@@ -27,10 +27,19 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
   // State for tracking if all positions are filled
   const [allFilled, setAllFilled] = useState(false)
 
+  // State for tracking cherub animation
+  const [cherubState, setCherubState] = useState(0) // 0: closed, 1: one eye, 2: both eyes
+
   // Check if all positions are filled
   useEffect(() => {
     const filled = Object.values(positions).every((pos) => pos !== null)
     setAllFilled(filled)
+
+    // Update cherub state based on how many positions are filled
+    const filledCount = Object.values(positions).filter((pos) => pos !== null).length
+    if (filledCount === 0) setCherubState(0)
+    else if (filledCount < 4) setCherubState(1)
+    else setCherubState(2)
   }, [positions])
 
   // Available marbles
@@ -105,10 +114,28 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
   }
 
+  // Get the cherub image based on state
+  const getCherubImageSrc = () => {
+    if (cherubState === 0) return "/images/mouth-of-truth/putto_00.webp"
+    if (cherubState === 1) return "/images/mouth-of-truth/putto_01.webp"
+    return "/images/mouth-of-truth/putto_11.webp"
+  }
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="text-center mb-4">
         <h3 className="text-lg font-pixel text-purple-300 mb-2">The Mouth of Truth</h3>
+      </div>
+
+      {/* Cherub image */}
+      <div className="mb-4">
+        <Image
+          src={getCherubImageSrc() || "/placeholder.svg"}
+          alt="Cherub"
+          width={150}
+          height={150}
+          className="pixelated"
+        />
       </div>
 
       {/* Marbles selection area */}
