@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Riddle Escape",
-    short_name: "Riddle Escape",
-    description: "A mysterious puzzle game where you solve riddles to escape",
+    name: "Puzzle Escape",
+    short_name: "Puzzle Escape",
+    description: "A mysterious puzzle game where you solve puzzles to escape",
     start_url: "/",
     display: "standalone",
     background_color: "#121212",

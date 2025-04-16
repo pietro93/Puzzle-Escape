@@ -136,7 +136,7 @@ export default function IntroScreen({ onStart, soundEnabled, toggleSound }: Intr
 
       <div className="relative z-10 flex-1 flex flex-col pt-8">
         <h1 className="text-3xl font-pixel text-purple-300 mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center">
-          Riddle Escape
+          Puzzle Escape
         </h1>
 
         {/* Visual elements - prison cell and guard */}

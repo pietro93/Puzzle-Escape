@@ -96,43 +96,19 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
       return `/images/mouth-of-truth/bocca_${position}_0_cropped.webp`
     }
 
-    // Check if we have an image for this position and marble type
-    // For now, we have images for:
-    // - All positions with golden marbles
-    // - All positions with blue marbles
-    // - Bottom left with white, green, and red marbles
-    // - Bottom right with green marble
-
-    // Special cases for bottom left
-    if (position === "bl") {
-      if (["white", "green", "red", "blue", "golden"].includes(marbleType)) {
-        return `/images/mouth-of-truth/bocca_${position}_${marbleType}_cropped.webp`
-      }
+    // Map the marble type to the correct image name
+    let marbleName = marbleType
+    if (marbleType === "golden") {
+      marbleName = "gold"
     }
 
-    // Special cases for bottom right
-    if (position === "br") {
-      if (["green", "blue", "golden"].includes(marbleType)) {
-        return `/images/mouth-of-truth/bocca_${position}_${marbleType}_cropped.webp`
-      }
-    }
-
-    // Special cases for top left and top right
-    if (position === "tl" || position === "tr") {
-      if (["blue", "golden"].includes(marbleType)) {
-        return `/images/mouth-of-truth/bocca_${position}_${marbleType}_cropped.webp`
-      }
-    }
-
-    // Default to the empty position image if we don't have a specific image
-    return `/images/mouth-of-truth/bocca_${position}_0_cropped.webp`
+    return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
   }
 
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="text-center mb-4">
         <h3 className="text-lg font-pixel text-purple-300 mb-2">The Mouth of Truth</h3>
-        <p className="text-sm text-gray-300 mb-4">Place the marbles in the correct positions to reveal the truth.</p>
       </div>
 
       {/* Marbles selection area */}
@@ -222,7 +198,9 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
           onClick={handleMouthClick}
         >
           <Image
-            src="/images/mouth-of-truth/bocca_mb_cropped.webp"
+            src={
+              allFilled ? "/images/mouth-of-truth/bocca_mb_light.webp" : "/images/mouth-of-truth/bocca_mb_cropped.webp"
+            }
             alt="Bottom Middle"
             width={100}
             height={100}
@@ -249,8 +227,6 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
       {/* Instructions */}
       <div className="mt-4 text-xs text-gray-400">
-        <p>Drag and drop marbles onto the corners of the stone.</p>
-        <p>Click on a corner to remove its marble.</p>
         {allFilled && <p className="text-green-400">All positions filled! Click the mouth to proceed.</p>}
       </div>
     </div>

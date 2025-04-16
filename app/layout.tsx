@@ -3,8 +3,8 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Riddle Escape",
-  description: "A mysterious puzzle game where you solve riddles to escape",
+  title: "Puzzle Escape",
+  description: "A mysterious puzzle game where you solve puzzles to escape",
     generator: 'v0.dev'
 }
 

@@ -42,7 +42,7 @@ export default function StatusBar({ level, lives, coins, setting }: StatusBarPro
   }
 
   const shareToSocial = (platform: string) => {
-    const text = `I've reached level ${level} in Riddle Escape! Can you solve the puzzles and escape?`
+    const text = `I've reached level ${level} in Puzzle Escape! Can you solve the puzzles and escape?`
     const url = window.location.href
 
     let shareUrl = ""

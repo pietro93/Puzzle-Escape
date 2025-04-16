@@ -75,7 +75,7 @@ export default function SplashScreen({
           style={{ transform: `scale(${logoScale})`, transition: "transform 1s ease-in-out" }}
         >
           <div className="w-72 h-72 relative mx-auto mb-4">
-            <Image src="/images/logo.webp" alt="Riddle Escape" width={288} height={288} className="pixelated" />
+            <Image src="/images/logo.webp" alt="Puzzle Escape" width={288} height={288} className="pixelated" />
           </div>
         </div>
 
