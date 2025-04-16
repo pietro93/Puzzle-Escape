@@ -23,7 +23,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
     tl: null, // top left
     tr: null, // top right
     bl: null, // bottom left
-    br: null, // bottom right
+    br: null,
   })
 
   // State for tracking which marble is being dragged
@@ -57,20 +57,11 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
 
   // Generate a random correct combination on mount
   useEffect(() => {
-    if (level === 48) {
-      // For level 48, use a fixed combination for testing
-      setCorrectCombination({
-        tl: "golden",
-        tr: "red",
-        bl: "golden",
-        br: "green",
-      })
-    } else {
-      generateCorrectCombination()
-    }
+    // Always generate a random combination regardless of level
+    generateCorrectCombination()
   }, [level])
 
-  // Generate a random correct combination
+  // Make sure the generateCorrectCombination function follows the constraints
   const generateCorrectCombination = () => {
     const validColors: MarbleType[] = ["red", "golden", "black", "green"]
     const positions: Position[] = ["tl", "tr", "bl", "br"]
