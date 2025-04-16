@@ -2,24 +2,28 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
+import { useAudio } from "@/hooks/use-audio"
 
 interface MouthOfTruthPuzzleProps {
   onSolve: () => void
+  level?: number
 }
 
 type MarbleType = "black" | "white" | "golden" | "red" | "green" | "blue" | null
 type Position = "tl" | "tr" | "bl" | "br" | null
 type FeedbackType = "00" | "01" | "11"
 
-export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps) {
+export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruthPuzzleProps) {
+  const { playSound } = useAudio()
+
   // State for tracking which marble is in which position
   const [positions, setPositions] = useState<Record<string, MarbleType>>({
     tl: null, // top left
     tr: null, // top right
     bl: null, // bottom left
-    br: null,
+    br: null, // bottom right
   })
 
   // State for tracking which marble is being dragged
@@ -42,10 +46,29 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     br: null,
   })
 
+  // State for tracking if the puzzle is solved
+  const [puzzleSolved, setPuzzleSolved] = useState(false)
+
+  // State for the revealed marbles after solving
+  const [revealedMarbles, setRevealedMarbles] = useState<Array<{ color: MarbleType; letter: string }>>([])
+
+  // State for the revealed cherubs after solving
+  const [revealedCherubs, setRevealedCherubs] = useState<Array<{ color: string; letter: string; position: string }>>([])
+
   // Generate a random correct combination on mount
   useEffect(() => {
-    generateCorrectCombination()
-  }, [])
+    if (level === 48) {
+      // For level 48, use a fixed combination for testing
+      setCorrectCombination({
+        tl: "golden",
+        tr: "red",
+        bl: "golden",
+        br: "green",
+      })
+    } else {
+      generateCorrectCombination()
+    }
+  }, [level])
 
   // Generate a random correct combination
   const generateCorrectCombination = () => {
@@ -105,6 +128,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
   // Handle drag start
   const handleDragStart = (e: React.DragEvent, marbleType: MarbleType) => {
+    if (puzzleSolved) return // Prevent interaction if puzzle is solved
+
     setDraggedMarble(marbleType)
     // Set the drag image (optional)
     if (e.dataTransfer) {
@@ -115,6 +140,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
   // Handle drag over
   const handleDragOver = (e: React.DragEvent) => {
+    if (puzzleSolved) return // Prevent interaction if puzzle is solved
+
     e.preventDefault()
     if (e.dataTransfer) {
       e.dataTransfer.dropEffect = "move"
@@ -123,6 +150,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
   // Handle drop
   const handleDrop = (e: React.DragEvent, position: Position) => {
+    if (puzzleSolved) return // Prevent interaction if puzzle is solved
+
     e.preventDefault()
 
     if (draggedMarble && position) {
@@ -148,6 +177,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
   // Handle click on a position to remove marble
   const handlePositionClick = (position: Position) => {
+    if (puzzleSolved) return // Prevent interaction if puzzle is solved
+
     if (positions[position]) {
       setPositions((prev) => ({
         ...prev,
@@ -162,8 +193,57 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     }
   }
 
+  // Generate the revealed marbles and cherubs for the second part of the puzzle
+  const generateRevealedItems = useCallback(() => {
+    // Get the colors from the correct combination
+    const colors = Object.values(correctCombination).filter(Boolean) as MarbleType[]
+
+    // Letter pairs
+    const letterPairs = [
+      ["C", "H"],
+      ["A", "P"],
+      ["L", "A"],
+      ["I", "N"],
+    ]
+
+    // Randomly select one letter from each pair for the marbles
+    const marbleLetters = letterPairs.map((pair) => pair[Math.floor(Math.random() * 2)])
+
+    // The cherub letters are the complementary letters
+    const cherubLetters = letterPairs.map((pair, index) => (pair[0] === marbleLetters[index] ? pair[1] : pair[0]))
+
+    // Create the revealed marbles
+    const newRevealedMarbles = colors.map((color, index) => ({
+      color,
+      letter: marbleLetters[index],
+    }))
+
+    // Create the revealed cherubs
+    const newRevealedCherubs = colors.map((color, index) => {
+      // Special handling for A letters
+      let position = "left"
+      if (cherubLetters[index] === "A") {
+        // If A is paired with P, it's always on the left
+        if (marbleLetters[index] === "P") position = "left"
+        // If A is paired with L, it's always on the right
+        else if (marbleLetters[index] === "L") position = "right"
+      }
+
+      return {
+        color: color === "golden" ? "gold" : color, // Normalize color name
+        letter: cherubLetters[index],
+        position,
+      }
+    })
+
+    setRevealedMarbles(newRevealedMarbles)
+    setRevealedCherubs(newRevealedCherubs)
+  }, [correctCombination])
+
   // Handle mouth click
   const handleMouthClick = () => {
+    if (puzzleSolved) return // Prevent interaction if puzzle is solved
+
     if (allFilled) {
       // Calculate feedback
       const newFeedback = calculateFeedback()
@@ -171,13 +251,34 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
       setHandInserted(true)
 
       // Check if all positions are correct
-      const allCorrect = newFeedback.every((f) => f === "11")
+      const allCorrect = isCorrectCombination()
       if (allCorrect) {
-        // This is where we would trigger the next part of the puzzle
-        // For now, we'll just log a message
-        console.log("All correct! Proceeding to next stage...")
+        // Play success sound
+        if (playSound) playSound("/audio/correct.mp3")
+
+        // Set puzzle as solved
+        setPuzzleSolved(true)
+
+        // Generate the revealed marbles and cherubs
+        generateRevealedItems()
+
+        // Clear all marbles from positions
+        setPositions({
+          tl: null,
+          tr: null,
+          bl: null,
+          br: null,
+        })
+      } else {
+        // Play wrong sound
+        if (playSound) playSound("/audio/wrong.mp3")
       }
     }
+  }
+
+  // Check if the current positions match the correct combination
+  const isCorrectCombination = () => {
+    return Object.entries(positions).every(([pos, color]) => color === correctCombination[pos as Position])
   }
 
   // Calculate feedback based on current positions and correct combination
@@ -255,37 +356,55 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     return `/images/mouth-of-truth/putto_${feedbackType}.webp`
   }
 
+  // Get the image source for a revealed cherub
+  const getRevealedCherubImageSrc = (cherub: { color: string; letter: string; position: string }) => {
+    return `/images/mouth-of-truth/putto_${cherub.color}_${cherub.letter}_${cherub.position}.webp`
+  }
+
+  // Get the image source for a revealed marble
+  const getRevealedMarbleImageSrc = (marble: { color: MarbleType; letter: string }) => {
+    // Map the marble type to the correct image name
+    let colorName = marble.color
+    if (marble.color === "golden") {
+      colorName = "gold"
+    }
+
+    return `/images/mouth-of-truth/${colorName}_marble_${marble.letter.toLowerCase()}.webp`
+  }
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="text-center mb-4">
         <h3 className="text-lg font-pixel text-purple-300 mb-2">The Mouth of Truth</h3>
       </div>
 
-      {/* Marbles selection area */}
-      <div className="flex justify-center gap-4 mb-6">
-        {marbles.map((marble) => (
-          <div
-            key={marble}
-            className="w-12 h-12 cursor-grab relative"
-            draggable
-            onDragStart={(e) => handleDragStart(e, marble)}
-          >
-            <Image
-              src={`/images/mouth-of-truth/${marble === "golden" ? "gold" : marble}_marble.webp`}
-              alt={`${marble} marble`}
-              width={48}
-              height={48}
-              className="pixelated"
-            />
-          </div>
-        ))}
-      </div>
+      {/* Marbles selection area - hide if puzzle is solved */}
+      {!puzzleSolved && (
+        <div className="flex justify-center gap-4 mb-6">
+          {marbles.map((marble) => (
+            <div
+              key={marble}
+              className="w-12 h-12 cursor-grab relative"
+              draggable
+              onDragStart={(e) => handleDragStart(e, marble)}
+            >
+              <Image
+                src={`/images/mouth-of-truth/${marble === "golden" ? "gold" : marble}_marble.webp`}
+                alt={`${marble} marble`}
+                width={48}
+                height={48}
+                className="pixelated"
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Mouth of Truth image - arranged in a grid with no spacing */}
       <div className="relative w-[300px] h-[300px] grid grid-cols-3 grid-rows-2 gap-0">
         {/* Top Left */}
         <div
-          className="w-full h-full cursor-pointer"
+          className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, "tl")}
           onClick={() => handlePositionClick("tl")}
@@ -312,7 +431,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
         {/* Top Right */}
         <div
-          className="w-full h-full cursor-pointer"
+          className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, "tr")}
           onClick={() => handlePositionClick("tr")}
@@ -328,7 +447,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
         {/* Bottom Left */}
         <div
-          className="w-full h-full cursor-pointer"
+          className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, "bl")}
           onClick={() => handlePositionClick("bl")}
@@ -344,12 +463,16 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
         {/* Bottom Middle - The Mouth */}
         <div
-          className={`w-full h-full ${allFilled ? "cursor-pointer" : "pointer-events-none"}`}
-          onClick={allFilled ? handleMouthClick : undefined}
+          className={`w-full h-full ${allFilled && !puzzleSolved ? "cursor-pointer" : "pointer-events-none"}`}
+          onClick={allFilled && !puzzleSolved ? handleMouthClick : undefined}
         >
           <Image
             src={
-              allFilled ? "/images/mouth-of-truth/bocca_mb_light.webp" : "/images/mouth-of-truth/bocca_mb_cropped.webp"
+              puzzleSolved
+                ? "/images/mouth-of-truth/bocca_mb_greenlight.webp"
+                : allFilled
+                  ? "/images/mouth-of-truth/bocca_mb_light.webp"
+                  : "/images/mouth-of-truth/bocca_mb_cropped.webp"
             }
             alt="Bottom Middle"
             width={100}
@@ -360,7 +483,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
         {/* Bottom Right */}
         <div
-          className="w-full h-full cursor-pointer"
+          className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, "br")}
           onClick={() => handlePositionClick("br")}
@@ -375,28 +498,63 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         </div>
       </div>
 
-      {/* Feedback cherubs */}
-      <div className="mt-6 flex justify-center">
-        <div className="grid grid-cols-2 gap-6 bg-black p-6 rounded-lg">
-          {feedback.map((feedbackType, index) => (
-            <div key={index} className="w-32 h-32 relative">
+      {/* Revealed marbles after solving */}
+      {puzzleSolved && revealedMarbles.length > 0 && (
+        <div className="mt-4 flex justify-center gap-4">
+          {revealedMarbles.map((marble, index) => (
+            <div key={index} className="w-12 h-12 relative">
               <Image
-                src={getFeedbackImageSrc(feedbackType) || "/placeholder.svg"}
-                alt={`Feedback ${index + 1}`}
-                width={128}
-                height={128}
+                src={getRevealedMarbleImageSrc(marble) || "/placeholder.svg"}
+                alt={`${marble.color} marble with letter ${marble.letter}`}
+                width={48}
+                height={48}
                 className="pixelated"
               />
             </div>
           ))}
         </div>
+      )}
+
+      {/* Feedback cherubs or revealed cherubs */}
+      <div className="mt-6 flex justify-center">
+        <div className="grid grid-cols-2 gap-6 bg-black p-6 rounded-lg">
+          {puzzleSolved && revealedCherubs.length > 0
+            ? revealedCherubs.map((cherub, index) => (
+                <div key={index} className="w-32 h-32 relative">
+                  <Image
+                    src={getRevealedCherubImageSrc(cherub) || "/placeholder.svg"}
+                    alt={`${cherub.color} cherub with letter ${cherub.letter}`}
+                    width={128}
+                    height={128}
+                    className="pixelated"
+                  />
+                </div>
+              ))
+            : feedback.map((feedbackType, index) => (
+                <div key={index} className="w-32 h-32 relative">
+                  <Image
+                    src={getFeedbackImageSrc(feedbackType) || "/placeholder.svg"}
+                    alt={`Feedback ${index + 1}`}
+                    width={128}
+                    height={128}
+                    className="pixelated"
+                  />
+                </div>
+              ))}
+        </div>
       </div>
 
       {/* Instructions */}
       <div className="mt-4 text-sm text-gray-300 font-pixel">
-        {allFilled && !handInserted && <p>Insert your hand into the Mouth of Truth</p>}
-        {allFilled && handInserted && <p>Try another combination or proceed if correct</p>}
-        {!allFilled && <p>Place marbles in all four corners</p>}
+        {puzzleSolved ? (
+          <p>The Mouth of Truth has revealed its secret...</p>
+        ) : allFilled && !handInserted ? (
+          <p>Insert your hand into the Mouth of Truth</p>
+        ) : allFilled && handInserted ? (
+          <p>Try another combination or proceed if correct</p>
+        ) : (
+          <p>Place marbles in all four corners</p>
+        )}
       </div>
     </div>
   )
