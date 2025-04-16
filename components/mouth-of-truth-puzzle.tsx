@@ -233,23 +233,6 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     return result.sort(() => Math.random() - 0.5)
   }
 
-  // Get the image source for a feedback cherub
-  const getFeedbackImageSrc = (feedbackType: FeedbackType) => {
-    // For now, we'll continue using the basic feedback types
-    // Later we can implement the letter-based feedback
-    if (feedbackType === "00") {
-      // No match - use black cherub with no letter
-      return `/images/mouth-of-truth/putto_00.webp`
-    } else if (feedbackType === "01") {
-      // Color match but wrong position - use gold cherub with C (for Color)
-      return `/images/mouth-of-truth/putto_gold_C_left.webp`
-    } else if (feedbackType === "11") {
-      // Perfect match - use green cherub with P (for Position)
-      return `/images/mouth-of-truth/putto_green_P_right.webp`
-    }
-    return `/images/mouth-of-truth/putto_${feedbackType}.webp`
-  }
-
   // Get the image source for a position based on the marble type
   const getPositionImageSrc = (position: Position) => {
     const marbleType = positions[position]
@@ -265,6 +248,11 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     }
 
     return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
+  }
+
+  // Get the image source for a feedback cherub
+  const getFeedbackImageSrc = (feedbackType: FeedbackType) => {
+    return `/images/mouth-of-truth/putto_${feedbackType}.webp`
   }
 
   return (
