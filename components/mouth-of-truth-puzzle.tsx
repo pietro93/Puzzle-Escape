@@ -19,7 +19,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     tl: null, // top left
     tr: null, // top right
     bl: null, // bottom left
-    br: null, // bottom right
+    br: null,
   })
 
   // State for tracking which marble is being dragged
@@ -176,7 +176,6 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         // This is where we would trigger the next part of the puzzle
         // For now, we'll just log a message
         console.log("All correct! Proceeding to next stage...")
-        onSolve()
       }
     }
   }
@@ -251,8 +250,13 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
   }
 
+  // Get the image source for a feedback cherub
+  const getFeedbackImageSrc = (feedbackType: FeedbackType) => {
+    return `/images/mouth-of-truth/putto_${feedbackType}.webp`
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto">
+    <div className="flex flex-col items-center justify-center">
       <div className="text-center mb-4">
         <h3 className="text-lg font-pixel text-purple-300 mb-2">The Mouth of Truth</h3>
       </div>
@@ -371,19 +375,21 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         </div>
       </div>
 
-      {/* Feedback cherubs - using the original putto images */}
-      <div className="mt-6 grid grid-cols-2 gap-6 bg-black p-6 rounded-lg w-full max-w-[600px]">
-        {feedback.map((feedbackType, index) => (
-          <div key={index} className="w-full aspect-square relative flex items-center justify-center">
-            <Image
-              src={`/images/mouth-of-truth/putto_${feedbackType}.webp`}
-              alt={`Feedback ${index + 1}`}
-              width={280}
-              height={280}
-              className="pixelated"
-            />
-          </div>
-        ))}
+      {/* Feedback cherubs */}
+      <div className="mt-6 flex justify-center">
+        <div className="grid grid-cols-2 gap-6 bg-black p-6 rounded-lg">
+          {feedback.map((feedbackType, index) => (
+            <div key={index} className="w-32 h-32 relative">
+              <Image
+                src={getFeedbackImageSrc(feedbackType) || "/placeholder.svg"}
+                alt={`Feedback ${index + 1}`}
+                width={128}
+                height={128}
+                className="pixelated"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Instructions */}
