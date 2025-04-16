@@ -82,7 +82,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
   // Handle mouth click
   const handleMouthClick = () => {
     if (allFilled) {
-      // Trigger the onSolve callback
+      // Check if the correct marbles are in the correct positions
+      // For now, just trigger the onSolve callback
       onSolve()
     }
   }
@@ -193,8 +194,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
         {/* Bottom Middle - The Mouth */}
         <div
-          className={`w-full h-full ${allFilled ? "cursor-grab" : "pointer-events-none"}`}
-          onClick={allFilled ? handleMouthClick : undefined}
+          className={`w-full h-full ${allFilled ? "cursor-pointer" : "pointer-events-none"}`}
+          onClick={handleMouthClick}
         >
           <Image
             src={
@@ -225,8 +226,8 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
       </div>
 
       {/* Instructions */}
-      <div className="mt-4 text-sm text-gray-300 font-pixel">
-        {allFilled && <p>Insert your hand into the Mouth of Truth</p>}
+      <div className="mt-4 text-xs text-gray-400">
+        {allFilled && <p className="text-green-400">All positions filled! Click the mouth to proceed.</p>}
       </div>
     </div>
   )
