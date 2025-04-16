@@ -1,93 +1,49 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
+// components/mouth-of-truth-puzzle.tsx
+
+type MarbleType = "red" | "blue" | "green" | "golden"
+type Position = "top_left" | "top_right" | "bottom_left" | "bottom_right"
 
 interface MouthOfTruthPuzzleProps {
-  onSolve: () => void
+  initialPositions?: { [key in Position]?: MarbleType }
+  onSolved?: () => void
 }
 
-type MarbleType = "black" | "white" | "golden" | "red" | "green" | "blue" | null
-type Position = "tl" | "tr" | "bl" | "br" | null
+const MouthOfTruthPuzzle = ({ initialPositions, onSolved }: MouthOfTruthPuzzleProps) => {
+  const [positions, setPositions] = React.useState<{ [key in Position]?: MarbleType }>(initialPositions || {})
 
-export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps) {
-  // State for tracking which marble is in which position
-  const [positions, setPositions] = useState<Record<string, MarbleType>>({
-    tl: null, // top left
-    tr: null, // top right
-    bl: null, // bottom left
-    br: null, // bottom right
-  })
-
-  // State for tracking which marble is being dragged
-  const [draggedMarble, setDraggedMarble] = useState<MarbleType>(null)
-
-  // State for tracking if all positions are filled
-  const [allFilled, setAllFilled] = useState(false)
-
-  // Check if all positions are filled
-  useEffect(() => {
-    const filled = Object.values(positions).every((pos) => pos !== null)
-    setAllFilled(filled)
-  }, [positions])
-
-  // Available marbles
-  const marbles: MarbleType[] = ["black", "white", "golden", "red", "green", "blue"]
-
-  // Handle drag start
-  const handleDragStart = (e: React.DragEvent, marbleType: MarbleType) => {
-    setDraggedMarble(marbleType)
-    // Set the drag image (optional)
-    if (e.dataTransfer) {
-      e.dataTransfer.setData("text/plain", marbleType)
-      e.dataTransfer.effectAllowed = "move"
-    }
-  }
-
-  // Handle drag over
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = "move"
-    }
-  }
-
-  // Handle drop
-  const handleDrop = (e: React.DragEvent, position: Position) => {
-    e.preventDefault()
-
-    if (draggedMarble && position) {
-      // Update the position with the dragged marble
-      setPositions((prev) => ({
-        ...prev,
-        [position]: draggedMarble,
-      }))
-    }
-
-    setDraggedMarble(null)
-  }
-
-  // Handle click on a position to remove marble
   const handlePositionClick = (position: Position) => {
-    if (positions[position]) {
-      setPositions((prev) => ({
-        ...prev,
-        [position]: null,
-      }))
-    }
+    // Logic to cycle through marble types or remove them
+    setPositions((prevPositions) => {
+      const currentMarble = prevPositions[position]
+      let newMarble: MarbleType | undefined
+
+      if (!currentMarble) {
+        newMarble = "red"
+      } else if (currentMarble === "red") {
+        newMarble = "blue"
+      } else if (currentMarble === "blue") {
+        newMarble = "green"
+      } else if (currentMarble === "green") {
+        newMarble = "golden"
+      } else {
+        newMarble = undefined
+      }
+
+      const newPositions = { ...prevPositions }
+      if (newMarble) {
+        newPositions[position] = newMarble
+      } else {
+        delete newPositions[position]
+      }
+
+      return newPositions
+    })
   }
 
-  // Handle mouth click
-  const handleMouthClick = () => {
-    if (allFilled) {
-      // Trigger the onSolve callback
-      onSolve()
-    }
-  }
-
-  // Get the image source for a position based on the marble type
   const getPositionImageSrc = (position: Position) => {
     const marbleType = positions[position]
 
@@ -104,130 +60,35 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
   }
 
+  // Check if the puzzle is solved (example condition)
+  React.useEffect(() => {
+    const isSolved =
+      positions.top_left === "red" &&
+      positions.top_right === "blue" &&
+      positions.bottom_left === "green" &&
+      positions.bottom_right === "golden"
+
+    if (isSolved && onSolved) {
+      onSolved()
+    }
+  }, [positions, onSolved])
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="text-center mb-4">
-        <h3 className="text-lg font-pixel text-purple-300 mb-2">The Mouth of Truth</h3>
-      </div>
-
-      {/* Marbles selection area */}
-      <div className="flex justify-center gap-4 mb-6">
-        {marbles.map((marble) => (
-          <div
-            key={marble}
-            className="w-12 h-12 cursor-grab relative"
-            draggable
-            onDragStart={(e) => handleDragStart(e, marble)}
-          >
-            <Image
-              src={`/images/mouth-of-truth/${marble}_marble.webp`}
-              alt={`${marble} marble`}
-              width={48}
-              height={48}
-              className="pixelated"
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Mouth of Truth image - arranged in a grid with no spacing */}
-      <div className="relative w-[300px] h-[300px] grid grid-cols-3 grid-rows-2 gap-0">
-        {/* Top Left */}
-        <div
-          className="w-full h-full cursor-pointer"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "tl")}
-          onClick={() => handlePositionClick("tl")}
-        >
-          <Image
-            src={getPositionImageSrc("tl") || "/placeholder.svg"}
-            alt="Top Left"
-            width={100}
-            height={100}
-            className="pixelated w-full h-full"
-          />
-        </div>
-
-        {/* Top Middle */}
-        <div className="w-full h-full pointer-events-none">
-          <Image
-            src="/images/mouth-of-truth/bocca_mt_cropped.webp"
-            alt="Top Middle"
-            width={100}
-            height={100}
-            className="pixelated w-full h-full"
-          />
-        </div>
-
-        {/* Top Right */}
-        <div
-          className="w-full h-full cursor-pointer"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "tr")}
-          onClick={() => handlePositionClick("tr")}
-        >
-          <Image
-            src={getPositionImageSrc("tr") || "/placeholder.svg"}
-            alt="Top Right"
-            width={100}
-            height={100}
-            className="pixelated w-full h-full"
-          />
-        </div>
-
-        {/* Bottom Left */}
-        <div
-          className="w-full h-full cursor-pointer"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "bl")}
-          onClick={() => handlePositionClick("bl")}
-        >
-          <Image
-            src={getPositionImageSrc("bl") || "/placeholder.svg"}
-            alt="Bottom Left"
-            width={100}
-            height={100}
-            className="pixelated w-full h-full"
-          />
-        </div>
-
-        {/* Bottom Middle - The Mouth */}
-        <div
-          className={`w-full h-full ${allFilled ? "cursor-grab" : "pointer-events-none"}`}
-          onClick={allFilled ? handleMouthClick : undefined}
-        >
-          <Image
-            src={
-              allFilled ? "/images/mouth-of-truth/bocca_mb_light.webp" : "/images/mouth-of-truth/bocca_mb_cropped.webp"
-            }
-            alt="Bottom Middle"
-            width={100}
-            height={100}
-            className="pixelated w-full h-full"
-          />
-        </div>
-
-        {/* Bottom Right */}
-        <div
-          className="w-full h-full cursor-pointer"
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "br")}
-          onClick={() => handlePositionClick("br")}
-        >
-          <Image
-            src={getPositionImageSrc("br") || "/placeholder.svg"}
-            alt="Bottom Right"
-            width={100}
-            height={100}
-            className="pixelated w-full h-full"
-          />
-        </div>
-      </div>
-
-      {/* Instructions */}
-      <div className="mt-4 text-sm text-gray-300 font-pixel">
-        {allFilled && <p>Insert your hand into the Mouth of Truth</p>}
-      </div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
+      <button onClick={() => handlePositionClick("top_left")}>
+        <img src={getPositionImageSrc("top_left") || "/placeholder.svg"} alt="Top Left" />
+      </button>
+      <button onClick={() => handlePositionClick("top_right")}>
+        <img src={getPositionImageSrc("top_right") || "/placeholder.svg"} alt="Top Right" />
+      </button>
+      <button onClick={() => handlePositionClick("bottom_left")}>
+        <img src={getPositionImageSrc("bottom_left") || "/placeholder.svg"} alt="Bottom Left" />
+      </button>
+      <button onClick={() => handlePositionClick("bottom_right")}>
+        <img src={getPositionImageSrc("bottom_right") || "/placeholder.svg"} alt="Bottom Right" />
+      </button>
     </div>
   )
 }
+
+export default MouthOfTruthPuzzle
