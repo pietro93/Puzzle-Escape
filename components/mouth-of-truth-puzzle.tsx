@@ -515,29 +515,29 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
         </div>
       )}
 
-      {/* Feedback cherubs or revealed cherubs */}
-      <div className="mt-6 flex justify-center">
-        <div className="grid grid-cols-2 gap-6 bg-black p-6 rounded-lg">
+      {/* Feedback cherubs or revealed cherubs - now full width with no padding */}
+      <div className="mt-6 w-full">
+        <div className="grid grid-cols-2 gap-0 bg-black">
           {puzzleSolved && revealedCherubs.length > 0
             ? revealedCherubs.map((cherub, index) => (
-                <div key={index} className="w-32 h-32 relative">
+                <div key={index} className="w-full relative">
                   <Image
                     src={getRevealedCherubImageSrc(cherub) || "/placeholder.svg"}
                     alt={`${cherub.color} cherub with letter ${cherub.letter}`}
-                    width={128}
-                    height={128}
-                    className="pixelated"
+                    width={200}
+                    height={200}
+                    className="pixelated w-full h-auto"
                   />
                 </div>
               ))
             : feedback.map((feedbackType, index) => (
-                <div key={index} className="w-32 h-32 relative">
+                <div key={index} className="w-full relative">
                   <Image
                     src={getFeedbackImageSrc(feedbackType) || "/placeholder.svg"}
                     alt={`Feedback ${index + 1}`}
-                    width={128}
-                    height={128}
-                    className="pixelated"
+                    width={200}
+                    height={200}
+                    className="pixelated w-full h-auto"
                   />
                 </div>
               ))}
