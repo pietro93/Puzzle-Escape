@@ -11,6 +11,7 @@ interface MouthOfTruthPuzzleProps {
 
 type MarbleType = "black" | "white" | "golden" | "red" | "green" | "blue" | null
 type Position = "tl" | "tr" | "bl" | "br" | null
+type FeedbackType = "00" | "01" | "11"
 
 export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps) {
   // State for tracking which marble is in which position
@@ -27,11 +28,77 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
   // State for tracking if all positions are filled
   const [allFilled, setAllFilled] = useState(false)
 
+  // State for tracking feedback from the cherubs
+  const [feedback, setFeedback] = useState<FeedbackType[]>(["00", "00", "00", "00"])
+
+  // State for tracking if the player has inserted their hand
+  const [handInserted, setHandInserted] = useState(false)
+
+  // State for the correct combination
+  const [correctCombination, setCorrectCombination] = useState<Record<string, MarbleType>>({
+    tl: null,
+    tr: null,
+    bl: null,
+    br: null,
+  })
+
+  // Generate a random correct combination on mount
+  useEffect(() => {
+    generateCorrectCombination()
+  }, [])
+
+  // Generate a random correct combination
+  const generateCorrectCombination = () => {
+    const validColors: MarbleType[] = ["red", "golden", "black", "green"]
+    const positions: Position[] = ["tl", "tr", "bl", "br"]
+
+    // Ensure at least two different colors
+    const combo: Record<string, MarbleType> = {
+      tl: null,
+      tr: null,
+      bl: null,
+      br: null,
+    }
+
+    // First, randomly select two different colors
+    const firstColor = validColors[Math.floor(Math.random() * validColors.length)]
+    let secondColor = firstColor
+    while (secondColor === firstColor) {
+      secondColor = validColors[Math.floor(Math.random() * validColors.length)]
+    }
+
+    // Randomly assign these two colors to positions
+    const firstPosition = positions[Math.floor(Math.random() * positions.length)]
+    let secondPosition = firstPosition
+    while (secondPosition === firstPosition) {
+      secondPosition = positions[Math.floor(Math.random() * positions.length)]
+    }
+
+    combo[firstPosition] = firstColor
+    combo[secondPosition] = secondColor
+
+    // Fill the remaining positions with random colors
+    positions.forEach((pos) => {
+      if (pos !== firstPosition && pos !== secondPosition) {
+        combo[pos] = validColors[Math.floor(Math.random() * validColors.length)]
+      }
+    })
+
+    console.log("Correct combination:", combo)
+    setCorrectCombination(combo)
+  }
+
   // Check if all positions are filled
   useEffect(() => {
     const filled = Object.values(positions).every((pos) => pos !== null)
     setAllFilled(filled)
-  }, [positions])
+
+    // Reset feedback if any marble is removed
+    if (!filled && handInserted) {
+      setFeedback(["00", "00", "00", "00"])
+      setHandInserted(false)
+    }
+  }, [positions, handInserted])
 
   // Available marbles
   const marbles: MarbleType[] = ["black", "white", "golden", "red", "green", "blue"]
@@ -60,10 +127,20 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
     if (draggedMarble && position) {
       // Update the position with the dragged marble
-      setPositions((prev) => ({
-        ...prev,
-        [position]: draggedMarble,
-      }))
+      setPositions((prev) => {
+        const newPositions = {
+          ...prev,
+          [position]: draggedMarble,
+        }
+
+        // Reset feedback if marbles have been changed after hand insertion
+        if (handInserted) {
+          setFeedback(["00", "00", "00", "00"])
+          setHandInserted(false)
+        }
+
+        return newPositions
+      })
     }
 
     setDraggedMarble(null)
@@ -76,15 +153,84 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         ...prev,
         [position]: null,
       }))
+
+      // Reset feedback if a marble is removed
+      if (handInserted) {
+        setFeedback(["00", "00", "00", "00"])
+        setHandInserted(false)
+      }
     }
   }
 
   // Handle mouth click
   const handleMouthClick = () => {
     if (allFilled) {
-      // Trigger the onSolve callback
-      onSolve()
+      // Calculate feedback
+      const newFeedback = calculateFeedback()
+      setFeedback(newFeedback)
+      setHandInserted(true)
+
+      // Check if all positions are correct
+      const allCorrect = newFeedback.every((f) => f === "11")
+      if (allCorrect) {
+        // This is where we would trigger the next part of the puzzle
+        // For now, we'll just log a message
+        console.log("All correct! Proceeding to next stage...")
+      }
     }
+  }
+
+  // Calculate feedback based on current positions and correct combination
+  const calculateFeedback = (): FeedbackType[] => {
+    const positionKeys: Position[] = ["tl", "tr", "bl", "br"]
+    const result: FeedbackType[] = ["00", "00", "00", "00"]
+
+    // Track which positions have been matched
+    const matchedPositions: Record<string, boolean> = {
+      tl: false,
+      tr: false,
+      bl: false,
+      br: false,
+    }
+
+    // Track which correct marbles have been matched
+    const matchedCorrect: Record<string, boolean> = {
+      tl: false,
+      tr: false,
+      bl: false,
+      br: false,
+    }
+
+    // First pass: find exact matches (right color, right position)
+    let exactMatches = 0
+    positionKeys.forEach((pos, index) => {
+      if (positions[pos] === correctCombination[pos]) {
+        result[index] = "11"
+        matchedPositions[pos] = true
+        matchedCorrect[pos] = true
+        exactMatches++
+      }
+    })
+
+    // Second pass: find color matches (right color, wrong position)
+    let colorMatches = 0
+    positionKeys.forEach((guessPos, index) => {
+      if (!matchedPositions[guessPos]) {
+        // This position hasn't been matched yet
+        for (const correctPos of positionKeys) {
+          if (!matchedCorrect[correctPos] && positions[guessPos] === correctCombination[correctPos]) {
+            // Found a color match
+            result[index] = "01"
+            matchedCorrect[correctPos] = true
+            colorMatches++
+            break
+          }
+        }
+      }
+    })
+
+    // Shuffle the feedback to avoid giving away position information
+    return result.sort(() => Math.random() - 0.5)
   }
 
   // Get the image source for a position based on the marble type
@@ -104,6 +250,11 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
   }
 
+  // Get the image source for a feedback cherub
+  const getFeedbackImageSrc = (feedbackType: FeedbackType) => {
+    return `/images/mouth-of-truth/putto_${feedbackType}.webp`
+  }
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="text-center mb-4">
@@ -120,7 +271,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
             onDragStart={(e) => handleDragStart(e, marble)}
           >
             <Image
-              src={`/images/mouth-of-truth/${marble}_marble.webp`}
+              src={`/images/mouth-of-truth/${marble === "golden" ? "gold" : marble}_marble.webp`}
               alt={`${marble} marble`}
               width={48}
               height={48}
@@ -193,7 +344,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
 
         {/* Bottom Middle - The Mouth */}
         <div
-          className={`w-full h-full ${allFilled ? "cursor-grab" : "pointer-events-none"}`}
+          className={`w-full h-full ${allFilled ? "cursor-pointer" : "pointer-events-none"}`}
           onClick={allFilled ? handleMouthClick : undefined}
         >
           <Image
@@ -224,9 +375,26 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         </div>
       </div>
 
+      {/* Feedback cherubs */}
+      <div className="mt-6 grid grid-cols-2 gap-4 bg-black p-4 rounded-lg">
+        {feedback.map((feedbackType, index) => (
+          <div key={index} className="w-16 h-16 relative">
+            <Image
+              src={getFeedbackImageSrc(feedbackType) || "/placeholder.svg"}
+              alt={`Feedback ${index + 1}`}
+              width={64}
+              height={64}
+              className="pixelated"
+            />
+          </div>
+        ))}
+      </div>
+
       {/* Instructions */}
       <div className="mt-4 text-sm text-gray-300 font-pixel">
-        {allFilled && <p>Insert your hand into the Mouth of Truth</p>}
+        {allFilled && !handInserted && <p>Insert your hand into the Mouth of Truth</p>}
+        {allFilled && handInserted && <p>Try another combination or proceed if correct</p>}
+        {!allFilled && <p>Place marbles in all four corners</p>}
       </div>
     </div>
   )
