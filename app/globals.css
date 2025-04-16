@@ -1,0 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "PixelFont";
+  src: url("/fonts/pixel.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 20, 20, 30;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  background-image: url("/images/dark-texture.png");
+  background-repeat: repeat;
+  image-rendering: pixelated;
+}
+
+.font-pixel {
+  font-family: "PixelFont", monospace;
+  letter-spacing: 0.5px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.pixelated-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes adProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* CRT screen effect */
+.crt::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+/* Scanline effect */
+.scanlines::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: repeating-linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 0.5%, transparent 1%);
+  animation: scanlines 1s steps(60) infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes scanlines {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+
+/* Flicker animation */
+.flicker {
+  animation: flicker 0.15s infinite alternate;
+}
+
+@keyframes flicker {
+  0%,
+  19.999%,
+  22%,
+  62.999%,
+  64%,
+  64.999%,
+  70%,
+  100% {
+    opacity: 0.99;
+  }
+  20%,
+  21.999%,
+  63%,
+  63.999%,
+  65%,
+  69.999% {
+    opacity: 0.4;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .font-pixel {
+    letter-spacing: 0.3px;
+  }
+
+  /* Reduce CRT effect intensity on mobile */
+  .crt::before {
+    opacity: 0.5;
+  }
+
+  /* Reduce scanline effect intensity on mobile */
+  .scanlines::before {
+    opacity: 0.5;
+  }
+}
+
+/* Prevent text selection for better mobile experience */
+.touch-none {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Button active state for mobile */
+.btn-active:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+/* Swipe indicator animation */
+@keyframes swipeUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+}
+
+.swipe-indicator {
+  animation: swipeUp 1.5s ease-in-out infinite;
+}
+
+/* New animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Stars animation for splash screen */
+.stars-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.stars,
+.stars2,
+.stars3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 90px 40px, #ddd, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 160px 120px, #fff, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.3;
+  animation: stars-animation 10s linear infinite;
+}
+
+.stars2 {
+  background-image: radial-gradient(2px 2px at 100px 50px, #eee, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 200px 100px, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 300px 30px, #ddd, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 400px 70px, #fff, rgba(0, 0, 0, 0));
+  background-size: 400px 400px;
+  animation: stars-animation 15s linear infinite;
+}
+
+.stars3 {
+  background-image: radial-gradient(1px 1px at 50px 160px, #eee, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 150px 230px, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 250px 180px, #ddd, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 350px 210px, #fff, rgba(0, 0, 0, 0));
+  background-size: 300px 300px;
+  animation: stars-animation 20s linear infinite;
+}
+
+@keyframes stars-animation {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(200px);
+  }
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+.glow:hover {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.8);
+}
+
+/* Add this new utility class */
+.bg-gradient-radial {
+  background-image: radial-gradient(var(--tw-gradient-stops));
+}

@@ -1,0 +1,40 @@
+{
+  "packagerConfig": {
+    "asar": true,
+    "icon": "./assets/icon",
+    "name": "Riddle Escape",
+    "executableName": "riddle-escape",
+    "appBundleId": "com.yourdomain.riddleescape"
+  },
+  "rebuildConfig": {},
+  "makers": [
+    {
+      "name": "@electron-forge/maker-squirrel",
+      "config": {
+        "name": "riddle_escape",
+        "authors": "Your Name",
+        "description": "A mysterious puzzle game where you solve riddles to escape",
+        "iconUrl": "https://yourdomain.com/icon.ico",
+        "setupIcon": "./assets/icon.ico"
+      }
+    },
+    {
+      "name": "@electron-forge/maker-zip",
+      "platforms": ["darwin"]
+    },
+    {
+      "name": "@electron-forge/maker-deb",
+      "config": {
+        "options": {
+          "icon": "./assets/icon.png",
+          "categories": ["Game"],
+          "description": "A mysterious puzzle game where you solve riddles to escape"
+        }
+      }
+    },
+    {
+      "name": "@electron-forge/maker-rpm",
+      "config": {}
+    }
+  ]
+}
