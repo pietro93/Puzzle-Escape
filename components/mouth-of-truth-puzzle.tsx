@@ -176,6 +176,7 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         // This is where we would trigger the next part of the puzzle
         // For now, we'll just log a message
         console.log("All correct! Proceeding to next stage...")
+        onSolve()
       }
     }
   }
@@ -248,11 +249,6 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
     }
 
     return `/images/mouth-of-truth/bocca_${position}_${marbleName}_cropped.webp`
-  }
-
-  // Get the image source for a feedback cherub
-  const getFeedbackImageSrc = (feedbackType: FeedbackType) => {
-    return `/images/mouth-of-truth/putto_${feedbackType}.webp`
   }
 
   return (
@@ -375,16 +371,16 @@ export default function MouthOfTruthPuzzle({ onSolve }: MouthOfTruthPuzzleProps)
         </div>
       </div>
 
-      {/* Feedback cherubs */}
+      {/* Feedback cherubs - using the original putto images */}
       <div className="mt-6 grid grid-cols-2 gap-6 bg-black p-6 rounded-lg w-full max-w-[600px]">
         {feedback.map((feedbackType, index) => (
-          <div key={index} className="w-full aspect-square relative">
+          <div key={index} className="w-full aspect-square relative flex items-center justify-center">
             <Image
-              src={getFeedbackImageSrc(feedbackType) || "/placeholder.svg"}
+              src={`/images/mouth-of-truth/putto_${feedbackType}.webp`}
               alt={`Feedback ${index + 1}`}
               width={280}
               height={280}
-              className="pixelated w-full h-full"
+              className="pixelated"
             />
           </div>
         ))}
