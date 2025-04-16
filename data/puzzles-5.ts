@@ -113,7 +113,7 @@ export const puzzlesSet5: Puzzle[] = [
     imageUrl: "",
     locationImage: "/images/hell-bg.webp",
     isMouthOfTruthPuzzle: true,
-    solution: "pentagram",
+    solution: "chaplain",
     hints: [
       "Each marble represents a different sin.",
       "The position of each marble matters.",
@@ -127,7 +127,7 @@ export const puzzlesSet5: Puzzle[] = [
     question: "The Mouth of Truth",
     description:
       "Place the colored marbles in the correct positions to reveal the truth. Legend says if you lie while your hand is in the Mouth of Truth, it will bite your hand off.",
-    solution: "veritas",
+    solution: "chaplain",
     category: "puzzle",
     isMouthOfTruthPuzzle: true,
     hints: [
