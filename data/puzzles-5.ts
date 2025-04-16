@@ -124,17 +124,17 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 49,
-    question: "The Devil presents you with a cryptic poem.",
+    question: "The Mouth of Truth",
     description:
-      "In darkness deep, where shadows creep,\nA heart of stone, a soul to keep.\nBeneath the waves, beyond the graves,\nThe answer lies in what one craves.",
-    imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level49-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
-    solution: "redemption",
-    category: "riddle",
+      "Place the colored marbles in the correct positions to reveal the truth. Legend says if you lie while your hand is in the Mouth of Truth, it will bite your hand off.",
+    solution: "veritas",
+    category: "puzzle",
+    isMouthOfTruthPuzzle: true,
     hints: [
-      "The poem speaks of something that a damned soul would desire most.",
-      "It's something that would free a soul from Hell.",
-      "The answer is a single word that means 'salvation' or 'forgiveness'.",
+      "The Mouth of Truth requires a specific arrangement of marbles.",
+      "Try different combinations of marbles in the four corners.",
+      "The colors represent different virtues or concepts.",
+      "The Latin word for 'truth' might be relevant here.",
     ],
   },
   {
