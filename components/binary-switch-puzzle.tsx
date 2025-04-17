@@ -95,10 +95,14 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                   key={switchIndex}
                   onClick={() => toggleSwitch(rowIndex, switchIndex)}
                   disabled={switchIndex < 3 || isSolved}
-                  className={`w-8 h-10 flex items-center justify-center ${switchIndex < 3 ? "opacity-70 cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
+                  className={`w-12 h-16 flex items-center justify-center ${switchIndex < 3 ? "opacity-70 cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
                 >
                   <img
-                    src={value === 1 ? "/images/flipswitch_1.webp" : "/images/flipswitch_0.webp"}
+                    src={
+                      value === 1
+                        ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/flipswitch_1-OPcpqqeE9fqJpB6LPEYFvNLvQTb5bu.webp"
+                        : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/flipswitch_0-xeAaXILvQOEYhaeJo2mWMHCPkbaT3P.webp"
+                    }
                     alt={value === 1 ? "Switch On" : "Switch Off"}
                     className="w-full h-full pixelated"
                   />
@@ -106,8 +110,8 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
               ))}
             </div>
             {/* Make the row number visually distinct */}
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-900 border-2 border-purple-700 ml-4">
-              <span className="text-white font-mono font-bold">{rowLabels[rowIndex]}</span>
+            <div className="ml-4 text-white font-mono text-sm">
+              <span>{rowLabels[rowIndex]}</span>
             </div>
           </div>
         ))}
