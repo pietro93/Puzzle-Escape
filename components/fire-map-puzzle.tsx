@@ -6,8 +6,8 @@ import { useState } from "react"
 
 interface PinLocation {
   id: string
-  x: number // pixel position
-  y: number // pixel position
+  x: number // percentage from left
+  y: number // percentage from top
   color: string
   correctAnswers: string[]
   userAnswer: string
@@ -20,68 +20,68 @@ interface ConnectionPair {
 }
 
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
-  // Define all pins with their exact pixel positions on the 971x813px image
+  // Define all pins with their positions as percentages for responsiveness
   const [pins, setPins] = useState<PinLocation[]>([
     {
       id: "pin1",
-      x: 60, // Zhanaozen (grey top left)
-      y: 70,
+      x: 6.2, // Zhanaozen (grey top left)
+      y: 8.6,
       color: "grey",
       correctAnswers: ["zhanaozen", "жаңаөзен"],
       userAnswer: "",
     },
     {
       id: "pin2",
-      x: 435, // Qonirat (top blue)
-      y: 120,
+      x: 44.8, // Qonirat (top blue)
+      y: 14.8,
       color: "blue",
       correctAnswers: ["qonirat", "qońirat", "kungrad", "кунград"],
       userAnswer: "",
     },
     {
       id: "pin3",
-      x: 570, // Urgench (top right green)
-      y: 190,
+      x: 58.7, // Urgench (top right green)
+      y: 23.4,
       color: "green",
       correctAnswers: ["urgench", "урганч"],
       userAnswer: "",
     },
     {
       id: "pin4",
-      x: 840, // Navoi (far right purple)
-      y: 320,
+      x: 86.5, // Navoi (far right purple)
+      y: 39.4,
       color: "purple",
       correctAnswers: ["navoi", "navoiy", "навоий"],
       userAnswer: "",
     },
     {
       id: "pin5",
-      x: 60, // Turkmenbasy (far left purple)
-      y: 320,
+      x: 6.2, // Turkmenbasy (far left purple)
+      y: 39.4,
       color: "purple",
       correctAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
       userAnswer: "",
     },
     {
       id: "pin6",
-      x: 435, // Ashgabat (bottom blue)
-      y: 490,
+      x: 44.8, // Ashgabat (bottom blue)
+      y: 60.3,
       color: "blue",
       correctAnswers: ["ashgabat"],
       userAnswer: "",
     },
     {
       id: "pin7",
-      x: 600, // Mary (bottom right grey)
-      y: 490,
+      x: 61.8, // Mary (bottom right grey)
+      y: 60.3,
       color: "grey",
       correctAnswers: ["mary"],
       userAnswer: "",
     },
     {
       id: "pin8",
-      x: 60, // Siri (bottom left green)
-      y: 610,
+      x: 6.2, // Siri (bottom left green)
+      y: 75.0,
       color: "green",
       correctAnswers: ["siri", "sari", "سارى"],
       userAnswer: "",
@@ -175,79 +175,82 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   }
 
   return (
-    <div className="w-full flex justify-center bg-gray-900 p-4">
-      <div className="relative" style={{ width: "971px", height: "813px" }}>
-        {/* Semi-transparent white background */}
-        <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}></div>
+    <div className="w-full bg-gray-900 rounded-lg overflow-hidden p-4">
+      <h3 className="text-lg font-bold mb-4 text-amber-500">Sacred Fires Map</h3>
 
-        {/* Base map image */}
-        <img
-          src="/images/hellmap/hellmap_full.webp"
-          alt="Map with location pins"
-          className="absolute inset-0"
-          style={{ width: "971px", height: "813px" }}
-        />
-
-        {/* Overlay images for connections */}
-        {activeOverlays.map((overlay, index) => (
-          <img
-            key={index}
-            src={overlay || "/placeholder.svg"}
-            alt="Connection overlay"
-            className="absolute inset-0"
-            style={{ width: "971px", height: "813px", zIndex: 10 }}
-          />
-        ))}
-
-        {/* Input fields for each pin */}
-        {pins.map((pin) => (
-          <div
-            key={pin.id}
-            className="absolute"
-            style={{
-              left: `${pin.x}px`,
-              top: `${pin.y}px`,
-              transform: "translate(-50%, 50%)",
-              zIndex: 20,
-            }}
-          >
-            {activePin === pin.id ? (
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleSaveAnswer}
-                onKeyDown={handleKeyPress}
-                className="px-2 py-1 text-sm rounded border border-gray-400 w-24"
-                autoFocus
-              />
-            ) : (
-              <div
-                onClick={() => handleInputClick(pin.id)}
-                className={`
-                  px-2 py-1 text-sm rounded cursor-pointer text-center w-24
-                  ${
-                    pin.userAnswer
-                      ? pin.correctAnswers.some((a) => a.toLowerCase() === pin.userAnswer.toLowerCase())
-                        ? "bg-green-600 text-white"
-                        : "bg-red-600 text-white"
-                      : "bg-gray-700 text-gray-200"
-                  }
-                `}
-              >
-                {pin.userAnswer || "?"}
-              </div>
-            )}
-          </div>
-        ))}
-
-        {/* Success message */}
-        {solved && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded">
-            All locations correctly identified!
-          </div>
-        )}
+      <div className="mb-4 text-gray-300 text-sm">
+        <p>
+          An ancient map shows the locations of sacred eternal flames. Click near each pin to label it with the correct
+          name. When pairs of locations are correctly identified, hidden connections will be revealed.
+        </p>
       </div>
+
+      <div className="relative w-full max-w-4xl mx-auto">
+        <div className="relative" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
+          {/* Base map image */}
+          <img src="/images/hellmap/hellmap_full.webp" alt="Map with location pins" className="w-full" />
+
+          {/* Overlay images for connections */}
+          {activeOverlays.map((overlay, index) => (
+            <img
+              key={index}
+              src={overlay || "/placeholder.svg"}
+              alt="Connection overlay"
+              className="absolute inset-0 w-full h-full"
+              style={{ zIndex: 10 }}
+            />
+          ))}
+
+          {/* Input fields for each pin */}
+          {pins.map((pin) => (
+            <div
+              key={pin.id}
+              className="absolute"
+              style={{
+                left: `${pin.x}%`,
+                top: `${pin.y}%`,
+                transform: "translate(0, 30px)",
+                zIndex: 20,
+              }}
+            >
+              {activePin === pin.id ? (
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onBlur={handleSaveAnswer}
+                  onKeyDown={handleKeyPress}
+                  className="px-2 py-1 text-sm rounded border border-gray-400 w-24"
+                  autoFocus
+                />
+              ) : (
+                <div
+                  onClick={() => handleInputClick(pin.id)}
+                  className={`
+                    px-2 py-1 text-sm rounded cursor-pointer text-center w-24
+                    ${
+                      pin.userAnswer
+                        ? pin.correctAnswers.some((a) => a.toLowerCase() === pin.userAnswer.toLowerCase())
+                          ? "bg-green-600 text-white"
+                          : "bg-red-600 text-white"
+                        : "bg-gray-700 text-gray-200"
+                    }
+                  `}
+                >
+                  {pin.userAnswer || "?"}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Success message */}
+      {solved && (
+        <div className="mt-4 p-2 bg-green-800 text-green-100 rounded-lg text-center">
+          All locations correctly identified!
+        </div>
+      )}
     </div>
   )
 }
