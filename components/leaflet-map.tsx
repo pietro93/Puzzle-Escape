@@ -9,9 +9,10 @@ import "leaflet/dist/leaflet.css"
 interface LeafletMapProps {
   cities: any[]
   scarabPosition: { x: number; y: number }
+  scarabRotation: number
 }
 
-const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition }) => {
+const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition, scarabRotation }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const scarabMarkerRef = useRef<L.Marker | null>(null)
@@ -21,7 +22,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition }) => {
     if (!container) return
 
     const map = L.map(container, {
-      center: [20, 20], // Center on North Africa
+      center: [20, 10],
       zoom: 3,
       attributionControl: false,
       dragging: false,
@@ -44,7 +45,11 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition }) => {
       iconAnchor: [16, 16],
     })
 
-    const scarabMarker = L.marker([scarabPosition.x, scarabPosition.y], { icon: scarabIcon }).addTo(map)
+    const scarabMarker = L.marker([scarabPosition.x, scarabPosition.y], {
+      icon: scarabIcon,
+      rotationAngle: scarabRotation,
+      rotationOrigin: "center",
+    }).addTo(map)
     scarabMarkerRef.current = scarabMarker
 
     return () => {
@@ -60,7 +65,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition }) => {
     if (!map || !scarabMarker) return
 
     scarabMarker.setLatLng([scarabPosition.x, scarabPosition.y])
-  }, [scarabPosition])
+    scarabMarker.setRotationAngle(scarabRotation)
+  }, [scarabPosition, scarabRotation])
 
   return <div ref={mapContainerRef} className="relative w-full h-full" />
 }
