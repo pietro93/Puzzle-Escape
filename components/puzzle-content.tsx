@@ -25,6 +25,7 @@ import DarkRoomPuzzle from "./dark-room-puzzle"
 import EgyptianMathPuzzle from "./egyptian-math-puzzle"
 import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
 import BinarySwitchPuzzle from "./binary-switch-puzzle"
+import ScarabJourneyPuzzle from "./scarab-journey-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
 import { useState } from "react"
 
@@ -139,6 +140,9 @@ export default function PuzzleContent({
 
   // Check if this is a binary switch puzzle
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
+
+  // Inside the PuzzleContent component, add this check with the other puzzle type checks
+  const isScarabJourneyPuzzle = puzzle.isScarabJourneyPuzzle
 
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
@@ -493,6 +497,19 @@ export default function PuzzleContent({
               // Don't automatically solve, let the player type the answer
             }}
             onCorrectCombinationsChange={setBinaryCorrectCombinations}
+          />
+        </div>
+      ) : null}
+
+      {isScarabJourneyPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <ScarabJourneyPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
           />
         </div>
       ) : null}
