@@ -27,6 +27,7 @@ import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
 import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
 import { useState } from "react"
+import FireMapPuzzle from "./fire-map-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -496,6 +497,7 @@ export default function PuzzleContent({
           />
         </div>
       ) : null}
+      {puzzle.isFireMapPuzzle && <FireMapPuzzle onSolve={() => handleParrotSolve()} />}
     </div>
   )
 }

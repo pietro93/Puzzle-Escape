@@ -2,19 +2,21 @@ import type { Puzzle } from "@/types/puzzle"
 
 // Hell - Devil (Levels 41-50)
 export const puzzlesSet5: Puzzle[] = [
+  // Level 41 - Fire Map Puzzle
   {
     level: 41,
-    question: "The Devil presents you with a cryptic message written in flames.",
-    description: "The flames dance and twist, forming letters that seem to burn into your mind.",
-    imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level41-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
-    solution: "eternal flame",
-    category: "riddle",
+    question: "The Devil presents you with a map of sacred eternal flames.",
+    description:
+      "The Devil smirks as he hands you an ancient map. 'These are the locations of sacred eternal flames across the mortal realm. Label them correctly, and I'll reward you with knowledge.'",
     hints: [
-      "The message seems to be about something that burns forever.",
-      "Look for patterns in how the flames move and form letters.",
-      "The answer is two words that describe an undying fire.",
+      "The pins mark locations of sacred eternal flames.",
+      "Match the city names to their correct locations on the map.",
+      "The numbers below some pins are coordinates that may help identify them.",
+      "Some locations are real cities in Central Asia, while others are mythological places.",
     ],
+    solution: "inferno",
+    isFireMapPuzzle: true,
+    category: "pattern",
   },
   {
     level: 42,
