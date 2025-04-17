@@ -17,7 +17,6 @@ import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
 import PuzzleContent from "./puzzle-content"
-import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 
 interface GameScreenProps {
   level: number
@@ -479,8 +478,6 @@ export default function GameScreen({
     <div
       className={`w-full max-w-md mx-auto p-4 ${getSettingBackground()} transition-colors duration-1000 min-h-[100vh] flex flex-col ${isAnimating ? "animate-fadeIn" : ""}`}
     >
-      {/* Golden Scarab Puzzle (Level 32) */}
-      {level === 32 && <GoldenScarabPuzzle onSolve={onCorrect} />}
       {/* Sound toggle button */}
       <div className="absolute top-4 right-4 z-20">
         <button

@@ -19,18 +19,16 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with a journey through the lands of a wealthy pilgrim.",
-    description:
-      "Guide the golden scarab through the path of history's wealthiest pilgrim, whose journey altered the economies of nations.",
+    question: "The Sphinx presents you with a journey through the lands of a great pilgrimage.",
+    description: "Guide the golden scarab through the path that changed the history of West Africa.",
     imageUrl: "",
     isGoldenScarabPuzzle: true,
     solution: "sublime splendor",
     category: "pattern",
     hints: [
-      "From the heart of the endless sands, seek first the land of pyramids.",
-      "Then journey to the sacred cube that draws all faithful.",
-      "Continue to the empire of gold rivers, then to the realm of boat builders on the mighty Niger.",
-      "Finally, return to where your journey began to complete the sacred circuit.",
+      "The path must visit all locations.",
+      "The path must start and end at the same location.",
+      "The path must follow a specific order.",
     ],
   },
   {
@@ -80,7 +78,7 @@ export const puzzlesSet4: Puzzle[] = [
     level: 36,
     question: "The Sphinx challenges you with a mathematical sequence hidden in the stars.",
     description:
-      "As night falls, the Sphinx points to a pattern of stars in the sky. 'These stars form a sequence,' it says. 'What number comes next?' 2, 3, 5, 8, 13, 21, ?",
+      "As night falls, the Sphinx points to a pattern of stars in the sky. 'These stars form a sequence,' it says. 'What number comes next?'\n\n2, 3, 5, 8, 13, 21, ?",
     imageUrl:
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level36-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
     solution: "34",
@@ -120,6 +118,7 @@ export const puzzlesSet4: Puzzle[] = [
       'What has a "bed", a "mouth", "banks" and a "crystal clear body"? Could it be some kind of body of water?',
       'Use the key "river" to decipher the code "UMNIIK AJYC". You will need to repeat the key twice.',
       "Convert each letter to its corresponding number in the alphabet starting from 0 (A=0, B=1, C=2, etc.), then subtract the key's letter number from the code's letter number for each pair, and convert the resulting numbers back to letters.",
+      'The first letter in the code "U" is number 20 and the first letter from the key "R" is number 17. so the first letter of the solution is 20-17=3, which corresponds to the letter "D".',
     ],
   },
   {
