@@ -57,7 +57,7 @@ export default function GoldenScarabPuzzle() {
 
   const [scarabPosition, setScarabPosition] = useState<{ x: number; y: number }>({ x: 50, y: 50 })
   const [currentPedestal, setCurrentPedestal] = useState<string | null>(null)
-  const [lines, setLines] = useState<[{ x1: number; y1: number; x2: number; y2: number }]>([])
+  const [lines, setLines] = useState<Array<{ x1: number; y1: number; x2: number; y2: number }>>([])
   const [showPopup, setShowPopup] = useState(false)
 
   const [activePedestal, setActivePedestal] = useState<Pedestal | null>(null)
