@@ -2,86 +2,85 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
-interface Pin {
+interface PinLocation {
   id: string
-  x: number // exact pixel position
-  y: number // exact pixel position
+  x: number // pixel position
+  y: number // pixel position
   color: string
   correctAnswers: string[]
   userAnswer: string
 }
 
-interface Connection {
+interface ConnectionPair {
   pin1Id: string
   pin2Id: string
-  imagePath: string
-  active: boolean
+  overlayImage: string
 }
 
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
-  // Define pins with exact pixel positions from the 971x813px image
-  const [pins, setPins] = useState<Pin[]>([
+  // Define all pins with their exact pixel positions on the 971x813px image
+  const [pins, setPins] = useState<PinLocation[]>([
     {
-      id: "zhanaozen",
-      x: 60,
+      id: "pin1",
+      x: 60, // Zhanaozen (grey top left)
       y: 70,
       color: "grey",
       correctAnswers: ["zhanaozen", "жаңаөзен"],
       userAnswer: "",
     },
     {
-      id: "qonirat",
-      x: 445,
+      id: "pin2",
+      x: 435, // Qonirat (top blue)
       y: 120,
       color: "blue",
       correctAnswers: ["qonirat", "qońirat", "kungrad", "кунград"],
       userAnswer: "",
     },
     {
-      id: "urgench",
-      x: 570,
+      id: "pin3",
+      x: 570, // Urgench (top right green)
       y: 190,
       color: "green",
       correctAnswers: ["urgench", "урганч"],
       userAnswer: "",
     },
     {
-      id: "navoi",
-      x: 825,
+      id: "pin4",
+      x: 840, // Navoi (far right purple)
       y: 320,
       color: "purple",
       correctAnswers: ["navoi", "navoiy", "навоий"],
       userAnswer: "",
     },
     {
-      id: "turkmenbasy",
-      x: 60,
+      id: "pin5",
+      x: 60, // Turkmenbasy (far left purple)
       y: 320,
       color: "purple",
       correctAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
       userAnswer: "",
     },
     {
-      id: "ashgabat",
-      x: 445,
+      id: "pin6",
+      x: 435, // Ashgabat (bottom blue)
       y: 490,
       color: "blue",
       correctAnswers: ["ashgabat"],
       userAnswer: "",
     },
     {
-      id: "mary",
-      x: 600,
+      id: "pin7",
+      x: 600, // Mary (bottom right grey)
       y: 490,
       color: "grey",
       correctAnswers: ["mary"],
       userAnswer: "",
     },
     {
-      id: "siri",
-      x: 60,
+      id: "pin8",
+      x: 60, // Siri (bottom left green)
       y: 610,
       color: "green",
       correctAnswers: ["siri", "sari", "سارى"],
@@ -89,31 +88,30 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     },
   ])
 
-  // Define connections
-  const [connections, setConnections] = useState<Connection[]>([
+  // Define connection pairs
+  const connectionPairs: ConnectionPair[] = [
     {
-      pin1Id: "siri",
-      pin2Id: "urgench",
-      imagePath: "/images/hellmap/hellmap_sari-urgench.webp",
-      active: false,
+      pin1Id: "pin8", // Siri
+      pin2Id: "pin3", // Urgench
+      overlayImage: "/images/hellmap/hellmap_sari-urgench.webp",
     },
     {
-      pin1Id: "turkmenbasy",
-      pin2Id: "navoi",
-      imagePath: "/images/hellmap/hellmap_turkmenbay-navoi.webp",
-      active: false,
+      pin1Id: "pin5", // Turkmenbasy
+      pin2Id: "pin4", // Navoi
+      overlayImage: "/images/hellmap/hellmap_turkmenbay-navoi.webp",
     },
-  ])
+  ]
 
-  const [editingPinId, setEditingPinId] = useState<string | null>(null)
+  const [activePin, setActivePin] = useState<string | null>(null)
   const [inputValue, setInputValue] = useState("")
+  const [activeOverlays, setActiveOverlays] = useState<string[]>([])
   const [solved, setSolved] = useState(false)
 
-  // Handle clicking on a pin label
-  const handlePinClick = (pinId: string) => {
+  // Handle input click
+  const handleInputClick = (pinId: string) => {
     const pin = pins.find((p) => p.id === pinId)
     if (pin) {
-      setEditingPinId(pinId)
+      setActivePin(pinId)
       setInputValue(pin.userAnswer)
     }
   }
@@ -123,52 +121,50 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     setInputValue(e.target.value)
   }
 
-  // Handle saving the answer
+  // Handle save answer
   const handleSaveAnswer = () => {
-    if (editingPinId) {
-      const updatedPins = pins.map((pin) => (pin.id === editingPinId ? { ...pin, userAnswer: inputValue } : pin))
+    if (activePin) {
+      // Update pin answer
+      const updatedPins = pins.map((pin) => (pin.id === activePin ? { ...pin, userAnswer: inputValue.trim() } : pin))
       setPins(updatedPins)
-      setEditingPinId(null)
+      setActivePin(null)
 
       // Check for connections
       checkConnections(updatedPins)
     }
   }
 
-  // Handle key press
+  // Handle keyboard events
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSaveAnswer()
     } else if (e.key === "Escape") {
-      setEditingPinId(null)
+      setActivePin(null)
     }
   }
 
-  // Check for connections
-  const checkConnections = (currentPins: Pin[]) => {
-    const updatedConnections = connections.map((connection) => {
-      const pin1 = currentPins.find((p) => p.id === connection.pin1Id)
-      const pin2 = currentPins.find((p) => p.id === connection.pin2Id)
+  // Check for matching pairs to show overlays
+  const checkConnections = (currentPins: PinLocation[]) => {
+    const newOverlays: string[] = []
+
+    connectionPairs.forEach((pair) => {
+      const pin1 = currentPins.find((p) => p.id === pair.pin1Id)
+      const pin2 = currentPins.find((p) => p.id === pair.pin2Id)
 
       if (pin1 && pin2) {
         const pin1Correct = pin1.correctAnswers.some((answer) => answer.toLowerCase() === pin1.userAnswer.toLowerCase())
         const pin2Correct = pin2.correctAnswers.some((answer) => answer.toLowerCase() === pin2.userAnswer.toLowerCase())
 
-        return {
-          ...connection,
-          active: pin1Correct && pin2Correct,
+        if (pin1Correct && pin2Correct) {
+          newOverlays.push(pair.overlayImage)
         }
       }
-
-      return connection
     })
 
-    setConnections(updatedConnections)
-  }
+    setActiveOverlays(newOverlays)
 
-  // Check if puzzle is solved
-  useEffect(() => {
-    const allCorrect = pins.every((pin) =>
+    // Check if all pins are correct
+    const allCorrect = currentPins.every((pin) =>
       pin.correctAnswers.some((answer) => answer.toLowerCase() === pin.userAnswer.toLowerCase()),
     )
 
@@ -176,33 +172,34 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
       setSolved(true)
       if (onSolve) onSolve()
     }
-  }, [pins, onSolve, solved])
+  }
 
   return (
-    <div className="w-full flex justify-center p-4 bg-gray-900">
-      <div className="relative" style={{ width: "971px", height: "813px", backgroundColor: "rgba(255,255,255,0.5)" }}>
+    <div className="w-full flex justify-center bg-gray-900 p-4">
+      <div className="relative" style={{ width: "971px", height: "813px" }}>
+        {/* Semi-transparent white background */}
+        <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}></div>
+
         {/* Base map image */}
         <img
           src="/images/hellmap/hellmap_full.webp"
           alt="Map with location pins"
-          className="absolute top-0 left-0 w-full h-full"
+          className="absolute inset-0"
+          style={{ width: "971px", height: "813px" }}
         />
 
-        {/* Connection overlays */}
-        {connections.map(
-          (connection, index) =>
-            connection.active && (
-              <img
-                key={`connection-${index}`}
-                src={connection.imagePath || "/placeholder.svg"}
-                alt="Connection"
-                className="absolute top-0 left-0 w-full h-full"
-                style={{ zIndex: 10 }}
-              />
-            ),
-        )}
+        {/* Overlay images for connections */}
+        {activeOverlays.map((overlay, index) => (
+          <img
+            key={index}
+            src={overlay || "/placeholder.svg"}
+            alt="Connection overlay"
+            className="absolute inset-0"
+            style={{ width: "971px", height: "813px", zIndex: 10 }}
+          />
+        ))}
 
-        {/* Pin labels */}
+        {/* Input fields for each pin */}
         {pins.map((pin) => (
           <div
             key={pin.id}
@@ -210,31 +207,33 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
             style={{
               left: `${pin.x}px`,
               top: `${pin.y}px`,
-              transform: "translate(20px, 0)",
+              transform: "translate(-50%, 50%)",
               zIndex: 20,
             }}
           >
-            {editingPinId === pin.id ? (
+            {activePin === pin.id ? (
               <input
                 type="text"
                 value={inputValue}
                 onChange={handleInputChange}
                 onBlur={handleSaveAnswer}
                 onKeyDown={handleKeyPress}
-                className="px-2 py-1 text-sm bg-white border border-gray-300 rounded"
+                className="px-2 py-1 text-sm rounded border border-gray-400 w-24"
                 autoFocus
-                style={{ width: "120px" }}
               />
             ) : (
               <div
-                className={`px-2 py-1 text-sm font-bold cursor-pointer whitespace-nowrap rounded ${
-                  pin.userAnswer
-                    ? pin.correctAnswers.some((a) => a.toLowerCase() === pin.userAnswer.toLowerCase())
-                      ? "bg-green-700 text-white"
-                      : "bg-red-700 text-white"
-                    : "bg-gray-700 text-gray-200"
-                }`}
-                onClick={() => handlePinClick(pin.id)}
+                onClick={() => handleInputClick(pin.id)}
+                className={`
+                  px-2 py-1 text-sm rounded cursor-pointer text-center w-24
+                  ${
+                    pin.userAnswer
+                      ? pin.correctAnswers.some((a) => a.toLowerCase() === pin.userAnswer.toLowerCase())
+                        ? "bg-green-600 text-white"
+                        : "bg-red-600 text-white"
+                      : "bg-gray-700 text-gray-200"
+                  }
+                `}
               >
                 {pin.userAnswer || "?"}
               </div>
@@ -242,13 +241,10 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
           </div>
         ))}
 
-        {/* Feedback message */}
+        {/* Success message */}
         {solved && (
-          <div
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 p-2 bg-green-800 text-green-100 rounded-lg text-center"
-            style={{ zIndex: 30 }}
-          >
-            Correct! You've identified all the sacred fire locations.
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded">
+            All locations correctly identified!
           </div>
         )}
       </div>
