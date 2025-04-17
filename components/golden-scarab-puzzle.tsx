@@ -59,9 +59,8 @@ export default function GoldenScarabPuzzle() {
   const [currentPedestal, setCurrentPedestal] = useState<string | null>(null)
   const [lines, setLines] = useState<[{ x1: number; y1: number; x2: number; y2: number }]>([])
   const [showPopup, setShowPopup] = useState(false)
-  \
-  const [activePedestal, setActivePedestal | null>(null
-  )
+
+  const [activePedestal, setActivePedestal] = useState<Pedestal | null>(null)
 
   // Function to handle pedestal click
   const handlePedestalClick = (pedestal: Pedestal) => {
