@@ -116,17 +116,17 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 36,
-    question: "The Sphinx challenges you to follow the path of a legendary merchant.",
-    description: "",
-    imageUrl: "",
-    isScarabJourneyPuzzle: true,
-    solution: "mansa musa",
-    category: "pattern",
+    question: "The Sphinx challenges you with a mathematical sequence hidden in the stars.",
+    description:
+      "As night falls, the Sphinx points to a pattern of stars in the sky. 'These stars form a sequence,' it says. 'What number comes next?'\n\n2, 3, 5, 8, 13, 21, ?",
+    imageUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level36-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
+    solution: "34",
+    category: "math",
     hints: [
-      "The scarab traces the journey of a famous historical figure.",
-      "This merchant was known for his incredible wealth and famous pilgrimage.",
-      "The journey from Mali to Mecca was undertaken by a king whose generosity crashed economies.",
-      "This African ruler's hajj to Mecca in 1324-1325 is legendary for the gold he distributed along the way.",
+      "This is a famous mathematical sequence.",
+      "Each number is the sum of the two numbers before it.",
+      "This sequence is named after an Italian mathematician.",
     ],
   },
   {
