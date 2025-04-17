@@ -33,6 +33,28 @@ interface GameScreenProps {
   onTransition: (transitionId: string) => void
 }
 
+// Define dialogueOptions here
+const dialogueOptions = [
+  "AAAGH! IT HURTS!",
+  "Can't... think...",
+  "STOP! PLEASE!",
+  "My brain... melting...",
+  "No more... switches...",
+]
+
+// Define getBrainLampImage here
+const getBrainLampImage = (correctCombinations: number) => {
+  if (correctCombinations === 0) {
+    return "/images/brain-lamp-0.png"
+  } else if (correctCombinations <= 2) {
+    return "/images/brain-lamp-1.png"
+  } else if (correctCombinations <= 4) {
+    return "/images/brain-lamp-2.png"
+  } else {
+    return "/images/brain-lamp-3.png"
+  }
+}
+
 export default function GameScreen({
   level,
   setting,
@@ -353,11 +375,11 @@ export default function GameScreen({
         const middleDialogues = [
           "AAAGH! IT HURTS!",
           "Can't... think...",
-          "My brain... burning...",
-          "No more... please...",
-          "STOP THE PAIN!",
+          "STOP! PLEASE!",
+          "My brain... melting...",
+          "No more... switches...",
         ]
-        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
+        dialogue = middleDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       } else {
         // Late stage - extreme agony, barely coherent
         const lateDialogues = [
@@ -598,6 +620,7 @@ export default function GameScreen({
           character={character}
           dialogue={characterDialogue}
           onClose={handleCloseCharacterDialogue}
+          brainImage={getBrainLampImage(binaryCorrectCombinations)} // Pass the brain image
         />
       )}
 
@@ -652,6 +675,7 @@ export default function GameScreen({
           character="brain"
           dialogue={brainDialogue}
           onClose={() => setShowBrainDialogue(false)}
+          brainImage={getBrainLampImage(binaryCorrectCombinations)} // Pass the brain image
         />
       )}
     </div>

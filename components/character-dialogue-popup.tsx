@@ -8,6 +8,7 @@ interface CharacterDialoguePopupProps {
   isGuardPopup?: boolean
   guardDialogIndex?: number
   level?: number
+  brainImage?: string // New prop for the brain image
 }
 
 export default function CharacterDialoguePopup({
@@ -17,6 +18,7 @@ export default function CharacterDialoguePopup({
   isGuardPopup = false,
   guardDialogIndex = 0,
   level = 0,
+  brainImage, // Destructure the new prop
 }: CharacterDialoguePopupProps) {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -33,7 +35,7 @@ export default function CharacterDialoguePopup({
                     ? "/images/skeleton.webp"
                     : "/images/sphinx.webp"
                   : character === "brain"
-                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-head-close-up-Hs7Uj2FdKlP9OIgTrMnVxCbAyRwZpq.webp" // Close-up image of the suffering head
+                    ? brainImage || "/images/brainlamp.webp" // Use the brainImage prop
                     : `/images/${character}.webp`
               }
               alt={
