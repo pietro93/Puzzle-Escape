@@ -33,7 +33,7 @@ export default function CharacterDialoguePopup({
                     ? "/images/skeleton.webp"
                     : "/images/sphinx.webp"
                   : character === "brain"
-                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-head-close-up-Hs7Uj2FdKlP9OIgTrMnVxCbAyRwZpq.webp" // Add a close-up image of the suffering head
+                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-head-close-up-Hs7Uj2FdKlP9OIgTrMnVxCbAyRwZpq.webp" // Close-up image of the suffering head
                     : `/images/${character}.webp`
               }
               alt={

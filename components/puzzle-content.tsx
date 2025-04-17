@@ -25,6 +25,7 @@ import DarkRoomPuzzle from "./dark-room-puzzle"
 import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
 import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
+import { useState } from "react"
 
 interface PuzzleContentProps {
   level: number
@@ -137,6 +138,53 @@ export default function PuzzleContent({
 
   // Check if this is a binary switch puzzle
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
+
+  const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
+
+  // Add a new function to handle brain lamp clicks
+  const handleBrainLampClick = () => {
+    // Generate dialogue based on the number of correct combinations
+    let dialogue = "..." // Default dialogue
+
+    if (binaryCorrectCombinations < 6) {
+      // Different dialogue tiers based on progress
+      if (binaryCorrectCombinations <= 1) {
+        // Early stage - more coherent pleas
+        const earlyDialogues = [
+          "Help... me...",
+          "Make it... stop...",
+          "Please... no more...",
+          "It burns...",
+          "My... thoughts...",
+        ]
+        dialogue = earlyDialogues[Math.floor(Math.random() * earlyDialogues.length)]
+      } else if (binaryCorrectCombinations <= 3) {
+        // Middle stage - increasing pain, less coherent
+        const middleDialogues = [
+          "AAAGH! IT HURTS!",
+          "Can't... think...",
+          "My brain... burning...",
+          "No more... please...",
+          "STOP THE PAIN!",
+        ]
+        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
+      } else {
+        // Late stage - extreme agony, barely coherent
+        const lateDialogues = [
+          "AAAAAAHHH!",
+          "KILL... ME...",
+          "*unintelligible screaming*",
+          "*gurgling sounds*",
+          "END... THIS...",
+        ]
+        dialogue = lateDialogues[Math.floor(Math.random() * lateDialogues.length)]
+      }
+    }
+
+    // Show the dialogue popup with the brain character
+    //setShowBrainDialogue(true);
+    //setBrainDialogue(dialogue);
+  }
 
   return (
     <div className="bg-gray-900/80 p-5 rounded-lg mb-4 border border-gray-800 shadow-inner flex-1 backdrop-blur-sm">

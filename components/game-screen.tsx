@@ -88,6 +88,9 @@ export default function GameScreen({
   const [hintIndex, setHintIndex] = useState(0)
   const [hintsUsed, setHintsUsed] = useState(0)
   const [attempts, setAttempts] = useState(0)
+  // Add state for brain dialogue
+  const [brainDialogue, setBrainDialogue] = useState<string>("")
+  const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
 
   // Focus input when component mounts
   useEffect(() => {
@@ -328,50 +331,58 @@ export default function GameScreen({
     setElevatorDescription(getRandomElevatorMessage())
   }
 
+  // Add a function to handle brain lamp clicks
+  const handleBrainLampClick = () => {
+    // Generate dialogue based on the number of correct combinations
+    let dialogue = "..." // Default dialogue
+
+    if (binaryCorrectCombinations < 6) {
+      // Different dialogue tiers based on progress
+      if (binaryCorrectCombinations <= 1) {
+        // Early stage - more coherent pleas
+        const earlyDialogues = [
+          "Help... me...",
+          "Make it... stop...",
+          "Please... no more...",
+          "It burns...",
+          "My... thoughts...",
+        ]
+        dialogue = earlyDialogues[Math.floor(Math.random() * earlyDialogues.length)]
+      } else if (binaryCorrectCombinations <= 3) {
+        // Middle stage - increasing pain, less coherent
+        const middleDialogues = [
+          "AAAGH! IT HURTS!",
+          "Can't... think...",
+          "My brain... burning...",
+          "No more... please...",
+          "STOP THE PAIN!",
+        ]
+        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
+      } else {
+        // Late stage - extreme agony, barely coherent
+        const lateDialogues = [
+          "AAAAAAHHH!",
+          "KILL... ME...",
+          "*unintelligible screaming*",
+          "*gurgling sounds*",
+          "END... THIS...",
+        ]
+        dialogue = lateDialogues[Math.floor(Math.random() * lateDialogues.length)]
+      }
+    }
+
+    // Show the dialogue popup with the brain character
+    setShowBrainDialogue(true)
+    setBrainDialogue(dialogue)
+  }
+
   // Add this handler for the location image click
   const handlePyramidLocationImageClick = () => {
     if (level === 40 && currentPyramidRoom === "ra" && !hasPyramidTorch) {
       setHasPyramidTorch(true)
     } else if (level === 47) {
-      // Show brain dialogue based on how many correct combinations have been found
-      let dialogue = ""
-
-      if (binaryCorrectCombinations === 6) {
-        // When fully solved, the head can only express "..."
-        dialogue = "..."
-      } else {
-        // Random dialogue lines based on how many correct combinations
-        const painDialogues = [
-          // 0-1 correct combinations - more coherent, early suffering
-          ["Help... me...", "Make it... stop...", "Please... no more...", "It burns...", "My... thoughts..."],
-          // 2-3 correct combinations - increasing pain, less coherent
-          [
-            "AAAGH! IT HURTS!",
-            "Can't... think...",
-            "STOP! PLEASE!",
-            "My brain... melting...",
-            "No more... switches...",
-          ],
-          // 4-5 correct combinations - extreme agony, barely coherent
-          ["AAAAAAHHH!", "MAKE IT STOP!", "BURNING! BURNING!", "NO MORE! NO MORE!", "KILL... ME..."],
-        ]
-
-        // Select dialogue tier based on correct combinations
-        let tier = 0
-        if (binaryCorrectCombinations >= 4) {
-          tier = 2
-        } else if (binaryCorrectCombinations >= 2) {
-          tier = 1
-        }
-
-        // Get random dialogue from the appropriate tier
-        const dialogueOptions = painDialogues[tier]
-        dialogue = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
-      }
-
-      // Show the dialogue in a popup
-      setCharacterDialogue(dialogue)
-      setShowCharacterDialogue(true)
+      // Call the brain lamp click handler for level 47
+      handleBrainLampClick()
     }
   }
 
@@ -633,6 +644,14 @@ export default function GameScreen({
             [-15]: "padma",
             [-16]: "pundarika",
           }}
+        />
+      )}
+      {/* Add the brain dialogue popup to the return statement, near the other dialogue popups */}
+      {showBrainDialogue && (
+        <CharacterDialoguePopup
+          character="brain"
+          dialogue={brainDialogue}
+          onClose={() => setShowBrainDialogue(false)}
         />
       )}
     </div>
