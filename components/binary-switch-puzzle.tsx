@@ -38,6 +38,33 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
   // State to track if puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
 
+  // Function to get opacity based on correct combinations
+  const getOpacity = (isFixed: boolean) => {
+    if (isSolved) return 1 // Full opacity when solved
+
+    if (isFixed) return 0.55 // Fixed switches stay at 0.55 until solved
+
+    // Dynamic opacity based on correct combinations
+    switch (correctCombinations) {
+      case 0:
+        return 0.55
+      case 1:
+        return 0.6
+      case 2:
+        return 0.65
+      case 3:
+        return 0.75
+      case 4:
+        return 0.85
+      case 5:
+        return 0.9
+      case 6:
+        return 1
+      default:
+        return 0.55
+    }
+  }
+
   // Function to toggle a switch
   const toggleSwitch = (rowIndex: number, switchIndex: number) => {
     // Don't allow changes if puzzle is solved
@@ -86,7 +113,7 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
   return (
     <div className="flex flex-col items-center space-y-6">
       {/* Switch rows */}
-      <div className="w-full max-w-md space-y-4">
+      <div className="w-full max-w-md space-y-4 bg-black p-6 rounded-lg">
         {switches.map((row, rowIndex) => (
           <div key={rowIndex} className="flex items-center justify-between">
             <div className="flex space-x-2">
@@ -95,7 +122,7 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                   key={switchIndex}
                   onClick={() => toggleSwitch(rowIndex, switchIndex)}
                   disabled={switchIndex < 3 || isSolved}
-                  className={`w-12 h-16 flex items-center justify-center ${switchIndex < 3 ? "opacity-70 cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
+                  className={`w-12 h-16 flex items-center justify-center ${switchIndex < 3 ? "cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
                 >
                   <img
                     src={
@@ -105,6 +132,7 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                     }
                     alt={value === 1 ? "Switch On" : "Switch Off"}
                     className="w-full h-full pixelated"
+                    style={{ opacity: getOpacity(switchIndex < 3) }}
                   />
                 </button>
               ))}
@@ -115,6 +143,17 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
             </div>
           </div>
         ))}
+
+        {/* Success message when all combinations are found */}
+        {isSolved && (
+          <div className="mt-6 text-center">
+            <p className="text-red-400 font-pixel text-sm animate-pulse">
+              The machine whirs to life, its gears grinding with malevolent purpose. A sickly crimson glow bathes the
+              room, revealing shadows that seem to writhe with a life of their own. The air grows thick with dread,
+              heavy with the scent of ancient malice awakened.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

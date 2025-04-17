@@ -64,13 +64,13 @@ export default function CharacterLocationDisplay({
   const getBrainLampOpacity = (correctCount: number) => {
     switch (correctCount) {
       case 0:
-        return 0.7 // 0 correct
+        return 0.55 // 0 correct
       case 1:
-        return 0.7 // 1 correct
+        return 0.6 // 1 correct
       case 2:
-        return 0.75 // 2 correct
+        return 0.65 // 2 correct
       case 3:
-        return 0.8 // 3 correct
+        return 0.75 // 3 correct
       case 4:
         return 0.85 // 4 correct
       case 5:
@@ -78,7 +78,7 @@ export default function CharacterLocationDisplay({
       case 6:
         return 1 // 6 correct (all)
       default:
-        return 0.7 // Default
+        return 0.55 // Default
     }
   }
 
