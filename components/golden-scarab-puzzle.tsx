@@ -2,8 +2,8 @@
 import { useState } from "react"
 import Image from "next/image"
 
-// Simple interface for pedestal data
-interface Pedestal {
+// Simple pedestal type
+type Pedestal = {
   id: string
   name: string
   imageUrl: string
@@ -13,8 +13,14 @@ interface Pedestal {
 }
 
 export default function GoldenScarabPuzzle() {
+  // State for the selected pedestal info popup
+  const [selectedPedestal, setSelectedPedestal] = useState<Pedestal | null>(null)
+
+  // State for the scarab position
+  const [scarabPosition, setScarabPosition] = useState({ x: 50, y: 50 })
+
   // Pedestal data
-  const pedestals = [
+  const pedestals: Pedestal[] = [
     {
       id: "egypt",
       name: "Egypt",
@@ -57,24 +63,17 @@ export default function GoldenScarabPuzzle() {
     },
   ]
 
-  // State
-  const [scarabPosition, setScarabPosition] = useState({ x: 50, y: 50 })
-  const [showPopup, setShowPopup] = useState(false)
-  const [activePedestal, setActivePedestal] = useState(null)
-
-  // Handle pedestal click
-  const handlePedestalClick = (pedestal) => {
-    setActivePedestal(pedestal)
-    setShowPopup(true)
+  // Handle clicking on a pedestal
+  const handlePedestalClick = (pedestal: Pedestal) => {
+    setSelectedPedestal(pedestal)
   }
 
-  // Handle popup close
+  // Handle closing the info popup
   const handleClosePopup = () => {
-    setShowPopup(false)
-    setActivePedestal(null)
+    setSelectedPedestal(null)
   }
 
-  // Handle scarab click
+  // Handle clicking on the scarab
   const handleScarabClick = () => {
     // Reset scarab position
     setScarabPosition({ x: 50, y: 50 })
@@ -89,11 +88,10 @@ export default function GoldenScarabPuzzle() {
 
       {/* Golden Scarab */}
       <div
-        className="absolute w-20 h-20 cursor-pointer"
+        className="absolute w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
         style={{
           left: `${scarabPosition.x}%`,
           top: `${scarabPosition.y}%`,
-          transform: "translate(-50%, -50%)",
           zIndex: 2,
         }}
         onClick={handleScarabClick}
@@ -105,11 +103,10 @@ export default function GoldenScarabPuzzle() {
       {pedestals.map((pedestal) => (
         <div
           key={pedestal.id}
-          className="absolute w-24 h-24 cursor-pointer"
+          className="absolute w-24 h-24 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
           style={{
             left: `${pedestal.x}%`,
             top: `${pedestal.y}%`,
-            transform: "translate(-50%, -50%)",
             zIndex: 1,
           }}
           onClick={() => handlePedestalClick(pedestal)}
@@ -118,20 +115,20 @@ export default function GoldenScarabPuzzle() {
         </div>
       ))}
 
-      {/* Pedestal Popup */}
-      {showPopup && activePedestal && (
+      {/* Pedestal Info Popup */}
+      {selectedPedestal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
           <div className="bg-gray-700 rounded-lg p-4 max-w-md">
-            <h2 className="text-xl font-bold text-white mb-2">{activePedestal.name}</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{selectedPedestal.name}</h2>
             <div className="relative w-48 h-48 mx-auto mb-4">
               <Image
-                src={activePedestal.imageUrl || "/placeholder.svg"}
-                alt={activePedestal.name}
+                src={selectedPedestal.imageUrl || "/placeholder.svg"}
+                alt={selectedPedestal.name}
                 fill
                 className="object-contain"
               />
             </div>
-            <p className="text-gray-300">{activePedestal.description}</p>
+            <p className="text-gray-300">{selectedPedestal.description}</p>
             <button onClick={handleClosePopup} className="mt-4 px-4 py-2 bg-gray-600 text-white rounded">
               Close
             </button>
