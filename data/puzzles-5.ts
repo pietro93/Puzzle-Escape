@@ -7,12 +7,12 @@ export const puzzlesSet5: Puzzle[] = [
     level: 41,
     question: "The Devil presents you with a map of sacred eternal flames.",
     description:
-      "The Devil smirks as he hands you an ancient map. 'These are the locations of sacred eternal flames across the mortal realm. Label them correctly, and I'll reward you with knowledge.'",
+      "The Devil smirks as he hands you an ancient map. 'These are the locations of sacred eternal flames. Label them correctly, and I'll reward you with knowledge.'",
     hints: [
       "The pins mark locations of sacred eternal flames.",
-      "Match the city names to their correct locations on the map.",
-      "The numbers below some pins are coordinates that may help identify them.",
-      "Some locations are real cities in Central Asia, while others are mythological places.",
+      "Try to identify the names of each location.",
+      "The symbols below some pins may provide additional clues.",
+      "When two pins of the same color have the same name, a connection will appear.",
     ],
     solution: "inferno",
     isFireMapPuzzle: true,
