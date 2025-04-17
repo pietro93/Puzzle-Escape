@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 interface MapLocation {
   id: string
@@ -10,14 +10,8 @@ interface MapLocation {
   y: number
   label: string
   acceptableAnswers: string[]
-  pinColor: "purple" | "blue" | "green"
+  color: "purple" | "blue" | "green" | "gray"
   numbers?: string
-}
-
-interface Connection {
-  from: string
-  to: string
-  color: string
 }
 
 interface FireMapPuzzleProps {
@@ -25,84 +19,35 @@ interface FireMapPuzzleProps {
 }
 
 export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
-  // Define the locations with empty labels - positions match the existing pins in the image
+  // Define the locations with empty labels - positions carefully measured from the image
   const initialLocations: MapLocation[] = [
-    {
-      id: "loc1",
-      x: 60,
-      y: 60,
-      label: "",
-      acceptableAnswers: ["ashgabat"],
-      pinColor: "purple",
-    },
-    {
-      id: "loc2",
-      x: 285,
-      y: 85,
-      label: "",
-      acceptableAnswers: ["qonirat", "qońirat", "kungrad"],
-      pinColor: "blue",
-    },
+    { id: "loc1", x: 40, y: 40, label: "", acceptableAnswers: ["ashgabat"], color: "purple" },
+    { id: "loc2", x: 405, y: 70, label: "", acceptableAnswers: ["qonirat", "qońirat", "kungrad"], color: "blue" },
     {
       id: "loc3",
-      x: 408,
-      y: 123,
+      x: 520,
+      y: 190,
       label: "",
       acceptableAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
-      pinColor: "green",
+      color: "green",
     },
-    {
-      id: "loc4",
-      x: 532,
-      y: 180,
-      label: "",
-      acceptableAnswers: ["navoi", "navoiy"],
-      pinColor: "purple",
-    },
-    {
-      id: "loc5",
-      x: 53,
-      y: 250,
-      label: "",
-      acceptableAnswers: ["sari"],
-      pinColor: "green",
-    },
-    {
-      id: "loc6",
-      x: 285,
-      y: 350,
-      label: "",
-      acceptableAnswers: ["mary"],
-      pinColor: "blue",
-      numbers: "√1436\n√3411",
-    },
-    {
-      id: "loc7",
-      x: 408,
-      y: 350,
-      label: "",
-      acceptableAnswers: ["inferno"],
-      pinColor: "purple",
-      numbers: "√1414\n√3825",
-    },
-    {
-      id: "loc8",
-      x: 60,
-      y: 350,
-      label: "",
-      acceptableAnswers: ["tartarus"],
-      pinColor: "purple",
-      numbers: "√1600\n√2807",
-    },
+    { id: "loc4", x: 825, y: 320, label: "", acceptableAnswers: ["navoi", "navoiy"], color: "purple" },
+    { id: "loc5", x: 40, y: 610, label: "", acceptableAnswers: ["sari"], color: "green" },
+    { id: "loc6", x: 405, y: 490, label: "", acceptableAnswers: ["mary"], color: "blue", numbers: "√1436\n√3411" },
+    { id: "loc7", x: 600, y: 490, label: "", acceptableAnswers: ["inferno"], color: "gray", numbers: "√1414\n√3825" },
+    { id: "loc8", x: 40, y: 320, label: "", acceptableAnswers: ["tartarus"], color: "purple", numbers: "√1600\n√2807" },
   ]
 
   const [locations, setLocations] = useState<MapLocation[]>(initialLocations)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
   const [solved, setSolved] = useState(false)
-  const [connections, setConnections] = useState<Connection[]>([])
-  const mapContainerRef = useRef<HTMLDivElement>(null)
-  const [mapDimensions, setMapDimensions] = useState({ width: 0, height: 0 })
+  const [showConnections, setShowConnections] = useState<{ [key: string]: boolean }>({
+    purple: false,
+    blue: false,
+    green: false,
+    gray: false,
+  })
 
   // Function to handle clicking on a label to edit it
   const handleLabelClick = (id: string, currentValue: string) => {
@@ -118,45 +63,25 @@ export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
       setLocations(newLocations)
       setEditingId(null)
 
-      // Check for connections after updating the locations
+      // Check if we should show connections for any color
       updateConnections(newLocations)
     }
   }
 
-  // Update connections between pins of the same color with matching answers
+  // Update which color groups have all pins labeled
   const updateConnections = (locs: MapLocation[]) => {
-    const newConnections: Connection[] = []
+    const newShowConnections = { ...showConnections }
 
-    // Group locations by color
-    const purplePins = locs.filter((loc) => loc.pinColor === "purple")
-    const bluePins = locs.filter((loc) => loc.pinColor === "blue")
-    const greenPins = locs.filter((loc) => loc.pinColor === "green")
+    // Check each color group
+    const colors = ["purple", "blue", "green", "gray"] as const
 
-    // Check for connections within each color group
-    checkConnectionsInGroup(purplePins, newConnections)
-    checkConnectionsInGroup(bluePins, newConnections)
-    checkConnectionsInGroup(greenPins, newConnections)
+    colors.forEach((color) => {
+      const pinsOfColor = locs.filter((loc) => loc.color === color)
+      const allLabeled = pinsOfColor.every((pin) => pin.label.trim() !== "")
+      newShowConnections[color] = allLabeled
+    })
 
-    setConnections(newConnections)
-  }
-
-  // Helper function to check connections within a group of pins
-  const checkConnectionsInGroup = (pins: MapLocation[], connections: Connection[]) => {
-    for (let i = 0; i < pins.length; i++) {
-      for (let j = i + 1; j < pins.length; j++) {
-        const pin1 = pins[i]
-        const pin2 = pins[j]
-
-        // If both pins have labels and they match (case insensitive)
-        if (pin1.label && pin2.label && pin1.label.toLowerCase() === pin2.label.toLowerCase()) {
-          connections.push({
-            from: pin1.id,
-            to: pin2.id,
-            color: "red",
-          })
-        }
-      }
-    }
+    setShowConnections(newShowConnections)
   }
 
   // Handle key press events for the input field
@@ -182,39 +107,6 @@ export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
     }
   }, [locations, onSolve, solved])
 
-  // Update map dimensions when the window resizes
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (mapContainerRef.current) {
-        const { width, height } = mapContainerRef.current.getBoundingClientRect()
-        setMapDimensions({ width, height })
-      }
-    }
-
-    updateDimensions()
-    window.addEventListener("resize", updateDimensions)
-
-    return () => {
-      window.removeEventListener("resize", updateDimensions)
-    }
-  }, [])
-
-  // Calculate scaled positions based on the original image dimensions and current container size
-  const getScaledPosition = (x: number, y: number) => {
-    // Original image dimensions
-    const originalWidth = 600
-    const originalHeight = 400
-
-    // Calculate the scale factor
-    const scaleX = mapDimensions.width / originalWidth
-    const scaleY = mapDimensions.height / originalHeight
-
-    return {
-      x: x * scaleX,
-      y: y * scaleY,
-    }
-  }
-
   return (
     <div className="w-full bg-gray-900 rounded-lg overflow-hidden p-4">
       <h3 className="text-lg font-bold mb-4 text-amber-500">Sacred Fires Map</h3>
@@ -222,66 +114,105 @@ export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
       {/* Instructions */}
       <div className="mb-4 text-gray-300 text-sm">
         <p>
-          An ancient map shows the locations of sacred eternal flames. Click near each pin to label it with the correct
-          name. When two pins of the same color have the same name, a connection will appear.
+          An ancient map shows the locations of sacred eternal flames. Click on each label to enter the correct name.
+          When all pins of the same color are labeled, connections will appear.
         </p>
       </div>
 
       {/* Map container */}
-      <div
-        ref={mapContainerRef}
-        className="relative w-full"
-        style={{
-          height: "calc(100vh - 200px)",
-          minHeight: "500px",
-        }}
-      >
-        {/* Map image */}
-        <div className="relative w-full h-full">
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-nqQOSKgTeA2oYkDH2sTCJjq6pW1WKl.png"
-            alt="Map with location pins"
-            className="w-full h-full object-contain"
-          />
+      <div className="relative w-full" style={{ minHeight: "700px" }}>
+        {/* Map image with SVG overlay for connections */}
+        <div className="relative w-full h-full flex justify-center">
+          <div className="relative" style={{ maxWidth: "900px" }}>
+            <img src="/images/fire-map.png" alt="Map with location pins" className="w-full" />
 
-          {/* Draw connections between pins */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none">
-            {connections.map((connection, index) => {
-              const fromLoc = locations.find((loc) => loc.id === connection.from)
-              const toLoc = locations.find((loc) => loc.id === connection.to)
+            {/* SVG overlay for connections */}
+            <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              {/* Purple connections */}
+              {showConnections.purple && (
+                <>
+                  {/* Connect all purple pins */}
+                  {locations
+                    .filter((loc) => loc.color === "purple")
+                    .flatMap((loc1, i, arr) =>
+                      arr
+                        .slice(i + 1)
+                        .map((loc2) => (
+                          <line
+                            key={`${loc1.id}-${loc2.id}`}
+                            x1={loc1.x}
+                            y1={loc1.y}
+                            x2={loc2.x}
+                            y2={loc2.y}
+                            stroke="red"
+                            strokeWidth="3"
+                            strokeDasharray="5,5"
+                          />
+                        )),
+                    )}
+                </>
+              )}
 
-              if (fromLoc && toLoc) {
-                const fromPos = getScaledPosition(fromLoc.x, fromLoc.y)
-                const toPos = getScaledPosition(toLoc.x, toLoc.y)
+              {/* Blue connections */}
+              {showConnections.blue && (
+                <>
+                  {/* Connect all blue pins */}
+                  {locations
+                    .filter((loc) => loc.color === "blue")
+                    .flatMap((loc1, i, arr) =>
+                      arr
+                        .slice(i + 1)
+                        .map((loc2) => (
+                          <line
+                            key={`${loc1.id}-${loc2.id}`}
+                            x1={loc1.x}
+                            y1={loc1.y}
+                            x2={loc2.x}
+                            y2={loc2.y}
+                            stroke="red"
+                            strokeWidth="3"
+                            strokeDasharray="5,5"
+                          />
+                        )),
+                    )}
+                </>
+              )}
 
-                return (
-                  <line
-                    key={index}
-                    x1={fromPos.x}
-                    y1={fromPos.y}
-                    x2={toPos.x}
-                    y2={toPos.y}
-                    stroke={connection.color}
-                    strokeWidth="3"
-                  />
-                )
-              }
-              return null
-            })}
-          </svg>
+              {/* Green connections */}
+              {showConnections.green && (
+                <>
+                  {/* Connect all green pins */}
+                  {locations
+                    .filter((loc) => loc.color === "green")
+                    .flatMap((loc1, i, arr) =>
+                      arr
+                        .slice(i + 1)
+                        .map((loc2) => (
+                          <line
+                            key={`${loc1.id}-${loc2.id}`}
+                            x1={loc1.x}
+                            y1={loc1.y}
+                            x2={loc2.x}
+                            y2={loc2.y}
+                            stroke="red"
+                            strokeWidth="3"
+                            strokeDasharray="5,5"
+                          />
+                        )),
+                    )}
+                </>
+              )}
+            </svg>
 
-          {/* Render each location label */}
-          {locations.map((location) => {
-            const position = getScaledPosition(location.x, location.y)
-
-            return (
+            {/* Labels */}
+            {locations.map((location) => (
               <div
                 key={location.id}
                 className="absolute"
                 style={{
-                  left: `${position.x}px`,
-                  top: `${position.y}px`,
-                  transform: "translate(-50%, 20px)",
+                  left: `${location.x}px`,
+                  top: `${location.y}px`,
+                  transform: "translate(-50%, 40px)",
                 }}
               >
                 {/* Editable label */}
@@ -313,8 +244,8 @@ export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
                   </div>
                 )}
               </div>
-            )
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
