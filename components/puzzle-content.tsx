@@ -22,6 +22,7 @@ import FinalLevelPuzzle from "./final-level-puzzle"
 import InfernalCasinoPuzzle from "./infernal-casino-puzzle"
 import EgyptianPillarsPuzzle from "./egyptian-pillars-puzzle"
 import DarkRoomPuzzle from "./dark-room-puzzle"
+import EgyptianMathPuzzle from "./egyptian-math-puzzle"
 import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
 import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
@@ -449,6 +450,19 @@ export default function PuzzleContent({
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
           <DarkRoomPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+          />
+        </div>
+      ) : null}
+
+      {isEgyptianMathPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <EgyptianMathPuzzle
             onSolve={() => {
               // Don't automatically solve, let the player type the answer
             }}
