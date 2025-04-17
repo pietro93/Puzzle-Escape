@@ -23,6 +23,9 @@ type PathSegment = {
   y2: number
 }
 
+// The correct path sequence (starting and ending at sahara)
+const CORRECT_PATH = ["sahara", "egypt", "hejaz", "mali", "songhai", "sahara"]
+
 export default function GoldenScarabPuzzle() {
   // Audio hooks
   const { playSound } = useAudio()
@@ -34,13 +37,13 @@ export default function GoldenScarabPuzzle() {
   const [scarabPosition, setScarabPosition] = useState({ x: 50, y: 50 })
 
   // State for the current path
-  const [path, setPath] = useState<string[]>([])
+  const [path, setPath] = useState<string[]>(["sahara"])
 
   // State for the path segments (for drawing lines)
   const [pathSegments, setPathSegments] = useState<PathSegment[]>([])
 
   // State for the active pedestal (where the scarab currently is)
-  const [activePedestalId, setActivePedestalId] = useState<string | null>("sahara")
+  const [activePedestalId, setActivePedestalId] = useState<string>("sahara")
 
   // State for puzzle completion
   const [isPuzzleComplete, setIsPuzzleComplete] = useState(false)
@@ -48,11 +51,11 @@ export default function GoldenScarabPuzzle() {
   // State for animation
   const [isAnimating, setIsAnimating] = useState(false)
 
-  // State for hints
-  const [showHint, setShowHint] = useState(false)
-  const [hintText, setHintText] = useState(
-    "Try to create a path that visits all pedestals and returns to the starting point.",
-  )
+  // State for the sphinx's riddle
+  const [showRiddle, setShowRiddle] = useState(true)
+
+  // State for solution display
+  const [showSolution, setShowSolution] = useState(false)
 
   // Pedestal data
   const pedestals: Pedestal[] = [
@@ -61,7 +64,7 @@ export default function GoldenScarabPuzzle() {
       name: "Egypt",
       imageUrl: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
       description:
-        "The ancient land of pharaohs and pyramids. Mansa Musa visited Egypt during his pilgrimage to Mecca, displaying his immense wealth and generosity.",
+        "Land of towering pyramids and ancient wisdom. The Nile's life-giving waters nurture a civilization of astronomers and architects. Gold adorns the tombs of pharaohs, while hieroglyphs tell stories of gods walking among mortals. Markets bustle with traders from distant lands, exchanging papyrus and precious stones.",
       x: 20,
       y: 20,
     },
@@ -70,7 +73,7 @@ export default function GoldenScarabPuzzle() {
       name: "Mali",
       imageUrl: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
       description:
-        "The Mali Empire, ruled by Mansa Musa, was one of the largest and wealthiest empires in African history, known for its gold and salt trade.",
+        "A realm of unimaginable wealth, where rivers run with gold dust and griots sing tales of mighty kings. The libraries of Timbuktu hold knowledge from across the world, while salt caravans stretch to the horizon. Warriors ride proud steeds across savanna plains, and merchants count wealth by the handful of precious metals.",
       x: 80,
       y: 20,
     },
@@ -79,7 +82,7 @@ export default function GoldenScarabPuzzle() {
       name: "Songhai",
       imageUrl: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
       description:
-        "A powerful West African empire that succeeded the Mali Empire. Known for its advanced trading networks along the Niger River.",
+        "Empire of the mighty Niger, where boats of intricate design carry goods to distant shores. Skilled metalworkers forge tools and weapons of remarkable quality, while farmers cultivate fertile floodplains. Scholars debate philosophy under the shade of ancient trees, and musicians play instruments whose melodies enchant all who hear them.",
       x: 80,
       y: 80,
     },
@@ -88,7 +91,7 @@ export default function GoldenScarabPuzzle() {
       name: "Hejaz",
       imageUrl: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
       description:
-        "The region in Arabia containing Mecca and Medina. Mansa Musa's pilgrimage to Mecca in this region became legendary for its extravagance.",
+        "Sacred land where the black cube stands as a beacon to the faithful. Desert winds carry prayers across dunes that shift like ocean waves. Pilgrims from every corner of the world converge in devotion, while merchants exchange spices, silks, and ideas. The night sky reveals stars that guide travelers on their sacred journey.",
       x: 20,
       y: 80,
     },
@@ -97,7 +100,7 @@ export default function GoldenScarabPuzzle() {
       name: "Sahara",
       imageUrl: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
       description:
-        "The vast desert that Mansa Musa and his caravan crossed during his famous hajj journey, carrying immense amounts of gold that affected economies along the way.",
+        "The great ocean of sand, where caravans navigate by stars across endless golden dunes. Oases appear like mirages, offering sweet water and date palms to weary travelers. Nomadic tribes follow ancient paths known only to those who respect the desert's harsh wisdom. The sun burns with unforgiving intensity by day, while nights bring a cold that chills to the bone.",
       x: 50,
       y: 50,
     },
@@ -110,8 +113,8 @@ export default function GoldenScarabPuzzle() {
 
   // Handle clicking on a pedestal
   const handlePedestalClick = (pedestal: Pedestal) => {
-    // If we're showing the info popup, don't do anything else
-    if (selectedPedestal) {
+    // If we're showing the info popup or riddle, don't do anything else
+    if (selectedPedestal || showRiddle) {
       return
     }
 
@@ -126,34 +129,18 @@ export default function GoldenScarabPuzzle() {
       return
     }
 
-    // If no active pedestal, set this as active
-    if (!activePedestalId) {
-      setActivePedestalId(pedestal.id)
-      setPath([pedestal.id])
-      setScarabPosition({ x: pedestal.x, y: pedestal.y })
-      playSound("/audio/button-click.mp3")
-      return
-    }
-
     // If clicking the active pedestal, show info
     if (pedestal.id === activePedestalId) {
       setSelectedPedestal(pedestal)
       return
     }
 
-    // Check if this pedestal is already in the path
-    if (path.includes(pedestal.id)) {
-      // If it's the first pedestal and we've visited all others, complete the circuit
-      if (pedestal.id === path[0] && path.length === pedestals.length) {
-        moveToNextPedestal(pedestal)
-        checkPuzzleCompletion()
-      } else {
-        // Otherwise, show info about why we can't go there
-        setHintText("You've already visited this location. Try to visit all locations before returning to the start.")
-        setShowHint(true)
-        setTimeout(() => setShowHint(false), 3000)
-        playSound("/audio/wrong.mp3")
-      }
+    // Check if this would be a valid next move
+    const isValidNextMove = isValidMove(activePedestalId, pedestal.id)
+
+    if (!isValidNextMove) {
+      // Play error sound
+      playSound("/audio/wrong.mp3")
       return
     }
 
@@ -161,20 +148,51 @@ export default function GoldenScarabPuzzle() {
     moveToNextPedestal(pedestal)
   }
 
+  // Check if a move is valid
+  const isValidMove = (fromId: string, toId: string): boolean => {
+    // If we're at sahara, we can go to egypt
+    if (fromId === "sahara" && path.length === 1) {
+      return toId === "egypt"
+    }
+
+    // If we're at egypt, we can go to hejaz
+    if (fromId === "egypt" && path.length === 2) {
+      return toId === "hejaz"
+    }
+
+    // If we're at hejaz, we can go to mali
+    if (fromId === "hejaz" && path.length === 3) {
+      return toId === "mali"
+    }
+
+    // If we're at mali, we can go to songhai
+    if (fromId === "mali" && path.length === 4) {
+      return toId === "songhai"
+    }
+
+    // If we're at songhai, we can go back to sahara
+    if (fromId === "songhai" && path.length === 5) {
+      return toId === "sahara"
+    }
+
+    return false
+  }
+
   // Move the scarab to the next pedestal
   const moveToNextPedestal = (pedestal: Pedestal) => {
-    const activePedestal = getPedestalById(activePedestalId!)
+    const activePedestal = getPedestalById(activePedestalId)
 
     if (!activePedestal) return
 
     // Add to path
-    setPath((prev) => [...prev, pedestal.id])
+    const newPath = [...path, pedestal.id]
+    setPath(newPath)
 
     // Add path segment
     setPathSegments((prev) => [
       ...prev,
       {
-        from: activePedestalId!,
+        from: activePedestalId,
         to: pedestal.id,
         x1: activePedestal.x,
         y1: activePedestal.y,
@@ -194,6 +212,24 @@ export default function GoldenScarabPuzzle() {
 
     // Animate scarab movement
     animateScarabMovement(activePedestal, pedestal)
+
+    // Check if the puzzle is complete after this move
+    if (newPath.length === CORRECT_PATH.length) {
+      const isCorrect = newPath.every((id, index) => id === CORRECT_PATH[index])
+      if (isCorrect) {
+        setTimeout(() => {
+          setIsPuzzleComplete(true)
+          playSound("/audio/correct.mp3")
+          setShowSolution(true)
+        }, 1500) // Wait for animation to complete
+      } else {
+        // Wrong path - reset after a delay
+        setTimeout(() => {
+          handleReset()
+          playSound("/audio/wrong.mp3")
+        }, 1500) // Wait for animation to complete
+      }
+    }
   }
 
   // Animate scarab movement
@@ -227,40 +263,15 @@ export default function GoldenScarabPuzzle() {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
   }
 
-  // Check if the puzzle is complete
-  const checkPuzzleCompletion = () => {
-    // A complete path should:
-    // 1. Start and end at the same pedestal
-    // 2. Visit all pedestals
-    // 3. Form a valid circuit
-
-    if (path.length !== pedestals.length + 1) {
-      return
-    }
-
-    if (path[0] !== path[path.length - 1]) {
-      return
-    }
-
-    // Check if all pedestals are visited
-    const visitedIds = new Set(path)
-    if (visitedIds.size !== pedestals.length) {
-      return
-    }
-
-    // Puzzle is complete!
-    setIsPuzzleComplete(true)
-    playSound("/audio/correct.mp3")
-
-    // Show completion message
-    setHintText("Congratulations! You've completed Mansa Musa's journey!")
-    setShowHint(true)
-    setTimeout(() => setShowHint(false), 5000)
-  }
-
   // Handle closing the info popup
   const handleClosePopup = () => {
     setSelectedPedestal(null)
+  }
+
+  // Handle closing the riddle
+  const handleCloseRiddle = () => {
+    setShowRiddle(false)
+    playSound("/audio/button-click.mp3")
   }
 
   // Handle resetting the puzzle
@@ -272,6 +283,7 @@ export default function GoldenScarabPuzzle() {
     setScarabPosition({ x: 50, y: 50 })
     setIsPuzzleComplete(false)
     setIsAnimating(false)
+    setShowSolution(false)
     playSound("/audio/button-click.mp3")
   }
 
@@ -339,10 +351,11 @@ export default function GoldenScarabPuzzle() {
         </div>
       ))}
 
-      {/* Hint Display */}
-      {showHint && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-80 text-white px-4 py-2 rounded-lg max-w-md text-center">
-          {hintText}
+      {/* Solution Display */}
+      {showSolution && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-80 text-gold px-8 py-6 rounded-lg text-center z-20 animate-fadeIn">
+          <h2 className="text-3xl font-bold text-yellow-400 mb-2 animate-pulse">SUBLIME SPLENDOR</h2>
+          <p className="text-yellow-200">The golden scarab has completed its sacred journey!</p>
         </div>
       )}
 
@@ -354,25 +367,44 @@ export default function GoldenScarabPuzzle() {
         Reset Puzzle
       </button>
 
-      {/* Hint Button */}
-      <button
-        className="absolute top-4 left-4 bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm"
-        onClick={() => {
-          setHintText(
-            "Create a path that visits all locations and returns to where you started. The correct path follows Mansa Musa's historical journey.",
-          )
-          setShowHint(true)
-          setTimeout(() => setShowHint(false), 5000)
-        }}
-      >
-        Hint
-      </button>
+      {/* Sphinx's Riddle Popup */}
+      {showRiddle && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+          <div className="bg-gray-800 border border-yellow-700 rounded-lg p-6 max-w-2xl text-center">
+            <h2 className="text-2xl font-bold text-yellow-400 mb-4">The Sphinx's Riddle</h2>
+            <div className="mb-6 text-gray-200 space-y-4">
+              <p>
+                "Behold the golden scarab, sacred to the ancients, bearer of wealth and transformation. Guide it along
+                the path of the one whose generosity changed the value of gold itself."
+              </p>
+              <p>
+                "From the heart of the endless sands, seek first the land of pyramids, then journey to the sacred cube
+                that draws all faithful. Continue to the empire of gold rivers, then to the realm of boat builders on
+                the mighty Niger. Finally, return to where your journey began."
+              </p>
+              <p>
+                "Follow the footsteps of history's wealthiest pilgrim, whose journey altered the economies of nations.
+                The path must be precise, for the scarab accepts no deviation from the true historical route."
+              </p>
+              <p className="text-yellow-300 italic">
+                "Complete this sacred circuit, and words of power shall be revealed to you."
+              </p>
+            </div>
+            <button
+              onClick={handleCloseRiddle}
+              className="px-6 py-2 bg-yellow-700 hover:bg-yellow-600 text-white rounded-md transition-colors"
+            >
+              Begin the Journey
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Pedestal Info Popup */}
       {selectedPedestal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-          <div className="bg-gray-700 rounded-lg p-4 max-w-md">
-            <h2 className="text-xl font-bold text-white mb-2">{selectedPedestal.name}</h2>
+          <div className="bg-gray-800 border border-yellow-700 rounded-lg p-4 max-w-md">
+            <h2 className="text-xl font-bold text-yellow-400 mb-2">{selectedPedestal.name}</h2>
             <div className="relative w-48 h-48 mx-auto mb-4">
               <Image
                 src={selectedPedestal.imageUrl || "/placeholder.svg"}
@@ -381,10 +413,10 @@ export default function GoldenScarabPuzzle() {
                 className="object-contain"
               />
             </div>
-            <p className="text-gray-300 mb-4">{selectedPedestal.description}</p>
+            <p className="text-gray-200 mb-4">{selectedPedestal.description}</p>
             <button
               onClick={handleClosePopup}
-              className="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded"
+              className="mt-2 px-4 py-2 bg-yellow-700 hover:bg-yellow-600 text-white rounded transition-colors"
             >
               Close
             </button>

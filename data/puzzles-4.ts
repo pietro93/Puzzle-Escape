@@ -19,16 +19,18 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with a journey through the lands of Mansa Musa.",
-    description: "Guide the golden scarab through the pedestals to uncover the hidden path.",
+    question: "The Sphinx presents you with a golden scarab and a mysterious challenge.",
+    description:
+      "Guide the golden scarab through the path of history's wealthiest pilgrim, whose journey altered the economies of nations.",
     imageUrl: "",
     isGoldenScarabPuzzle: true,
-    solution: "RANDOM", // This will be overridden by the component
+    solution: "sublime splendor",
     category: "pattern",
     hints: [
-      "The path must visit all locations.",
-      "The path must start and end at the same location.",
-      "The path must follow a specific order.",
+      "From the heart of the endless sands, seek first the land of pyramids.",
+      "Then journey to the sacred cube that draws all faithful.",
+      "Continue to the empire of gold rivers, then to the realm of boat builders on the mighty Niger.",
+      "Finally, return to where your journey began to complete the sacred circuit.",
     ],
   },
   {
