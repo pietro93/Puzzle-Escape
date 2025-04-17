@@ -39,29 +39,29 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
   const [isSolved, setIsSolved] = useState(false)
 
   // Function to get opacity based on correct combinations
-  const getOpacity = (isFixed: boolean) => {
+  const getOpacity = (switchIndex: number) => {
     if (isSolved) return 1 // Full opacity when solved
 
-    if (isFixed) return 0.55 // Fixed switches stay at 0.55 until solved
+    if (switchIndex < 3) return 1 // Fixed switches always have full opacity
 
     // Dynamic opacity based on correct combinations
     switch (correctCombinations) {
       case 0:
-        return 0.55
+        return 0.5
       case 1:
-        return 0.6
+        return 0.57
       case 2:
         return 0.65
       case 3:
-        return 0.75
+        return 0.73
       case 4:
-        return 0.85
+        return 0.81
       case 5:
         return 0.9
       case 6:
         return 1
       default:
-        return 0.55
+        return 0.5
     }
   }
 
@@ -112,6 +112,13 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
 
   return (
     <div className="flex flex-col items-center space-y-6">
+      {/* Success message */}
+      {isSolved && (
+        <div className="text-center">
+          <p className="text-red-400 font-pixel text-sm">The machine hums, and the head screams louder.</p>
+        </div>
+      )}
+
       {/* Switch rows */}
       <div className="w-full max-w-md space-y-4 bg-black p-6 rounded-lg">
         {switches.map((row, rowIndex) => (
@@ -131,8 +138,8 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                         : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/flipswitch_0-xeAaXILvQOEYhaeJo2mWMHCPkbaT3P.webp"
                     }
                     alt={value === 1 ? "Switch On" : "Switch Off"}
-                    className="w-full h-full pixelated"
-                    style={{ opacity: getOpacity(switchIndex < 3) }}
+                    className="max-w-[75%] max-h-[75%] pixelated"
+                    style={{ opacity: getOpacity(switchIndex) }}
                   />
                 </button>
               ))}
@@ -143,17 +150,6 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
             </div>
           </div>
         ))}
-
-        {/* Success message when all combinations are found */}
-        {isSolved && (
-          <div className="mt-6 text-center">
-            <p className="text-red-400 font-pixel text-sm animate-pulse">
-              The machine whirs to life, its gears grinding with malevolent purpose. A sickly crimson glow bathes the
-              room, revealing shadows that seem to writhe with a life of their own. The air grows thick with dread,
-              heavy with the scent of ancient malice awakened.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   )
