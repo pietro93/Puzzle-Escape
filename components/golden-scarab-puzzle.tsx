@@ -1,14 +1,13 @@
 "use client"
+
 import { useState } from "react"
 import Image from "next/image"
-import { useAudio } from "@/hooks/use-audio"
 
 // Simple pedestal type
 type Pedestal = {
   id: string
   name: string
   imageUrl: string
-  description: string
   x: number
   y: number
 }
@@ -31,9 +30,6 @@ interface GoldenScarabPuzzleProps {
 }
 
 export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps) {
-  // Audio hooks
-  const { playSound } = useAudio()
-
   // State for the selected pedestal info popup
   const [selectedPedestal, setSelectedPedestal] = useState<Pedestal | null>(null)
 
@@ -67,8 +63,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "egypt",
       name: "Egypt",
       imageUrl: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
-      description:
-        "Where the Nile's embrace gives life, and colossal monuments pierce the sky, a testament to pharaohs and gods. Here, the sands whisper tales of ancient wisdom, and the sun beats down on a land of both splendor and mystery.",
       x: 20,
       y: 20,
     },
@@ -76,8 +70,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "mali",
       name: "Mali",
       imageUrl: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
-      description:
-        "A realm of sun-baked savannas and bustling trade routes, where the Niger River flows like a golden serpent. Griots sing of legendary kings, and the earth itself seems to shimmer with untold riches.",
       x: 80,
       y: 20,
     },
@@ -85,8 +77,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "songhai",
       name: "Songhai",
       imageUrl: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
-      description:
-        "Where the Niger bends, a kingdom of skilled boatwrights and fierce warriors rises. Their longships ply the waters, carrying goods and soldiers to distant lands, and their drums echo across the fertile plains.",
       x: 80,
       y: 80,
     },
@@ -94,8 +84,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "hejaz",
       name: "Hejaz",
       imageUrl: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
-      description:
-        "A land of scorching deserts and unwavering faith, where pilgrims journey to a sacred stone. The air hums with devotion, and the stars guide travelers across the trackless sands.",
       x: 20,
       y: 80,
     },
@@ -103,8 +91,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "sahara",
       name: "Sahara",
       imageUrl: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
-      description:
-        "A sea of sand stretching to the horizon, where the sun reigns supreme and mirages dance in the heat. Nomads roam this unforgiving landscape, guided by ancient knowledge and the promise of hidden oases.",
       x: 50,
       y: 50,
     },
@@ -144,7 +130,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
 
     if (!isValidNextMove) {
       // Play error sound
-      playSound("/audio/wrong.mp3")
+      //playSound("/audio/wrong.mp3");
       return
     }
 
@@ -209,7 +195,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
     setIsAnimating(true)
 
     // Play sound
-    playSound("/audio/button-click.mp3")
+    //playSound("/audio/button-click.mp3");
 
     // Update active pedestal
     setActivePedestalId(pedestal.id)
@@ -223,7 +209,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       if (isCorrect) {
         setTimeout(() => {
           setIsPuzzleComplete(true)
-          playSound("/audio/correct.mp3")
+          //playSound("/audio/correct.mp3");
           setShowSolution(true)
           if (onSolve) {
             onSolve()
@@ -233,7 +219,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
         // Wrong path - reset after a delay
         setTimeout(() => {
           handleReset()
-          playSound("/audio/wrong.mp3")
+          //playSound("/audio/wrong.mp3");
         }, 1500) // Wait for animation to complete
       }
     }
@@ -278,7 +264,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
   // Handle closing the riddle
   const handleCloseRiddle = () => {
     setShowRiddle(false)
-    playSound("/audio/button-click.mp3")
+    //playSound("/audio/button-click.mp3");
   }
 
   // Handle resetting the puzzle
@@ -291,7 +277,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
     setIsPuzzleComplete(false)
     setIsAnimating(false)
     setShowSolution(false)
-    playSound("/audio/button-click.mp3")
+    //playSound("/audio/button-click.mp3");
   }
 
   return (
