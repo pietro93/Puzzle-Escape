@@ -20,15 +20,17 @@ export const puzzlesSet4: Puzzle[] = [
   {
     level: 32,
     question: "The Sphinx presents you with a journey through the lands of a great pilgrimage.",
-    description: "Guide the golden scarab through the path that changed the history of West Africa.",
+    description:
+      "Guide the golden scarab through the path that changed the history of West Africa. The journey must visit all lands and return to where it began.",
     imageUrl: "",
     isGoldenScarabPuzzle: true,
     solution: "sublime splendor",
     category: "pattern",
     hints: [
-      "The path must visit all locations.",
-      "The path must start and end at the same location.",
-      "The path must follow a specific order.",
+      "The scarab must follow the historical pilgrimage route.",
+      "The path must visit all locations and return to where it began.",
+      "The journey begins and ends in Mali, passing through all other lands.",
+      "The correct path follows: Mali → Sahara → Egypt → Hejaz → Songhai → Mali",
     ],
   },
   {
