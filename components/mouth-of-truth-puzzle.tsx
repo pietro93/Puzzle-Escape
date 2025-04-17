@@ -211,9 +211,16 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
 
     // Create the revealed cherubs
     const newRevealedCherubs = colors.map((color, index) => {
-      // Special handling for A letters
-      let position = "left"
-      if (cherubLetters[index] === "A") {
+      // Determine the correct position based on the letter rules
+      let position = "left" // default
+
+      // Apply the letter position rules
+      if (["H", "P", "N"].includes(cherubLetters[index])) {
+        position = "right"
+      } else if (["C", "L", "I"].includes(cherubLetters[index])) {
+        position = "left"
+      } else if (cherubLetters[index] === "A") {
+        // Special handling for A letters
         // If A is paired with P, it's always on the left
         if (marbleLetters[index] === "P") position = "left"
         // If A is paired with L, it's always on the right
@@ -349,7 +356,20 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
 
   // Get the image source for a revealed cherub
   const getRevealedCherubImageSrc = (cherub: { color: string; letter: string; position: string }) => {
-    return `/images/mouth-of-truth/putto_${cherub.color}_${cherub.letter}_${cherub.position}.webp`
+    // Apply the letter position rules:
+    // Always on the left: C, L, I
+    // Always on the right: H, P, N
+    // A can be either right or left (handled by existing logic)
+    let position = cherub.position
+
+    // Force certain letters to their correct positions regardless of what's passed in
+    if (["C", "L", "I"].includes(cherub.letter)) {
+      position = "left"
+    } else if (["H", "P", "N"].includes(cherub.letter)) {
+      position = "right"
+    }
+
+    return `/images/mouth-of-truth/putto_${cherub.color}_${cherub.letter}_${position}.webp`
   }
 
   // Get the image source for a revealed marble
