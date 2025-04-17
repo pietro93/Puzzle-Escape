@@ -12,7 +12,7 @@ interface Pedestal {
 }
 
 export default function GoldenScarabPuzzle() {
-  const [pedestals, setPedestals] = useState<Pedestal[]>([
+  const [pedestals] = useState<Pedestal[]>([
     {
       id: "egypt",
       name: "Egypt",
@@ -55,11 +55,10 @@ export default function GoldenScarabPuzzle() {
     },
   ])
 
-  const [scarabPosition, setScarabPosition] = useState<{ x: number; y: number }>({ x: 50, y: 50 })
+  const [scarabPosition, setScarabPosition] = useState({ x: 50, y: 50 })
   const [currentPedestal, setCurrentPedestal] = useState<string | null>(null)
   const [lines, setLines] = useState<Array<{ x1: number; y1: number; x2: number; y2: number }>>([])
   const [showPopup, setShowPopup] = useState(false)
-
   const [activePedestal, setActivePedestal] = useState<Pedestal | null>(null)
 
   // Function to handle pedestal click
@@ -102,13 +101,7 @@ export default function GoldenScarabPuzzle() {
   return (
     <div className="relative w-full h-[600px] bg-gray-800 rounded-lg overflow-hidden">
       {/* Map Background */}
-      <Image
-        src="/images/map-background.png"
-        alt="Map Background"
-        layout="fill"
-        objectFit="cover"
-        className="opacity-50"
-      />
+      <Image src="/images/map-background.png" alt="Map Background" fill className="opacity-50 object-cover" />
 
       {/* Golden Scarab */}
       <div
@@ -119,9 +112,8 @@ export default function GoldenScarabPuzzle() {
         <Image
           src="/images/golden-scarab/golden_scarab.webp"
           alt="Golden Scarab"
-          layout="fill"
-          objectFit="contain"
-          className="pixelated"
+          fill
+          className="object-contain pixelated"
         />
       </div>
 
@@ -136,9 +128,8 @@ export default function GoldenScarabPuzzle() {
           <Image
             src={pedestal.imageUrl || "/placeholder.svg"}
             alt={pedestal.name}
-            layout="fill"
-            objectFit="contain"
-            className="pixelated"
+            fill
+            className="object-contain pixelated"
           />
         </div>
       ))}
@@ -159,16 +150,17 @@ export default function GoldenScarabPuzzle() {
 
       {/* Pedestal Popup */}
       {showPopup && activePedestal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-gray-700 rounded-lg p-4 max-w-md">
             <h2 className="text-xl font-bold text-white mb-2">{activePedestal.name}</h2>
-            <Image
-              src={activePedestal.imageUrl || "/placeholder.svg"}
-              alt={activePedestal.name}
-              width={200}
-              height={200}
-              className="mx-auto mb-4"
-            />
+            <div className="relative w-48 h-48 mx-auto mb-4">
+              <Image
+                src={activePedestal.imageUrl || "/placeholder.svg"}
+                alt={activePedestal.name}
+                fill
+                className="object-contain"
+              />
+            </div>
             <p className="text-gray-300">{activePedestal.description}</p>
             <button onClick={handleClosePopup} className="mt-4 px-4 py-2 bg-gray-600 text-white rounded">
               Close
