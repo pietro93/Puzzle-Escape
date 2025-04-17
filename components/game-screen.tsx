@@ -332,6 +332,46 @@ export default function GameScreen({
   const handlePyramidLocationImageClick = () => {
     if (level === 40 && currentPyramidRoom === "ra" && !hasPyramidTorch) {
       setHasPyramidTorch(true)
+    } else if (level === 47) {
+      // Show brain dialogue based on how many correct combinations have been found
+      let dialogue = ""
+
+      if (binaryCorrectCombinations === 6) {
+        // When fully solved, the head can only express "..."
+        dialogue = "..."
+      } else {
+        // Random dialogue lines based on how many correct combinations
+        const painDialogues = [
+          // 0-1 correct combinations - more coherent, early suffering
+          ["Help... me...", "Make it... stop...", "Please... no more...", "It burns...", "My... thoughts..."],
+          // 2-3 correct combinations - increasing pain, less coherent
+          [
+            "AAAGH! IT HURTS!",
+            "Can't... think...",
+            "STOP! PLEASE!",
+            "My brain... melting...",
+            "No more... switches...",
+          ],
+          // 4-5 correct combinations - extreme agony, barely coherent
+          ["AAAAAAHHH!", "MAKE IT STOP!", "BURNING! BURNING!", "NO MORE! NO MORE!", "KILL... ME..."],
+        ]
+
+        // Select dialogue tier based on correct combinations
+        let tier = 0
+        if (binaryCorrectCombinations >= 4) {
+          tier = 2
+        } else if (binaryCorrectCombinations >= 2) {
+          tier = 1
+        }
+
+        // Get random dialogue from the appropriate tier
+        const dialogueOptions = painDialogues[tier]
+        dialogue = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
+      }
+
+      // Show the dialogue in a popup
+      setCharacterDialogue(dialogue)
+      setShowCharacterDialogue(true)
     }
   }
 

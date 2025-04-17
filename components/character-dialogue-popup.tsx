@@ -32,9 +32,19 @@ export default function CharacterDialoguePopup({
                   ? level === 10
                     ? "/images/skeleton.webp"
                     : "/images/sphinx.webp"
-                  : `/images/${character}.webp`
+                  : character === "brain"
+                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-head-close-up-Hs7Uj2FdKlP9OIgTrMnVxCbAyRwZpq.webp" // Add a close-up image of the suffering head
+                    : `/images/${character}.webp`
               }
-              alt={isGuardPopup ? (level === 10 ? "Guard" : "Sphinx") : character}
+              alt={
+                isGuardPopup
+                  ? level === 10
+                    ? "Guard"
+                    : "Sphinx"
+                  : character === "brain"
+                    ? "Suffering Head"
+                    : character
+              }
               width={64}
               height={64}
               className="pixelated"
@@ -46,7 +56,9 @@ export default function CharacterDialoguePopup({
                 ? level === 10
                   ? "Guard:"
                   : "Sphinx:"
-                : character.charAt(0).toUpperCase() + character.slice(1) + ":"}
+                : character === "brain"
+                  ? "Suffering Head:"
+                  : character.charAt(0).toUpperCase() + character.slice(1) + ":"}
             </p>
             <p className="text-gray-200 text-sm whitespace-pre-line">
               {isGuardPopup

@@ -115,7 +115,9 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
       {/* Success message */}
       {isSolved && (
         <div className="text-center">
-          <p className="text-red-400 font-pixel text-sm">The machine hums, and the head screams louder.</p>
+          <p className="text-red-400 font-pixel text-sm">
+            The machine runs at full power. The head's mouth gapes in silent agony, unable to scream anymore.
+          </p>
         </div>
       )}
 

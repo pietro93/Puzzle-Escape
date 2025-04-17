@@ -202,7 +202,15 @@ export default function CharacterLocationDisplay({
         <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
           <CharacterImage character={character} />
         </div>
-        <div className="flex justify-center items-center">
+        <div
+          className="flex justify-center items-center cursor-pointer"
+          onClick={() => {
+            // Call the location click handler which will trigger the dialogue
+            if (onPyramidLocationImageClick) {
+              onPyramidLocationImageClick()
+            }
+          }}
+        >
           <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
             <Image
