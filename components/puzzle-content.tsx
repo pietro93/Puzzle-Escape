@@ -1,123 +1,503 @@
 "use client"
 
+import type React from "react"
+import Image from "next/image"
+import InmatePuzzle from "./inmate-puzzle"
+import LibraryPuzzle from "./library-puzzle"
+import JigsawPuzzle from "./jigsaw-puzzle"
+import ParrotPuzzle from "./parrot-puzzle"
+import AnimatedGifPuzzle from "./animated-gif-puzzle"
+import LightSwitchPuzzle from "./light-switch-puzzle"
+import TarotPuzzle from "./tarot-puzzle"
+import QuestionnairePuzzle from "./questionnaire-puzzle"
+import CoffeeGroundsPuzzle from "./coffee-grounds-puzzle"
+import ZodiacPuzzle from "./zodiac-puzzle"
+import CrystalJigsawPuzzle from "./crystal-jigsaw-puzzle"
+import CrocodileJigsawPuzzle from "./crocodile-jigsaw-puzzle"
+import PyramidPuzzle from "./pyramid-puzzle"
+import FamiliarFacesPuzzle from "./familiar-faces-puzzle"
+import HellJigsawPuzzle from "./hell-jigsaw-puzzle"
+import CrystalSequencePuzzle from "./crystal-sequence-puzzle"
+import FinalLevelPuzzle from "./final-level-puzzle"
+import InfernalCasinoPuzzle from "./infernal-casino-puzzle"
+import EgyptianPillarsPuzzle from "./egyptian-pillars-puzzle"
+import DarkRoomPuzzle from "./dark-room-puzzle"
+import EgyptianMathPuzzle from "./egyptian-math-puzzle"
+import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
+import BinarySwitchPuzzle from "./binary-switch-puzzle"
+import { guardDialogLines } from "@/utils/dialogue-utils"
 import { useState } from "react"
-import PuzzleImage from "@/components/puzzle-image"
-import AnswerInput from "@/components/answer-input"
-import LibraryPuzzle from "@/components/library-puzzle"
-import InmatePuzzle from "@/components/inmate-puzzle"
-import JigsawPuzzle from "@/components/jigsaw-puzzle"
-import TarotPuzzle from "@/components/tarot-puzzle"
-import AnimatedGifPuzzle from "@/components/animated-gif-puzzle"
-import ParrotPuzzle from "@/components/parrot-puzzle"
-import CoffeeGroundsPuzzle from "@/components/coffee-grounds-puzzle"
-import QuestionnairePuzzle from "@/components/questionnaire-puzzle"
-import CrystalJigsawPuzzle from "@/components/crystal-jigsaw-puzzle"
-import CrocodileJigsawPuzzle from "@/components/crocodile-jigsaw-puzzle"
-import HellJigsawPuzzle from "@/components/hell-jigsaw-puzzle"
-import FamiliarFacesPuzzle from "@/components/familiar-faces-puzzle"
-import ZodiacPuzzle from "@/components/zodiac-puzzle"
-import CrystalSequencePuzzle from "@/components/crystal-sequence-puzzle"
-import MouthOfTruthPuzzle from "@/components/mouth-of-truth-puzzle"
-import BinarySwitchPuzzle from "@/components/binary-switch-puzzle"
-import EgyptianPillarsPuzzle from "@/components/egyptian-pillars-puzzle"
-import DarkRoomPuzzle from "@/components/dark-room-puzzle"
-import EgyptianMathPuzzle from "@/components/egyptian-math-puzzle"
-import PyramidPuzzle from "@/components/pyramid-puzzle"
-import FireMapPuzzle from "@/components/fire-map-puzzle"
-import GoldenScarabPuzzle from "@/components/golden-scarab-puzzle"
-import HintSystem from "@/components/hint-system"
-import type { Puzzle } from "@/types/puzzle"
+import FireMapPuzzle from "./fire-map-puzzle"
 
 interface PuzzleContentProps {
-  puzzle: Puzzle
-  onSolve: () => void
+  level: number
+  puzzle: any
+  guardDialogIndex: number
+  handleGuardClick: () => void
+  handleJigsawComplete: () => void
+  handleParrotSolve: () => void
+  handleQuestionnaireRestart: () => void
+  handleLightSwitchUpdate: (isLightOn: boolean, isSolved: boolean) => void
+  handleZodiacSolve: () => void
+  handlePyramidRoomChange: (room: string) => void
+  handlePyramidTorchAcquired: () => void
+  currentPyramidRoom: string
+  hasPyramidTorch: boolean
+  handleAllPiecesRemoved: () => void
+  handleElevatorPanelOpen: () => void
+  currentElevatorFloor: number
+  setCurrentElevatorFloor: (floor: number) => void
+  onSolutionGenerated: (solution: string) => void
+  setBinaryCorrectCombinations: (count: number) => void
+  questionnaireRef: React.RefObject<any>
 }
 
-export default function PuzzleContent({ puzzle, onSolve }: PuzzleContentProps) {
-  const [answer, setAnswer] = useState("")
-  const [isCorrect, setIsCorrect] = useState(false)
-  const [isIncorrect, setIsIncorrect] = useState(false)
-  const [showHints, setShowHints] = useState(false)
+export default function PuzzleContent({
+  level,
+  puzzle,
+  guardDialogIndex,
+  handleGuardClick,
+  handleJigsawComplete,
+  handleParrotSolve,
+  handleQuestionnaireRestart,
+  handleLightSwitchUpdate,
+  handleZodiacSolve,
+  handlePyramidRoomChange,
+  handlePyramidTorchAcquired,
+  currentPyramidRoom,
+  hasPyramidTorch,
+  handleAllPiecesRemoved,
+  handleElevatorPanelOpen,
+  currentElevatorFloor,
+  setCurrentElevatorFloor,
+  onSolutionGenerated,
+  setBinaryCorrectCombinations,
+  questionnaireRef,
+}: PuzzleContentProps) {
+  // Check if this puzzle has an image
+  const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
 
-  const handleAnswerChange = (value: string) => {
-    setAnswer(value)
-  }
+  // Check if this is an interactive inmate puzzle
+  const isInteractiveInmates = puzzle.isInteractiveInmates && puzzle.inmateData && puzzle.inmateData.length > 0
 
-  const handleSubmit = () => {
-    const normalizedAnswer = answer.trim().toLowerCase()
-    const normalizedSolution = puzzle.solution.toLowerCase()
+  // Check if this is a library puzzle
+  const isLibraryPuzzle =
+    puzzle.isLibraryPuzzle && puzzle.libraryData && puzzle.libraryData.books && puzzle.libraryData.books.length > 0
 
-    const solutions = normalizedSolution.split("|")
-    const isCorrectAnswer = solutions.some((solution) => normalizedAnswer === solution.trim())
+  // Check if this is a jigsaw puzzle
+  const isJigsawPuzzle = puzzle.isJigsawPuzzle
 
-    if (isCorrectAnswer) {
-      setIsCorrect(true)
-      setTimeout(() => {
-        onSolve()
-      }, 1500)
-    } else {
-      setIsIncorrect(true)
-      setTimeout(() => {
-        setIsIncorrect(false)
-      }, 1500)
+  // Check if this is a parrot puzzle
+  const isParrotPuzzle = puzzle.isParrotPuzzle
+
+  // Check if this is a light switch puzzle
+  const isLightSwitchPuzzle = puzzle.isLightSwitchPuzzle
+
+  // Check if this is a tarot puzzle
+  const isTarotPuzzle = puzzle.isTarotPuzzle
+
+  // Check if this is a questionnaire puzzle
+  const isQuestionnairePuzzle = puzzle.isQuestionnairePuzzle
+
+  // Check if this is a coffee grounds puzzle
+  const isCoffeeGroundsPuzzle = level === 22
+
+  // Check if this is a zodiac puzzle
+  const isZodiacPuzzle = puzzle.isZodiacPuzzle
+
+  // Check if this is a crystal jigsaw puzzle
+  const isCrystalJigsawPuzzle = puzzle.isCrystalJigsawPuzzle
+
+  // Check if this is a crocodile jigsaw puzzle
+  const isCrocodileJigsawPuzzle = puzzle.isCrocodileJigsawPuzzle
+
+  // Check if this is a pyramid puzzle
+  const isPyramidPuzzle = puzzle.isPyramidPuzzle
+
+  // Check if this is a familiar faces puzzle
+  const isFamiliarFacesPuzzle = puzzle.isFamiliarFacesPuzzle
+
+  // Check if this is a hell jigsaw puzzle
+  const isHellJigsawPuzzle = puzzle.isHellJigsawPuzzle
+
+  // Check if this is a crystal sequence puzzle
+  const isCrystalSequencePuzzle = puzzle.isCrystalSequencePuzzle
+
+  // Check if this is an infernal casino puzzle
+  const isInfernalCasinoPuzzle = puzzle.isInfernalCasinoPuzzle
+
+  // Check if this is an Egyptian pillars puzzle
+  const isEgyptianPillarsPuzzle = puzzle.isEgyptianPillarsPuzzle
+
+  // Check if this is a dark room puzzle
+  const isDarkRoomPuzzle = puzzle.isDarkRoomPuzzle
+
+  // Check if this is an Egyptian math puzzle
+  const isEgyptianMathPuzzle = puzzle.isEgyptianMathPuzzle
+
+  // Check if this is a mouth of truth puzzle
+  const isMouthOfTruthPuzzle = puzzle.isMouthOfTruthPuzzle
+
+  // Check if this is a binary switch puzzle
+  const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
+
+  const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
+
+  // Add a new function to handle brain lamp clicks
+  const handleBrainLampClick = () => {
+    // Generate dialogue based on the number of correct combinations
+    let dialogue = "..." // Default dialogue
+
+    if (binaryCorrectCombinations < 6) {
+      // Different dialogue tiers based on progress
+      if (binaryCorrectCombinations <= 1) {
+        // Early stage - more coherent pleas
+        const earlyDialogues = [
+          "Help... me...",
+          "Make it... stop...",
+          "Please... no more...",
+          "It burns...",
+          "My... thoughts...",
+        ]
+        dialogue = earlyDialogues[Math.floor(Math.random() * earlyDialogues.length)]
+      } else if (binaryCorrectCombinations <= 3) {
+        // Middle stage - increasing pain, less coherent
+        const middleDialogues = [
+          "AAAGH! IT HURTS!",
+          "Can't... think...",
+          "My brain... burning...",
+          "No more... please...",
+          "STOP THE PAIN!",
+        ]
+        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
+      } else {
+        // Late stage - extreme agony, barely coherent
+        const lateDialogues = [
+          "AAAAAAHHH!",
+          "KILL... ME...",
+          "*unintelligible screaming*",
+          "*gurgling sounds*",
+          "END... THIS...",
+        ]
+        dialogue = lateDialogues[Math.floor(Math.random() * lateDialogues.length)]
+      }
     }
-  }
 
-  const toggleHints = () => {
-    setShowHints(!showHints)
+    // Show the dialogue popup with the brain character
+    //setShowBrainDialogue(true);
+    //setBrainDialogue(dialogue);
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full">
-      <div className="w-full max-w-4xl">
-        {puzzle.isPuzzleImage && <PuzzleImage level={puzzle.level} />}
-        {puzzle.isLibraryPuzzle && <LibraryPuzzle />}
-        {puzzle.isInmatePuzzle && <InmatePuzzle />}
-        {puzzle.isJigsawPuzzle && <JigsawPuzzle />}
-        {puzzle.isTarotPuzzle && <TarotPuzzle />}
-        {puzzle.isAnimatedGifPuzzle && <AnimatedGifPuzzle />}
-        {puzzle.isParrotPuzzle && <ParrotPuzzle />}
-        {puzzle.isCoffeeGroundsPuzzle && <CoffeeGroundsPuzzle />}
-        {puzzle.isQuestionnairePuzzle && <QuestionnairePuzzle />}
-        {puzzle.isCrystalJigsawPuzzle && <CrystalJigsawPuzzle />}
-        {puzzle.isCrocodileJigsawPuzzle && <CrocodileJigsawPuzzle />}
-        {puzzle.isHellJigsawPuzzle && <HellJigsawPuzzle />}
-        {puzzle.isFamiliarFacesPuzzle && <FamiliarFacesPuzzle />}
-        {puzzle.isZodiacPuzzle && <ZodiacPuzzle />}
-        {puzzle.isCrystalSequencePuzzle && <CrystalSequencePuzzle />}
-        {puzzle.isMouthOfTruthPuzzle && <MouthOfTruthPuzzle />}
-        {puzzle.isBinarySwitchPuzzle && <BinarySwitchPuzzle />}
-        {puzzle.isEgyptianPillarsPuzzle && <EgyptianPillarsPuzzle />}
-        {puzzle.isDarkRoomPuzzle && <DarkRoomPuzzle />}
-        {puzzle.isEgyptianMathPuzzle && <EgyptianMathPuzzle />}
-        {puzzle.isPyramidPuzzle && <PyramidPuzzle />}
-        {puzzle.isFireMapPuzzle && <FireMapPuzzle />}
-        {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle />}
+    <div className="bg-gray-900/80 p-5 rounded-lg mb-4 border border-gray-800 shadow-inner flex-1 backdrop-blur-sm">
+      <div className="flex justify-between items-center mb-3">
+        {level !== 17 && <p className="font-pixel text-lg text-purple-300 leading-relaxed">{puzzle.question}</p>}
+      </div>
 
-        {puzzle.imageUrl && !puzzle.isPuzzleImage && (
-          <div className="flex justify-center mb-4">
-            <img src={puzzle.imageUrl || "/placeholder.svg"} alt="Puzzle" className="max-w-full max-h-96" />
-          </div>
-        )}
-
-        <div className="mt-4">
-          <AnswerInput
-            value={answer}
-            onChange={handleAnswerChange}
-            onSubmit={handleSubmit}
-            isCorrect={isCorrect}
-            isIncorrect={isIncorrect}
+      {isInfernalCasinoPuzzle ? (
+        <div className="my-4">
+          <InfernalCasinoPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
           />
         </div>
+      ) : null}
 
-        <div className="mt-4 flex justify-center">
-          <button onClick={toggleHints} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md">
-            {showHints ? "Hide Hints" : "Show Hints"}
-          </button>
+      {isCrystalJigsawPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <CrystalJigsawPuzzle
+            onComplete={() => {
+              // Just set the jigsaw as complete, don't automatically advance
+              handleJigsawComplete()
+            }}
+          />
         </div>
+      ) : isCrocodileJigsawPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <CrocodileJigsawPuzzle
+            onComplete={() => {
+              // Just set the jigsaw as complete, don't automatically advance
+              handleJigsawComplete()
+            }}
+          />
+        </div>
+      ) : isQuestionnairePuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <QuestionnairePuzzle
+            ref={questionnaireRef}
+            onSolve={handleParrotSolve}
+            onRestart={handleQuestionnaireRestart}
+            onSolutionGenerated={onSolutionGenerated}
+          />
+        </div>
+      ) : isCoffeeGroundsPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <CoffeeGroundsPuzzle onSolve={handleParrotSolve} />
+        </div>
+      ) : isTarotPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <TarotPuzzle onSolve={handleParrotSolve} />
+        </div>
+      ) : isParrotPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <ParrotPuzzle onSolve={handleParrotSolve} />
+        </div>
+      ) : isZodiacPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <ZodiacPuzzle onSolve={handleZodiacSolve} />
+        </div>
+      ) : puzzle.isAnimatedGif ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <div className={level === 29 ? "bg-black p-4 rounded-lg" : ""}>
+            <AnimatedGifPuzzle
+              videoUrl={
+                puzzle.videoUrl ||
+                "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hands-animation-J6PNaCc88j264qQxkPiSfPzA6Fzsbs.mp4"
+              }
+              altText={`Puzzle for level ${puzzle.level}`}
+              showReplayButton={level !== 26} // Don't show replay button for level 26
+            />
+          </div>
+        </div>
+      ) : isJigsawPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <JigsawPuzzle onComplete={handleJigsawComplete} />
+        </div>
+      ) : isLibraryPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <LibraryPuzzle books={puzzle.libraryData?.books || []} />
+        </div>
+      ) : isInteractiveInmates ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <InmatePuzzle
+            inmates={puzzle.inmateData || []}
+            guardStatement={puzzle.guardStatement || guardDialogLines[guardDialogIndex]}
+            level={level}
+            onGuardClick={handleGuardClick}
+          />
+        </div>
+      ) : isLightSwitchPuzzle ? (
+        <div className="my-4">
+          {/* No description text for level 17 */}
+          {level !== 17 && puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <LightSwitchPuzzle onSolve={() => {}} onUpdate={handleLightSwitchUpdate} />
+        </div>
+      ) : isPyramidPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <PyramidPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+            onRoomChange={handlePyramidRoomChange}
+            onTorchAcquired={handlePyramidTorchAcquired}
+            hasTorch={hasPyramidTorch}
+            currentRoom={currentPyramidRoom}
+          />
+        </div>
+      ) : level === 31 ? (
+        <div className="flex flex-col items-center justify-center my-4 bg-black p-4 rounded-lg">
+          <div className="w-full max-w-md relative pixelated-container mb-4">
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hyeroglyphs1-4yVXD0Okuqc06VyH3fA9yjIwz0sCBR.webp"
+              alt="Hieroglyphs part 1"
+              width={400}
+              height={100}
+              className="pixelated z-10 relative w-full object-contain"
+            />
+          </div>
+          <div className="w-full max-w-md relative pixelated-container">
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hyeroglyphs2-Ws9pjdF8pnqTgk6shmeR8y4ZeECG9q.webp"
+              alt="Hieroglyphs part 2"
+              width={400}
+              height={100}
+              className="pixelated z-10 relative w-full object-contain"
+            />
+          </div>
+        </div>
+      ) : hasImage ? (
+        <div className="flex justify-center my-4">
+          <div className="w-full max-w-md relative pixelated-container">
+            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+            <Image
+              src={puzzle.imageUrl || "/placeholder.svg"}
+              alt={`Puzzle for level ${puzzle.level}`}
+              width={400}
+              height={400}
+              className="pixelated z-10 relative w-full object-contain"
+            />
+            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+          </div>
+        </div>
+      ) : puzzle.description ? (
+        <div className="text-gray-300 whitespace-pre-line font-mono text-sm bg-gray-950/50 p-4 rounded-lg border border-gray-800 shadow-inner">
+          {puzzle.description}
+        </div>
+      ) : null}
 
-        {showHints && <HintSystem hints={puzzle.hints} />}
-      </div>
+      {isFamiliarFacesPuzzle ? (
+        <div className="my-4">
+          {/* Remove the redundant description text for level 45 */}
+          {level !== 45 && puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <FamiliarFacesPuzzle
+            id="familiar-faces-puzzle"
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+            handleDevilClick={() => {}}
+          />
+        </div>
+      ) : null}
+
+      {isHellJigsawPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <HellJigsawPuzzle
+            onComplete={() => {
+              // Just set the jigsaw as complete, don't automatically advance
+              handleJigsawComplete()
+            }}
+          />
+        </div>
+      ) : null}
+
+      {isCrystalSequencePuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <CrystalSequencePuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+          />
+        </div>
+      ) : null}
+
+      {level === 50 ? (
+        <div className="my-4" id="final-level-puzzle">
+          <FinalLevelPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+            onDevilClick={() => {}}
+            onAllPiecesRemoved={handleAllPiecesRemoved}
+            onElevatorPanelOpen={handleElevatorPanelOpen}
+            currentFloor={currentElevatorFloor}
+            onFloorChange={(floor) => setCurrentElevatorFloor(floor)}
+          />
+        </div>
+      ) : null}
+
+      {isEgyptianPillarsPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <EgyptianPillarsPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+          />
+        </div>
+      ) : null}
+
+      {isDarkRoomPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <DarkRoomPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+          />
+        </div>
+      ) : null}
+
+      {isEgyptianMathPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <EgyptianMathPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+          />
+        </div>
+      ) : null}
+
+      {isMouthOfTruthPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <MouthOfTruthPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+          />
+        </div>
+      ) : null}
+
+      {isBinarySwitchPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <BinarySwitchPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+            onCorrectCombinationsChange={setBinaryCorrectCombinations}
+          />
+        </div>
+      ) : null}
+      {puzzle.isFireMapPuzzle && <FireMapPuzzle onSolve={() => handleParrotSolve()} />}
     </div>
   )
 }

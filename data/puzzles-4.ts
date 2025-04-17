@@ -19,7 +19,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with a golden scarab and a mysterious challenge.",
+    question: "The Sphinx presents you with a journey through the lands of a wealthy pilgrim.",
     description:
       "Guide the golden scarab through the path of history's wealthiest pilgrim, whose journey altered the economies of nations.",
     imageUrl: "",
