@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
+import "leaflet/dist/leaflet.css"
+import L from "leaflet"
 
 interface City {
   id: string
@@ -17,8 +19,8 @@ interface ScarabJourneyPuzzleProps {
 }
 
 export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const mapContainerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<L.Map | null>(null)
 
   const [scarabPosition, setScarabPosition] = useState({ x: 0, y: 0 })
   const [currentCityIndex, setCurrentCityIndex] = useState(0)
@@ -31,153 +33,54 @@ export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProp
   const [scarabRotation, setScarabRotation] = useState(0)
 
   const cities: City[] = [
-    {
-      id: "niani",
-      name: "Niani",
-      lat: 12.25,
-      lng: -10.88,
-      clue: "The capital of the Mali Empire, where our journey begins.",
-    },
-    {
-      id: "walata",
-      name: "Walata",
-      lat: 20.93,
-      lng: -7.33,
-      clue: "A historic trading town in Mauritania.",
-    },
-    {
-      id: "taghaza",
-      name: "Taghaza",
-      lat: 22.9,
-      lng: -3.98,
-      clue: "Salt mines in the Sahara.",
-    },
-    {
-      id: "tuat",
-      name: "Tuat",
-      lat: 29.0,
-      lng: -2.5,
-      clue: "An oasis region in Algeria.",
-    },
-    {
-      id: "ghadames",
-      name: "Ghadames",
-      lat: 30.13,
-      lng: 9.5,
-      clue: "An ancient oasis town in Libya.",
-    },
-    {
-      id: "cairo",
-      name: "Cairo",
-      lat: 30.04,
-      lng: 31.24,
-      clue: "A great city of learning and trade in Egypt.",
-    },
-    {
-      id: "medina",
-      name: "Medina",
-      lat: 24.47,
-      lng: 39.61,
-      clue: "The first holy city on the pilgrimage route.",
-    },
-    {
-      id: "mecca",
-      name: "Mecca",
-      lat: 21.42,
-      lng: 39.83,
-      clue: "The final destination of the outbound journey.",
-    },
-    {
-      id: "gao",
-      name: "Gao",
-      lat: 16.27,
-      lng: -0.04,
-      clue: "An important trading city on the Niger River.",
-    },
-    {
-      id: "timbuktu",
-      name: "Timbuktu",
-      lat: 16.77,
-      lng: 3.0,
-      clue: "A center of Islamic learning and scholarship.",
-    },
+    { id: "niani", name: "Niani", lat: 12.25, lng: -10.88, clue: "The capital of the Mali Empire." },
+    { id: "walata", name: "Walata", lat: 20.93, lng: -7.33, clue: "A historic trading town." },
+    { id: "taghaza", name: "Taghaza", lat: 22.9, lng: -3.98, clue: "Salt mines in the Sahara." },
+    { id: "tuat", name: "Tuat", lat: 29.0, lng: -2.5, clue: "An oasis region in Algeria." },
+    { id: "ghadames", name: "Ghadames", lat: 30.13, lng: 9.5, clue: "An ancient oasis town in Libya." },
+    { id: "cairo", name: "Cairo", lat: 30.04, lng: 31.24, clue: "A great city of learning and trade in Egypt." },
+    { id: "medina", name: "Medina", lat: 24.47, lng: 39.61, clue: "The first holy city on the pilgrimage route." },
+    { id: "mecca", name: "Mecca", lat: 21.42, lng: 39.83, clue: "The final destination of the outbound journey." },
+    { id: "gao", name: "Gao", lat: 16.27, lng: -0.04, clue: "An important trading city on the Niger River." },
+    { id: "timbuktu", name: "Timbuktu", lat: 16.77, lng: 3.0, clue: "A center of Islamic learning and scholarship." },
   ]
 
   const outboundRoute = ["niani", "walata", "taghaza", "tuat", "ghadames", "cairo", "medina", "mecca"]
   const returnRoute = ["mecca", "medina", "cairo", "ghadames", "gao", "timbuktu", "niani"]
 
-  // Draw the map on the canvas
   useEffect(() => {
-    const drawMap = () => {
-      const canvas = canvasRef.current
-      const container = mapContainerRef.current
+    const container = mapContainerRef.current
+    if (!container) return
 
-      if (!canvas || !container) return
+    const map = L.map(container, {
+      center: [20, 20], // Center on North Africa
+      zoom: 3,
+      attributionControl: false,
+      dragging: false,
+      zoomControl: false,
+      scrollWheelZoom: false,
+    })
 
-      const ctx = canvas.getContext("2d")
-      const width = container.clientWidth
-      const height = container.clientHeight
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map)
 
-      canvas.width = width
-      canvas.height = height
+    cities.forEach((city) => {
+      L.marker([city.lat, city.lng]).addTo(map)
+    })
 
-      // Define the geographic bounds of our map
-      const minLng = -15
-      const maxLng = 45
-      const minLat = 5
-      const maxLat = 35
+    mapRef.current = map
 
-      // Function to convert geographic coordinates to canvas coordinates
-      const geoToCanvasCoords = (lat: number, lng: number) => {
-        const x = ((lng - minLng) / (maxLng - minLng)) * width
-        const y = (1 - (lat - minLat) / (maxLat - minLat)) * height
-        return { x, y }
-      }
-
-      if (!ctx) return
-
-      // Draw a simple map outline (simplified for brevity)
-      ctx.fillStyle = "#374151" // Slate gray
-      ctx.fillRect(0, 0, width, height)
-
-      // Draw a few simplified features (deserts, rivers)
-      ctx.fillStyle = "#71717a" // Gray
-      ctx.fillRect(0, 0, width, height / 4)
-      ctx.fillRect(0, height / 2, width, height / 4)
-
-      // Draw city pins
-      ctx.fillStyle = "#f59e0b" // Amber
-      cities.forEach((city) => {
-        const { x, y } = geoToCanvasCoords(city.lat, city.lng)
-        ctx.beginPath()
-        ctx.arc(x, y, 3, 0, 2 * Math.PI)
-        ctx.fill()
-      })
+    return () => {
+      map.remove()
+      mapRef.current = null
     }
-
-    drawMap()
   }, [])
 
   const geoToScreenCoords = (lat: number, lng: number) => {
-    const canvas = canvasRef.current
-    const container = mapContainerRef.current
+    const map = mapRef.current
+    if (!map) return { x: 0, y: 0 }
 
-    if (!canvas || !container) return { x: 0, y: 0 }
-
-    const width = container.clientWidth
-    const height = container.clientHeight
-
-    // Define the geographic bounds of our map
-    const minLng = -15
-    const maxLng = 45
-    const minLat = 5
-    const maxLat = 35
-
-    // Convert to screen coordinates
-    const x = ((lng - minLng) / (maxLng - minLng)) * width
-    const y = (1 - (lat - minLat) / (maxLat - minLat)) * height
-
-    return { x, y }
+    const point = map.latLngToContainerPoint([lat, lng])
+    return { x: point.x, y: point.y }
   }
 
   const calculateRotation = (startX: number, startY: number, endX: number, endY: number) => {
@@ -285,9 +188,7 @@ export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProp
         ref={mapContainerRef}
         className="relative w-full h-[400px] bg-amber-100/10 rounded-lg border-2 border-amber-800/30 overflow-hidden"
       >
-        {/* Map canvas */}
-        <canvas ref={canvasRef} className="absolute inset-0"></canvas>
-
+        {/* Map container */}
         {/* Scarab */}
         {journeyStarted && (
           <div
