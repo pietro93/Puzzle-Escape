@@ -44,14 +44,23 @@ const dialogueOptions = [
 
 // Define getBrainLampImage here
 const getBrainLampImage = (correctCombinations: number) => {
-  if (correctCombinations === 0) {
-    return "/images/brain-lamp-0.png"
-  } else if (correctCombinations <= 2) {
-    return "/images/brain-lamp-1.png"
-  } else if (correctCombinations <= 4) {
-    return "/images/brain-lamp-2.png"
-  } else {
-    return "/images/brain-lamp-3.png"
+  switch (correctCombinations) {
+    case 0:
+      return "/images/brainlamp.webp" // 0 correct
+    case 1:
+      return "/images/brainlamp1animated.webp" // 1 correct
+    case 2:
+      return "/images/brainlamp2animated.webp" // 2 correct
+    case 3:
+      return "/images/brainlamp3animated.webp" // 3 correct
+    case 4:
+      return "/images/brainlamp4animated.webp" // 4 correct
+    case 5:
+      return "/images/brainlamp5animated.webp" // 5 correct
+    case 6:
+      return "/images/brainlamp6animated.webp" // 6 correct (all)
+    default:
+      return "/images/brainlamp.webp" // Default
   }
 }
 
@@ -65,6 +74,7 @@ export default function GameScreen({
   soundEnabled,
   toggleSound,
   onJumpToLevel,
+  characterDialogues,
   onLevelComplete,
   onTransition,
 }: GameScreenProps) {

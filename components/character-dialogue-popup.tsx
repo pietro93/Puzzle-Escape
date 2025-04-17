@@ -21,7 +21,7 @@ export default function CharacterDialoguePopup({
   brainImage, // Destructure the new prop
 }: CharacterDialoguePopupProps) {
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div
         className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
