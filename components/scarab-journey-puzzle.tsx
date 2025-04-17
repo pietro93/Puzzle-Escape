@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
 import { X } from "lucide-react"
 import "leaflet/dist/leaflet.css"
-
-// Dynamic import for Leaflet
-import dynamic from "next/dynamic"
+import L from "leaflet"
 
 interface City {
   id: string
@@ -19,17 +18,10 @@ interface ScarabJourneyPuzzleProps {
   onSolve?: () => void
 }
 
-const LeafletMap = dynamic(() => import("./leaflet-map"), { ssr: false })
-
-const LeafletMapComponent = ({ cities, scarabPosition, scarabRotation }: any) => {
-  return <LeafletMap cities={cities} scarabPosition={scarabPosition} scarabRotation={scarabRotation} />
-}
-
-const LeafletMapWithNoSSR = dynamic(() => Promise.resolve(LeafletMapComponent), {
-  ssr: false,
-})
-
 export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProps) {
+  const mapContainerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<L.Map | null>(null)
+
   const [scarabPosition, setScarabPosition] = useState({ x: 0, y: 0 })
   const [currentCityIndex, setCurrentCityIndex] = useState(0)
   const [isOutboundJourney, setIsOutboundJourney] = useState(true)
@@ -56,28 +48,78 @@ export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProp
   const outboundRoute = ["niani", "walata", "taghaza", "tuat", "ghadames", "cairo", "medina", "mecca"]
   const returnRoute = ["mecca", "medina", "cairo", "ghadames", "gao", "timbuktu", "niani"]
 
-  const startJourney = useCallback(() => {
-    const startCity = cities.find((city) => city.id === "niani")
-    if (startCity) {
-      setScarabPosition({ x: startCity.lat, y: startCity.lng })
+  useEffect(() => {
+    const container = mapContainerRef.current
+    if (!container) return
+
+    const map = L.map(container, {
+      center: [20, 20], // Center on North Africa
+      zoom: 3,
+      attributionControl: false,
+      dragging: false,
+      zoomControl: false,
+      scrollWheelZoom: false,
+    })
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map)
+
+    cities.forEach((city) => {
+      L.marker([city.lat, city.lng]).addTo(map)
+    })
+
+    mapRef.current = map
+
+    return () => {
+      map.remove()
+      mapRef.current = null
     }
+  }, [])
+
+  const geoToScreenCoords = (lat: number, lng: number) => {
+    const map = mapRef.current
+    if (!map) return { x: 0, y: 0 }
+
+    const point = map.latLngToContainerPoint([lat, lng])
+    return { x: point.x, y: point.y }
+  }
+
+  const calculateRotation = (startX: number, startY: number, endX: number, endY: number) => {
+    const deltaX = endX - startX
+    const deltaY = endY - startY
+    const angleRad = Math.atan2(deltaY, deltaX)
+    const angleDeg = (angleRad * 180) / Math.PI
+    return angleDeg
+  }
+
+  const startJourney = () => {
+    if (journeyStarted) return
+
     setJourneyStarted(true)
     setIsMoving(true)
-  }, [cities])
 
-  const moveToNextCity = useCallback(() => {
+    const startCity = cities.find((city) => city.id === "niani")
+    if (startCity) {
+      const { x, y } = geoToScreenCoords(startCity.lat, startCity.lng)
+      setScarabPosition({ x, y })
+    }
+
+    moveToNextCity()
+  }
+
+  const moveToNextCity = () => {
     const route = isOutboundJourney ? outboundRoute : returnRoute
 
     if (currentCityIndex >= route.length - 1) {
       if (isOutboundJourney) {
         setIsOutboundJourney(false)
         setCurrentCityIndex(0)
+        moveToNextCity()
       } else {
         setIsMoving(false)
         setJourneyCompleted(true)
         if (onSolve) onSolve()
-        return
       }
+      return
     }
 
     const currentCityId = route[currentCityIndex]
@@ -88,38 +130,45 @@ export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProp
 
     if (!currentCity || !nextCity) return
 
-    const startPos = { lat: currentCity.lat, lng: currentCity.lng }
-    const endPos = { lat: nextCity.lat, lng: nextCity.lng }
+    const startPos = geoToScreenCoords(currentCity.lat, currentCity.lng)
+    const endPos = geoToScreenCoords(nextCity.lat, nextCity.lng)
 
-    const deltaX = endPos.lng - startPos.lng
-    const deltaY = endPos.lat - startPos.lat
-    const angleRad = Math.atan2(deltaY, deltaX)
-    const angleDeg = (angleRad * 180) / Math.PI
-    setScarabRotation(angleDeg)
+    const rotation = calculateRotation(startPos.x, startPos.y, endPos.x, endPos.y)
+    setScarabRotation(rotation)
 
-    setScarabPosition({ x: nextCity.lat, y: nextCity.lng })
-    setPopupContent(nextCity)
-    setShowPopup(true)
+    animateScarab(startPos, endPos, nextCity)
+  }
 
-    setTimeout(() => {
-      setShowPopup(false)
-      setCurrentCityIndex((prevIndex) => prevIndex + 1)
-    }, 2000)
-  }, [cities, currentCityIndex, isOutboundJourney, onSolve])
+  const animateScarab = (startPos: { x: number; y: number }, endPos: { x: number; y: number }, nextCity: City) => {
+    const duration = 3000
+    const startTime = Date.now()
 
-  useEffect(() => {
-    if (journeyStarted && isMoving) {
-      const timer = setTimeout(() => {
-        moveToNextCity()
-      }, 3000)
+    const animate = () => {
+      const currentTime = Date.now()
+      const elapsedTime = currentTime - startTime
+      const progress = Math.min(elapsedTime / duration, 1)
 
-      return () => clearTimeout(timer)
+      const currentX = startPos.x + (endPos.x - startPos.x) * progress
+      const currentY = startPos.y + (endPos.y - startPos.y) * progress
+
+      setScarabPosition({ x: currentX, y: currentY })
+
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        setPopupContent(nextCity)
+        setShowPopup(true)
+
+        setTimeout(() => {
+          setShowPopup(false)
+          setCurrentCityIndex(currentCityIndex + 1)
+          moveToNextCity()
+        }, 2000)
+      }
     }
-  }, [journeyStarted, isMoving, moveToNextCity])
 
-  useEffect(() => {
-    startJourney()
-  }, [startJourney])
+    animate()
+  }
 
   const closePopup = () => {
     setShowPopup(false)
@@ -135,21 +184,54 @@ export default function ScarabJourneyPuzzle({ onSolve }: ScarabJourneyPuzzleProp
         </p>
       </div>
 
-      <div className="relative w-full h-[400px] bg-amber-100/10 rounded-lg border-2 border-amber-800/30 overflow-hidden">
-        <LeafletMapComponent cities={cities} scarabPosition={scarabPosition} scarabRotation={scarabRotation} />
+      <div
+        ref={mapContainerRef}
+        className="relative w-full h-[400px] bg-amber-100/10 rounded-lg border-2 border-amber-800/30 overflow-hidden"
+      >
+        {/* Map container */}
+        {/* Scarab */}
+        {journeyStarted && (
+          <div
+            className="absolute w-8 h-8 transform -translate-x-1/2 -translate-y-1/2 transition-transform"
+            style={{
+              left: scarabPosition.x,
+              top: scarabPosition.y,
+              transform: `translate(-50%, -50%) rotate(${scarabRotation}deg)`,
+            }}
+          >
+            <Image
+              src="/images/moonstone.webp"
+              alt="Scarab"
+              width={32}
+              height={32}
+              className="w-full h-full object-contain"
+            />
+          </div>
+        )}
+
+        {/* City popup */}
+        {showPopup && popupContent && (
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900/90 p-3 rounded-lg border border-amber-700 max-w-[80%] z-10">
+            <button
+              onClick={closePopup}
+              className="absolute -top-2 -right-2 w-5 h-5 bg-red-900 rounded-full flex items-center justify-center text-white text-xs"
+            >
+              <X className="w-3 h-3" />
+            </button>
+            <h3 className="text-amber-300 font-pixel text-sm mb-1">{popupContent.name}</h3>
+            <p className="text-amber-100 text-xs">{popupContent.clue}</p>
+          </div>
+        )}
       </div>
 
-      {/* City popup */}
-      {showPopup && popupContent && (
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900/90 p-3 rounded-lg border border-amber-700 max-w-[80%] z-10">
+      {!journeyStarted && (
+        <div className="flex justify-center mt-4">
           <button
-            onClick={closePopup}
-            className="absolute -top-2 -right-2 w-5 h-5 bg-red-900 rounded-full flex items-center justify-center text-white text-xs"
+            onClick={startJourney}
+            className="px-4 py-2 bg-amber-900/50 hover:bg-amber-800/60 text-amber-200 rounded-md font-pixel text-sm border border-amber-700/50 transition-colors"
           >
-            <X className="w-3 h-3" />
+            Begin Scarab's Journey
           </button>
-          <h3 className="text-amber-300 font-pixel text-sm mb-1">{popupContent.name}</h3>
-          <p className="text-amber-100 text-xs">{popupContent.clue}</p>
         </div>
       )}
 
