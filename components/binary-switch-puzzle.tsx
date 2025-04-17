@@ -123,13 +123,13 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
       <div className="w-full max-w-md space-y-4 bg-black p-6 rounded-lg">
         {switches.map((row, rowIndex) => (
           <div key={rowIndex} className="flex items-center justify-between">
-            <div className="flex space-x-2">
+            <div className="flex">
               {row.map((value, switchIndex) => (
                 <button
                   key={switchIndex}
                   onClick={() => toggleSwitch(rowIndex, switchIndex)}
                   disabled={switchIndex < 3 || isSolved}
-                  className={`w-12 h-16 flex items-center justify-center ${switchIndex < 3 ? "cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
+                  className={`w-10 h-14 flex items-center justify-center ${switchIndex < 3 ? "cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
                 >
                   <img
                     src={
@@ -138,14 +138,14 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                         : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/flipswitch_0-xeAaXILvQOEYhaeJo2mWMHCPkbaT3P.webp"
                     }
                     alt={value === 1 ? "Switch On" : "Switch Off"}
-                    className="max-w-[75%] max-h-[75%] pixelated"
+                    className="w-full h-full object-contain pixelated"
                     style={{ opacity: getOpacity(switchIndex) }}
                   />
                 </button>
               ))}
             </div>
             {/* Make the row number visually distinct */}
-            <div className="ml-4 text-white font-mono text-sm">
+            <div className="ml-2 text-white font-mono text-sm">
               <span>{rowLabels[rowIndex]}</span>
             </div>
           </div>
