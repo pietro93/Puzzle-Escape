@@ -47,10 +47,24 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition, scarabR
 
     const scarabMarker = L.marker([scarabPosition.x, scarabPosition.y], {
       icon: scarabIcon,
-      rotationAngle: scarabRotation,
-      rotationOrigin: "center",
-    }).addTo(map)
+    })
     scarabMarkerRef.current = scarabMarker
+
+    // Add rotation functionality
+    scarabMarker.options.rotationAngle = scarabRotation
+    scarabMarker.options.rotationOrigin = "center"
+
+    // Function to update rotation
+    const updateRotation = () => {
+      if (scarabMarker && scarabMarker._icon) {
+        ;(scarabMarker._icon as HTMLElement).style.transformOrigin = "center"(
+          scarabMarker._icon as HTMLElement,
+        ).style.transform = `rotate(${scarabRotation}deg)`
+      }
+    }
+
+    // Initial rotation
+    updateRotation()
 
     return () => {
       map.remove()
@@ -65,7 +79,11 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ cities, scarabPosition, scarabR
     if (!map || !scarabMarker) return
 
     scarabMarker.setLatLng([scarabPosition.x, scarabPosition.y])
-    scarabMarker.setRotationAngle(scarabRotation)
+    if (scarabMarker && scarabMarker._icon) {
+      ;(scarabMarker._icon as HTMLElement).style.transformOrigin = "center"(
+        scarabMarker._icon as HTMLElement,
+      ).style.transform = `rotate(${scarabRotation}deg)`
+    }
   }, [scarabPosition, scarabRotation])
 
   return <div ref={mapContainerRef} className="relative w-full h-full" />
