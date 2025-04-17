@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
-import Image from "next/image"
 
 interface MapLocation {
   id: string
@@ -228,7 +227,7 @@ export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
         </p>
       </div>
 
-      {/* Map with pins */}
+      {/* Map container */}
       <div
         ref={mapContainerRef}
         className="relative w-full"
@@ -237,14 +236,12 @@ export default function FireMapPuzzle({ onSolve }: FireMapPuzzleProps) {
           minHeight: "500px",
         }}
       >
-        {/* Full-width map image */}
+        {/* Map image */}
         <div className="relative w-full h-full">
-          <Image
-            src="/images/map-background.png"
+          <img
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-nqQOSKgTeA2oYkDH2sTCJjq6pW1WKl.png"
             alt="Map with location pins"
-            layout="fill"
-            objectFit="contain"
-            className="pointer-events-none"
+            className="w-full h-full object-contain"
           />
 
           {/* Draw connections between pins */}
