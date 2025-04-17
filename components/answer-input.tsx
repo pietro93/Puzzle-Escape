@@ -76,10 +76,15 @@ export default function AnswerInput({
         onMouseEnter={handleSubmitButtonMouseEnter}
         onMouseLeave={handleSubmitButtonMouseLeave}
         disabled={
-          isCorrect || !answer.trim() || (level === 50 && jigsawComplete && !showElevator && isSubmitButtonHovered)
+          isCorrect ||
+          typeof answer !== "string" ||
+          !answer.trim() ||
+          (level === 50 && jigsawComplete && !showElevator && isSubmitButtonHovered)
         }
         className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-          answer.trim() && !(level === 50 && jigsawComplete && !showElevator && isSubmitButtonHovered)
+          typeof answer === "string" &&
+          answer.trim() &&
+          !(level === 50 && jigsawComplete && !showElevator && isSubmitButtonHovered)
             ? "bg-purple-900 hover:bg-purple-800 text-white"
             : "bg-gray-800 text-gray-600 cursor-not-allowed"
         } ${level === 50 && jigsawComplete && !showElevator && isSubmitButtonHovered ? "opacity-0" : "opacity-100"}`}

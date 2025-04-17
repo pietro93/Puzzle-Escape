@@ -24,7 +24,7 @@ type PathSegment = {
 }
 
 // The correct path sequence (starting and ending at sahara)
-const CORRECT_PATH = ["sahara", "egypt", "hejaz", "mali", "songhai", "sahara"]
+const CORRECT_PATH = ["mali", "sahara", "egypt", "hejaz", "songhai", "mali"]
 
 export default function GoldenScarabPuzzle() {
   // Audio hooks
@@ -34,16 +34,16 @@ export default function GoldenScarabPuzzle() {
   const [selectedPedestal, setSelectedPedestal] = useState<Pedestal | null>(null)
 
   // State for the scarab position
-  const [scarabPosition, setScarabPosition] = useState({ x: 50, y: 50 })
+  const [scarabPosition, setScarabPosition] = useState({ x: 80, y: 20 })
 
   // State for the current path
-  const [path, setPath] = useState<string[]>(["sahara"])
+  const [path, setPath] = useState<string[]>(["mali"])
 
   // State for the path segments (for drawing lines)
   const [pathSegments, setPathSegments] = useState<PathSegment[]>([])
 
   // State for the active pedestal (where the scarab currently is)
-  const [activePedestalId, setActivePedestalId] = useState<string>("sahara")
+  const [activePedestalId, setActivePedestalId] = useState<string>("mali")
 
   // State for puzzle completion
   const [isPuzzleComplete, setIsPuzzleComplete] = useState(false)
@@ -150,29 +150,29 @@ export default function GoldenScarabPuzzle() {
 
   // Check if a move is valid
   const isValidMove = (fromId: string, toId: string): boolean => {
+    // If we're at mali, we can go to sahara
+    if (fromId === "mali" && path.length === 1) {
+      return toId === "sahara"
+    }
+
     // If we're at sahara, we can go to egypt
-    if (fromId === "sahara" && path.length === 1) {
+    if (fromId === "sahara" && path.length === 2) {
       return toId === "egypt"
     }
 
     // If we're at egypt, we can go to hejaz
-    if (fromId === "egypt" && path.length === 2) {
+    if (fromId === "egypt" && path.length === 3) {
       return toId === "hejaz"
     }
 
-    // If we're at hejaz, we can go to mali
-    if (fromId === "hejaz" && path.length === 3) {
-      return toId === "mali"
-    }
-
-    // If we're at mali, we can go to songhai
-    if (fromId === "mali" && path.length === 4) {
+    // If we're at hejaz, we can go to songhai
+    if (fromId === "hejaz" && path.length === 4) {
       return toId === "songhai"
     }
 
-    // If we're at songhai, we can go back to sahara
+    // If we're at songhai, we can go back to mali
     if (fromId === "songhai" && path.length === 5) {
-      return toId === "sahara"
+      return toId === "mali"
     }
 
     return false
@@ -277,10 +277,10 @@ export default function GoldenScarabPuzzle() {
   // Handle resetting the puzzle
   const handleReset = () => {
     // Reset to initial state
-    setPath(["sahara"])
+    setPath(["mali"])
     setPathSegments([])
-    setActivePedestalId("sahara")
-    setScarabPosition({ x: 50, y: 50 })
+    setActivePedestalId("mali")
+    setScarabPosition({ x: 80, y: 20 })
     setIsPuzzleComplete(false)
     setIsAnimating(false)
     setShowSolution(false)
