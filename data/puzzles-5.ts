@@ -92,17 +92,18 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 47,
     question:
-      "The Devil gestures towards an infernal machine: dozens of switches connected to what appears to be a human brain... still attached to its head.",
+      "The Devil gestures towards an infernal machine: dozens of switches connected to what appears to be a human brain... still attached to its head. The owner seems to be in pain.",
     description: "",
     imageUrl: "",
-    solution: "fire",
-    category: "riddle",
+    solution: "eureka",
+    category: "logic",
     hints: [
       "The numbers next to each row of switches show how many switches need to be flipped up.",
       "Pay attention to the flickering of the light. When you find the correct combination for one set of switches, the lightbulb become slightly brighter.",
       "Once you find all six combinations, pay attention to what's in front of you. Perhaps the solution is hidden somewhere.",
       "The switches seem to be a combinations of 0s and 1s. Perhaps the solution is encoded in binary",
     ],
+    isBinarySwitchPuzzle: true,
   },
   // Level 48 - Mouth of Truth puzzle
   {

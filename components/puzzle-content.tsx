@@ -23,6 +23,7 @@ import InfernalCasinoPuzzle from "./infernal-casino-puzzle"
 import EgyptianPillarsPuzzle from "./egyptian-pillars-puzzle"
 import DarkRoomPuzzle from "./dark-room-puzzle"
 import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
+import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
 
 interface PuzzleContentProps {
@@ -133,6 +134,9 @@ export default function PuzzleContent({
 
   // Check if this is a mouth of truth puzzle
   const isMouthOfTruthPuzzle = puzzle.isMouthOfTruthPuzzle
+
+  // Check if this is a binary switch puzzle
+  const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
 
   return (
     <div className="bg-gray-900/80 p-5 rounded-lg mb-4 border border-gray-800 shadow-inner flex-1 backdrop-blur-sm">
@@ -413,6 +417,20 @@ export default function PuzzleContent({
             onSolve={() => {
               // Don't automatically solve, let the player type the answer
             }}
+          />
+        </div>
+      ) : null}
+
+      {isBinarySwitchPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <BinarySwitchPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
+            onCorrectCombinationsChange={setBinaryCorrectCombinations}
           />
         </div>
       ) : null}

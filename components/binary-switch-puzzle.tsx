@@ -98,11 +98,7 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                   className={`w-8 h-10 flex items-center justify-center ${switchIndex < 3 ? "opacity-70 cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
                 >
                   <img
-                    src={
-                      value === 1
-                        ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/flipswitch_1-poW0nL9c0xYdqZAthrHQvYqlR7I5o8.webp"
-                        : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/flipswitch_0-V7av0oGSpT5UWkqka0OmVMH4gKlpjv.webp"
-                    }
+                    src={value === 1 ? "/images/flipswitch_1.webp" : "/images/flipswitch_0.webp"}
                     alt={value === 1 ? "Switch On" : "Switch Off"}
                     className="w-full h-full pixelated"
                   />
