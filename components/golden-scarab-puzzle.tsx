@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 
@@ -92,6 +91,31 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
 
   // Center position for the scarab
   const centerPosition: Position = { x: 50, y: 50 }
+
+  // Calculate pedestal positions in a pentagon shape
+  useEffect(() => {
+    const containerWidth = 400 // Fixed container width
+    const containerHeight = 400 // Fixed container height
+    const pedestalRadius = 150 // Radius of the pentagon
+
+    const newPedestals = pedestals.map((pedestal, index) => {
+      const angle = ((2 * Math.PI) / pedestals.length) * index - Math.PI / 2 // Shift to start from top
+      const x = centerPosition.x + pedestalRadius * Math.cos(angle)
+      const y = centerPosition.y + pedestalRadius * Math.sin(angle)
+      return {
+        ...pedestal,
+        position: {
+          x: Math.max(0, Math.min(100, (x / containerWidth) * 100)), // Clamp values
+          y: Math.max(0, Math.min(100, (y / containerHeight) * 100)), // Clamp values
+        },
+      }
+    })
+
+    // Update the pedestal positions
+    pedestals.forEach((pedestal, index) => {
+      pedestal.position = newPedestals[index].position
+    })
+  }, [])
 
   // Handle pedestal click for information popup
   const handlePedestalClick = (pedestal: Pedestal, e: React.MouseEvent) => {
@@ -342,9 +366,9 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       {/* Center scarab position */}
       <div
         className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 z-20 
-         ${showDropEffect === "center" ? "animate-pulse scale-110" : ""} 
-         ${highlightedPedestal === "center" ? "ring-4 ring-yellow-400 rounded-full" : ""}
-       `}
+           ${showDropEffect === "center" ? "animate-pulse scale-110" : ""} 
+           ${highlightedPedestal === "center" ? "ring-4 ring-yellow-400 rounded-full" : ""}
+         `}
         style={{
           left: `${centerPosition.x}%`,
           top: `${centerPosition.y}%`,
@@ -376,9 +400,9 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
         <div
           key={pedestal.id}
           className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2
-           ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
-           ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
-         `}
+            ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
+            ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
+          `}
           style={{
             left: `${pedestal.position.x}%`,
             top: `${pedestal.position.y}%`,
@@ -468,15 +492,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
           </div>
         </div>
       )}
-
-      {/* Instructions */}
-      <div className="absolute bottom-2 left-2 right-2 bg-black bg-opacity-70 p-2 rounded text-xs text-gray-300">
-        <p>
-          Guide the golden scarab along the path of the legendary pilgrimage that changed the course of history.
-          <span className="text-yellow-400"> Drag and drop</span> the scarab to move it. Return to the center when
-          you've completed the journey.
-        </p>
-      </div>
     </div>
   )
 }
