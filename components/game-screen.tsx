@@ -94,7 +94,7 @@ export default function GameScreen({
   const [showPuzzleDetails, setShowPuzzleDetails] = useState(true)
   const [isAnimating, setIsAnimating] = useState(false)
   const [guardDialogIndex, setGuardDialogIndex] = useState(0)
-  const [showGuardPopup, setShowGuardDialog] = useState(false)
+  const [showGuardPopup, setShowGuardPopup] = useState(false)
   const [jigsawComplete, setJigsawComplete] = useState(false)
   const [lightsOn, setLightsOn] = useState(false)
   const [solved, setSolved] = useState(false)
@@ -230,7 +230,6 @@ export default function GameScreen({
       onWrong() // Trigger wrong answer sound
 
       setTimeout(() => {
-        setAnswer("")
         setFeedback("")
         setIsWrong(false)
       }, 1500)
@@ -380,15 +379,15 @@ export default function GameScreen({
           "It burns...",
           "My... thoughts...",
         ]
-        dialogue = earlyDialogues[Math.floor(Math.random() * dialogueOptions.length)]
+        dialogue = earlyDialogues[Math.floor(Math.random() * earlyDialogues.length)]
       } else if (binaryCorrectCombinations <= 3) {
         // Middle stage - increasing pain, less coherent
         const middleDialogues = [
           "AAAGH! IT HURTS!",
           "Can't... think...",
-          "My brain... burning...",
-          "No more... please...",
-          "STOP THE PAIN!",
+          "STOP! PLEASE!",
+          "My brain... melting...",
+          "No more... switches...",
         ]
         dialogue = middleDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       } else {
@@ -405,8 +404,8 @@ export default function GameScreen({
     }
 
     // Show the dialogue popup with the brain character
-    //setShowBrainDialogue(true);
-    //setBrainDialogue(dialogue);
+    setShowBrainDialogue(true)
+    setBrainDialogue(dialogue)
   }
 
   // Add this handler for the location image click
@@ -458,12 +457,21 @@ export default function GameScreen({
     setHasUsedElevator(true)
   }
 
-  const handleCloseGuardPopup = () => {
-    setShowGuardDialog(false)
-  }
+  // Update the FinalLevelPuzzle component when the elevator floor changes
+  useEffect(() => {
+    if (level === 50) {
+      const finalLevelPuzzleElement = document.getElementById("final-level-puzzle")
+      if (finalLevelPuzzleElement && finalLevelPuzzleElement.__reactProps$) {
+        if (finalLevelPuzzleElement.__reactProps$.onFloorChange) {
+          finalLevelPuzzleElement.__reactProps$.onFloorChange(currentElevatorFloor)
+        }
+      }
+    }
+  }, [currentElevatorFloor, level])
 
-  const onSolutionGenerated = (solution: string) => {
-    setDynamicSolution(solution)
+  // Function to close the guard popup
+  const handleCloseGuardPopup = () => {
+    setShowGuardPopup(false)
   }
 
   return (
@@ -550,7 +558,7 @@ export default function GameScreen({
         handleElevatorPanelOpen={handleElevatorPanelOpen}
         currentElevatorFloor={currentElevatorFloor}
         setCurrentElevatorFloor={setCurrentElevatorFloor}
-        onSolutionGenerated={onSolutionGenerated}
+        onSolutionGenerated={(solution) => setDynamicSolution(solution)}
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
       />
