@@ -51,7 +51,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "mali",
       name: "Mali Empire",
       image: "/images/golden-scarab/mali-pedestal.webp",
-      position: { x: 20, y: 40 },
+      position: { x: 50, y: 15 }, // Top
       description:
         "A vast West African empire known for its extraordinary wealth in gold. The royal court gleams with precious metals, while griots sing tales of mighty kings. Markets bustle with traders exchanging salt, ivory, and gold dust. The great university at Timbuktu draws scholars from across the world to study astronomy, mathematics, and theology.",
     },
@@ -59,7 +59,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "sahara",
       name: "Sahara Desert",
       image: "/images/golden-scarab/sahara-pedestal.webp",
-      position: { x: 30, y: 70 },
+      position: { x: 15, y: 50 }, // Left
       description:
         "The world's largest hot desert, a vast ocean of sand where caravans traverse ancient trade routes. Camel trains wind their way across towering dunes that shift with the desert winds. Oases provide rare respite with their date palms and precious water. The desert's vastness has claimed countless travelers who underestimated its harsh beauty.",
     },
@@ -67,55 +67,33 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       id: "egypt",
       name: "Mamluk Egypt",
       image: "/images/golden-scarab/egypt-pedestal.webp",
-      position: { x: 70, y: 30 },
+      position: { x: 85, y: 50 }, // Right
       description:
         "A powerful sultanate centered on the Nile, where ancient traditions blend with Islamic scholarship. Cairo's thousand minarets pierce the sky as markets overflow with goods from across three continents. The Mamluks, once slave soldiers, now rule as elite warriors and patrons of art and architecture. Scholars gather in Al-Azhar, preserving knowledge that spans millennia.",
-    },
-    {
-      id: "hejaz",
-      name: "Hejaz",
-      image: "/images/golden-scarab/hejaz-pedestal.webp",
-      position: { x: 80, y: 60 },
-      description:
-        "The sacred region of western Arabia containing Islam's holiest cities. In Mecca, the Kaaba stands as the center of faith, draped in kiswa cloth embroidered with gold thread. Pilgrims from across the world circle in prayer, fulfilling a sacred duty. The region's harsh mountains and desert climate are transformed by the devotion of those who journey here.",
     },
     {
       id: "songhai",
       name: "Songhai Empire",
       image: "/images/golden-scarab/songhai-pedestal.webp",
-      position: { x: 50, y: 80 },
+      position: { x: 30, y: 85 }, // Bottom Left
       description:
         "A powerful trading state along the Niger River that would later rise to prominence. River vessels connect distant markets, carrying goods and ideas across West Africa. The kingdom thrives on trade in gold, salt, and kola nuts. Skilled craftsmen create intricate works in gold, leather, and textiles that are sought after throughout the continent.",
+    },
+    {
+      id: "hejaz",
+      name: "Hejaz",
+      image: "/images/golden-scarab/hejaz-pedestal.webp",
+      position: { x: 70, y: 85 }, // Bottom Right
+      description:
+        "The sacred region of western Arabia containing Islam's holiest cities. In Mecca, the Kaaba stands as the center of faith, draped in kiswa cloth embroidered with gold thread. Pilgrims from across the world circle in prayer, fulfilling a sacred duty. The region's harsh mountains and desert climate are transformed by the devotion of those who journey here.",
     },
   ]
 
   // Center position for the scarab
   const centerPosition: Position = { x: 50, y: 50 }
 
-  // Calculate pedestal positions in a pentagon shape
-  useEffect(() => {
-    const containerWidth = 400 // Fixed container width
-    const containerHeight = 400 // Fixed container height
-    const pedestalRadius = 150 // Radius of the pentagon
-
-    const newPedestals = pedestals.map((pedestal, index) => {
-      const angle = ((2 * Math.PI) / pedestals.length) * index - Math.PI / 2 // Shift to start from top
-      const x = centerPosition.x + pedestalRadius * Math.cos(angle)
-      const y = centerPosition.y + pedestalRadius * Math.sin(angle)
-      return {
-        ...pedestal,
-        position: {
-          x: Math.max(0, Math.min(100, (x / containerWidth) * 100)), // Clamp values
-          y: Math.max(0, Math.min(100, (y / containerHeight) * 100)), // Clamp values
-        },
-      }
-    })
-
-    // Update the pedestal positions
-    pedestals.forEach((pedestal, index) => {
-      pedestal.position = newPedestals[index].position
-    })
-  }, [])
+  // Fixed pedestal size
+  const pedestalSize = 100
 
   // Handle pedestal click for information popup
   const handlePedestalClick = (pedestal: Pedestal, e: React.MouseEvent) => {
@@ -372,8 +350,10 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
         style={{
           left: `${centerPosition.x}%`,
           top: `${centerPosition.y}%`,
-          width: "100px",
-          height: "100px",
+          width: `${pedestalSize}px`,
+          height: `${pedestalSize}px`,
+          marginLeft: `-${pedestalSize / 2}px`,
+          marginTop: `-${pedestalSize / 2}px`,
         }}
       >
         {scarabPosition === "center" && (
@@ -381,8 +361,8 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
             <Image
               src="/images/golden-scarab/golden-scarab.webp"
               alt="Golden Scarab"
-              width={100}
-              height={100}
+              width={pedestalSize}
+              height={pedestalSize}
               className="object-contain"
               draggable={false}
             />
@@ -400,22 +380,24 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
         <div
           key={pedestal.id}
           className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2
-            ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
-            ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
-          `}
+             ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
+             ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
+           `}
           style={{
             left: `${pedestal.position.x}%`,
             top: `${pedestal.position.y}%`,
-            width: "120px", // Increased size
-            height: "140px", // Increased size
+            width: `${pedestalSize}px`,
+            height: `${pedestalSize}px`,
+            marginLeft: `-${pedestalSize / 2}px`,
+            marginTop: `-${pedestalSize / 2}px`,
           }}
           onClick={(e) => handlePedestalClick(pedestal, e)}
         >
           <Image
             src={pedestal.image || "/placeholder.svg"}
             alt={pedestal.name}
-            width={120} // Increased size
-            height={140} // Increased size
+            width={pedestalSize}
+            height={pedestalSize}
             className="object-contain"
             draggable={false}
           />
