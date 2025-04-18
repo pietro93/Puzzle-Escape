@@ -5,6 +5,8 @@ import { useState } from "react"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import HintSystem from "./hint-system"
+import { useHaptics } from "@/hooks/use-haptics"
+import { useAchievements, ACHIEVEMENTS } from "@/hooks/use-achievements"
 import { useCharacterDialogue } from "@/utils/dialogue-utils"
 import CharacterDialoguePopup from "./character-dialogue-popup"
 import { useRouter } from "next/navigation"
@@ -14,7 +16,7 @@ interface GameScreenProps {
   setting: string
   character: string
   puzzle: any
-  onCorrect: (isSkipping: boolean) => void
+  onCorrect: (isSkipping?: boolean) => void
   onWrong: () => void
   soundEnabled: boolean
   toggleSound: () => void
@@ -35,160 +37,145 @@ export default function GameScreen({
   const [answer, setAnswer] = useState("")
   const [isCorrect, setIsCorrect] = useState(false)
   const [isWrong, setIsWrong] = useState(false)
-  const [showDialogue, setShowDialogue] = useState(false)
+  const [showHint, setShowHint] = useState(false)
+  const [hintIndex, setHintIndex] = useState(0)
+  const [showSolution, setShowSolution] = useState(false)
+  const [showCongrats, setShowCongrats] = useState(false)
+  const [showCheat, setShowCheat] = useState(false)
   const [guardDialogIndex, setGuardDialogIndex] = useState(0)
+  const [showGuardDialog, setShowGuardDialog] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
   const [isSubmitButtonHovered, setIsSubmitButtonHovered] = useState(false)
-  const [currentPyramidRoom, setCurrentPyramidRoom] = useState("entrance")
-  const [hasPyramidTorch, setHasPyramidTorch] = useState(false)
-  const [hasUsedElevator, setHasUsedElevator] = useState(false)
-  const [showElevator, setShowElevator] = useState(false)
-  const [jigsawComplete, setJigsawComplete] = useState(false)
-  const [currentElevatorFloor, setCurrentElevatorFloor] = useState(0)
-  const [solution, setSolution] = useState("")
 
+  const { impact } = useHaptics()
+  const { unlockAchievement } = useAchievements()
+  const getCharacterDialogue = useCharacterDialogue()
   const router = useRouter()
 
-  const { getCharacterDialogue } = useCharacterDialogue()
-
-  const handleGuardClick = () => {
-    setShowDialogue(true)
+  const handleCorrect = (isSkipping = false) => {
+    setIsCorrect(true)
+    setIsWrong(false)
+    setAnswer("")
+    onCorrect(isSkipping)
+    if (setting === "prison") unlockAchievement(ACHIEVEMENTS.ESCAPE_PRISON)
+    if (setting === "mansion") unlockAchievement(ACHIEVEMENTS.ESCAPE_MANSION)
+    if (setting === "forest") unlockAchievement(ACHIEVEMENTS.ESCAPE_FOREST)
+    if (setting === "desert") unlockAchievement(ACHIEVEMENTS.ESCAPE_DESERT)
   }
 
-  const handleCloseDialogue = () => {
-    setShowDialogue(false)
+  const handleWrong = () => {
+    setIsWrong(true)
+    setIsCorrect(false)
+    setAnswer("")
+    onWrong()
   }
 
   const checkAnswer = () => {
-    if (answer.toLowerCase() === puzzle.solution.toLowerCase() || puzzle.solution.includes(answer.toLowerCase())) {
-      setIsCorrect(true)
-      onCorrect(false)
+    if (
+      answer.toLowerCase() === puzzle.solution.toLowerCase() ||
+      puzzle.solution.split("|").includes(answer.toLowerCase())
+    ) {
+      handleCorrect()
     } else {
-      setIsWrong(true)
-      onWrong()
+      handleWrong()
     }
   }
 
-  const handleJigsawComplete = () => {
-    setJigsawComplete(true)
+  const handleHint = () => {
+    setShowHint(true)
   }
 
-  const handleParrotSolve = () => {
-    setIsCorrect(true)
-    onCorrect(false)
+  const handleSolution = () => {
+    setShowSolution(true)
   }
 
-  const handleQuestionnaireRestart = () => {
-    setAnswer("")
-    setIsCorrect(false)
-    setIsWrong(false)
+  const handleCongrats = () => {
+    setShowCongrats(true)
   }
 
-  const handleLightSwitchUpdate = (isLightOn: boolean, isSolved: boolean) => {
-    // No specific logic needed here, just passing the props
+  const handleCheat = () => {
+    setShowCheat(true)
   }
 
-  const handleZodiacSolve = () => {
-    setIsCorrect(true)
-    onCorrect(false)
+  const handleNextHint = () => {
+    setHintIndex((prev) => (prev + 1) % (puzzle.hints?.length || 1))
   }
 
-  const handlePyramidRoomChange = (room: string) => {
-    setCurrentPyramidRoom(room)
+  const handleGuardClick = () => {
+    setShowGuardDialog(true)
   }
 
-  const handlePyramidTorchAcquired = () => {
-    setHasPyramidTorch(true)
+  const closeGuardDialog = () => {
+    setShowGuardDialog(false)
   }
 
-  const handleAllPiecesRemoved = () => {
-    setShowElevator(true)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientY)
   }
 
-  const handleElevatorPanelOpen = () => {
-    setHasUsedElevator(true)
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart) return
+
+    const touchEnd = e.touches[0].clientY
+    const touchDiff = touchStart - touchEnd
+
+    // Swipe up
+    if (touchDiff > 5) {
+      checkAnswer()
+    }
+    // Swipe down
+    if (touchDiff < -5) {
+      setAnswer("")
+    }
+
+    setTouchStart(null)
+  }
+
+  const handleTouchEnd = () => {
+    setTouchStart(null)
   }
 
   const handleSecretKey = () => {
     if (answer.toLowerCase() === "tiengviet") {
-      onCorrect(true)
+      handleCorrect(true)
+      impact("heavy")
     }
-  }
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    // Add touch start logic if needed
-  }
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    // Add touch move logic if needed
-  }
-
-  const handleTouchEnd = () => {
-    // Add touch end logic if needed
-    if (answer.trim()) {
-      checkAnswer()
-    }
-  }
-
-  const handleSolutionGenerated = (solution: string) => {
-    setSolution(solution)
-  }
-
-  const handleJumpToLevel = (level: number) => {
-    onJumpToLevel(level)
   }
 
   return (
     <div className="relative w-full h-full flex flex-col">
-      {/* Character and Location Display */}
-      <CharacterLocationDisplay
-        level={level}
-        setting={setting}
-        character={character}
-        puzzle={puzzle}
-        lightsOn={false}
-        solved={false}
-        onGuardClick={handleGuardClick}
-        onLocationClick={() => {}}
-        onPyramidLocationImageClick={() => {}}
-        currentPyramidRoom={currentPyramidRoom}
-        hasPyramidTorch={hasPyramidTorch}
-        hasUsedElevator={hasUsedElevator}
-        showElevator={showElevator}
-        jigsawComplete={jigsawComplete}
-      />
-
-      {/* Answer Input */}
-      <AnswerInput
-        answer={answer}
-        setAnswer={setAnswer}
-        isCorrect={isCorrect}
-        isWrong={isWrong}
-        checkAnswer={checkAnswer}
-        level={level}
-        jigsawComplete={jigsawComplete}
-        showElevator={showElevator}
-        isSubmitButtonHovered={isSubmitButtonHovered}
-        handleSubmitButtonMouseEnter={() => setIsSubmitButtonHovered(true)}
-        handleSubmitButtonMouseLeave={() => setIsSubmitButtonHovered(false)}
-        handleTouchStart={handleTouchStart}
-        handleTouchMove={handleTouchMove}
-        handleTouchEnd={handleTouchEnd}
-      />
-
-      {/* Hint System */}
-      <HintSystem hints={puzzle.hints || []} />
-
-      {/* Character Dialogue Popup */}
-      {showDialogue && (
+      {showGuardDialog && (
         <CharacterDialoguePopup
           character={character}
           dialogue={getCharacterDialogue(character, level)}
-          onClose={handleCloseDialogue}
-          isGuardPopup={true}
-          guardDialogIndex={guardDialogIndex}
-          level={level}
+          onClose={closeGuardDialog}
         />
       )}
+
+      <div className="flex-1 flex flex-col p-4">
+        <CharacterLocationDisplay
+          level={level}
+          setting={setting}
+          character={character}
+          puzzle={puzzle}
+          onGuardClick={handleGuardClick}
+        />
+
+        <AnswerInput
+          answer={answer}
+          setAnswer={setAnswer}
+          isCorrect={isCorrect}
+          isWrong={isWrong}
+          checkAnswer={checkAnswer}
+          level={level}
+          handleTouchStart={handleTouchStart}
+          handleTouchMove={handleTouchMove}
+          handleTouchEnd={handleTouchEnd}
+        />
+
+        {puzzle.hints && puzzle.hints.length > 0 && <HintSystem hints={puzzle.hints} />}
+      </div>
     </div>
   )
 }
