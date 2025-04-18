@@ -94,7 +94,7 @@ export default function GameScreen({
   const [showPuzzleDetails, setShowPuzzleDetails] = useState(true)
   const [isAnimating, setIsAnimating] = useState(false)
   const [guardDialogIndex, setGuardDialogIndex] = useState(0)
-  const [showGuardPopup, setShowGuardPopup] = useState(false)
+  const [showGuardPopup, setShowGuardDialog] = useState(false)
   const [jigsawComplete, setJigsawComplete] = useState(false)
   const [lightsOn, setLightsOn] = useState(false)
   const [solved, setSolved] = useState(false)
@@ -123,8 +123,6 @@ export default function GameScreen({
   // Add state for brain dialogue
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
-  // Add state for golden scarab puzzle
-  const [scarabPuzzleSolved, setScarabPuzzleSolved] = useState(false)
 
   // Focus input when component mounts
   useEffect(() => {
@@ -143,26 +141,6 @@ export default function GameScreen({
     return () => clearTimeout(timer)
   }, [])
 
-  // Add event listener for scarab puzzle solved
-  useEffect(() => {
-    const handleScarabPuzzleSolved = () => {
-      setScarabPuzzleSolved(true)
-      setFeedback("You've traced the path of the legendary pilgrimage! What phrase describes this journey?")
-
-      // Play success sound
-      playSound("/audio/correct.mp3")
-
-      // Vibrate if available
-      vibrate(200)
-    }
-
-    window.addEventListener("scarabPuzzleSolved", handleScarabPuzzleSolved)
-
-    return () => {
-      window.removeEventListener("scarabPuzzleSolved", handleScarabPuzzleSolved)
-    }
-  }, [playSound, vibrate])
-
   const checkAnswer = () => {
     if (!answer.trim()) return
 
@@ -176,10 +154,6 @@ export default function GameScreen({
         // Reset any level-specific state here
         if (puzzle.isQuestionnairePuzzle && questionnaireRef.current) {
           questionnaireRef.current.initializePuzzle()
-        }
-        // Reset scarab puzzle state if needed
-        if (puzzle.isGoldenScarabPuzzle) {
-          setScarabPuzzleSolved(false)
         }
       }, 1000)
       return
@@ -256,6 +230,7 @@ export default function GameScreen({
       onWrong() // Trigger wrong answer sound
 
       setTimeout(() => {
+        setAnswer("")
         setFeedback("")
         setIsWrong(false)
       }, 1500)
@@ -405,15 +380,15 @@ export default function GameScreen({
           "It burns...",
           "My... thoughts...",
         ]
-        dialogue = earlyDialogues[Math.floor(Math.random() * earlyDialogues.length)]
+        dialogue = earlyDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       } else if (binaryCorrectCombinations <= 3) {
         // Middle stage - increasing pain, less coherent
         const middleDialogues = [
           "AAAGH! IT HURTS!",
           "Can't... think...",
-          "STOP! PLEASE!",
-          "My brain... melting...",
-          "No more... switches...",
+          "My brain... burning...",
+          "No more... please...",
+          "STOP THE PAIN!",
         ]
         dialogue = middleDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       } else {
@@ -430,8 +405,8 @@ export default function GameScreen({
     }
 
     // Show the dialogue popup with the brain character
-    setShowBrainDialogue(true)
-    setBrainDialogue(dialogue)
+    //setShowBrainDialogue(true);
+    //setBrainDialogue(dialogue);
   }
 
   // Add this handler for the location image click
@@ -483,21 +458,12 @@ export default function GameScreen({
     setHasUsedElevator(true)
   }
 
-  // Update the FinalLevelPuzzle component when the elevator floor changes
-  useEffect(() => {
-    if (level === 50) {
-      const finalLevelPuzzleElement = document.getElementById("final-level-puzzle")
-      if (finalLevelPuzzleElement && finalLevelPuzzleElement.__reactProps$) {
-        if (finalLevelPuzzleElement.__reactProps$.onFloorChange) {
-          finalLevelPuzzleElement.__reactProps$.onFloorChange(currentElevatorFloor)
-        }
-      }
-    }
-  }, [currentElevatorFloor, level])
-
-  // Function to close the guard popup
   const handleCloseGuardPopup = () => {
-    setShowGuardPopup(false)
+    setShowGuardDialog(false)
+  }
+
+  const onSolutionGenerated = (solution: string) => {
+    setDynamicSolution(solution)
   }
 
   return (
@@ -584,7 +550,7 @@ export default function GameScreen({
         handleElevatorPanelOpen={handleElevatorPanelOpen}
         currentElevatorFloor={currentElevatorFloor}
         setCurrentElevatorFloor={setCurrentElevatorFloor}
-        onSolutionGenerated={(solution) => setDynamicSolution(solution)}
+        onSolutionGenerated={onSolutionGenerated}
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
       />
@@ -629,12 +595,6 @@ export default function GameScreen({
         {jigsawComplete && !isCorrect && level === 44 && (
           <div className="p-3 rounded-lg text-center font-pixel bg-purple-900/80 text-purple-200 border border-purple-700 animate-fadeIn shadow-lg">
             You've completed the puzzle! What could this painting represent?
-          </div>
-        )}
-
-        {scarabPuzzleSolved && !isCorrect && level === 32 && (
-          <div className="p-3 rounded-lg text-center font-pixel bg-amber-900/80 text-amber-200 border border-amber-700 animate-fadeIn shadow-lg">
-            You've traced the path of the legendary pilgrimage! What phrase describes this journey?
           </div>
         )}
 
