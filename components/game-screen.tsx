@@ -563,7 +563,6 @@ export default function GameScreen({
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
       />
-      {/* Color Palette Puzzle */}
       {puzzle.isColorPalettePuzzle ? (
         <div className="my-4">
           {puzzle.description && (
