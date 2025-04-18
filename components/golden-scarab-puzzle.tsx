@@ -342,16 +342,15 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       {/* Center scarab position */}
       <div
         className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 z-20 
-          ${showDropEffect === "center" ? "animate-pulse scale-110" : ""} 
-          ${highlightedPedestal === "center" ? "ring-4 ring-yellow-400 rounded-full" : ""}
-        `}
+         ${showDropEffect === "center" ? "animate-pulse scale-110" : ""} 
+         ${highlightedPedestal === "center" ? "ring-4 ring-yellow-400 rounded-full" : ""}
+       `}
         style={{
           left: `${centerPosition.x}%`,
           top: `${centerPosition.y}%`,
           width: "100px",
           height: "100px",
         }}
-        onClick={handleReturnToCenter}
       >
         {scarabPosition === "center" && (
           <div ref={scarabRef} className="cursor-grab active:cursor-grabbing" onMouseDown={handleDragStart}>
@@ -376,38 +375,34 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       {pedestals.map((pedestal) => (
         <div
           key={pedestal.id}
-          className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 
-            ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
-            ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
-          `}
+          className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2
+           ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
+           ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
+         `}
           style={{
             left: `${pedestal.position.x}%`,
             top: `${pedestal.position.y}%`,
-            width: "100px",
-            height: "120px",
+            width: "120px", // Increased size
+            height: "140px", // Increased size
           }}
           onClick={(e) => handlePedestalClick(pedestal, e)}
         >
           <Image
             src={pedestal.image || "/placeholder.svg"}
             alt={pedestal.name}
-            width={100}
-            height={120}
+            width={120} // Increased size
+            height={140} // Increased size
             className="object-contain"
             draggable={false}
           />
           {scarabPosition === pedestal.id && (
-            <div
-              className="absolute top-[-40px] left-1/2 transform -translate-x-1/2 cursor-grab active:cursor-grabbing"
-              onMouseDown={handleDragStart}
-            >
+            <div className="absolute top-[-40px] left-1/2 transform -translate-x-1/2">
               <Image
                 src="/images/golden-scarab/golden-scarab.webp"
                 alt="Golden Scarab"
                 width={60}
                 height={60}
                 className="object-contain"
-                draggable={false}
               />
             </div>
           )}
@@ -423,7 +418,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       {/* Pedestal popup */}
       {showPopup && selectedPedestal && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-stone-800 rounded-lg p-6 max-w-md w-full border border-yellow-700">
+          <div className="bg-stone-800 rounded-lg p-6 max-w-md w-full border border-yellow-700 animate-fadeIn">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-pixel text-yellow-500">{selectedPedestal.name}</h3>
               <button onClick={() => setShowPopup(false)} className="text-gray-400 hover:text-white">
@@ -442,10 +437,10 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
               <p className="text-gray-300 text-sm mb-6">{selectedPedestal.description}</p>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex justify-between">
               <button
                 onClick={() => setShowPopup(false)}
-                className="px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-600 font-pixel"
+                className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 font-pixel"
               >
                 Close
               </button>
