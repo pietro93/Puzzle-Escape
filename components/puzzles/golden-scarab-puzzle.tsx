@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react"
 import Image from "next/image"
-import { useAudio } from "@/hooks/use-audio"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
@@ -59,7 +58,7 @@ const pedestals: Pedestal[] = [
 
 const correctPath = ["start", "mali", "sahara", "egypt", "hejaz", "songhai", "mali", "end"]
 
-export default function GoldenScarabPuzzle({
+export function GoldenScarabPuzzle({
   onSolve,
 }: {
   onSolve: (solution: string) => void
@@ -71,7 +70,6 @@ export default function GoldenScarabPuzzle({
   const [isSolved, setIsSolved] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { playSound } = useAudio()
 
   const centerPosition = { x: 50, y: 50 }
 
@@ -85,14 +83,12 @@ export default function GoldenScarabPuzzle({
     setPath(["start"])
     setScarabPosition("center")
     setLines([])
-    playSound("button-click")
   }
 
   const handlePedestalClick = (pedestal: Pedestal) => {
     if (isSolved) return
 
     setSelectedPedestal(pedestal)
-    playSound("button-click")
   }
 
   const handlePedestalSelect = (pedestal: Pedestal) => {
@@ -122,13 +118,11 @@ export default function GoldenScarabPuzzle({
 
       if (isCorrect) {
         setIsSolved(true)
-        playSound("correct")
         setTimeout(() => {
           onSolve("sublime splendor")
         }, 2000)
       } else {
         // Wrong path
-        playSound("wrong")
         setTimeout(() => {
           // Reset after a delay
           setPath(["start"])
@@ -144,7 +138,7 @@ export default function GoldenScarabPuzzle({
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center bg-amber-50 p-4">
+    <div className="relative w-full h-full flex flex-col items-center justify-center bg-amber-50 p-4 rounded-lg">
       <div className="mb-6 text-center max-w-2xl">
         <h2 className="text-xl font-bold mb-2">The Golden Scarab's Journey</h2>
         <p className="text-sm">
