@@ -37,7 +37,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "mali",
       name: "Mali",
-      image: "/images/golden-scarab/mali-pedistal.webp",
+      image: "/images/golden-scarab/mali-pedestal.webp",
       position: { x: 70, y: 70 },
       description: "This pedestal is adorned with a majestic golden lion, symbolizing strength and royalty.",
       next: "sahara",
@@ -46,7 +46,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "sahara",
       name: "Sahara",
-      image: "/images/golden-scarab/sahara-pedistal.webp",
+      image: "/images/golden-scarab/sahara-pedestal.webp",
       position: { x: 30, y: 70 },
       description: "This pedestal features sand dunes and camels, representing the vast Sahara Desert.",
       next: "egypt",
@@ -55,7 +55,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "egypt",
       name: "Egypt",
-      image: "/images/golden-scarab/egypt-pedistal.webp",
+      image: "/images/golden-scarab/egypt-pedestal.webp",
       position: { x: 80, y: 30 },
       description: "This pedestal features a lotus flower, a symbol of rebirth and creation in ancient Egypt.",
       next: "hejaz",
@@ -64,7 +64,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "hejaz",
       name: "Hejaz",
-      image: "/images/golden-scarab/hejaz-pedistal.webp",
+      image: "/images/golden-scarab/hejaz-pedestal.webp",
       position: { x: 20, y: 30 },
       description: "This pedestal resembles the Kaaba, a sacred cube-shaped building in Mecca.",
       next: "songhai",
@@ -73,7 +73,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "songhai",
       name: "Songhai",
-      image: "/images/golden-scarab/songhai-pedistal.webp",
+      image: "/images/golden-scarab/songhai-pedestal.webp",
       position: { x: 50, y: 10 },
       description: "This pedestal depicts a trading boat, symbolizing commerce and prosperity.",
       next: "mali",
@@ -167,7 +167,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
           onClick={handleCenterClick}
         >
           <Image
-            src="/images/golden-scarab/golden_scarab.webp"
+            src="/images/golden-scarab/golden-scarab.webp"
             alt="Golden Scarab"
             width={80}
             height={80}
