@@ -32,17 +32,17 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 13,
-    question: "The butler presents you with a curious painting.",
+    question: "The butler presents you with a color palette.",
     description:
-      '"This painting has always fascinated me," the butler says, gesturing to a still life of various fruits. "The master claimed it contained a hidden message about his favorite fruit, but I\'ve never been able to decipher it."\n\nThe painting shows apples, oranges, pears, and bananas arranged in a specific pattern.',
-    locationImage: "/images/level13/color_palette.webp",
-    imageUrl: "",
-    solution: "pineapple",
-    category: "word",
+      '"This palette is an artifact gifted to the Master by a renowned French painter," the butler explains. "The painter also left a message with it mentioning that the canvas is some treasure map of sorts."',
+    imageUrl: "/images/level13/color_palette.webp",
+    isColorPalettePuzzle: true,
+    solution: "Vampire Island",
+    category: "riddle",
     hints: [
-      "Look at the first letter of each fruit in the painting.",
-      "The arrangement of the fruits might suggest how to combine these letters.",
-      "The master's favorite fruit is not shown in the painting itself.",
+      "The French painter left a message with the palette.",
+      "The canvas is some treasure map of sorts.",
+      "The solution is a location.",
     ],
   },
   {
