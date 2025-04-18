@@ -123,6 +123,8 @@ export default function GameScreen({
   // Add state for brain dialogue
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
+  // Add state for golden scarab puzzle
+  const [scarabPuzzleSolved, setScarabPuzzleSolved] = useState(false)
 
   // Focus input when component mounts
   useEffect(() => {
@@ -141,6 +143,26 @@ export default function GameScreen({
     return () => clearTimeout(timer)
   }, [])
 
+  // Add event listener for scarab puzzle solved
+  useEffect(() => {
+    const handleScarabPuzzleSolved = () => {
+      setScarabPuzzleSolved(true)
+      setFeedback("You've traced the path of the legendary pilgrimage! What phrase describes this journey?")
+
+      // Play success sound
+      playSound("/audio/correct.mp3")
+
+      // Vibrate if available
+      vibrate(200)
+    }
+
+    window.addEventListener("scarabPuzzleSolved", handleScarabPuzzleSolved)
+
+    return () => {
+      window.removeEventListener("scarabPuzzleSolved", handleScarabPuzzleSolved)
+    }
+  }, [playSound, vibrate])
+
   const checkAnswer = () => {
     if (!answer.trim()) return
 
@@ -154,6 +176,10 @@ export default function GameScreen({
         // Reset any level-specific state here
         if (puzzle.isQuestionnairePuzzle && questionnaireRef.current) {
           questionnaireRef.current.initializePuzzle()
+        }
+        // Reset scarab puzzle state if needed
+        if (puzzle.isGoldenScarabPuzzle) {
+          setScarabPuzzleSolved(false)
         }
       }, 1000)
       return
@@ -603,6 +629,12 @@ export default function GameScreen({
         {jigsawComplete && !isCorrect && level === 44 && (
           <div className="p-3 rounded-lg text-center font-pixel bg-purple-900/80 text-purple-200 border border-purple-700 animate-fadeIn shadow-lg">
             You've completed the puzzle! What could this painting represent?
+          </div>
+        )}
+
+        {scarabPuzzleSolved && !isCorrect && level === 32 && (
+          <div className="p-3 rounded-lg text-center font-pixel bg-amber-900/80 text-amber-200 border border-amber-700 animate-fadeIn shadow-lg">
+            You've traced the path of the legendary pilgrimage! What phrase describes this journey?
           </div>
         )}
 

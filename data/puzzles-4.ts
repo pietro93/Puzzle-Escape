@@ -19,56 +19,18 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with four ancient figures, each claiming to know the secret of the desert.",
-    description:
-      "Four figures stand before you, each claiming to know the secret of the desert. The Sphinx tells you that only one speaks the truth, while the others lie. You must determine who speaks the truth.",
+    question: "The Sphinx presents you with a golden scarab and ancient pedestals.",
+    description: "Guide the sacred beetle along the path of a legendary pilgrimage that changed the course of history.",
     imageUrl: "",
-    isInteractiveInmates: true,
-    inmateData: [
-      {
-        name: "Priest",
-        image: "/images/priest.webp", // Placeholder
-        statements: [
-          { text: "The merchant knows the secret path through the desert." },
-          { text: "The scribe is not to be trusted." },
-          { text: "I have served the gods faithfully for decades." },
-        ],
-      },
-      {
-        name: "Merchant",
-        image: "/images/merchant.webp", // Placeholder
-        statements: [
-          { text: "The priest speaks falsely about me." },
-          { text: "The soldier has never set foot in the sacred temple." },
-          { text: "I have traveled the desert many times." },
-        ],
-      },
-      {
-        name: "Scribe",
-        image: "/images/scribe.webp", // Placeholder
-        statements: [
-          { text: "I alone know the ancient texts that reveal the secret." },
-          { text: "The priest has been corrupted by gold." },
-          { text: "The merchant's maps are forgeries." },
-        ],
-      },
-      {
-        name: "Soldier",
-        image: "/images/soldier.webp", // Placeholder
-        statements: [
-          { text: "I have guarded the secret for many years." },
-          { text: "The scribe's knowledge comes from stolen scrolls." },
-          { text: "The merchant has never left the city walls." },
-        ],
-      },
-    ],
-    guardStatement: "Only one of these four speaks the truth. The others lie. Who speaks the truth?",
-    solution: "merchant",
-    category: "logic",
+    isGoldenScarabPuzzle: true,
+    solution: "sublime splendor",
+    category: "pattern",
     hints: [
-      "Analyze each statement carefully and look for contradictions.",
-      "If only one person tells the truth, then all statements by the others must be false.",
-      "The truthful person's statements must all be true, while the liars must have at least one false statement each.",
+      "The golden scarab must trace the journey of the wealthiest ruler who ever lived.",
+      "Begin and end at the center, visiting each kingdom in the correct order.",
+      "The journey starts in a land of gold, crosses the burning sands, and reaches a sacred destination before returning.",
+      "The path is: Start → Mali → Sahara → Egypt → Hejaz → Songhai → Mali → Return to center",
+      "This pilgrimage was so lavish that it caused economic inflation in every city along the route.",
     ],
   },
   {
