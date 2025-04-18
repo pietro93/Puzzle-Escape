@@ -28,7 +28,6 @@ import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
 import { useState } from "react"
 import FireMapPuzzle from "./fire-map-puzzle"
-import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -499,7 +498,6 @@ export default function PuzzleContent({
         </div>
       ) : null}
       {puzzle.isFireMapPuzzle && <FireMapPuzzle onSolve={() => handleParrotSolve()} />}
-      {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle onSolve={() => handleParrotSolve()} />}
     </div>
   )
 }
