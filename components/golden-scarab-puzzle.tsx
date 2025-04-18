@@ -24,15 +24,6 @@ interface GoldenScarabPuzzleProps {
 }
 
 const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
-  const [scarabPosition, setScarabPosition] = useState<string>("center")
-  const [visited, setVisited] = useState<number[]>([])
-  const [isSolved, setIsSolved] = useState(false)
-  const [showSolution, setShowSolution] = useState(false)
-  const [path, setPath] = useState<number[]>([0]) // Track the path
-  const [isResetting, setIsResetting] = useState(false)
-
-  const containerRef = useRef<HTMLDivElement | null>(null)
-
   const pedestals: Pedestal[] = [
     {
       id: "mali",
@@ -80,6 +71,16 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
       index: 5,
     },
   ]
+
+  console.log("Rendering Golden Scarab Puzzle with pedestals:", pedestals)
+  const [scarabPosition, setScarabPosition] = useState<string>("center")
+  const [visited, setVisited] = useState<number[]>([])
+  const [isSolved, setIsSolved] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
+  const [path, setPath] = useState<number[]>([0]) // Track the path
+  const [isResetting, setIsResetting] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
   const centerPosition: Position = { x: 50, y: 50 }
 
@@ -149,6 +150,11 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
               width={80}
               height={100}
               className="object-contain"
+              priority
+              onError={(e) => {
+                console.error(`Failed to load image: ${pedestal.image}`)
+                e.currentTarget.src = "/placeholder.svg"
+              }}
             />
             <p className="text-white text-center text-xs mt-1">{pedestal.name}</p>
           </motion.div>
@@ -172,6 +178,11 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
             width={80}
             height={80}
             className="object-contain"
+            priority
+            onError={(e) => {
+              console.error("Failed to load scarab image")
+              e.currentTarget.src = "/placeholder.svg"
+            }}
           />
         </motion.div>
       </div>
