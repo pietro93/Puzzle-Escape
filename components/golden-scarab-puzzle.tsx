@@ -49,43 +49,43 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
   const pedestals: Pedestal[] = [
     {
       id: "mali",
-      name: "Mali Empire",
+      name: "Golden Lion Pedestal",
       image: "/images/golden-scarab/mali-pedestal.webp",
       position: { x: 50, y: 15 }, // Top
       description:
-        "A vast West African empire known for its extraordinary wealth in gold. The royal court gleams with precious metals, while griots sing tales of mighty kings. Markets bustle with traders exchanging salt, ivory, and gold dust. The great university at Timbuktu draws scholars from across the world to study astronomy, mathematics, and theology.",
+        "This pedestal is adorned with a majestic golden lion, symbolizing strength and royalty. Intricate carvings cover its surface, depicting scenes of prosperity and power.",
     },
     {
       id: "sahara",
-      name: "Sahara Desert",
+      name: "Desert Oasis Pedestal",
       image: "/images/golden-scarab/sahara-pedestal.webp",
       position: { x: 15, y: 50 }, // Left
       description:
-        "The world's largest hot desert, a vast ocean of sand where caravans traverse ancient trade routes. Camel trains wind their way across towering dunes that shift with the desert winds. Oases provide rare respite with their date palms and precious water. The desert's vastness has claimed countless travelers who underestimated its harsh beauty.",
+        "This pedestal features a serene oasis scene, complete with palm trees and a shimmering pool of water. The base is made of rough-hewn stone, contrasting with the delicate oasis above.",
     },
     {
       id: "egypt",
-      name: "Mamluk Egypt",
+      name: "Nile Serpent Pedestal",
       image: "/images/golden-scarab/egypt-pedestal.webp",
       position: { x: 85, y: 50 }, // Right
       description:
-        "A powerful sultanate centered on the Nile, where ancient traditions blend with Islamic scholarship. Cairo's thousand minarets pierce the sky as markets overflow with goods from across three continents. The Mamluks, once slave soldiers, now rule as elite warriors and patrons of art and architecture. Scholars gather in Al-Azhar, preserving knowledge that spans millennia.",
+        "This pedestal is carved with a winding serpent, representing the life-giving Nile. Hieroglyphs adorn its sides, hinting at ancient knowledge and forgotten secrets.",
     },
     {
       id: "songhai",
-      name: "Songhai Empire",
+      name: "River Trading Pedestal",
       image: "/images/golden-scarab/songhai-pedestal.webp",
       position: { x: 30, y: 85 }, // Bottom Left
       description:
-        "A powerful trading state along the Niger River that would later rise to prominence. River vessels connect distant markets, carrying goods and ideas across West Africa. The kingdom thrives on trade in gold, salt, and kola nuts. Skilled craftsmen create intricate works in gold, leather, and textiles that are sought after throughout the continent.",
+        "This pedestal depicts a bustling river scene, with boats carrying goods to distant markets. The base is decorated with intricate patterns and symbols of trade.",
     },
     {
       id: "hejaz",
-      name: "Hejaz",
+      name: "Mountain Shrine Pedestal",
       image: "/images/golden-scarab/hejaz-pedestal.webp",
       position: { x: 70, y: 85 }, // Bottom Right
       description:
-        "The sacred region of western Arabia containing Islam's holiest cities. In Mecca, the Kaaba stands as the center of faith, draped in kiswa cloth embroidered with gold thread. Pilgrims from across the world circle in prayer, fulfilling a sacred duty. The region's harsh mountains and desert climate are transformed by the devotion of those who journey here.",
+        "This pedestal is carved with towering mountains and a sacred shrine at its peak. The air around it seems to shimmer with devotion and reverence.",
     },
   ]
 
