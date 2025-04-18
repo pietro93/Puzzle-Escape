@@ -39,8 +39,8 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
   const [highlightedPedestal, setHighlightedPedestal] = useState<string | null>(null)
   const [showDropEffect, setShowDropEffect] = useState<string | null>(null)
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const scarabRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const scarabRef = useRef<HTMLDivElement | null>(null)
 
   // Define the correct path sequence
   const correctSequence = ["mali", "sahara", "egypt", "hejaz", "songhai", "mali", "center"]
@@ -104,7 +104,6 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
   const handleDragStart = (e: React.MouseEvent) => {
     if (isSolved) return
 
-    e.preventDefault()
     setIsDragging(true)
 
     // Get initial position
@@ -332,29 +331,26 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
   }
 
   return (
-    <div className="relative w-full h-[500px] bg-stone-900 rounded-lg overflow-hidden" ref={containerRef}>
+    <div
+      className="relative w-full h-[500px] bg-stone-900 rounded-lg overflow-hidden flex items-center justify-center"
+      ref={containerRef}
+    >
       {/* Render paths */}
       {renderPaths()}
 
       {/* Center scarab position */}
       <div
         className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 z-20 
-           ${showDropEffect === "center" ? "animate-pulse scale-110" : ""} 
-           ${highlightedPedestal === "center" ? "ring-4 ring-yellow-400 rounded-full" : ""}
-         `}
+          ${showDropEffect === "center" ? "animate-pulse scale-110" : ""} 
+          ${highlightedPedestal === "center" ? "ring-4 ring-yellow-400 rounded-full" : ""}
+        `}
         style={{
           left: `${centerPosition.x}%`,
           top: `${centerPosition.y}%`,
           width: `${pedestalSize}px`,
-          maxWidth: `${pedestalSize}px`,
           height: `${pedestalSize}px`,
-          maxHeight: `${pedestalSize}px`,
           marginLeft: `-${pedestalSize / 2}px`,
           marginTop: `-${pedestalSize / 2}px`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxSizing: "border-box",
         }}
       >
         {scarabPosition === "center" && (
@@ -381,22 +377,16 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
         <div
           key={pedestal.id}
           className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2
-              ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
-              ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
-            `}
+            ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
+            ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
+          `}
           style={{
             left: `${pedestal.position.x}%`,
             top: `${pedestal.position.y}%`,
             width: `${pedestalSize}px`,
-            maxWidth: `${pedestalSize}px`,
             height: `${pedestalSize}px`,
-            maxHeight: `${pedestalSize}px`,
             marginLeft: `-${pedestalSize / 2}px`,
             marginTop: `-${pedestalSize / 2}px`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxSizing: "border-box",
           }}
           onClick={(e) => handlePedestalClick(pedestal, e)}
         >
@@ -430,7 +420,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
 
       {/* Pedestal popup */}
       {showPopup && selectedPedestal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-stone-800 rounded-lg p-6 max-w-md w-full border border-yellow-700 animate-fadeIn">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-pixel text-yellow-500">{selectedPedestal.name}</h3>
@@ -464,7 +454,7 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
 
       {/* Solution popup */}
       {showSolution && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
           <div className="bg-stone-800 rounded-lg p-6 max-w-md w-full border border-yellow-700 animate-fadeIn">
             <h3 className="text-2xl font-pixel text-yellow-500 text-center mb-4">SUBLIME SPLENDOR</h3>
             <p className="text-gray-300 text-center mb-6">
