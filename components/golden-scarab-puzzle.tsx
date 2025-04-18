@@ -346,9 +346,15 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
           left: `${centerPosition.x}%`,
           top: `${centerPosition.y}%`,
           width: `${pedestalSize}px`,
+          maxWidth: `${pedestalSize}px`,
           height: `${pedestalSize}px`,
+          maxHeight: `${pedestalSize}px`,
           marginLeft: `-${pedestalSize / 2}px`,
           marginTop: `-${pedestalSize / 2}px`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxSizing: "border-box",
         }}
       >
         {scarabPosition === "center" && (
@@ -375,16 +381,22 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
         <div
           key={pedestal.id}
           className={`absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2
-             ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
-             ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
-           `}
+              ${showDropEffect === pedestal.id ? "animate-pulse scale-110" : ""}
+              ${highlightedPedestal === pedestal.id ? "ring-4 ring-yellow-400 rounded-full p-2" : ""}
+            `}
           style={{
             left: `${pedestal.position.x}%`,
             top: `${pedestal.position.y}%`,
             width: `${pedestalSize}px`,
+            maxWidth: `${pedestalSize}px`,
             height: `${pedestalSize}px`,
+            maxHeight: `${pedestalSize}px`,
             marginLeft: `-${pedestalSize / 2}px`,
             marginTop: `-${pedestalSize / 2}px`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxSizing: "border-box",
           }}
           onClick={(e) => handlePedestalClick(pedestal, e)}
         >
