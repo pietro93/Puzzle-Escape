@@ -6,8 +6,6 @@ import { useState, useRef, useEffect } from "react"
 import type { Puzzle } from "@/types/puzzle"
 import HintSystem from "./hint-system"
 import { Lightbulb, ChevronUp, ChevronDown, Volume2, VolumeX, Sparkles } from "lucide-react"
-import DevilDialogue from "./devil-dialogue"
-import ElevatorPanel from "./elevator-panel"
 import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
@@ -15,7 +13,6 @@ import { useStorage } from "@/hooks/use-storage"
 import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
-import CharacterDialoguePopup from "./character-dialogue-popup"
 import PuzzleContent from "./puzzle-content"
 import ColorPalettePuzzle from "./color-palette-puzzle"
 
@@ -400,7 +397,7 @@ export default function GameScreen({
           "*gurgling sounds*",
           "END... THIS...",
         ]
-        dialogue = lateDialogues[Math.floor(Math.random() * lateDialogues.length)]
+        dialogue = lateDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       }
     }
 
@@ -627,76 +624,6 @@ export default function GameScreen({
 
         {showHints && <HintSystem hints={puzzle.hints} />}
       </div>
-
-      {/* Devil Dialog popup for level 50 */}
-      {showDevilDialogue && level === 50 && (
-        <DevilDialogue onClose={() => setShowDevilDialogue(false)} currentFloor={currentElevatorFloor} />
-      )}
-
-      {/* Character dialogue popup */}
-      {showCharacterDialogue && (
-        <CharacterDialoguePopup
-          character={character}
-          dialogue={characterDialogue}
-          onClose={handleCloseCharacterDialogue}
-          brainImage={getBrainLampImage(binaryCorrectCombinations)} // Pass the brain image
-        />
-      )}
-
-      {/* Guard Dialog popup for level 10 */}
-      {showGuardPopup && (level === 10 || level === 38) && (
-        <CharacterDialoguePopup
-          character={level === 10 ? "skeleton" : "sphinx"}
-          dialogue={guardDialogLines[guardDialogIndex]}
-          onClose={handleCloseGuardPopup}
-          isGuardPopup={true}
-          guardDialogIndex={guardDialogIndex}
-          level={level}
-        />
-      )}
-
-      {/* Elevator Panel popup for level 50 */}
-      {showElevatorPanel && level === 50 && (
-        <ElevatorPanel
-          onClose={() => setShowElevatorPanel(false)}
-          onFloorSelect={handleElevatorFloorChange}
-          currentFloor={currentElevatorFloor}
-          onRenameFloor={(floor, name) => {
-            setFloorLabels((prev) => ({
-              ...prev,
-              [floor]: name,
-            }))
-          }}
-          floorLabels={floorLabels}
-          correctNames={{
-            [-1]: "samjiva",
-            [-2]: "kalasutra",
-            [-3]: "samghata",
-            [-4]: "raurava",
-            [-5]: "maharaurava",
-            [-6]: "tapana",
-            [-7]: "pratapana",
-            [-8]: "avici",
-            [-9]: "arbuda",
-            [-10]: "nirarbuda",
-            [-11]: "atata",
-            [-12]: "hahava",
-            [-13]: "huhuva",
-            [-14]: "utpala",
-            [-15]: "padma",
-            [-16]: "pundarika",
-          }}
-        />
-      )}
-      {/* Add the brain dialogue popup to the return statement, near the other dialogue popups */}
-      {showBrainDialogue && (
-        <CharacterDialoguePopup
-          character="brain"
-          dialogue={brainDialogue}
-          onClose={() => setShowBrainDialogue(false)}
-          brainImage={getBrainLampImage(binaryCorrectCombinations)} // Pass the brain image
-        />
-      )}
     </div>
   )
 }

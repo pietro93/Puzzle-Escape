@@ -35,7 +35,7 @@ export const puzzlesSet2: Puzzle[] = [
     question: "The butler presents you with a color palette.",
     description:
       '"This palette is an artifact gifted to the Master by a renowned French painter," the butler explains. "The painter also left a message with it mentioning that the canvas is some treasure map of sorts."',
-    imageUrl: "/images/level13/color_palette.webp",
+    imageUrl: "",
     isColorPalettePuzzle: true,
     solution: "Vampire Island",
     category: "riddle",
