@@ -35,6 +35,7 @@ export const puzzlesSet2: Puzzle[] = [
     question: "The butler presents you with a curious painting.",
     description:
       '"This painting has always fascinated me," the butler says, gesturing to a still life of various fruits. "The master claimed it contained a hidden message about his favorite fruit, but I\'ve never been able to decipher it."\n\nThe painting shows apples, oranges, pears, and bananas arranged in a specific pattern.',
+    locationImage: "/images/level13/color_palette.webp",
     imageUrl: "",
     solution: "pineapple",
     category: "word",
