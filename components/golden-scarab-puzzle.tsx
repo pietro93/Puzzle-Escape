@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 
 interface Position {
   x: number
@@ -16,6 +16,7 @@ interface Pedestal {
   position: Position
   description: string
   next?: string
+  index: number
 }
 
 interface GoldenScarabPuzzleProps {
@@ -23,11 +24,12 @@ interface GoldenScarabPuzzleProps {
 }
 
 const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
-  const [scarabPosition, setScarabPosition] = useState<string>("mali")
-  const [visited, setVisited] = useState<string[]>([])
+  const [scarabPosition, setScarabPosition] = useState<string>("center")
+  const [visited, setVisited] = useState<number[]>([])
   const [isSolved, setIsSolved] = useState(false)
-  const [selectedPedestal, setSelectedPedestal] = useState<Pedestal | null>(null)
-  const [showPopup, setShowPopup] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
+  const [path, setPath] = useState<number[]>([0]) // Track the path
+  const [isResetting, setIsResetting] = useState(false)
 
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -35,84 +37,99 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "mali",
       name: "Mali",
-      image: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
-      position: { x: 50, y: 80 },
+      image: "/images/golden-scarab/mali-pedistal.webp",
+      position: { x: 70, y: 70 },
       description: "This pedestal is adorned with a majestic golden lion, symbolizing strength and royalty.",
       next: "sahara",
+      index: 1,
     },
     {
       id: "sahara",
       name: "Sahara",
-      image: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
-      position: { x: 15, y: 50 },
+      image: "/images/golden-scarab/sahara-pedistal.webp",
+      position: { x: 30, y: 70 },
       description: "This pedestal features sand dunes and camels, representing the vast Sahara Desert.",
       next: "egypt",
+      index: 2,
     },
     {
       id: "egypt",
       name: "Egypt",
-      image: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
-      position: { x: 85, y: 50 },
+      image: "/images/golden-scarab/egypt-pedistal.webp",
+      position: { x: 80, y: 30 },
       description: "This pedestal features a lotus flower, a symbol of rebirth and creation in ancient Egypt.",
       next: "hejaz",
+      index: 3,
     },
     {
       id: "hejaz",
       name: "Hejaz",
-      image: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
-      position: { x: 85, y: 15 },
+      image: "/images/golden-scarab/hejaz-pedistal.webp",
+      position: { x: 20, y: 30 },
       description: "This pedestal resembles the Kaaba, a sacred cube-shaped building in Mecca.",
       next: "songhai",
+      index: 4,
     },
     {
       id: "songhai",
       name: "Songhai",
-      image: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
-      position: { x: 15, y: 15 },
+      image: "/images/golden-scarab/songhai-pedistal.webp",
+      position: { x: 50, y: 10 },
       description: "This pedestal depicts a trading boat, symbolizing commerce and prosperity.",
       next: "mali",
+      index: 5,
     },
   ]
 
   const centerPosition: Position = { x: 50, y: 50 }
 
-  const handlePedestalClick = (pedestal: Pedestal) => {
-    setSelectedPedestal(pedestal)
-    setShowPopup(true)
-  }
+  const correctPath = [0, 1, 2, 3, 4, 0]
 
   const handleMoveScarab = (pedestal: Pedestal) => {
-    if (isSolved) return
+    if (isSolved || isResetting) return
 
-    if (scarabPosition === pedestal.id) return
+    setScarabPosition(pedestal.id)
+    setPath([...path, pedestal.index])
+  }
 
-    if (
-      (scarabPosition === "mali" && pedestal.id === "sahara") ||
-      (scarabPosition === "sahara" && pedestal.id === "egypt") ||
-      (scarabPosition === "egypt" && pedestal.id === "hejaz") ||
-      (scarabPosition === "hejaz" && pedestal.id === "songhai") ||
-      (scarabPosition === "songhai" && pedestal.id === "mali")
-    ) {
-      setScarabPosition(pedestal.id)
-      setVisited((prev) => [...prev, pedestal.id])
+  const handleCenterClick = () => {
+    if (isSolved || isResetting) return
+
+    if (scarabPosition !== "center") {
+      setScarabPosition("center")
+      setPath([...path, 0])
     }
   }
 
   useEffect(() => {
-    if (visited.length === 5 && scarabPosition === "mali") {
-      setIsSolved(true)
-      onSolve()
+    if (scarabPosition === "center" && path.length > 1) {
+      if (arraysAreEqual(path, correctPath)) {
+        setIsSolved(true)
+        setShowSolution(true)
+        onSolve()
+      } else {
+        setIsResetting(true)
+        setTimeout(() => {
+          setScarabPosition("center")
+          setPath([0])
+          setIsResetting(false)
+        }, 1500)
+      }
     }
-  }, [scarabPosition, visited, onSolve])
+  }, [scarabPosition, path, onSolve])
 
-  const getPedestalPosition = (id: string): Position => {
-    return pedestals.find((p) => p.id === id)?.position || { x: 0, y: 0 }
+  const arraysAreEqual = (a: number[], b: number[]) => {
+    if (a.length !== b.length) return false
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false
+    }
+    return true
   }
 
   return (
-    <div className="relative w-full h-[600px] bg-black rounded-lg overflow-hidden flex items-center justify-center">
+    <div className="relative w-full h-[600px] bg-[#4A295A] rounded-lg overflow-hidden flex items-center justify-center">
       {/* Pedestals */}
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full h-full">
         {pedestals.map((pedestal) => (
           <motion.div
             key={pedestal.id}
@@ -122,17 +139,18 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
               top: `${pedestal.position.y}%`,
               transform: "translate(-50%, -50%)",
             }}
-            onClick={() => handlePedestalClick(pedestal)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            onClick={() => handleMoveScarab(pedestal)}
           >
             <Image
               src={pedestal.image || "/placeholder.svg"}
               alt={pedestal.name}
-              width={100}
-              height={120}
+              width={80}
+              height={100}
               className="object-contain"
             />
+            <p className="text-white text-center text-xs mt-1">{pedestal.name}</p>
           </motion.div>
         ))}
 
@@ -140,12 +158,13 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
         <motion.div
           className="absolute cursor-pointer"
           style={{
-            left: `${getPedestalPosition(scarabPosition).x}%`,
-            top: `${getPedestalPosition(scarabPosition).y}%`,
+            left: `${centerPosition.x}%`,
+            top: `${centerPosition.y}%`,
             transform: "translate(-50%, -50%)",
           }}
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.8 }}
+          onClick={handleCenterClick}
         >
           <Image
             src="/images/golden-scarab/golden_scarab.webp"
@@ -153,65 +172,12 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
             width={80}
             height={80}
             className="object-contain"
-            onClick={() => {
-              const pedestal = pedestals.find((p) => p.id === scarabPosition)
-              if (pedestal) {
-                handleMoveScarab(pedestal)
-              }
-            }}
           />
         </motion.div>
       </div>
 
-      {/* Pedestal popup */}
-      <AnimatePresence>
-        {showPopup && selectedPedestal && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="bg-stone-800 rounded-lg p-6 max-w-md w-full border border-yellow-700">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-pixel text-yellow-500">{selectedPedestal.name}</h3>
-                <button onClick={() => setShowPopup(false)} className="text-gray-400 hover:text-white">
-                  ✕
-                </button>
-              </div>
-
-              <div className="flex flex-col items-center mb-4">
-                <Image
-                  src={selectedPedestal.image || "/placeholder.svg"}
-                  alt={selectedPedestal.name}
-                  width={150}
-                  height={180}
-                  className="object-contain mb-4"
-                />
-                <p className="text-gray-300 text-sm mb-6">{selectedPedestal.description}</p>
-              </div>
-
-              <div className="flex justify-between">
-                <button
-                  onClick={() => setShowPopup(false)}
-                  className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 font-pixel"
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => handleMoveScarab(selectedPedestal)}
-                  className="px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-600 font-pixel"
-                >
-                  Place Scarab Here
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Solution popup */}
-      {isSolved && (
+      {showSolution && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
           <div className="bg-stone-800 rounded-lg p-6 max-w-md w-full border border-yellow-700 animate-fadeIn">
             <h3 className="text-2xl font-pixel text-yellow-500 text-center mb-4">SUBLIME SPLENDOR</h3>
