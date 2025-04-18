@@ -52,40 +52,35 @@ export default function GoldenScarabPuzzle({ onSolve }: GoldenScarabPuzzleProps)
       name: "Lion Pedestal",
       image: "/images/golden-scarab/mali-pedestal.webp",
       position: { x: 50, y: 15 }, // Top
-      description:
-        "This pedestal is adorned with a majestic golden lion, symbolizing strength and royalty. Intricate carvings cover its surface.",
+      description: "This pedestal is adorned with a majestic golden lion, symbolizing strength and royalty.",
     },
     {
       id: "sahara",
-      name: "Oasis Pedestal",
+      name: "Desert Pedestal",
       image: "/images/golden-scarab/sahara-pedestal.webp",
       position: { x: 15, y: 50 }, // Left
-      description:
-        "This pedestal features a serene oasis scene, complete with palm trees and a shimmering pool of water. The base is made of rough-hewn stone.",
+      description: "This pedestal features sand dunes and camels, representing the vast Sahara Desert.",
     },
     {
       id: "egypt",
-      name: "Serpent Pedestal",
+      name: "Lotus Pedestal",
       image: "/images/golden-scarab/egypt-pedestal.webp",
       position: { x: 85, y: 50 }, // Right
-      description:
-        "This pedestal is carved with a winding serpent, representing the life-giving Nile. Hieroglyphs adorn its sides.",
+      description: "This pedestal features a lotus flower, a symbol of rebirth and creation in ancient Egypt.",
     },
     {
       id: "songhai",
-      name: "River Trading Pedestal",
+      name: "Trading Boat Pedestal",
       image: "/images/golden-scarab/songhai-pedestal.webp",
       position: { x: 30, y: 85 }, // Bottom Left
-      description:
-        "This pedestal depicts a bustling river scene, with boats carrying goods. The base is decorated with intricate patterns.",
+      description: "This pedestal depicts a trading boat, symbolizing commerce and prosperity.",
     },
     {
       id: "hejaz",
-      name: "Mountain Shrine Pedestal",
+      name: "Kaaba Pedestal",
       image: "/images/golden-scarab/hejaz-pedestal.webp",
       position: { x: 70, y: 85 }, // Bottom Right
-      description:
-        "This pedestal is carved with towering mountains and a sacred shrine at its peak. The air around it seems to shimmer.",
+      description: "This pedestal resembles the Kaaba, a sacred cube-shaped building in Mecca.",
     },
   ]
 
