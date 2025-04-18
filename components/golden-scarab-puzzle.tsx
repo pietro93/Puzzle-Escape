@@ -35,7 +35,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "mali",
       name: "Mali",
-      image: "/images/golden-scarab/mali-pedestal.webp",
+      image: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
       position: { x: 50, y: 80 },
       description: "This pedestal is adorned with a majestic golden lion, symbolizing strength and royalty.",
       next: "sahara",
@@ -43,7 +43,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "sahara",
       name: "Sahara",
-      image: "/images/golden-scarab/sahara-pedestal.webp",
+      image: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
       position: { x: 15, y: 50 },
       description: "This pedestal features sand dunes and camels, representing the vast Sahara Desert.",
       next: "egypt",
@@ -51,7 +51,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "egypt",
       name: "Egypt",
-      image: "/images/golden-scarab/egypt-pedestal.webp",
+      image: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
       position: { x: 85, y: 50 },
       description: "This pedestal features a lotus flower, a symbol of rebirth and creation in ancient Egypt.",
       next: "hejaz",
@@ -59,7 +59,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "hejaz",
       name: "Hejaz",
-      image: "/images/golden-scarab/hejaz-pedestal.webp",
+      image: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
       position: { x: 85, y: 15 },
       description: "This pedestal resembles the Kaaba, a sacred cube-shaped building in Mecca.",
       next: "songhai",
@@ -67,7 +67,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
     {
       id: "songhai",
       name: "Songhai",
-      image: "/images/golden-scarab/songhai-pedestal.webp",
+      image: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
       position: { x: 15, y: 15 },
       description: "This pedestal depicts a trading boat, symbolizing commerce and prosperity.",
       next: "mali",
@@ -110,15 +110,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
   }
 
   return (
-    <div className="relative w-full h-[600px] bg-stone-900 rounded-lg overflow-hidden flex items-center justify-center">
-      <Image
-        src="/images/map-background.png"
-        alt="Map Background"
-        layout="fill"
-        objectFit="cover"
-        className="absolute inset-0 z-0"
-      />
-
+    <div className="relative w-full h-[600px] bg-black rounded-lg overflow-hidden flex items-center justify-center">
       {/* Pedestals */}
       <div className="relative w-full h-full flex items-center justify-center">
         {pedestals.map((pedestal) => (
@@ -156,7 +148,7 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
           whileTap={{ scale: 0.8 }}
         >
           <Image
-            src="/images/golden-scarab/golden-scarab.webp"
+            src="/images/golden-scarab/golden_scarab.webp"
             alt="Golden Scarab"
             width={80}
             height={80}
@@ -205,6 +197,12 @@ const GoldenScarabPuzzle = ({ onSolve }: GoldenScarabPuzzleProps) => {
                   className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 font-pixel"
                 >
                   Close
+                </button>
+                <button
+                  onClick={() => handleMoveScarab(selectedPedestal)}
+                  className="px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-600 font-pixel"
+                >
+                  Place Scarab Here
                 </button>
               </div>
             </div>
