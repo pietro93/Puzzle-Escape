@@ -1,7 +1,5 @@
 "use client"
 
-// Update the puzzle-content.tsx file to include the GoldenScarabPuzzle component
-
 import type React from "react"
 import Image from "next/image"
 import InmatePuzzle from "./inmate-puzzle"
@@ -30,7 +28,6 @@ import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
 import { useState } from "react"
 import FireMapPuzzle from "./fire-map-puzzle"
-import { GoldenScarabPuzzle } from "./puzzles/golden-scarab-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -144,9 +141,6 @@ export default function PuzzleContent({
   // Check if this is a binary switch puzzle
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
 
-  // Check if this is a golden scarab puzzle
-  const isGoldenScarabPuzzle = puzzle.isGoldenScarabPuzzle
-
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
   // Add a new function to handle brain lamp clicks
@@ -200,18 +194,7 @@ export default function PuzzleContent({
         {level !== 17 && <p className="font-pixel text-lg text-purple-300 leading-relaxed">{puzzle.question}</p>}
       </div>
 
-      {isGoldenScarabPuzzle ? (
-        <div className="my-4">
-          {puzzle.description && (
-            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
-          )}
-          <GoldenScarabPuzzle
-            onSolve={() => {
-              handleParrotSolve()
-            }}
-          />
-        </div>
-      ) : isInfernalCasinoPuzzle ? (
+      {isInfernalCasinoPuzzle ? (
         <div className="my-4">
           <InfernalCasinoPuzzle
             onSolve={() => {

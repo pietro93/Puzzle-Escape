@@ -1,39 +1,37 @@
-// Update the Puzzle type to include isGoldenScarabPuzzle
-
-export type Puzzle = {
+export interface Puzzle {
   level: number
   question: string
   description: string
-  imageUrl: string
+  imageUrl?: string
+  locationImage?: string
+  characterImage?: string
   solution: string
-  category: "riddle" | "math" | "pattern" | "logic"
-  hints: string[]
-  isPuzzleImage?: boolean
+  category: string
+  hints?: string[]
   isLibraryPuzzle?: boolean
   isInmatePuzzle?: boolean
+  isTarotPuzzle?: boolean
   isParrotPuzzle?: boolean
   isCoffeeGroundsPuzzle?: boolean
   isQuestionnairePuzzle?: boolean
-  isTarotPuzzle?: boolean
-  isAnimatedGifPuzzle?: boolean
-  isZodiacPuzzle?: boolean
-  isFamiliarFacesPuzzle?: boolean
-  isJigsawPuzzle?: boolean
   isCrystalJigsawPuzzle?: boolean
+  isCrocodileJigsawPuzzle?: boolean
+  isJigsawPuzzle?: boolean
+  isZodiacPuzzle?: boolean
   isCrystalSequencePuzzle?: boolean
   isHellJigsawPuzzle?: boolean
-  isCrocodileJigsawPuzzle?: boolean
-  isMouthOfTruthPuzzle?: boolean
+  isFamiliarFacesPuzzle?: boolean
+  isAnimatedGifPuzzle?: boolean
+  isEgyptianMathPuzzle?: boolean
+  isEgyptianPillarsPuzzle?: boolean
+  isPyramidPuzzle?: boolean
+  isDarkRoomPuzzle?: boolean
   isBinarySwitchPuzzle?: boolean
+  isInfernalCasinoPuzzle?: boolean
   isElevatorPuzzle?: boolean
   isFinalJigsawPuzzle?: boolean
   isLightSwitchPuzzle?: boolean
   isFinalLevelPuzzle?: boolean
-  isInfernalCasinoPuzzle?: boolean
-  isEgyptianPillarsPuzzle?: boolean
-  isEgyptianMathPuzzle?: boolean
-  isDarkRoomPuzzle?: boolean
-  isPyramidPuzzle?: boolean
-  isFireMapPuzzle?: boolean
-  isGoldenScarabPuzzle?: boolean
+  isDevilDialogue?: boolean
+  isMouthOfTruthPuzzle?: boolean
 }

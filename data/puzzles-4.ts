@@ -19,18 +19,56 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with a journey through the lands of a great pilgrimage.",
+    question: "The Sphinx presents you with four ancient figures, each claiming to know the secret of the desert.",
     description:
-      "Guide the golden scarab through the path that changed the history of West Africa. The journey must visit all lands and return to where it began.",
+      "Four figures stand before you, each claiming to know the secret of the desert. The Sphinx tells you that only one speaks the truth, while the others lie. You must determine who speaks the truth.",
     imageUrl: "",
-    isGoldenScarabPuzzle: true,
-    solution: "sublime splendor",
-    category: "pattern",
+    isInteractiveInmates: true,
+    inmateData: [
+      {
+        name: "Priest",
+        image: "/images/priest.webp", // Placeholder
+        statements: [
+          { text: "The merchant knows the secret path through the desert." },
+          { text: "The scribe is not to be trusted." },
+          { text: "I have served the gods faithfully for decades." },
+        ],
+      },
+      {
+        name: "Merchant",
+        image: "/images/merchant.webp", // Placeholder
+        statements: [
+          { text: "The priest speaks falsely about me." },
+          { text: "The soldier has never set foot in the sacred temple." },
+          { text: "I have traveled the desert many times." },
+        ],
+      },
+      {
+        name: "Scribe",
+        image: "/images/scribe.webp", // Placeholder
+        statements: [
+          { text: "I alone know the ancient texts that reveal the secret." },
+          { text: "The priest has been corrupted by gold." },
+          { text: "The merchant's maps are forgeries." },
+        ],
+      },
+      {
+        name: "Soldier",
+        image: "/images/soldier.webp", // Placeholder
+        statements: [
+          { text: "I have guarded the secret for many years." },
+          { text: "The scribe's knowledge comes from stolen scrolls." },
+          { text: "The merchant has never left the city walls." },
+        ],
+      },
+    ],
+    guardStatement: "Only one of these four speaks the truth. The others lie. Who speaks the truth?",
+    solution: "merchant",
+    category: "logic",
     hints: [
-      "The scarab must follow the historical pilgrimage route.",
-      "The path must visit all locations and return to where it began.",
-      "The journey begins and ends in Mali, passing through all other lands.",
-      "The correct path follows: Mali → Sahara → Egypt → Hejaz → Songhai → Mali",
+      "Analyze each statement carefully and look for contradictions.",
+      "If only one person tells the truth, then all statements by the others must be false.",
+      "The truthful person's statements must all be true, while the liars must have at least one false statement each.",
     ],
   },
   {
@@ -50,8 +88,8 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 34,
-    question: "The Sphinx presents you with fragments of a crystal mosaic.",
-    description: "Reassemble the pieces to reveal the identity of the crocodile god worshipped in this region.",
+    question: "The Sphinx presents you with a fragmented mosaic of an ancient deity.",
+    description: "Reassemble the mosaic to reveal the identity of the crocodile god worshipped in this region.",
     imageUrl: "",
     isCrocodileJigsawPuzzle: true,
     solution: "sobek",
