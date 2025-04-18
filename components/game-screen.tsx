@@ -11,10 +11,10 @@ import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
 import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage } from "@/utils/dialogue-utils"
-import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
-import PuzzleContent from "./puzzle-content"
 import ColorPalettePuzzle from "./color-palette-puzzle"
+import Image from "next/image"
+import CharacterImage from "./character-image"
 
 interface GameScreenProps {
   level: number
@@ -29,37 +29,6 @@ interface GameScreenProps {
   characterDialogues?: Record<string, string[]>
   onLevelComplete: () => void
   onTransition: (transitionId: string) => void
-}
-
-// Define dialogueOptions here
-const dialogueOptions = [
-  "AAAGH! IT HURTS!",
-  "Can't... think...",
-  "STOP! PLEASE!",
-  "My brain... melting...",
-  "No more... switches...",
-]
-
-// Define getBrainLampImage here
-const getBrainLampImage = (correctCombinations: number) => {
-  switch (correctCombinations) {
-    case 0:
-      return "/images/brainlamp.webp" // 0 correct
-    case 1:
-      return "/images/brainlamp1animated.webp" // 1 correct
-    case 2:
-      return "/images/brainlamp2animated.webp" // 2 correct
-    case 3:
-      return "/images/brainlamp3animated.webp" // 3 correct
-    case 4:
-      return "/images/brainlamp4animated.webp" // 4 correct
-    case 5:
-      return "/images/brainlamp5animated.webp" // 5 correct
-    case 6:
-      return "/images/brainlamp6animated.webp" // 6 correct (all)
-    default:
-      return "/images/brainlamp.webp" // Default
-  }
 }
 
 export default function GameScreen({
@@ -366,6 +335,14 @@ export default function GameScreen({
     // Generate dialogue based on the number of correct combinations
     let dialogue = "..." // Default dialogue
 
+    const dialogueOptions = [
+      "AAAAAAHHH!",
+      "KILL... ME...",
+      "*unintelligible screaming*",
+      "*gurgling sounds*",
+      "END... THIS...",
+    ]
+
     if (binaryCorrectCombinations < 6) {
       // Different dialogue tiers based on progress
       if (binaryCorrectCombinations <= 1) {
@@ -518,56 +495,61 @@ export default function GameScreen({
 
       {/* Character and location section */}
       {showPuzzleDetails && (
-        <CharacterLocationDisplay
-          level={level}
-          setting={setting}
-          character={character}
-          puzzle={puzzle}
-          lightsOn={lightsOn}
-          solved={solved}
-          binaryCorrectCombinations={binaryCorrectCombinations}
-          currentPyramidRoom={currentPyramidRoom}
-          hasPyramidTorch={hasPyramidTorch}
-          hasUsedElevator={hasUsedElevator}
-          showElevator={showElevator}
-          jigsawComplete={jigsawComplete}
-          onGuardClick={handleGuardClick}
-          onLocationClick={handleLocationClick}
-          onPyramidLocationImageClick={handlePyramidLocationImageClick}
-        />
+        <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+          <div className="flex justify-center items-center">
+            <CharacterImage character={character} />
+          </div>
+          <div className="flex justify-center items-center">
+            <div className="w-40 h-40 relative pixelated-container">
+              <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+              <Image
+                src={
+                  puzzle.level === 13
+                    ? "/public/images/color-palette/color_palette.webp"
+                    : puzzle.locationImage || `/images/${setting}-bg.webp`
+                }
+                alt={`${setting} location`}
+                width={160}
+                height={160}
+                className="pixelated z-10 relative"
+              />
+              <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+              <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Puzzle content */}
-      <PuzzleContent
-        level={level}
-        puzzle={puzzle}
-        guardDialogIndex={guardDialogIndex}
-        handleGuardClick={handleGuardClick}
-        handleJigsawComplete={handleJigsawComplete}
-        handleParrotSolve={handleParrotSolve}
-        handleQuestionnaireRestart={handleQuestionnaireRestart}
-        handleLightSwitchUpdate={handleLightSwitchUpdate}
-        handleZodiacSolve={handleZodiacSolve}
-        handlePyramidRoomChange={handlePyramidRoomChange}
-        handlePyramidTorchAcquired={handlePyramidTorchAcquired}
-        currentPyramidRoom={currentPyramidRoom}
-        hasPyramidTorch={hasPyramidTorch}
-        handleAllPiecesRemoved={handleAllPiecesRemoved}
-        handleElevatorPanelOpen={handleElevatorPanelOpen}
-        currentElevatorFloor={currentElevatorFloor}
-        setCurrentElevatorFloor={setCurrentElevatorFloor}
-        onSolutionGenerated={(solution) => setDynamicSolution(solution)}
-        setBinaryCorrectCombinations={setBinaryCorrectCombinations}
-        questionnaireRef={questionnaireRef}
-      />
       {puzzle.isColorPalettePuzzle ? (
         <div className="my-4">
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <ColorPalettePuzzle onSolve={handleParrotSolve} />
+          <ColorPalettePuzzle onSolve={onCorrect} />
         </div>
-      ) : null}
+      ) : (
+        <div className="bg-gray-900/80 p-5 rounded-lg mb-4 border border-gray-800 shadow-inner flex-1 backdrop-blur-sm">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          {puzzle.imageUrl && (
+            <div className="flex justify-center my-4">
+              <div className="w-full max-w-md relative pixelated-container">
+                <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+                <Image
+                  src={puzzle.imageUrl || "/placeholder.svg"}
+                  alt={`Puzzle for level ${puzzle.level}`}
+                  width={400}
+                  height={400}
+                  className="pixelated z-10 relative w-full object-contain"
+                />
+                <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Answer input section */}
       <div className="space-y-3 mt-auto">
