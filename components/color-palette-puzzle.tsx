@@ -1,137 +1,178 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
-import { useAudio } from "@/hooks/use-audio"
-import { useHaptics } from "@/hooks/use-haptics"
+import Image from "next/image"
 
 interface ColorPalettePuzzleProps {
-  onSolve: () => void
+  onSolve?: () => void
 }
 
-interface ColorData {
+interface ColorEntry {
   name: string
   frenchName: string
   value: number | null
   imagePath: string
+  isInput: boolean
 }
 
-export function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps) {
-  const { playCorrect, playWrong } = useAudio()
-  const { triggerHapticSuccess, triggerHapticError } = useHaptics()
-
-  const [greenValue, setGreenValue] = useState<string>("")
-  const [blueValue, setBlueValue] = useState<string>("")
-  const [yellowValue, setYellowValue] = useState<string>("")
-  const [pinkValue, setPinkValue] = useState<string>("")
-  const [solved, setSolved] = useState<boolean>(false)
-
-  const colors: ColorData[] = [
-    { name: "White", frenchName: "Blanc", value: 0.1857, imagePath: "/images/color-palette/paint-white.webp" },
-    { name: "Black", frenchName: "Noir", value: -0.1857, imagePath: "/images/color-palette/paint-black.webp" },
+export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps) {
+  // Define the color entries with their values
+  const colorEntries: ColorEntry[] = [
+    {
+      name: "White",
+      frenchName: "Blanc",
+      value: 0.1857,
+      imagePath: "/images/color-palette/paint-white.webp",
+      isInput: false,
+    },
+    {
+      name: "Black",
+      frenchName: "Noir",
+      value: -0.1857,
+      imagePath: "/images/color-palette/paint-black.webp",
+      isInput: false,
+    },
     {
       name: "Light Blue",
       frenchName: "Azur",
       value: -19.8143,
       imagePath: "/images/color-palette/paint-light-blue.webp",
+      isInput: false,
     },
-    { name: "Orange", frenchName: "Orange", value: 116.3128, imagePath: "/images/color-palette/paint-orange.webp" },
-    { name: "Red", frenchName: "Rouge", value: 117.0, imagePath: "/images/color-palette/paint-red.webp" },
-    { name: "Grey", frenchName: "Gris", value: 0, imagePath: "/images/color-palette/paint-grey.webp" },
-    { name: "Green", frenchName: "Vert", value: null, imagePath: "/images/color-palette/paint-green.webp" },
-    { name: "Blue", frenchName: "Bleu", value: null, imagePath: "/images/color-palette/paint-blue.webp" },
-    { name: "Yellow", frenchName: "Jaune", value: null, imagePath: "/images/color-palette/paint-yellow.webp" },
-    { name: "Pink", frenchName: "Rose", value: null, imagePath: "/images/color-palette/paint-pink.webp" },
+    {
+      name: "Orange",
+      frenchName: "Orange",
+      value: 116.3128,
+      imagePath: "/images/color-palette/paint-orange.webp",
+      isInput: false,
+    },
+    {
+      name: "Red",
+      frenchName: "Rouge",
+      value: 117.0,
+      imagePath: "/images/color-palette/paint-red.webp",
+      isInput: false,
+    },
+    { name: "Grey", frenchName: "Gris", value: 0, imagePath: "/images/color-palette/paint-grey.webp", isInput: false },
+    {
+      name: "Green",
+      frenchName: "Vert",
+      value: null,
+      imagePath: "/images/color-palette/paint-green.webp",
+      isInput: true,
+    },
+    {
+      name: "Blue",
+      frenchName: "Bleu",
+      value: null,
+      imagePath: "/images/color-palette/paint-blue.webp",
+      isInput: true,
+    },
+    {
+      name: "Yellow",
+      frenchName: "Jaune",
+      value: null,
+      imagePath: "/images/color-palette/paint-yellow.webp",
+      isInput: true,
+    },
+    {
+      name: "Pink",
+      frenchName: "Rose",
+      value: null,
+      imagePath: "/images/color-palette/paint-pink.webp",
+      isInput: true,
+    },
   ]
 
-  const checkAnswers = () => {
-    const correctGreen = Math.abs(Number.parseFloat(greenValue) - -20.6872) < 0.001
-    const correctBlue = Math.abs(Number.parseFloat(blueValue) - -20) < 0.001
-    const correctYellow = Math.abs(Number.parseFloat(yellowValue) - -0.6872) < 0.001
-    const correctPink = Math.abs(Number.parseFloat(pinkValue) - 117.1857) < 0.001
+  // State for user inputs
+  const [userInputs, setUserInputs] = useState<{ [key: string]: string }>({
+    Green: "",
+    Blue: "",
+    Yellow: "",
+    Pink: "",
+  })
 
-    if (correctGreen && correctBlue && correctYellow && correctPink) {
-      playCorrect()
-      triggerHapticSuccess()
-      setSolved(true)
-      onSolve()
-    } else {
-      playWrong()
-      triggerHapticError()
-    }
-  }
+  // State for checking if all answers are correct
+  const [allCorrect, setAllCorrect] = useState(false)
 
-  const handleInputChange = (value: string, setter: React.Dispatch<React.SetStateAction<string>>) => {
-    // Allow empty string, minus sign, decimal point, and numbers
-    if (value === "" || value === "-" || /^-?\d*\.?\d*$/.test(value)) {
-      setter(value)
-    }
-  }
-
+  // Check if all answers are correct
   useEffect(() => {
-    if (greenValue && blueValue && yellowValue && pinkValue) {
-      checkAnswers()
+    const correctAnswers = {
+      Green: -20.6872,
+      Blue: -20,
+      Yellow: -0.6872,
+      Pink: 117.1857,
     }
-  }, [greenValue, blueValue, yellowValue, pinkValue])
 
-  // Group colors in pairs for display
-  const colorPairs = []
-  for (let i = 0; i < colors.length; i += 2) {
-    if (i + 1 < colors.length) {
-      colorPairs.push([colors[i], colors[i + 1]])
-    } else {
-      colorPairs.push([colors[i]])
+    const isCorrect = Object.entries(userInputs).every(([color, value]) => {
+      if (!value) return false
+      const numValue = Number.parseFloat(value)
+      return Math.abs(numValue - correctAnswers[color as keyof typeof correctAnswers]) < 0.001
+    })
+
+    setAllCorrect(isCorrect)
+
+    if (isCorrect && onSolve) {
+      onSolve()
     }
+  }, [userInputs, onSolve])
+
+  // Handle input change
+  const handleInputChange = (color: string, value: string) => {
+    setUserInputs((prev) => ({
+      ...prev,
+      [color]: value,
+    }))
   }
 
   return (
-    <div className="flex flex-col items-center w-full max-w-md mx-auto p-4 bg-black/80 rounded-lg">
-      <div className="grid grid-cols-1 gap-4 w-full">
-        {colorPairs.map((pair, index) => (
-          <div key={index} className="flex justify-between gap-4">
-            {pair.map((color) => (
-              <div key={color.name} className="flex items-center gap-2 w-full">
-                <img
-                  src={color.imagePath || "/placeholder.svg"}
-                  alt={color.name}
-                  className="w-12 h-12 object-contain"
-                />
-                <div className="flex flex-col flex-1">
-                  <span className="text-white text-sm">{color.frenchName}</span>
-                  {color.value !== null ? (
-                    <span className="text-white font-mono">{color.value}</span>
-                  ) : (
-                    <input
-                      type="text"
-                      className="w-full bg-gray-800 text-white px-2 py-1 rounded font-mono"
-                      value={
-                        color.name === "Green"
-                          ? greenValue
-                          : color.name === "Blue"
-                            ? blueValue
-                            : color.name === "Yellow"
-                              ? yellowValue
-                              : color.name === "Pink"
-                                ? pinkValue
-                                : ""
-                      }
-                      onChange={(e) => {
-                        if (color.name === "Green") handleInputChange(e.target.value, setGreenValue)
-                        if (color.name === "Blue") handleInputChange(e.target.value, setBlueValue)
-                        if (color.name === "Yellow") handleInputChange(e.target.value, setYellowValue)
-                        if (color.name === "Pink") handleInputChange(e.target.value, setPinkValue)
-                      }}
-                      disabled={solved}
-                      placeholder="?"
-                    />
-                  )}
+    <div className="p-4 bg-gray-900/80 rounded-lg border border-gray-700 shadow-lg max-w-md mx-auto">
+      <div className="mb-4 text-center">
+        <h3 className="text-lg font-pixel text-purple-300 mb-2">La Palette du Maître</h3>
+        <p className="text-sm text-gray-300 font-pixel">
+          Cette palette a été offerte au Maître par un célèbre peintre français. Le peintre a laissé un message
+          indiquant que la toile est une sorte de carte au trésor.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        {colorEntries.map((entry, index) => (
+          <div key={index} className="flex items-center space-x-3 bg-gray-800/60 p-2 rounded-lg border border-gray-700">
+            <div className="w-12 h-12 relative">
+              <Image
+                src={entry.imagePath || "/placeholder.svg"}
+                alt={entry.name}
+                width={48}
+                height={48}
+                className="object-contain pixelated"
+              />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-pixel text-purple-200">{entry.frenchName}</p>
+              {entry.isInput ? (
+                <div className="mt-1">
+                  <input
+                    type="number"
+                    step="any"
+                    value={userInputs[entry.name]}
+                    onChange={(e) => handleInputChange(entry.name, e.target.value)}
+                    className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm font-pixel"
+                    placeholder="?"
+                  />
                 </div>
-              </div>
-            ))}
+              ) : (
+                <p className="text-sm font-mono text-yellow-300">{entry.value}</p>
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {allCorrect && (
+        <div className="mt-4 p-2 bg-green-900/50 border border-green-700 rounded-lg text-center">
+          <p className="text-green-300 font-pixel">Correct! You've solved the pattern.</p>
+        </div>
+      )}
     </div>
   )
 }
