@@ -4,9 +4,10 @@ interface LocationImageProps {
   setting: string
   customImage?: string
   hintImage?: string
+  level?: number
 }
 
-export default function LocationImage({ setting, customImage, hintImage }: LocationImageProps) {
+export default function LocationImage({ setting, customImage, hintImage, level }: LocationImageProps) {
   const getLocationImage = () => {
     // If there's a hint image specified, use that
     if (hintImage) {
@@ -16,6 +17,11 @@ export default function LocationImage({ setting, customImage, hintImage }: Locat
     // If there's a custom image specified, use that
     if (customImage) {
       return customImage
+    }
+
+    // Special case for level 13 color palette
+    if (setting === "mansion" && level === 13) {
+      return "/images/color-palette/color_palette.webp"
     }
 
     // Otherwise use the default image for the setting

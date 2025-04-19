@@ -67,9 +67,9 @@ export const useCharacterDialogue = () => {
           "Time moves differently in this mansion, sir. You may find that hours pass like minutes... or years.",
         ],
         13: [
-          "The master's art collection is quite extensive. Each piece tells a story, if one knows how to look.",
-          "That particular painting was acquired under... unusual circumstances. The artist was never seen again.",
-          "The still life appears mundane, but the master insisted it contained profound secrets.",
+          "This palette was gifted to the master by a renowned French painter. The numerical values of the colors are said to hide a secret message.",
+          "The master spent many hours studying this palette. He believed the mathematical relationships between the colors revealed a hidden location.",
+          "The French painter who created this palette was known for hiding cryptic messages in his works. This one supposedly reveals the name of a mysterious place.",
         ],
         14: [
           "The master's puzzle boxes are quite ingenious, sir. He designed them himself.",

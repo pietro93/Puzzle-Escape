@@ -28,6 +28,7 @@ import BinarySwitchPuzzle from "./binary-switch-puzzle"
 import { guardDialogLines } from "@/utils/dialogue-utils"
 import { useState } from "react"
 import FireMapPuzzle from "./fire-map-puzzle"
+import ColorPalettePuzzle from "./color-palette-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -498,6 +499,11 @@ export default function PuzzleContent({
         </div>
       ) : null}
       {puzzle.isFireMapPuzzle && <FireMapPuzzle onSolve={() => handleParrotSolve()} />}
+      {puzzle.isColorPalettePuzzle && (
+        <div className="mb-4">
+          <ColorPalettePuzzle onSolve={() => {}} />
+        </div>
+      )}
     </div>
   )
 }
