@@ -127,6 +127,14 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
 
   return (
     <div className="p-4 bg-gray-900/80 rounded-lg border border-gray-700 shadow-lg max-w-md mx-auto">
+      <div className="mb-4 text-center">
+        <h3 className="text-lg font-pixel text-purple-300 mb-2">La Palette du Maître</h3>
+        <p className="text-sm text-gray-300 font-pixel">
+          Cette palette a été offerte au Maître par un célèbre peintre français. Le peintre a laissé un message
+          indiquant que la toile est une sorte de carte au trésor.
+        </p>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         {colorEntries.map((entry, index) => (
           <div key={index} className="flex items-center space-x-3 bg-gray-800/60 p-2 rounded-lg border border-gray-700">
