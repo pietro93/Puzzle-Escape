@@ -44,6 +44,9 @@ export default function LocationImage({ setting, customImage, hintImage, level }
   const imageUrl = getLocationImage()
   const isGif = imageUrl.endsWith(".gif")
 
+  // Special styling for the color palette image
+  const isColorPalette = setting === "mansion" && level === 13
+
   return (
     <div className="w-40 h-40 relative pixelated-container">
       <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
@@ -54,13 +57,15 @@ export default function LocationImage({ setting, customImage, hintImage, level }
           className="pixelated z-10 relative w-full h-full object-cover"
         />
       ) : (
-        <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt={`${setting} location`}
-          width={160}
-          height={160}
-          className="pixelated z-10 relative"
-        />
+        <div className={`relative w-full h-full flex items-center justify-center ${isColorPalette ? "p-2" : ""}`}>
+          <Image
+            src={imageUrl || "/placeholder.svg"}
+            alt={`${setting} location`}
+            width={160}
+            height={160}
+            className={`pixelated z-10 relative ${isColorPalette ? "object-contain" : ""}`}
+          />
+        </div>
       )}
       <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
       <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>

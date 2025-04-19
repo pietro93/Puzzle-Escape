@@ -130,8 +130,7 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
       <div className="mb-4 text-center">
         <h3 className="text-lg font-pixel text-purple-300 mb-2">La Palette du Maître</h3>
         <p className="text-sm text-gray-300 font-pixel">
-          Cette palette a été offerte au Maître par un célèbre peintre français. Le peintre a laissé un message
-          indiquant que la toile est une sorte de carte au trésor.
+          Les roses verte et rose cachent un secret. Entre les nombres, une île attend d'être découverte.
         </p>
       </div>
 
