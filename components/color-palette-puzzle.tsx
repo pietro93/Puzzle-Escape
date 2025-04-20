@@ -84,6 +84,14 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
     },
   ]
 
+  // Correct answers with 4 decimal places
+  const correctAnswers = {
+    Green: -20.6872,
+    Blue: -20.0,
+    Yellow: -0.6872,
+    Pink: 117.1857,
+  }
+
   // State for user inputs
   const [userInputs, setUserInputs] = useState<{ [key: string]: string }>({
     Green: "",
@@ -92,37 +100,59 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
     Pink: "",
   })
 
+  // State for tracking which inputs are correct and locked
+  const [correctInputs, setCorrectInputs] = useState<{ [key: string]: boolean }>({
+    Green: false,
+    Blue: false,
+    Yellow: false,
+    Pink: false,
+  })
+
   // State for checking if all answers are correct
   const [allCorrect, setAllCorrect] = useState(false)
 
   // Check if all answers are correct
   useEffect(() => {
-    const correctAnswers = {
-      Green: -20.6872,
-      Blue: -20,
-      Yellow: -0.6872,
-      Pink: 117.1857,
-    }
+    const isAllCorrect = Object.values(correctInputs).every((value) => value === true)
+    setAllCorrect(isAllCorrect)
 
-    const isCorrect = Object.entries(userInputs).every(([color, value]) => {
-      if (!value) return false
-      const numValue = Number.parseFloat(value)
-      return Math.abs(numValue - correctAnswers[color as keyof typeof correctAnswers]) < 0.001
-    })
-
-    setAllCorrect(isCorrect)
-
-    if (isCorrect && onSolve) {
+    if (isAllCorrect && onSolve) {
       onSolve()
     }
-  }, [userInputs, onSolve])
+  }, [correctInputs, onSolve])
 
   // Handle input change
   const handleInputChange = (color: string, value: string) => {
+    // If the input is already correct and locked, don't allow changes
+    if (correctInputs[color]) return
+
     setUserInputs((prev) => ({
       ...prev,
       [color]: value,
     }))
+
+    // Check if the input is correct
+    if (value) {
+      const numValue = Number.parseFloat(value)
+      const isCorrect = Math.abs(numValue - correctAnswers[color as keyof typeof correctAnswers]) < 0.001
+
+      if (isCorrect) {
+        // Format to 4 decimal places
+        const formattedValue = correctAnswers[color as keyof typeof correctAnswers].toFixed(4)
+
+        // Update the input with the formatted value
+        setUserInputs((prev) => ({
+          ...prev,
+          [color]: formattedValue,
+        }))
+
+        // Mark this input as correct and locked
+        setCorrectInputs((prev) => ({
+          ...prev,
+          [color]: true,
+        }))
+      }
+    }
   }
 
   return (
@@ -151,12 +181,17 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
               {entry.isInput ? (
                 <div className="mt-1">
                   <input
-                    type="number"
-                    step="any"
+                    type="text"
+                    inputMode="decimal"
                     value={userInputs[entry.name]}
                     onChange={(e) => handleInputChange(entry.name, e.target.value)}
-                    className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm font-pixel"
+                    className={`w-full px-2 py-1 border rounded text-sm font-pixel appearance-none ${
+                      correctInputs[entry.name]
+                        ? "bg-green-700/50 border-green-500 text-white"
+                        : "bg-gray-700 border-gray-600 text-white"
+                    }`}
                     placeholder="?"
+                    disabled={correctInputs[entry.name]}
                   />
                 </div>
               ) : (

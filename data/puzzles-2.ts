@@ -33,8 +33,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 13,
     question: "The butler presents you with a curious color palette.",
-    description:
-      '"This palette was gifted to the master by a renowned French painter," the butler explains, handling the artifact with reverence. "The painter mentioned that the canvas contains a sort of treasure map. The master was fascinated by the numerical patterns hidden within the colors."',
+    description: "",
     imageUrl: "",
     locationImage: "/images/color-palette/color_palette.webp",
     isColorPalettePuzzle: true,
