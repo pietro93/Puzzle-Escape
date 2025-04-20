@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 interface LocationImageProps {
   setting: string
   customImage?: string
@@ -27,7 +29,7 @@ export default function LocationImage({ setting, customImage, hintImage, level }
       case "prison":
         return "/images/prison-bg.webp"
       case "mansion":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-Qd9jgVQwNdCF6yT2PFKtFg0KEhxQ4Q.webp" // Updated mansion interior
+        return "https://v0.blob.com/mansion-Qd9jgVQwNdCF6yT2PFKtFg0KEhxQ4Q.webp" // Updated mansion interior
       case "forest":
         return "/images/forest-bg.webp"
       case "desert":
@@ -52,14 +54,16 @@ export default function LocationImage({ setting, customImage, hintImage, level }
         <img
           src={imageUrl || "/placeholder.svg"}
           alt={`${setting} location`}
-          className="pixelated z-10 relative w-full h-full object-cover"
+          className="pixelated z-10 relative w-full h-full object-contain"
         />
       ) : (
         <div className={`relative w-full h-full flex items-center justify-center ${isColorPalette ? "p-2" : ""}`}>
-          <img
+          <Image
             src={imageUrl || "/placeholder.svg"}
             alt={`${setting} location`}
-            className={`pixelated z-10 relative w-full h-full ${isColorPalette ? "object-contain" : "object-cover"}`}
+            width={160}
+            height={160}
+            className={`pixelated z-10 relative object-contain`}
           />
         </div>
       )}
