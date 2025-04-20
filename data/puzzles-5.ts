@@ -127,18 +127,14 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 49,
-    question: "The Mouth of Truth",
+    question: "The Devil challenges you to a game of murder mystery.",
     description:
-      "Place the colored marbles in the correct positions to reveal the truth. Legend says if you lie while your hand is in the Mouth of Truth, it will bite your hand off.",
-    solution: "chaplain",
-    category: "puzzle",
-    isMouthOfTruthPuzzle: true,
-    hints: [
-      "The Mouth of Truth requires a specific arrangement of marbles.",
-      "Try different combinations of marbles in the four corners.",
-      "The colors represent different virtues or concepts.",
-      "The Latin word for 'truth' might be relevant here.",
-    ],
+      "The devil is sending you to investigate a murder. Navigate through the locations below to collect hints and find out who is the killer.",
+    imageUrl: "",
+    isMurderMysteryPuzzle: true,
+    solution: "the butler",
+    category: "riddle",
+    hints: [],
   },
   {
     level: 50,
