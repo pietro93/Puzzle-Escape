@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 interface LocationImageProps {
   setting: string
   customImage?: string
@@ -21,7 +19,7 @@ export default function LocationImage({ setting, customImage, hintImage, level }
 
     // Special case for level 13 color palette
     if (setting === "mansion" && level === 13) {
-      return "/images/color-palette/color_palette.webp"
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/color_palette-h27yDnavC1s2oWPqy7kE46mSMUcMMN.webp" // Direct URL for color palette
     }
 
     // Otherwise use the default image for the setting
@@ -58,12 +56,10 @@ export default function LocationImage({ setting, customImage, hintImage, level }
         />
       ) : (
         <div className={`relative w-full h-full flex items-center justify-center ${isColorPalette ? "p-2" : ""}`}>
-          <Image
+          <img
             src={imageUrl || "/placeholder.svg"}
             alt={`${setting} location`}
-            width={160}
-            height={160}
-            className={`pixelated z-10 relative ${isColorPalette ? "object-contain" : ""}`}
+            className={`pixelated z-10 relative w-full h-full ${isColorPalette ? "object-contain" : "object-cover"}`}
           />
         </div>
       )}

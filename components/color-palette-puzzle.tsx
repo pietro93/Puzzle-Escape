@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 
 interface ColorPalettePuzzleProps {
   onSolve?: () => void
@@ -22,64 +21,80 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
       name: "White",
       frenchName: "Blanc",
       value: 0.1857,
-      imagePath: "/images/color-palette/paint-white.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-white-2GetFxbLPUixHkLVuEGZtQJyfTKi9H.webp", // Direct URL for white
       isInput: false,
     },
     {
       name: "Black",
       frenchName: "Noir",
       value: -0.1857,
-      imagePath: "/images/color-palette/paint-black.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-black-KWk2ilDyTAEQluRi9bpX4gN9xtuIep.webp", // Direct URL for black
       isInput: false,
     },
     {
       name: "Light Blue",
       frenchName: "Azur",
       value: -19.8143,
-      imagePath: "/images/color-palette/paint-light-blue.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-light-blue-FSMb6ZmDU0NcAiXSNKJ8UBgsTnYU54.webp", // Direct URL for light blue
       isInput: false,
     },
     {
       name: "Orange",
       frenchName: "Orange",
       value: 116.3128,
-      imagePath: "/images/color-palette/paint-orange.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-orange-S1xLOfXMwrcsbui5LYBISnVx90wBgP.webp", // Direct URL for orange
       isInput: false,
     },
     {
       name: "Red",
       frenchName: "Rouge",
       value: 117.0,
-      imagePath: "/images/color-palette/paint-red.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-red-b5EAROnRa6Uhufx4YXmKncHgUf8XT3.webp", // Direct URL for red
       isInput: false,
     },
-    { name: "Grey", frenchName: "Gris", value: 0, imagePath: "/images/color-palette/paint-grey.webp", isInput: false },
+    {
+      name: "Grey",
+      frenchName: "Gris",
+      value: 0,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-grey-HUx6KBrVV59laXqvKTbW3fTeiOCrDl.webp", // Direct URL for grey
+      isInput: false,
+    },
     {
       name: "Green",
       frenchName: "Vert",
       value: null,
-      imagePath: "/images/color-palette/paint-green.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-green-8gjkdNjeKvQ5gjRAURbIRGRuwFSyiu.webp", // Direct URL for green
       isInput: true,
     },
     {
       name: "Blue",
       frenchName: "Bleu",
       value: null,
-      imagePath: "/images/color-palette/paint-blue.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-blue-mSdmi2frgBThBVqWiTWkFcembXIQHe.webp", // Direct URL for blue
       isInput: true,
     },
     {
       name: "Yellow",
       frenchName: "Jaune",
       value: null,
-      imagePath: "/images/color-palette/paint-yellow.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-yellow-cUuyjLYMUplDvQVY6pgtnkMgYFxXos.webp", // Direct URL for yellow
       isInput: true,
     },
     {
       name: "Pink",
       frenchName: "Rose",
       value: null,
-      imagePath: "/images/color-palette/paint-pink.webp",
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/paint-pink-bWlr5ZC2fuPYq3U1J4x3Iw6AnGob9c.webp", // Direct URL for pink
       isInput: true,
     },
   ]
@@ -168,12 +183,10 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
         {colorEntries.map((entry, index) => (
           <div key={index} className="flex items-center space-x-3 bg-gray-800/60 p-2 rounded-lg border border-gray-700">
             <div className="w-12 h-12 relative">
-              <Image
+              <img
                 src={entry.imagePath || "/placeholder.svg"}
                 alt={entry.name}
-                width={48}
-                height={48}
-                className="object-contain pixelated"
+                className="w-full h-full object-contain pixelated"
               />
             </div>
             <div className="flex-1">
