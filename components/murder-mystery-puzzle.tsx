@@ -65,9 +65,14 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
           </CardHeader>
           <CardContent>
             <p className="text-gray-400">You are in the mansion's library. There are books everywhere.</p>
-            {/* Add the demonology and botany books here */}
-            <p className="text-gray-400">Demonology Book</p>
-            <p className="text-gray-400">Botany Book</p>
+            <h4 className="text-lg font-semibold text-purple-300 mt-4">Available Books:</h4>
+            <ul className="list-disc pl-5 text-gray-400">
+              <li>Demonology</li>
+              <li>Botany</li>
+            </ul>
+            <p className="mt-4 text-sm text-gray-500">
+              (You can't actually read the books in this version, but imagine they are very informative.)
+            </p>
           </CardContent>
         </Card>
       )}
