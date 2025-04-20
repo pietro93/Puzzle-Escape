@@ -1,4 +1,5 @@
 import type { Puzzle } from "@/types/puzzle"
+import MurderMysteryPuzzle from "@/components/murder-mystery-puzzle"
 
 // Hell - Devil (Levels 41-50)
 export const puzzlesSet5: Puzzle[] = [
@@ -130,10 +131,16 @@ export const puzzlesSet5: Puzzle[] = [
     description:
       "The devil is sending you to investigate a murder. Navigate through the locations below to collect hints and find out who is the killer.",
     imageUrl: "",
-    isMurderMysteryPuzzle: true,
-    solution: "the butler",
+    solution: "professor hemlock",
     category: "puzzle",
-    hints: [],
+    isMurderMysteryPuzzle: true,
+    component: MurderMysteryPuzzle,
+    hints: [
+      "Visit all locations to gather clues about the murder.",
+      "Pay special attention to the books in the library.",
+      "The killer's name is related to a poisonous plant.",
+      "Look for connections between the toxicology report and botanical knowledge.",
+    ],
   },
   {
     level: 50,

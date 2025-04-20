@@ -1,8 +1,6 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
-import { guardDialogLines } from "@/utils/dialogue-utils"
 import Image from "next/image"
 import InmatePuzzle from "./inmate-puzzle"
 import LibraryPuzzle from "./library-puzzle"
@@ -27,8 +25,11 @@ import DarkRoomPuzzle from "./dark-room-puzzle"
 import EgyptianMathPuzzle from "./egyptian-math-puzzle"
 import MouthOfTruthPuzzle from "./mouth-of-truth-puzzle"
 import BinarySwitchPuzzle from "./binary-switch-puzzle"
+import { guardDialogLines } from "@/utils/dialogue-utils"
+import { useState } from "react"
 import FireMapPuzzle from "./fire-map-puzzle"
 import ColorPalettePuzzle from "./color-palette-puzzle"
+import MurderMysteryPuzzle from "./murder-mystery-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -142,23 +143,12 @@ export default function PuzzleContent({
   // Check if this is a binary switch puzzle
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
 
-  // Check if this is a Murder Mystery puzzle
-  const isMurderMysteryPuzzle = puzzle.isMurderMysteryPuzzle
-
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
-  const [showElevator, setShowElevator] = useState(false)
-  const [showElevatorPanel, setShowElevatorPanel] = useState(false)
-  const [hasUsedElevator, setHasUsedElevator] = useState(false)
-  const [isSubmitButtonHovered, setIsSubmitButtonHovered] = useState(false)
-  const [jigsawComplete, setJigsawComplete] = useState(false)
-  const [showGuardPopup, setShowGuardPopup] = useState(false)
 
   // Add a new function to handle brain lamp clicks
   const handleBrainLampClick = () => {
     // Generate dialogue based on the number of correct combinations
     let dialogue = "..." // Default dialogue
-
-    const dialogueOptions = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"]
 
     if (binaryCorrectCombinations < 6) {
       // Different dialogue tiers based on progress
@@ -181,7 +171,7 @@ export default function PuzzleContent({
           "No more... please...",
           "STOP THE PAIN!",
         ]
-        dialogue = middleDialogues[Math.floor(Math.random() * dialogueOptions.length)]
+        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
       } else {
         // Late stage - extreme agony, barely coherent
         const lateDialogues = [
@@ -191,79 +181,13 @@ export default function PuzzleContent({
           "*gurgling sounds*",
           "END... THIS...",
         ]
-        dialogue = lateDialogues[Math.floor(Math.random() * dialogueOptions.length)]
+        dialogue = lateDialogues[Math.floor(Math.random() * lateDialogues.length)]
       }
     }
 
     // Show the dialogue popup with the brain character
     //setShowBrainDialogue(true);
     //setBrainDialogue(dialogue);
-  }
-
-  // Add this handler for the location image click
-  const handlePyramidLocationImageClick = () => {
-    if (level === 40 && currentPyramidRoom === "ra" && !hasPyramidTorch) {
-      handlePyramidTorchAcquired(true)
-    } else if (level === 47) {
-      // Call the brain lamp click handler for level 47
-      handleBrainLampClick()
-    }
-  }
-
-  // Handle submit button hover for level 50
-  const handleSubmitButtonMouseEnter = () => {
-    if (level === 50 && jigsawComplete && !showElevator) {
-      setIsSubmitButtonHovered(true)
-      // Update the FinalLevelPuzzle component to show the devil's message
-      const finalLevelPuzzleElement = document.getElementById("final-level-puzzle")
-      if (finalLevelPuzzleElement && finalLevelPuzzleElement.__reactProps$) {
-        if (finalLevelPuzzleElement.__reactProps$.handleSubmitHover) {
-          finalLevelPuzzleElement.__reactProps$.handleSubmitHover()
-        }
-      }
-    }
-  }
-
-  const handleSubmitButtonMouseLeave = () => {
-    if (level === 50) {
-      setIsSubmitButtonHovered(false)
-      // Update the FinalLevelPuzzle component
-      const finalLevelPuzzleElement = document.getElementById("final-level-puzzle")
-      if (finalLevelPuzzleElement && finalLevelPuzzleElement.__reactProps$) {
-        if (finalLevelPuzzleElement.__reactProps$.handleSubmitLeave) {
-          finalLevelPuzzleElement.__reactProps$.handleSubmitLeave()
-        }
-      }
-    }
-  }
-
-  // Handle elevator panel events from FinalLevelPuzzle
-  const handleElevatorPanelOpenFinal = () => {
-    setShowElevatorPanel(true)
-    setHasUsedElevator(true)
-  }
-
-  const handleAllPiecesRemovedFinal = () => {
-    setShowElevator(true)
-    // Ensure the location image is updated to show the elevator
-    setHasUsedElevator(true)
-  }
-
-  // Update the FinalLevelPuzzle component when the elevator floor changes
-  useEffect(() => {
-    if (level === 50) {
-      const finalLevelPuzzleElement = document.getElementById("final-level-puzzle")
-      if (finalLevelPuzzleElement && finalLevelPuzzleElement.__reactProps$) {
-        if (finalLevelPuzzleElement.__reactProps$.onFloorChange) {
-          finalLevelPuzzleElement.__reactProps$.onFloorChange(currentElevatorFloor)
-        }
-      }
-    }
-  }, [currentElevatorFloor, level])
-
-  // Function to close the guard popup
-  const handleCloseGuardPopup = () => {
-    setShowGuardPopup(false)
   }
 
   return (
@@ -502,8 +426,8 @@ export default function PuzzleContent({
               // Don't automatically solve, let the player type the answer
             }}
             onDevilClick={() => {}}
-            onAllPiecesRemoved={handleAllPiecesRemovedFinal}
-            onElevatorPanelOpen={handleElevatorPanelOpenFinal}
+            onAllPiecesRemoved={handleAllPiecesRemoved}
+            onElevatorPanelOpen={handleElevatorPanelOpen}
             currentFloor={currentElevatorFloor}
             onFloorChange={(floor) => setCurrentElevatorFloor(floor)}
           />
@@ -581,6 +505,7 @@ export default function PuzzleContent({
           <ColorPalettePuzzle onSolve={() => {}} />
         </div>
       )}
+      {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
     </div>
   )
 }
