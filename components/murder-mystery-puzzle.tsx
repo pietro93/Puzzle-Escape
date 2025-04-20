@@ -1,42 +1,81 @@
 "use client"
 
 import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+const KNOWN_LOCATIONS = ["crime scene", "police station", "morgue", "library"]
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
 }
 
 export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProps) {
-  const [solution, setSolution] = useState("")
+  const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
 
-  const handleSubmit = () => {
-    if (solution.toLowerCase() === "the butler") {
-      if (onSolve) {
-        onSolve()
-      }
-    } else {
-      alert("That is incorrect. Please try again.")
+  const navigateTo = (location: string) => {
+    if (KNOWN_LOCATIONS.includes(location)) {
+      setCurrentLocation(location)
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <p className="text-gray-300 font-mono text-sm mb-4">
-        The butler did it! (This is a placeholder. Implement the actual murder mystery logic here.)
-      </p>
-      <input
-        type="text"
-        placeholder="Who is the killer?"
-        value={solution}
-        onChange={(e) => setSolution(e.target.value)}
-        className="px-4 py-2 bg-gray-900/80 border-2 border-gray-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-600 font-mono text-center transition-all duration-300 shadow-lg mb-4"
-      />
-      <button
-        onClick={handleSubmit}
-        className="px-4 py-2 bg-purple-900 hover:bg-purple-800 rounded-xl font-pixel transition-colors border-2 border-purple-700 text-purple-300 flex items-center gap-1 shadow-[0_4px_0_rgba(0,0,0,0.3)] active:shadow-none active:translate-y-1"
-      >
-        Submit
-      </button>
+    <div className="flex flex-col items-center space-y-4">
+      <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
+      <p className="text-gray-300">Explore the locations to gather clues.</p>
+
+      {/* Location Content */}
+      {currentLocation === "crime scene" && (
+        <Card className="w-[400px] bg-gray-800">
+          <CardHeader>
+            <CardTitle>Crime Scene</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-400">You are at the crime scene. It's a bloody mess.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {currentLocation === "police station" && (
+        <Card className="w-[400px] bg-gray-800">
+          <CardHeader>
+            <CardTitle>Police Station</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-400">You are at the police station. The officers are not very helpful.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {currentLocation === "morgue" && (
+        <Card className="w-[400px] bg-gray-800">
+          <CardHeader>
+            <CardTitle>Morgue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-400">You are in the morgue. It smells like formaldehyde.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {currentLocation === "library" && (
+        <Card className="w-[400px] bg-gray-800">
+          <CardHeader>
+            <CardTitle>Library</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-400">You are in the mansion's library. There are books everywhere.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between w-full max-w-md">
+        <Button onClick={() => navigateTo("crime scene")}>Crime Scene</Button>
+        <Button onClick={() => navigateTo("police station")}>Police Station</Button>
+        <Button onClick={() => navigateTo("morgue")}>Morgue</Button>
+        <Button onClick={() => navigateTo("library")}>Library</Button>
+      </div>
     </div>
   )
 }
