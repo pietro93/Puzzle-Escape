@@ -107,7 +107,6 @@ export const puzzlesSet5: Puzzle[] = [
     ],
     isBinarySwitchPuzzle: true,
   },
-  // Level 48 - Mouth of Truth puzzle
   {
     level: 48,
     question: "The Mouth of Truth Reveals All",
@@ -127,13 +126,13 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 49,
-    question: "The Devil challenges you to a game of murder mystery.",
+    question: "The Devil challenges you to face death, in a sort of murder mystery game.",
     description:
       "The devil is sending you to investigate a murder. Navigate through the locations below to collect hints and find out who is the killer.",
     imageUrl: "",
+    solution: "tbd",
+    category: "puzzle",
     isMurderMysteryPuzzle: true,
-    solution: "the butler",
-    category: "riddle",
     hints: [],
   },
   {
