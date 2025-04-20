@@ -34,4 +34,5 @@ export interface Puzzle {
   isFinalLevelPuzzle?: boolean
   isDevilDialogue?: boolean
   isMouthOfTruthPuzzle?: boolean
+  isMurderMysteryPuzzle?: boolean
 }

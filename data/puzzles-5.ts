@@ -130,9 +130,9 @@ export const puzzlesSet5: Puzzle[] = [
     description:
       "The devil is sending you to investigate a murder. Navigate through the locations below to collect hints and find out who is the killer.",
     imageUrl: "",
-    solution: "tbd",
-    category: "puzzle",
     isMurderMysteryPuzzle: true,
+    solution: "the butler",
+    category: "puzzle",
     hints: [],
   },
   {
