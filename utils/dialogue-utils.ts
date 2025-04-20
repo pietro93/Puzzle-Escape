@@ -67,9 +67,13 @@ export const useCharacterDialogue = () => {
           "Time moves differently in this mansion, sir. You may find that hours pass like minutes... or years.",
         ],
         13: [
-          'This antique color palette was gifted to the master by a renowned French painter," the butler explains, handling the artifact with reverence. "The painter mentioned that the canvas contains a sort of treasure map. But I was never able to figure it out, myself. Perhaps you can help?',
-          "The master was particularly fond of this palette. He would stare at it for hours, muttering about the mathematical relationships between the green and pink roses.",
-          "The French painter who created this palette was known for his fascination with numerical patterns. The master believed the values held a secret location.",
+          "This color palette belonged to a famous French painter. The master acquired it at an auction in Paris.",
+          "The painter was known to hide geographical coordinates in his color values. Most ingenious.",
+          "The master spent countless nights calculating the relationships between these colors.",
+          "I believe the green and pink values are particularly significant, sir. They seemed to fascinate the master.",
+          "The master once mentioned this palette contained directions to a remote island. I never understood the mathematics myself.",
+          "The numerical patterns between these colors supposedly reveal a location on a map. The master was obsessed with finding it.",
+          "If you can decipher the relationship between these colors, you might discover what the master was searching for.",
         ],
         14: [
           "The master's puzzle boxes are quite ingenious, sir. He designed them himself.",

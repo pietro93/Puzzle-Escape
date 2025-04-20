@@ -41,10 +41,11 @@ export const puzzlesSet2: Puzzle[] = [
     solution: "Vampire Island",
     category: "math",
     hints: [
-      "Look for mathematical patterns in the known values of the colors.",
-      "Try to find relationships between colors that are similar in value.",
-      "The colors form a mathematical sequence that can help you determine the missing values.",
-      "Once you've found all the correct values, convert them to letters using their positions in the alphabet.",
+      "Use color theory to identify the relationship between colors.",
+      "You can add or subtract colors to find the values that are missing.",
+      "You can find pink by adding red and white together.",
+      "To find green, first find the value for yellow by subtracting red from orange. Then find blue by adding azure and black. Finally, add blue to yellow to get green.",
+      "The correct values of green and pink will give you the coordinates of an island in Australia. The name of the island is the solution for this level.",
     ],
   },
   {
