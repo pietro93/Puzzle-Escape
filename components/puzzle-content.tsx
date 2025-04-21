@@ -52,6 +52,8 @@ interface PuzzleContentProps {
   onSolutionGenerated: (solution: string) => void
   setBinaryCorrectCombinations: (count: number) => void
   questionnaireRef: React.RefObject<any>
+  onMurderMysteryLocationChange?: (location: string) => void
+  onShowDevilDialogue?: () => void
 }
 
 export default function PuzzleContent({
@@ -75,6 +77,8 @@ export default function PuzzleContent({
   onSolutionGenerated,
   setBinaryCorrectCombinations,
   questionnaireRef,
+  onMurderMysteryLocationChange,
+  onShowDevilDialogue,
 }: PuzzleContentProps) {
   // Check if this puzzle has an image
   const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
@@ -144,6 +148,24 @@ export default function PuzzleContent({
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
 
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
+
+  // Add state for murder mystery location
+  const [murderMysteryLocation, setMurderMysteryLocation] = useState("crime scene")
+
+  // Add a function to handle murder mystery location change
+  const handleMurderMysteryLocationChange = (location: string) => {
+    setMurderMysteryLocation(location)
+    if (onMurderMysteryLocationChange) {
+      onMurderMysteryLocationChange(location)
+    }
+  }
+
+  // Add a function to handle devil dialogue button click
+  const handleDevilDialogueClick = () => {
+    if (onShowDevilDialogue) {
+      onShowDevilDialogue()
+    }
+  }
 
   // Add a new function to handle brain lamp clicks
   const handleBrainLampClick = () => {
@@ -387,7 +409,7 @@ export default function PuzzleContent({
             onSolve={() => {
               // Don't automatically solve, let the player type the answer
             }}
-            handleDevilClick={() => {}}
+            handleDevilClick={handleDevilDialogueClick}
           />
         </div>
       ) : null}
@@ -425,7 +447,7 @@ export default function PuzzleContent({
             onSolve={() => {
               // Don't automatically solve, let the player type the answer
             }}
-            onDevilClick={() => {}}
+            onDevilClick={handleDevilDialogueClick}
             onAllPiecesRemoved={handleAllPiecesRemoved}
             onElevatorPanelOpen={handleElevatorPanelOpen}
             currentFloor={currentElevatorFloor}
@@ -505,7 +527,13 @@ export default function PuzzleContent({
           <ColorPalettePuzzle onSolve={() => {}} />
         </div>
       )}
-      {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
+      {puzzle.isMurderMysteryPuzzle && (
+        <MurderMysteryPuzzle
+          onSolve={handleParrotSolve}
+          onLocationChange={handleMurderMysteryLocationChange}
+          onDevilClick={handleDevilDialogueClick}
+        />
+      )}
     </div>
   )
 }

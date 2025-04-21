@@ -123,6 +123,8 @@ export default function GameScreen({
   // Add state for brain dialogue
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
+  // Add state for murder mystery current location
+  const [murderMysteryLocation, setMurderMysteryLocation] = useState<string>("crime scene")
 
   // Focus input when component mounts
   useEffect(() => {
@@ -475,6 +477,16 @@ export default function GameScreen({
     setShowGuardPopup(false)
   }
 
+  // Function to handle murder mystery location change
+  const handleMurderMysteryLocationChange = (location: string) => {
+    setMurderMysteryLocation(location)
+  }
+
+  // Function to show devil dialogue
+  const handleShowDevilDialogue = () => {
+    setShowDevilDialogue(true)
+  }
+
   return (
     <div
       className={`w-full max-w-md mx-auto p-4 ${getSettingBackground()} transition-colors duration-1000 min-h-[100vh] flex flex-col ${isAnimating ? "animate-fadeIn" : ""}`}
@@ -562,6 +574,8 @@ export default function GameScreen({
         onSolutionGenerated={(solution) => setDynamicSolution(solution)}
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
+        onMurderMysteryLocationChange={handleMurderMysteryLocationChange}
+        onShowDevilDialogue={handleShowDevilDialogue}
       />
 
       {/* Answer input section */}
@@ -621,8 +635,13 @@ export default function GameScreen({
       </div>
 
       {/* Devil Dialog popup for level 50 */}
-      {showDevilDialogue && level === 50 && (
-        <DevilDialogue onClose={() => setShowDevilDialogue(false)} currentFloor={currentElevatorFloor} />
+      {showDevilDialogue && (
+        <DevilDialogue
+          onClose={() => setShowDevilDialogue(false)}
+          currentFloor={currentElevatorFloor}
+          level={level}
+          currentLocation={murderMysteryLocation}
+        />
       )}
 
       {/* Character dialogue popup */}
