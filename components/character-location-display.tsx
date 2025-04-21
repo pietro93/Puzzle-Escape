@@ -1,4 +1,5 @@
 "use client"
+
 import Image from "next/image"
 import CharacterImage from "./character-image"
 import LocationImage from "./location-image"
@@ -105,7 +106,8 @@ export default function CharacterLocationDisplay({
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         <div className="flex justify-center items-center">
-          <div className="w-40 h-40 relative pixelated-container">
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
               src={
                 solved
@@ -122,7 +124,8 @@ export default function CharacterLocationDisplay({
           </div>
         </div>
         <div className="flex justify-center items-center">
-          <div className="w-40 h-40 relative pixelated-container">
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
               src={
                 solved
@@ -160,11 +163,14 @@ export default function CharacterLocationDisplay({
   if (level === 39) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
           <CharacterImage character={character} />
         </div>
         <div className="flex justify-center items-center">
-          <LocationImage setting={setting} customImage={null} hintImage={null} />
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
+            <LocationImage setting={setting} customImage={null} hintImage={null} />
+          </div>
         </div>
       </div>
     )
@@ -178,8 +184,8 @@ export default function CharacterLocationDisplay({
           <CharacterImage character={character} />
         </div>
         <div className="flex justify-center items-center cursor-pointer" onClick={onPyramidLocationImageClick}>
-          <div className="w-40 h-40 relative pixelated-container">
-            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
               src={getPyramidLocationImage() || `/images/${setting}-bg.webp`}
               alt={`${setting} location`}
@@ -187,8 +193,6 @@ export default function CharacterLocationDisplay({
               height={160}
               className="pixelated z-10 relative"
             />
-            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
-            <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
           </div>
         </div>
       </div>
@@ -211,8 +215,8 @@ export default function CharacterLocationDisplay({
             }
           }}
         >
-          <div className="w-40 h-40 relative pixelated-container">
-            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
               src={getBrainLampImage(binaryCorrectCombinations) || "/images/brainlamp.webp"}
               alt="Brain Lamp"
@@ -221,8 +225,6 @@ export default function CharacterLocationDisplay({
               className="pixelated z-10 relative w-full h-full object-contain"
               style={{ opacity: getBrainLampOpacity(binaryCorrectCombinations) }}
             />
-            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
-            <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
           </div>
         </div>
       </div>
@@ -240,8 +242,8 @@ export default function CharacterLocationDisplay({
 
         {/* Location image - always clickable for elevator access */}
         <div className="flex justify-center items-center cursor-pointer" onClick={onLocationClick}>
-          <div className="w-40 h-40 relative pixelated-container">
-            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
               src={hasUsedElevator || showElevator || jigsawComplete ? "/images/elevator.webp" : "/images/hell-bg.webp"}
               alt={`${setting} location`}
@@ -249,8 +251,41 @@ export default function CharacterLocationDisplay({
               height={160}
               className="pixelated z-10 relative"
             />
-            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
-            <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Special handling for level 51 (murder mystery)
+  if (level === 51) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        {/* Crime Scene Image */}
+        <div className="flex justify-center items-center">
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Ehfuz3nythu7PvV0aE7yXLaePwt3DD.png"
+              alt="Crime Scene"
+              width={160}
+              height={160}
+              className="pixelated z-10 relative"
+            />
+          </div>
+        </div>
+
+        {/* Victim ID Photo */}
+        <div className="flex justify-center items-center">
+          <div className="w-40 h-40 relative pixelated-container bg-black">
+            <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-roWXY86XQmvAEzD4JM867U7v6WkKjW.png"
+              alt="Victim ID"
+              width={160}
+              height={160}
+              className="pixelated z-10 relative"
+            />
           </div>
         </div>
       </div>
@@ -264,8 +299,8 @@ export default function CharacterLocationDisplay({
         <CharacterImage character={character} />
       </div>
       <div className="flex justify-center items-center">
-        <div className="w-40 h-40 relative pixelated-container">
-          <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+        <div className="w-40 h-40 relative pixelated-container bg-black">
+          <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
           <Image
             src={puzzle.locationImage || `/images/${setting}-bg.webp`}
             alt={`${setting} location`}
@@ -273,8 +308,6 @@ export default function CharacterLocationDisplay({
             height={160}
             className="pixelated z-10 relative"
           />
-          <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
-          <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
         </div>
       </div>
     </div>
