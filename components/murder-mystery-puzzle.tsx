@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { demonologyBook } from "@/data/books"
 import Image from "next/image"
-import { X, Book, MapPin, FileText } from "lucide-react"
+import { X, Book, MapPin } from "lucide-react"
 import { botanyBook } from "@/data/books"
 import { cn } from "@/lib/utils"
 
@@ -382,26 +382,64 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           )}
 
           {/* Police and Mortician Dialogue  */}
-          {(currentLocation === "police station" || currentLocation === "morgue") && showDialogue && (
-            <div className="flex items-center space-x-4 p-4">
-              {/* Character Portrait */}
-              <div className="w-24 h-24 relative">
-                <Image
-                  src={
-                    currentCharacter === "policewoman"
-                      ? "/images/murder-mystery/policewoman.webp"
-                      : "/images/murder-mystery/mortician.webp"
-                  }
-                  alt={currentCharacter}
-                  width={96}
-                  height={96}
-                  className="rounded-lg border-2 border-gray-700"
-                />
+          {(currentLocation === "police station" || currentLocation === "morgue") && (
+            <div className="flex flex-col">
+              {/* Character Portrait and Speech Bubble */}
+              <div className="flex items-start mb-2 px-4">
+                <div className="w-24 h-24 relative">
+                  <Image
+                    src={
+                      currentCharacter === "policewoman"
+                        ? "/images/murder-mystery/policewoman.webp"
+                        : "/images/murder-mystery/mortician.webp"
+                    }
+                    alt={currentCharacter}
+                    width={96}
+                    height={96}
+                    className="rounded-lg border-2 border-gray-700"
+                  />
+                </div>
+
+                {/* Speech Bubble */}
+                <div className="ml-2 relative bg-gray-800 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
+                  <p className="font-pixel text-gray-200 text-sm">{typedText}</p>
+                </div>
               </div>
 
-              {/* Speech Bubble */}
-              <div className="bg-gray-700 p-4 rounded-lg flex-1">
-                <p className="text-gray-300 font-mono text-sm">{typedText}</p>
+              {/* Dialogue Options */}
+              <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
+                <div className="grid gap-2 max-h-[200px] overflow-y-auto">
+                  {currentDialogueOptions
+                    .filter((option) => {
+                      // Conditionally render "Is there a police report?" option
+                      if (option.id === "police-report") {
+                        return showPoliceReportOption
+                      }
+                      return true
+                    })
+                    .map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => handleDialogueOption(option)}
+                        className={cn(
+                          "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
+                          askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
+                        )}
+                      >
+                        {option.text}
+                      </button>
+                    ))}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="flex justify-between mt-4">
+                  <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
+                    {dialoguePath.length === 0 ? "Exit" : "Back"}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
+                    Close
+                  </Button>
+                </div>
               </div>
             </div>
           )}
@@ -498,7 +536,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
           <div className="bg-gray-900 rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800">
               <h3 className="text-xl font-bold text-amber-300">{selectedBook.title}</h3>
               <Button variant="ghost" size="sm" onClick={closeBook} className="text-gray-400 hover:text-white">
                 <X className="h-4 w-4" />
@@ -557,132 +595,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               >
                 Next
               </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Dialogue functions - will only be displayed when there is a selected chracter and you are a police station or a moruge */}
-      {/* Character dialogue pop up */}
-      {showDialogue && (
-        <div className="">
-          <div className="" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-start gap-3">
-              <div className="w-16 h-16 relative pixelated-container shrink-0">
-                <Image
-                  src={
-                    currentCharacter === "policewoman"
-                      ? "/images/murder-mystery/policewoman.webp"
-                      : "/images/murder-mystery/mortician.webp"
-                  }
-                  alt={currentCharacter}
-                  width={64}
-                  height={64}
-                  className="pixelated"
-                />
-              </div>
-              <div className="flex-1">
-                <p className="text-purple-300 font-pixel mb-2">
-                  {currentCharacter === "policewoman" ? "Policewoman:" : "Mortician:"}
-                </p>
-                <p className="text-gray-200 text-sm">{typedText}</p>
-              </div>
-            </div>
-
-            {/* Dialogue options inside popup */}
-            <div className="mt-4 text-center flex justify-center">
-              {showDialogue && (
-                <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
-                  {dialoguePath.length === 0 ? "Exit" : "Back"}
-                </Button>
-              )}
-              {/* Close Button */}
-              <Button
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
-                onClick={closeDialogue}
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Passport Popup */}
-      {showPassport && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-900 rounded-lg max-w-md w-full overflow-hidden flex flex-col shadow-2xl border border-gray-700">
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800">
-              <h3 className="text-xl font-bold text-amber-300 font-pixel">Victim's Passport</h3>
-              <Button variant="ghost" size="sm" onClick={closePassport} className="text-gray-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="p-6">
-              {/* Placeholder for passport image - will be replaced with actual image */}
-              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full">
-                <div className="text-center text-gray-400 mb-2 font-pixel">Passport</div>
-                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
-                  <p className="text-gray-500 font-pixel">Passport Image Placeholder</p>
-                </div>
-                <div className="mt-4 space-y-2 text-sm font-pixel">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Name:</span>
-                    <span className="text-gray-300">John Doe</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Nationality:</span>
-                    <span className="text-gray-300">United States</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Date of Birth:</span>
-                    <span className="text-gray-300">01/01/1980</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Police Report Popup */}
-      {showPoliceReport && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-900 rounded-lg max-w-md w-full overflow-hidden flex flex-col shadow-2xl border border-gray-700">
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800">
-              <h3 className="text-xl font-bold text-amber-300 font-pixel">Police Report</h3>
-              <Button variant="ghost" size="sm" onClick={closePoliceReport} className="text-gray-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="p-6">
-              <div className="bg-gray-800 p-4 rounded border border-gray-700">
-                <div className="flex items-center justify-center mb-4">
-                  <FileText className="text-gray-400 mr-2" />
-                  <h4 className="text-gray-300 font-pixel">Official Police Report</h4>
-                </div>
-                <div className="bg-gray-100 p-4 rounded text-gray-800 font-pixel text-sm leading-relaxed">
-                  <p className="mb-2">Date: April 21, 2025</p>
-                  <p className="mb-2">Case #: 2025-04-21-001</p>
-                  <p className="mb-2">Reporting Officer: Officer Jenny</p>
-                  <p className="mb-4">Subject: Death of tourist - Natural causes</p>
-
-                  <p className="mb-2">
-                    Victim was found in hotel room after calling for emergency services. Deceased upon arrival. No signs
-                    of struggle or forced entry.
-                  </p>
-                  <p className="mb-2">
-                    Cause of death appears to be natural causes. No further investigation required.
-                  </p>
-                  <p className="mb-2">Personal effects collected and stored in evidence.</p>
-
-                  <div className="mt-4 text-right">
-                    <p>
-                      Signed: <span className="italic">Officer Jenny</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
