@@ -290,7 +290,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "see-body",
           text: "Can I see the body?",
-          response: "No. I don't share my company.",
+          response: "No.",
           specialAction: () => setAskedToSeeBody(true),
           followUp: [],
         },
@@ -307,7 +307,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 {
                   id: "any-friends",
                   text: "Don't you have any friends?",
-                  response: "Friends? In this line of work, the living are more trouble than they're worth.",
+                  response: "In this line of work, the living are more trouble than they're worth.",
                   specialAction: () => setAskedAboutFriends(true),
                   followUp: [],
                 },
@@ -346,9 +346,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               followUp: [
                 {
                   id: "smile",
-                  text: ":)",
-                  response:
-                    "Okay okay, listen. I show you the body, you get the HELL out of here, as fast as you can. okay?",
+                  text: "Yay! Best friends! Can I bead your dreadlocks?",
+                  response: "Enough! I show you the body, you get the HELL out of here, as fast as you can. okay?",
                   specialAction: () => setCanSeeBody(true),
                   followUp: [],
                 },
@@ -771,13 +770,41 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   </Button>
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Victim's Body</div>
-                <div className="flex items-center">
-                  <div className="w-48 h-48 relative mr-4 pixelated-container bg-black p-0">
+                <div className="flex items-center justify-center">
+                  <div className="grid grid-cols-2 gap-2">
                     <Image
-                      src="/images/murder-mystery/victim_body.webp"
-                      alt="Victim's Body"
-                      width={192}
-                      height={192}
+                      src="/images/murder-mystery/victim-head.webp"
+                      alt="Victim's Head"
+                      width={128}
+                      height={128}
+                      className="pixelated"
+                    />
+                    <Image
+                      src="/images/murder-mystery/victim-left-hand.webp"
+                      alt="Victim's Left Hand"
+                      width={128}
+                      height={128}
+                      className="pixelated"
+                    />
+                    <Image
+                      src="/images/murder-mystery/victim-right-hand.webp"
+                      alt="Victim's Right Hand"
+                      width={128}
+                      height={128}
+                      className="pixelated"
+                    />
+                    <Image
+                      src="/images/murder-mystery/victim-left-leg.webp"
+                      alt="Victim's Left Leg"
+                      width={128}
+                      height={128}
+                      className="pixelated"
+                    />
+                    <Image
+                      src="/images/murder-mystery/victim-right-leg.webp"
+                      alt="Victim's Right Leg"
+                      width={128}
+                      height={128}
                       className="pixelated"
                     />
                   </div>
