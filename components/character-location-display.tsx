@@ -129,10 +129,10 @@ export default function CharacterLocationDisplay({
             <Image
               src={
                 solved
-                  ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-8F0FXySQS7FpTruWOt1MsbbrL7IKiw.webp" // mansion.webp
+                  ? "https://v0.blob.com/mansion-8F0FXySQS7FpTruWOt1MsbbrL7IKiw.webp" // mansion.webp
                   : lightsOn
-                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-lit-Y00BfTg0ZTovGTlXIoaVpm4btmNctX.webp" // Updated mansion-lit.webp
-                    : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pitch-darkness-hHHhjqR7LwsUXdako3Kczz70K9LK40.webp" // pitch-darkness.webp
+                    ? "https://v0.blob.com/mansion-lit-Y00BfTg0ZTovGTlXIoaVpm4btmNctX.webp" // Updated mansion-lit.webp
+                    : "https://v0.blob.com/pitch-darkness-hHHhjqR7LwsUXdako3Kczz70K9LK40.webp" // pitch-darkness.webp
               }
               alt={lightsOn ? "Mansion" : "Darkness"}
               width={160}
@@ -263,7 +263,7 @@ export default function CharacterLocationDisplay({
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         {/* Character image (Policewoman) */}
         <div className="flex justify-center items-center">
-          <div className="w-40 h-40 relative pixelated-container bg-black">
+          <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
               src="/images/murder-mystery/policewoman.webp"
@@ -277,10 +277,10 @@ export default function CharacterLocationDisplay({
 
         {/* Location image (Police Station) */}
         <div className="flex justify-center items-center">
-          <div className="w-40 h-40 relative pixelated-container bg-black">
+          <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-exterior-KTmGONVi3wa6sx2G9nKqAybVn3qVV0.webp" // Use mansion exterior as police station for now
+              src="/images/prison-bg.webp" // Use prison exterior as police station for now
               alt="Police Station"
               width={160}
               height={160}
@@ -299,7 +299,7 @@ export default function CharacterLocationDisplay({
         <CharacterImage character={character} />
       </div>
       <div className="flex justify-center items-center">
-        <div className="w-40 h-40 relative pixelated-container bg-black">
+        <div className="w-40 h-40 relative pixelated-container">
           <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
           <Image
             src={puzzle.locationImage || `/images/${setting}-bg.webp`}
