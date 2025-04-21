@@ -177,37 +177,79 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
         <CardContent>
           {currentLocation === "crime scene" && (
             <div className="text-gray-300">
-              <p>You examine the crime scene carefully. Blood spatters suggest a violent struggle.</p>
-              <p className="mt-2">There are several items that might be worth investigating:</p>
-              <ul className="list-disc pl-5 mt-2">
-                <li>A broken vial with traces of an unknown substance</li>
-                <li>Footprints leading to and from the scene</li>
-                <li>A torn piece of fabric caught on a nearby bush</li>
-              </ul>
+              <div className="flex flex-col md:flex-row gap-4 items-center mb-4">
+                <div className="w-full md:w-1/2">
+                  <Image
+                    src="/images/murder-mystery/crime-scene.webp"
+                    alt="Crime Scene"
+                    width={400}
+                    height={400}
+                    className="rounded-lg shadow-lg mb-4"
+                  />
+                </div>
+                <div className="w-full md:w-1/2">
+                  <p>You examine the crime scene carefully. Blood spatters suggest a violent struggle.</p>
+                  <p className="mt-2">There are several items that might be worth investigating:</p>
+                  <ul className="list-disc pl-5 mt-2">
+                    <li>A broken vial with traces of an unknown substance</li>
+                    <li>Footprints leading to and from the scene</li>
+                    <li>A torn piece of fabric caught on a nearby bush</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
 
           {currentLocation === "police station" && (
             <div className="text-gray-300">
-              <p>The police station is busy with officers discussing the case.</p>
-              <p className="mt-2">You overhear snippets of conversation:</p>
-              <ul className="list-disc pl-5 mt-2">
-                <li>"...third victim this month with the same MO..."</li>
-                <li>"...toxicology report showed unusual plant compounds..."</li>
-                <li>"...witness mentioned seeing someone from the university..."</li>
-              </ul>
+              <div className="flex flex-col md:flex-row gap-4 items-center mb-4">
+                <div className="w-full md:w-1/3">
+                  <Image
+                    src="/images/murder-mystery/policewoman.webp"
+                    alt="Police Officer"
+                    width={300}
+                    height={300}
+                    className="rounded-lg shadow-lg mb-4"
+                  />
+                </div>
+                <div className="w-full md:w-2/3">
+                  <p>
+                    The police station is busy with officers discussing the case. Detective Bones is handling the
+                    investigation.
+                  </p>
+                  <p className="mt-2">You overhear snippets of conversation:</p>
+                  <ul className="list-disc pl-5 mt-2">
+                    <li>"...third victim this month with the same MO..."</li>
+                    <li>"...toxicology report showed unusual plant compounds..."</li>
+                    <li>"...witness mentioned seeing someone from the university..."</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
 
           {currentLocation === "morgue" && (
             <div className="text-gray-300">
-              <p>The morgue is cold and clinical. The medical examiner shows you the victim's body.</p>
-              <p className="mt-2">You notice several unusual features:</p>
-              <ul className="list-disc pl-5 mt-2">
-                <li>Small puncture wounds that don't match any typical weapon</li>
-                <li>Traces of a green substance under the fingernails</li>
-                <li>An unusual discoloration around the mouth and nose</li>
-              </ul>
+              <div className="flex flex-col md:flex-row gap-4 items-center mb-4">
+                <div className="w-full md:w-1/3">
+                  <Image
+                    src="/images/murder-mystery/mortician.webp"
+                    alt="Mortician"
+                    width={300}
+                    height={300}
+                    className="rounded-lg shadow-lg mb-4"
+                  />
+                </div>
+                <div className="w-full md:w-2/3">
+                  <p>The morgue is cold and clinical. Dr. Rigor, the medical examiner, shows you the victim's body.</p>
+                  <p className="mt-2">You notice several unusual features:</p>
+                  <ul className="list-disc pl-5 mt-2">
+                    <li>Small puncture wounds that don't match any typical weapon</li>
+                    <li>Traces of a green substance under the fingernails</li>
+                    <li>An unusual discoloration around the mouth and nose</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
 
