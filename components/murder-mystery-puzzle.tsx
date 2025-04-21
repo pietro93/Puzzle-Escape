@@ -26,7 +26,7 @@ interface MurderMysteryPuzzleProps {
   currentQuestion?: string
 }
 
-export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
+function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
   // Location State
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
   const locations = [
@@ -44,6 +44,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Police Data State
   const [showPoliceReport, setShowPoliceReport] = useState(false)
   const [showPassport, setShowPassport] = useState(false)
+  const [showVictimBody, setShowVictimBody] = useState(false)
 
   // Dialogue State
   const [showDialogue, setShowDialogue] = useState(false)
@@ -56,6 +57,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [isTyping, setIsTyping] = useState(false)
   const [typedText, setTypedText] = useState("")
   const [dialoguePath, setDialoguePath] = useState<DialogueOption[]>([])
+  const [canSeeBody, setCanSeeBody] = useState(false)
+  const [askedAboutFriends, setAskedAboutFriends] = useState(false)
+  const [askedToSeeBody, setAskedToSeeBody] = useState(false)
 
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
@@ -238,7 +242,154 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   ]
 
   // Mortician
-  const morticianDialogue = []
+  const morticianDialogue = [
+    {
+      id: "initial-greeting",
+      text: "Start",
+      response: "...",
+      followUp: [
+        {
+          id: "who-are-you",
+          text: "Who are you?",
+          response: "Name's Psychopompus. Psycho for short.",
+          followUp: [
+            {
+              id: "hello-psycho",
+              text: "Huh... hello, Psycho.",
+              response: "...",
+              followUp: [],
+            },
+          ],
+        },
+        {
+          id: "tell-about-body",
+          text: "What can you tell me about the body that was found by the lake?",
+          response: "It's dead.",
+          followUp: [
+            {
+              id: "cause-of-death",
+              text: "What was the cause of death?",
+              response: "Anemia.",
+              followUp: [
+                {
+                  id: "anemia-question",
+                  text: "Anemia?",
+                  response: "Low blood levels. Caused organ failure.",
+                  followUp: [],
+                },
+                {
+                  id: "natural-question",
+                  text: "Was it natural?",
+                  response: "As natural as having almost no blood gets.",
+                  followUp: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: "see-body",
+          text: "Can I see the body?",
+          response: "No.",
+          specialAction: () => setAskedToSeeBody(true),
+          followUp: [],
+        },
+        {
+          id: "like-job",
+          text: "Do you like your job?",
+          response: "I enjoy the company.",
+          followUp: [
+            {
+              id: "alone-with-corpses",
+              text: "Aren't you alone with corpses all the time?",
+              response: "As I said. I enjoy the company.",
+              followUp: [
+                {
+                  id: "any-friends",
+                  text: "Don't you have any friends?",
+                  response: "I have plenty. They're just not very talkative. Or mobile. Or alive.",
+                  specialAction: () => setAskedAboutFriends(true),
+                  followUp: [],
+                },
+              ],
+            },
+            {
+              id: "macabre-stuff",
+              text: "You must have seen some pretty macabre stuff in here.",
+              response: "Your face is a contender.",
+              followUp: [],
+            },
+          ],
+        },
+        {
+          id: "be-your-friend",
+          text: "I'll be your friend!",
+          response: "Hell no. Please leave me alone.",
+          condition: "friendship-condition",
+          followUp: [
+            {
+              id: "hobbies",
+              text: "Do you have any hobbies?",
+              response: "Fondling dead people.",
+              followUp: [],
+            },
+            {
+              id: "puzzle-games",
+              text: "Do you like puzzle games?",
+              response: "What am I, some kind of loser?",
+              followUp: [],
+            },
+            {
+              id: "not-leaving",
+              text: "I am not leaving until you accept my friendship.",
+              response: "You must be kidding me.",
+              followUp: [
+                {
+                  id: "smile",
+                  text: ":)",
+                  response:
+                    "Okay okay, listen. I show you the body, you get the HELL out of here, as fast as you can. Okay?",
+                  specialAction: () => setCanSeeBody(true),
+                  followUp: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: "check-victim-body",
+          text: "Let's check the victim's body alright.",
+          response: "Fine. But don't touch anything. And don't tell anyone I showed you this.",
+          condition: "can-see-body",
+          specialAction: () => setShowVictimBody(true),
+          followUp: [],
+        },
+      ],
+    },
+  ]
+
+  // Filter dialogue options based on conditions
+  const filteredDialogueOptions = currentDialogueOptions.filter((option) => {
+    if (option.condition === "exhausted-murder-questions") {
+      return showPoliceReportOption
+    }
+    if (option.condition === "asked-about-murder") {
+      return showWitnessesOption
+    }
+    if (option.condition === "seen-police-report") {
+      return showPoliceReportAgainOption
+    }
+    if (option.condition === "seen-passport") {
+      return showPassportAgainOption
+    }
+    if (option.condition === "friendship-condition") {
+      return showFriendshipOption
+    }
+    if (option.condition === "can-see-body") {
+      return showBodyViewingOption
+    }
+    return true // If no condition, always show the option
+  })
 
   // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
   const closePassport = () => {
@@ -246,6 +397,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }
   const closePoliceReport = () => {
     setShowPoliceReport(false)
+  }
+  const closeVictimBody = () => {
+    setShowVictimBody(false)
   }
 
   // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
@@ -327,12 +481,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     // Set initial dialogue options based on character
     if (character === "policewoman") {
       setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
-      setCurrentResponse(policewomanDialogue[0].response)
-      setIsTyping(true)
     } else if (character === "mortician") {
-      setCurrentDialogueOptions(morticianDialogue)
-      setCurrentResponse("...")
-      setIsTyping(true)
+      setCurrentDialogueOptions(morticianDialogue[0].followUp || [])
     }
   }
 
@@ -372,7 +522,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         if (currentCharacter === "policewoman") {
           setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
         } else if (currentCharacter === "mortician") {
-          setCurrentDialogueOptions(morticianDialogue)
+          setCurrentDialogueOptions(morticianDialogue[0].followUp || [])
         }
       } else {
         // Back to previous level
@@ -434,19 +584,25 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
   const showPassportAgainOption = askedQuestions.has("check-passport")
 
+  // Conditionally show friendship option
+  const showFriendshipOption = askedAboutFriends && askedToSeeBody
+
+  // Conditionally show body viewing option
+  const showBodyViewingOption = canSeeBody
+
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
 
       {/* Location Content */}
-      <Card className="w-full bg-gray-800 border-gray-700">
-        <CardHeader>
+      <Card className="w-full bg-black border-gray-700">
+        <CardHeader className="bg-black text-purple-300">
           <CardTitle className="text-purple-300">{locations.find((loc) => loc.id === currentLocation)?.name}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="bg-black p-0">
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
-              <div className="w-full relative pixelated-container bg-black">
+              <div className="w-full h-full relative pixelated-container bg-black p-0">
                 <Image
                   src="/images/murder-mystery/crime-scene.webp"
                   alt="Crime Scene"
@@ -460,25 +616,25 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
           {/* Police and Mortician Dialogue  */}
           {(currentLocation === "police station" || currentLocation === "morgue") && (
-            <div className="flex flex-col">
+            <div className="flex flex-col bg-black">
               {/* Character Portrait and Speech Bubble */}
-              <div className="flex flex-col items-center mb-2 px-4">
-                <div className="w-40 h-40 relative pixelated-container bg-black">
+              <div className="flex flex-col items-center mb-2 p-6 pt-0 bg-black">
+                <div className="w-40 h-40 relative pixelated-container bg-black p-0">
                   <Image
                     src={
                       currentCharacter === "policewoman"
                         ? "/images/murder-mystery/policewoman.webp"
                         : "/images/murder-mystery/mortician.webp"
                     }
-                    alt={currentCharacter}
+                    alt={currentCharacter || ""}
                     width={160}
                     height={160}
-                    className="rounded-lg pixelated"
+                    className="pixelated"
                   />
                 </div>
 
                 {/* Speech Bubble */}
-                <div className="mt-2 relative bg-gray-800 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
+                <div className="mt-2 relative bg-gray-900 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
                   <p className="font-pixel text-gray-200 text-sm">{typedText}</p>
                 </div>
               </div>
@@ -486,35 +642,18 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               {/* Dialogue Options */}
               <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
                 <div className="grid gap-2 max-h-[200px] overflow-y-auto">
-                  {currentDialogueOptions
-                    .filter((option) => {
-                      // Conditionally render "Is there a police report?" option
-                      if (option.id === "police-report") {
-                        return showPoliceReportOption
-                      }
-                      if (option.id === "were-there-any-witnesses") {
-                        return showWitnessesOption
-                      }
-                      if (option.id === "can-see-report-again") {
-                        return showPoliceReportAgainOption
-                      }
-                      if (option.id === "can-see-passport-again") {
-                        return showPassportAgainOption
-                      }
-                      return true
-                    })
-                    .map((option) => (
-                      <button
-                        key={option.id}
-                        onClick={() => handleDialogueOption(option)}
-                        className={cn(
-                          "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
-                          askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
-                        )}
-                      >
-                        {option.text}
-                      </button>
-                    ))}
+                  {filteredDialogueOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleDialogueOption(option)}
+                      className={cn(
+                        "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
+                        askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
+                      )}
+                    >
+                      {option.text}
+                    </button>
+                  ))}
                 </div>
 
                 {/* Navigation Buttons */}
@@ -532,7 +671,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {/* Police Report Button */}
           {showPoliceReport && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full max-w-md">
+              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
                 <div className="flex justify-end">
                   <Button
                     variant="ghost"
@@ -573,7 +712,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {/* Passport Button */}
           {showPassport && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full max-w-md">
+              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
                 <div className="flex justify-end">
                   <Button variant="ghost" size="sm" onClick={closePassport} className="text-gray-400 hover:text-white">
                     <X className="h-4 w-4" />
@@ -581,13 +720,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">ID</div>
                 <div className="flex items-center">
-                  <div className="w-24 h-24 relative mr-4 pixelated-container bg-black">
+                  <div className="w-24 h-24 relative mr-4 pixelated-container bg-black p-0">
                     <Image
                       src="/images/murder-mystery/victim_passport-headshot.webp"
                       alt="Victim's Headshot"
                       width={96}
                       height={96}
-                      className="rounded-lg shadow-lg pixelated"
+                      className="pixelated"
                     />
                   </div>
                   <div className="mt-4 space-y-2 text-sm font-pixel">
@@ -613,14 +752,103 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
+          {/* Victim Body Modal */}
+          {showVictimBody && (
+            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="text-center text-gray-400 font-pixel">Victim's Body</div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={closeVictimBody}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Body Parts Layout */}
+                <div className="relative h-[400px] bg-black rounded-lg">
+                  {/* Head */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-24 pixelated-container bg-black">
+                    <Image
+                      src="/images/murder-mystery/victim-head.webp"
+                      alt="Victim's Head"
+                      width={96}
+                      height={96}
+                      className="pixelated"
+                    />
+                  </div>
+
+                  {/* Left Hand */}
+                  <div className="absolute top-1/4 left-0 w-24 h-24 pixelated-container bg-black">
+                    <Image
+                      src="/images/murder-mystery/victim-left-hand.webp"
+                      alt="Victim's Left Hand"
+                      width={96}
+                      height={96}
+                      className="pixelated"
+                    />
+                  </div>
+
+                  {/* Right Hand */}
+                  <div className="absolute top-1/4 right-0 w-24 h-24 pixelated-container bg-black">
+                    <Image
+                      src="/images/murder-mystery/victim-right-hand.webp"
+                      alt="Victim's Right Hand"
+                      width={96}
+                      height={96}
+                      className="pixelated"
+                    />
+                  </div>
+
+                  {/* Left Leg */}
+                  <div className="absolute bottom-0 left-1/4 w-24 h-24 pixelated-container bg-black">
+                    <Image
+                      src="/images/murder-mystery/victim-left-leg.webp"
+                      alt="Victim's Left Leg"
+                      width={96}
+                      height={96}
+                      className="pixelated"
+                    />
+                  </div>
+
+                  {/* Right Leg */}
+                  <div className="absolute bottom-0 right-1/4 w-24 h-24 pixelated-container bg-black">
+                    <Image
+                      src="/images/murder-mystery/victim-right-leg.webp"
+                      alt="Victim's Right Leg"
+                      width={96}
+                      height={96}
+                      className="pixelated"
+                    />
+                  </div>
+
+                  {/* Body Outline */}
+                  <div className="absolute top-1/6 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-800 opacity-30"></div>
+                  <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gray-800 opacity-30"></div>
+                </div>
+
+                <div className="mt-4 text-sm font-pixel text-gray-300">
+                  <p>
+                    The body appears to be drained of blood. There are two small puncture marks on the neck, barely
+                    visible.
+                  </p>
+                  <p className="mt-2">The skin is extremely pale, with a waxy appearance.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {currentLocation === "library" && (
-            <div className="text-gray-300">
+            <div className="text-gray-300 bg-black p-4">
               <p>The library contains thousands of books on various subjects.</p>
               <p className="mt-2">Two books catch your attention:</p>
 
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div
-                  className="bg-gray-700 p-3 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                  className="bg-gray-900 p-3 rounded-lg cursor-pointer hover:bg-gray-800 transition-colors"
                   onClick={() => openBook(demonologyBook)}
                 >
                   <div className="flex items-center gap-2">
@@ -631,7 +859,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 </div>
 
                 <div
-                  className="bg-gray-700 p-3 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                  className="bg-gray-900 p-3 rounded-lg cursor-pointer hover:bg-gray-800 transition-colors"
                   onClick={() => openBook(botanyBook)}
                 >
                   <div className="flex items-center gap-2">
@@ -666,3 +894,5 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     </div>
   )
 }
+
+export default MurderMysteryPuzzle
