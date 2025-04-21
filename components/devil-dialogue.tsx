@@ -5,8 +5,8 @@ import { X } from "lucide-react"
 interface DevilDialogueProps {
   onClose: () => void
   currentFloor: number
-  level: number
-  currentLocation: string
+  level?: number
+  currentLocation?: string
 }
 
 export default function DevilDialogue({ onClose, currentFloor, level, currentLocation }: DevilDialogueProps) {
@@ -32,11 +32,11 @@ export default function DevilDialogue({ onClose, currentFloor, level, currentLoc
           return "Knowledge is power, and these books contain secrets that might reveal our killer. I'm particularly fond of the botany section... plants can be so deadly in the right hands."
 
         default:
-          return "This realm is... special. I've crafted it with particular attention to detail. The suffering here is... exquisite. I do hope you're taking notes."
+          return "This murder... it has a certain artistic quality to it. I appreciate the attention to detail. Find the killer, and perhaps I'll consider reducing your sentence."
       }
     }
 
-    // For other levels, use the existing dialogue
+    // For other levels, use the existing dialogue based on floor
     switch (currentFloor) {
       // Hot hells
       case -1: // Samjiva

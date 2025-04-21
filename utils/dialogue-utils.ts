@@ -243,11 +243,7 @@ export const useCharacterDialogue = () => {
           "Behind each door lies a specially tailored torment. I designed them myself.",
           "Choose wisely. Or don't. All paths lead to me eventually.",
         ],
-        49: [
-          "Poetry in Hell. One of my little jokes.",
-          "This verse was composed by a damned poet. He writes exclusively in tears now.",
-          "The rhythm is meant to mimic a heartbeat. Yours, specifically.",
-        ],
+        49: [],
         50: [
           "My elevator provides express service to all levels of Hell. No return tickets, I'm afraid.",
           "Each floor offers unique accommodations. All equally... stimulating.",
