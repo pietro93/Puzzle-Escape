@@ -76,7 +76,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "devil-sent-me",
               text: "The Devil sent me here.",
-              response: "Oh, did he now? Well, tell him I said 'hi'.",
+              response:
+                "Oh, did he now? Well, tell him I said 'hi'. And that he still owes me five bucks from that poker game last Tuesday.",
               followUp: [],
             },
           ],
@@ -85,18 +86,19 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           id: "tell-about-murder",
           text: "Tell me about the murder.",
           response:
-            "Murder? What murder? There was no murder. The victim died of natural causes. Just an accident, really.",
+            "Murder? What murder? There was no murder. The victim died of natural causes. Just an accident, really. Happens all the time, ya know?",
           followUp: [
             {
               id: "what-natural-causes",
               text: "What natural causes?",
-              response: "How would I know? Ask forensics. I just know there was no murder.",
+              response:
+                "How would I know? Ask forensics. I just know there was no murder. And I'm not supposed to talk about it, so shhh!",
               followUp: [],
             },
             {
               id: "was-there-no-weapon",
               text: "Was there no weapon?",
-              response: "Told you, there was no murder. Are you even listening?",
+              response: "Told you, there was no murder. Are you even listening? Maybe you need a hearing aid, gramps.",
               followUp: [],
             },
             {
@@ -108,7 +110,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 {
                   id: "eating-donuts",
                   text: "You're eating donuts from the crime scene?!",
-                  response: "Of course. Don't tell my boss. I don't want to share.",
+                  response:
+                    "Of course. Don't tell my boss. I don't want to share. Besides, they're evidence... of deliciousness!",
                   followUp: [],
                 },
               ],
@@ -116,13 +119,14 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "police-report",
               text: "Is there a police report?",
-              response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes.",
+              response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes. Yawn.",
               condition: "exhausted-murder-questions",
               followUp: [
                 {
                   id: "can-see-report",
                   text: "Can I see the report?",
-                  response: "Sure, knock yourself out. It's just a formality anyway.",
+                  response:
+                    "Sure, knock yourself out. It's just a formality anyway. Don't expect any juicy details, though.",
                   followUp: [
                     {
                       id: "check-police-report",
@@ -146,24 +150,24 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "victim-name",
               text: "Does he have a name?",
-              response: "I would assume so.",
+              response: "I would assume so. I didn't bother to ask him, though.",
               followUp: [],
             },
             {
               id: "more-about-victim",
               text: "What else can you tell me about the victim?",
-              response: "I have got nothing to tell.",
+              response: "I have got nothing to tell. I'm not his biographer, you know.",
               followUp: [],
             },
             {
               id: "how-identify-victim",
               text: "How did you identify the victim?",
-              response: "Oh, that was easy. He had his ID on him.",
+              response: "Oh, that was easy. He had his ID on him. Lucky for us, or we'd be calling John Doe.",
               followUp: [
                 {
                   id: "can-see-passport",
                   text: "Can I see it?",
-                  response: "Fine, but only if you promise to leave me alone.",
+                  response: "Fine, but only if you promise to leave me alone. I'm on my break, you know.",
                   followUp: [
                     {
                       id: "check-passport",
@@ -181,19 +185,21 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "were-there-any-witnesses",
           text: "Where there any witnesses?",
-          response: "Nope. resuce team arrived on site and found the body",
+          response: "Nope. rescue team arrived on site and found the body",
           condition: "asked-about-murder",
           followUp: [
             {
               id: "who-called-rescue",
               text: "Who called the rescue team?",
-              response: "well, the victim himself. he called an ambulance but died before they arrived on site",
+              response:
+                "Well, the victim himself. He called an ambulance but died before they arrived on site. Talk about bad luck, eh?",
               followUp: [],
             },
             {
               id: "victim-alive",
               text: "Wait, so the victim was alive?",
-              response: "d'huh. I told you there was no murder. I think he just felt ill and died. Totally natural",
+              response:
+                "D'huh. I told you there was no murder. I think he just felt ill and died. Totally natural. Happens all the time, ya know?",
               followUp: [],
             },
           ],
@@ -201,7 +207,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "can-see-report-again",
           text: "Can I see that police report again?",
-          response: "Here you go, but don't say I didn't warn you.",
+          response: "Here you go, but don't say I didn't warn you. It's about as thrilling as watching paint dry.",
           condition: "seen-police-report",
           followUp: [
             {
@@ -216,7 +222,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "can-see-passport-again",
           text: "Can I see that ID again?",
-          response: "Here you go, but don't say I didn't warn you.",
+          response: "Here you go, but don't say I didn't warn you. It's not like it's gonna change anything.",
           condition: "seen-passport",
           followUp: [
             {
@@ -445,7 +451,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
               <Image
-                src="/components/crime-scene.webp"
+                src="/images/murder-mystery/crime-scene.webp"
                 alt="Crime Scene"
                 width={400}
                 height={400}
@@ -540,9 +546,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   </Button>
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Police Report</div>
-                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
-                  <p className="text-gray-500 font-pixel">Police Report Placeholder</p>
-                </div>
                 <div className="mt-4 space-y-2 text-sm font-pixel">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Victim:</span>
