@@ -434,7 +434,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 {/* Navigation Buttons */}
                 <div className="flex justify-between mt-4">
                   <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
-                    {dialoguePath.length === 0 ? "Exit" : "Back"}
+                    {dialoguePath.length === 0 ? "Back" : "Back"}
                   </Button>
                   <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
                     Close
