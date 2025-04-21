@@ -23,33 +23,12 @@ interface DialogueOption {
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
   onLocationChange?: (location: string) => void
-  onShowDevilDialogue?: () => void
+  currentQuestion?: string
 }
 
-export default function MurderMysteryPuzzle({
-  onSolve,
-  onLocationChange,
-  onShowDevilDialogue,
-}: MurderMysteryPuzzleProps) {
+export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
+  // Location State
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
-  const [selectedBook, setSelectedBook] = useState<any>(null)
-  const [currentPage, setCurrentPage] = useState(0)
-  const [currentSection, setCurrentSection] = useState<string | null>(null)
-
-  // Dialogue state
-  const [showDialogue, setShowDialogue] = useState(false)
-  const [currentCharacter, setCurrentCharacter] = useState<string>("")
-  const [askedQuestions, setAskedQuestions] = useState<Set<string>>(new Set())
-  const [currentResponse, setCurrentResponse] = useState<string>("")
-  const [isTyping, setIsTyping] = useState(false)
-  const [typedText, setTypedText] = useState("")
-  const [currentDialogueOptions, setCurrentDialogueOptions] = useState<DialogueOption[]>([])
-  const [dialoguePath, setDialoguePath] = useState<DialogueOption[]>([])
-  const [showPassport, setShowPassport] = useState(false)
-  const [showPoliceReport, setShowPoliceReport] = useState(false)
-  const typingSpeed = 30 // ms per character
-  const typingRef = useRef<NodeJS.Timeout | null>(null)
-
   const locations = [
     { id: "crime scene", name: "Crime Scene" },
     { id: "police station", name: "Police Station" },
@@ -57,8 +36,33 @@ export default function MurderMysteryPuzzle({
     { id: "library", name: "Library" },
   ]
 
-  // Define the policewoman dialogue tree
-  const policewomanDialogue: DialogueOption[] = [
+  // Book Modal State
+  const [selectedBook, setSelectedBook] = useState<any>(null)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [currentSection, setCurrentSection] = useState<string | null>(null)
+
+  // Police Data State
+  const [showPoliceReport, setShowPoliceReport] = useState(false)
+  const [showPassport, setShowPassport] = useState(false)
+
+  // Dialogue State
+  const [showDialogue, setShowDialogue] = useState(false)
+  const [currentCharacter, setCurrentCharacter] = useState<string | null>(null)
+  const [currentResponse, setCurrentResponse] = useState<string>("")
+  const [currentDialogueOptions, setCurrentDialogueOptions] = useState<DialogueOption[]>([])
+
+  // Local State
+  const [askedQuestions, setAskedQuestions] = useState<Set<string>>(new Set())
+  const [isTyping, setIsTyping] = useState(false)
+  const [typedText, setTypedText] = useState("")
+  const [dialoguePath, setDialoguePath] = useState<DialogueOption[]>([])
+
+  const typingSpeed = 30
+  const typingRef = useRef<NodeJS.Timeout | null>(null)
+
+  // // // // // // DIALOGUE TREES  // // // // // // // // // // // // // // // // // // // // // //
+  // Police Woman
+  const policewomanDialogue = [
     {
       id: "initial-greeting",
       text: "Start",
@@ -157,59 +161,18 @@ export default function MurderMysteryPuzzle({
     },
   ]
 
-  // Define the mortician dialogue tree (placeholder for now)
-  const morticianDialogue: DialogueOption[] = []
+  // Mortician
+  const morticianDialogue = []
 
-  // Text typing animation effect
-  useEffect(() => {
-    if (isTyping && currentResponse) {
-      let currentIndex = 0
-
-      const typeNextCharacter = () => {
-        if (currentIndex < currentResponse.length) {
-          setTypedText(currentResponse.substring(0, currentIndex + 1))
-          currentIndex++
-          typingRef.current = setTimeout(typeNextCharacter, typingSpeed)
-        } else {
-          setIsTyping(false)
-        }
-      }
-
-      typingRef.current = setTimeout(typeNextCharacter, typingSpeed)
-
-      return () => {
-        if (typingRef.current) {
-          clearTimeout(typingRef.current)
-        }
-      }
-    }
-  }, [isTyping, currentResponse])
-
-  // Reset dialogue options when character changes
-  useEffect(() => {
-    if (currentCharacter === "policewoman") {
-      setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
-    } else if (currentCharacter === "mortician") {
-      setCurrentDialogueOptions(morticianDialogue)
-    }
-  }, [currentCharacter])
-
-  useEffect(() => {
-    // Automatically start dialogue when entering the police station
-    if (currentLocation === "police station" || currentLocation === "morgue") {
-      startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
-    }
-  }, [currentLocation])
-
-  const navigateTo = (location: string) => {
-    setCurrentLocation(location)
-    // Close any open dialogues when changing location
-    setShowDialogue(false)
-    if (onLocationChange) {
-      onLocationChange(location)
-    }
+  // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
+  const closePassport = () => {
+    setShowPassport(false)
+  }
+  const closePoliceReport = () => {
+    setShowPoliceReport(false)
   }
 
+  // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
   const openBook = (book: any) => {
     setSelectedBook(book)
     setCurrentPage(0)
@@ -221,7 +184,6 @@ export default function MurderMysteryPuzzle({
       setCurrentSection(null)
     }
   }
-
   const closeBook = () => {
     setSelectedBook(null)
     setCurrentPage(0)
@@ -256,7 +218,29 @@ export default function MurderMysteryPuzzle({
     setCurrentPage(0)
   }
 
-  // Dialogue functions
+  const getCurrentContent = () => {
+    if (!selectedBook) return null
+
+    if (selectedBook.sections) {
+      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
+      return section ? section.pages[currentPage] : null
+    } else {
+      return selectedBook.pages[currentPage]
+    }
+  }
+
+  const getTotalPages = () => {
+    if (!selectedBook) return 0
+
+    if (selectedBook.sections) {
+      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
+      return section ? section.pages.length : 0
+    } else {
+      return selectedBook.pages.length
+    }
+  }
+
+  // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
   const startDialogue = (character: string) => {
     setCurrentCharacter(character)
     setShowDialogue(true)
@@ -274,8 +258,6 @@ export default function MurderMysteryPuzzle({
       setCurrentResponse("...")
       setIsTyping(true)
     }
-
-    setDialoguePath([])
   }
 
   const handleDialogueOption = (option: DialogueOption) => {
@@ -325,43 +307,56 @@ export default function MurderMysteryPuzzle({
 
   const closeDialogue = () => {
     setShowDialogue(false)
+    setCurrentCharacter(null)
   }
 
-  const closePassport = () => {
-    setShowPassport(false)
-  }
+  // // // // // // TEXT TYPING ANIMATION  // // // // // // // // // // // // // // // // // // // // // //
+  useEffect(() => {
+    if (isTyping && currentResponse) {
+      let currentIndex = 0
 
-  const closePoliceReport = () => {
-    setShowPoliceReport(false)
-  }
+      const typeNextCharacter = () => {
+        if (currentIndex < currentResponse.length) {
+          setTypedText(currentResponse.substring(0, currentIndex + 1))
+          currentIndex++
+          typingRef.current = setTimeout(typeNextCharacter, typingSpeed)
+        } else {
+          setIsTyping(false)
+        }
+      }
 
-  const getCurrentContent = () => {
-    if (!selectedBook) return null
+      typingRef.current = setTimeout(typeNextCharacter, typingSpeed)
 
-    if (selectedBook.sections) {
-      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
-      return section ? section.pages[currentPage] : null
-    } else {
-      return selectedBook.pages[currentPage]
+      return () => {
+        if (typingRef.current) {
+          clearTimeout(typingRef.current)
+        }
+      }
+    }
+  }, [isTyping, currentResponse])
+
+  useEffect(() => {
+    // Automatically start dialogue when entering the police station
+    if (currentLocation === "police station" || currentLocation === "morgue") {
+      startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
+    }
+  }, [currentLocation])
+
+  // // // // // // FUNCTION CALLS  // // // // // // // // // // // // // // // // // // // // // //
+  const navigateTo = (location: string) => {
+    setCurrentLocation(location)
+    setShowDialogue(false)
+
+    if (onLocationChange) {
+      onLocationChange(location)
     }
   }
 
-  const getTotalPages = () => {
-    if (!selectedBook) return 0
-
-    if (selectedBook.sections) {
-      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
-      return section ? section.pages.length : 0
-    } else {
-      return selectedBook.pages.length
-    }
-  }
+  // Conditionally render "Is there a police report?" option
+  const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
 
   const currentContent = getCurrentContent()
   const totalPages = getTotalPages()
-
-  // Check if "Is there a police report?" option should be displayed
-  const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
@@ -386,65 +381,82 @@ export default function MurderMysteryPuzzle({
             </div>
           )}
 
-          {(currentLocation === "police station" || currentLocation === "morgue") && (
-            <div className="flex flex-col items-center">
-              {showDialogue && (
-                <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="w-16 h-16 relative pixelated-container shrink-0">
-                      <Image
-                        src={
-                          currentCharacter === "policewoman"
-                            ? "/images/murder-mystery/policewoman.webp"
-                            : "/images/murder-mystery/mortician.webp"
-                        }
-                        alt={currentCharacter}
-                        width={64}
-                        height={64}
-                        className="pixelated"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-purple-300 font-pixel mb-2">
-                        {currentCharacter === "policewoman" ? "Policewoman:" : "Mortician:"}
-                      </p>
-                      <p className="text-gray-200 text-sm">"{typedText}"</p>
-                    </div>
-                  </div>
-                  <div className="grid gap-2 max-h-[200px] overflow-y-auto dialogue-options">
-                    {currentDialogueOptions
-                      .filter((option) => {
-                        // Conditionally render "Is there a police report?" option
-                        if (option.id === "police-report") {
-                          return showPoliceReportOption
-                        }
-                        return true
-                      })
-                      .map((option) => (
-                        <button
-                          key={option.id}
-                          onClick={() => handleDialogueOption(option)}
-                          className={cn(
-                            "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
-                            askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
-                          )}
-                        >
-                          {option.text}
-                        </button>
-                      ))}
-                  </div>
+          {/* Police and Mortician Dialogue  */}
+          {(currentLocation === "police station" || currentLocation === "morgue") && showDialogue && (
+            <div className="flex items-center space-x-4 p-4">
+              {/* Character Portrait */}
+              <div className="w-24 h-24 relative">
+                <Image
+                  src={
+                    currentCharacter === "policewoman"
+                      ? "/images/murder-mystery/policewoman.webp"
+                      : "/images/murder-mystery/mortician.webp"
+                  }
+                  alt={currentCharacter}
+                  width={96}
+                  height={96}
+                  className="rounded-lg border-2 border-gray-700"
+                />
+              </div>
 
-                  {/* Navigation Buttons */}
-                  <div className="flex justify-between mt-4">
-                    <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
-                      {dialoguePath.length === 0 ? "Exit" : "Back"}
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
-                      Close
-                    </Button>
+              {/* Speech Bubble */}
+              <div className="bg-gray-700 p-4 rounded-lg flex-1">
+                <p className="text-gray-300 font-mono text-sm">{typedText}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Police Report Button */}
+          {showPoliceReport && (
+            <div className="p-6">
+              {/* Placeholder for passport image - will be replaced with actual image */}
+              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full">
+                <div className="text-center text-gray-400 mb-2 font-pixel">Police Report</div>
+                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
+                  <p className="text-gray-500 font-pixel">Police Report Placeholder</p>
+                </div>
+                <div className="mt-4 space-y-2 text-sm font-pixel">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Reporting Officer:</span>
+                    <span className="text-gray-300">Officer Jenny</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Case:</span>
+                    <span className="text-gray-300">2025-04-21-001</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Info:</span>
+                    <span className="text-gray-300">Death By Natural Causes</span>
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+          )}
+
+          {/* Police Report Button */}
+          {showPassport && (
+            <div className="p-6">
+              {/* Placeholder for passport image - will be replaced with actual image */}
+              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full">
+                <div className="text-center text-gray-400 mb-2 font-pixel">Passport</div>
+                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
+                  <p className="text-gray-500 font-pixel">Passport Image Placeholder</p>
+                </div>
+                <div className="mt-4 space-y-2 text-sm font-pixel">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Name:</span>
+                    <span className="text-gray-300">John Doe</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Nationality:</span>
+                    <span className="text-gray-300">United States</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Date of Birth:</span>
+                    <span className="text-gray-300">01/01/1980</span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -481,6 +493,143 @@ export default function MurderMysteryPuzzle({
         </CardContent>
       </Card>
 
+      {/* Book Modal */}
+      {selectedBook && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+          <div className="bg-gray-900 rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-amber-300">{selectedBook.title}</h3>
+              <Button variant="ghost" size="sm" onClick={closeBook} className="text-gray-400 hover:text-white">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Content - show either regular book pages or sections of the Botany book */}
+            <div className="p-6 book-page" style={{ maxHeight: "50vh", overflowY: "auto" }}>
+              {selectedBook.sections ? (
+                <>
+                  <div className="flex space-x-4 mb-4">
+                    {selectedBook.sections.map((section: any) => (
+                      <Button
+                        variant="link"
+                        key={section.id}
+                        onClick={() => switchSection(section.id)}
+                        className={cn(
+                          "text-sm text-gray-400 hover:text-gray-200",
+                          currentSection === section.id && "font-bold text-amber-300",
+                        )}
+                      >
+                        {section.title}
+                      </Button>
+                    ))}
+                  </div>
+                  {currentContent && (
+                    <>
+                      <h4 className="text-lg font-semibold text-gray-300 mb-2">{currentContent.title}</h4>
+                      <p className="text-sm text-gray-400">{currentContent.text}</p>
+                    </>
+                  )}
+                </>
+              ) : (
+                selectedBook.pages[currentPage]?.text
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-700 flex justify-between items-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={prevPage}
+                disabled={currentPage === 0}
+                className="font-pixel text-xs"
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-gray-400">{`${currentPage + 1} / ${totalPages}`}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={nextPage}
+                disabled={currentPage === totalPages - 1}
+                className="font-pixel text-xs"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dialogue functions - will only be displayed when there is a selected chracter and you are a police station or a moruge */}
+      {showDialogue && (
+        <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
+          <div className="w-full max-w-4xl pointer-events-auto">
+            {/* Character Portrait and Speech Bubble */}
+            <div className="flex items-start mb-2 px-4">
+              <div className="w-24 h-24 relative">
+                <Image
+                  src={
+                    currentCharacter === "policewoman"
+                      ? "/images/murder-mystery/policewoman.webp"
+                      : "/images/murder-mystery/mortician.webp"
+                  }
+                  alt={currentCharacter}
+                  width={96}
+                  height={96}
+                  className="rounded-lg border-2 border-gray-700"
+                />
+              </div>
+
+              {/* Speech Bubble */}
+              <div className="ml-2 relative bg-gray-800 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px] speech-bubble">
+                <p className="font-pixel text-gray-200 text-lg leading-relaxed">
+                  {typedText}
+                  {isTyping && <span className="animate-pulse">_</span>}
+                </p>
+              </div>
+            </div>
+
+            {/* Dialogue Options */}
+            <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
+              <div className="grid gap-2 max-h-[200px] overflow-y-auto dialogue-options">
+                {currentDialogueOptions
+                  .filter((option) => {
+                    // Conditionally render "Is there a police report?" option
+                    if (option.id === "police-report") {
+                      return showPoliceReportOption
+                    }
+                    return true
+                  })
+                  .map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleDialogueOption(option)}
+                      className={cn(
+                        "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
+                        askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
+                      )}
+                    >
+                      {option.text}
+                    </button>
+                  ))}
+              </div>
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-4">
+                <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
+                  {dialoguePath.length === 0 ? "Exit" : "Back"}
+                </Button>
+                <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Passport Popup */}
       {showPassport && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
@@ -491,9 +640,9 @@ export default function MurderMysteryPuzzle({
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="p-6 flex justify-center">
+            <div className="p-6">
               {/* Placeholder for passport image - will be replaced with actual image */}
-              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full max-w-xs">
+              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full">
                 <div className="text-center text-gray-400 mb-2 font-pixel">Passport</div>
                 <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
                   <p className="text-gray-500 font-pixel">Passport Image Placeholder</p>
@@ -561,64 +710,55 @@ export default function MurderMysteryPuzzle({
         </div>
       )}
 
-      {/* Book Display */}
-      {selectedBook && (
+      {/* Character dialogue pop up */}
+      {showDialogue && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-900 rounded-lg max-w-md w-full overflow-hidden flex flex-col shadow-2xl border border-gray-700">
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800">
-              <h3 className="text-xl font-bold text-amber-300 font-pixel">{selectedBook.title}</h3>
-              <Button variant="ghost" size="sm" onClick={closeBook} className="text-gray-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </Button>
+          <div
+            className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-16 h-16 relative pixelated-container shrink-0">
+                <Image
+                  src={
+                    currentCharacter === "policewoman"
+                      ? "/images/murder-mystery/policewoman.webp"
+                      : "/images/murder-mystery/mortician.webp"
+                  }
+                  alt={currentCharacter}
+                  width={64}
+                  height={64}
+                  className="pixelated"
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-purple-300 font-pixel mb-2">
+                  {currentCharacter === "policewoman" ? "Policewoman:" : "Mortician:"}
+                </p>
+                <p className="text-gray-200 text-sm">{typedText}</p>
+              </div>
             </div>
-            <div className="p-6">
-              {selectedBook.sections ? (
-                // For botany book with sections
-                <>
-                  <div className="flex justify-between items-center mb-4">
-                    <h4 className="text-lg font-semibold text-gray-300">Sections</h4>
-                    <div className="space-x-2">
-                      {selectedBook.sections.map((section: any) => (
-                        <button
-                          key={section.id}
-                          onClick={() => switchSection(section.id)}
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            currentSection === section.id ? "bg-amber-700 text-white" : "bg-gray-700 text-gray-300"
-                          }`}
-                        >
-                          {section.title}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  {currentContent && (
-                    <>
-                      <h5 className="text-md font-semibold text-gray-300 mb-2">{currentContent.title}</h5>
-                      <p className="text-gray-400">{currentContent.text}</p>
-                    </>
-                  )}
-                </>
-              ) : (
-                // For regular books
-                <p className="text-gray-400">{currentContent?.text}</p>
+
+            {/* Dialogue options inside popup */}
+            <div className="mt-4 text-center flex justify-center">
+              {showDialogue && (
+                <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
+                  {dialoguePath.length === 0 ? "Exit" : "Back"}
+                </Button>
               )}
-            </div>
-            <div className="p-4 border-t border-gray-700 flex justify-between items-center bg-gray-800">
-              <Button variant="ghost" size="sm" onClick={prevPage} disabled={currentPage === 0}>
-                Previous
-              </Button>
-              <span className="text-sm text-gray-400">
-                Page {currentPage + 1} of {totalPages}
-              </span>
-              <Button variant="ghost" size="sm" onClick={nextPage} disabled={currentPage === totalPages - 1}>
-                Next
+              {/* Close Button */}
+              <Button
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+                onClick={closeDialogue}
+              >
+                Close
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Navigation Bar - Now at the bottom */}
+      {/* Location Map */}
       <div className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 border-t border-gray-700 z-10">
         <div className="flex justify-between items-center max-w-md mx-auto">
           {locations.map((location) => (
@@ -635,52 +775,6 @@ export default function MurderMysteryPuzzle({
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @font-face {
-          font-family: 'PixelFont';
-          src: url('/fonts/pixel.woff2') format('woff2');
-          font-weight: normal;
-          font-style: normal;
-        }
-        
-        .font-pixel {
-          font-family: 'PixelFont', monospace;
-          letter-spacing: 0.5px;
-        }
-        
-        .speech-bubble {
-          position: relative;
-        }
-        
-        .speech-bubble:before {
-          content: '';
-          position: absolute;
-          left: -10px;
-          top: 15px;
-          border-width: 10px 10px 10px 0;
-          border-style: solid;
-          border-color: transparent #374151 transparent transparent;
-        }
-        
-        .dialogue-options::-webkit-scrollbar {
-          width: 8px;
-        }
-        
-        .dialogue-options::-webkit-scrollbar-track {
-          background: #1f2937;
-          border-radius: 4px;
-        }
-        
-        .dialogue-options::-webkit-scrollbar-thumb {
-          background: #4b5563;
-          border-radius: 4px;
-        }
-        
-        .book-page {
-          background-image: linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 5%, rgba(0,0,0,0) 95%, rgba(0,0,0,0.05) 100%);
-        }
-      `}</style>
     </div>
   )
 }
