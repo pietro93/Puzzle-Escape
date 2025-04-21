@@ -563,12 +563,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       )}
 
       {/* Dialogue functions - will only be displayed when there is a selected chracter and you are a police station or a moruge */}
+      {/* Character dialogue pop up */}
       {showDialogue && (
-        <div className="fixed inset-0 flex items-end justify-center z-50 pointer-events-none">
-          <div className="w-full max-w-4xl pointer-events-auto">
-            {/* Character Portrait and Speech Bubble */}
-            <div className="flex items-start mb-2 px-4">
-              <div className="w-24 h-24 relative">
+        <div className="">
+          <div className="" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start gap-3">
+              <div className="w-16 h-16 relative pixelated-container shrink-0">
                 <Image
                   src={
                     currentCharacter === "policewoman"
@@ -576,55 +576,33 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       : "/images/murder-mystery/mortician.webp"
                   }
                   alt={currentCharacter}
-                  width={96}
-                  height={96}
-                  className="rounded-lg border-2 border-gray-700"
+                  width={64}
+                  height={64}
+                  className="pixelated"
                 />
               </div>
-
-              {/* Speech Bubble */}
-              <div className="ml-2 relative bg-gray-800 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px] speech-bubble">
-                <p className="font-pixel text-gray-200 text-lg leading-relaxed">
-                  {typedText}
-                  {isTyping && <span className="animate-pulse">_</span>}
+              <div className="flex-1">
+                <p className="text-purple-300 font-pixel mb-2">
+                  {currentCharacter === "policewoman" ? "Policewoman:" : "Mortician:"}
                 </p>
+                <p className="text-gray-200 text-sm">{typedText}</p>
               </div>
             </div>
 
-            {/* Dialogue Options */}
-            <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
-              <div className="grid gap-2 max-h-[200px] overflow-y-auto dialogue-options">
-                {currentDialogueOptions
-                  .filter((option) => {
-                    // Conditionally render "Is there a police report?" option
-                    if (option.id === "police-report") {
-                      return showPoliceReportOption
-                    }
-                    return true
-                  })
-                  .map((option) => (
-                    <button
-                      key={option.id}
-                      onClick={() => handleDialogueOption(option)}
-                      className={cn(
-                        "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
-                        askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
-                      )}
-                    >
-                      {option.text}
-                    </button>
-                  ))}
-              </div>
-
-              {/* Navigation Buttons */}
-              <div className="flex justify-between mt-4">
+            {/* Dialogue options inside popup */}
+            <div className="mt-4 text-center flex justify-center">
+              {showDialogue && (
                 <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
                   {dialoguePath.length === 0 ? "Exit" : "Back"}
                 </Button>
-                <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
-                  Close
-                </Button>
-              </div>
+              )}
+              {/* Close Button */}
+              <Button
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+                onClick={closeDialogue}
+              >
+                Close
+              </Button>
             </div>
           </div>
         </div>
@@ -705,54 +683,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Character dialogue pop up */}
-      {showDialogue && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div
-            className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start gap-3">
-              <div className="w-16 h-16 relative pixelated-container shrink-0">
-                <Image
-                  src={
-                    currentCharacter === "policewoman"
-                      ? "/images/murder-mystery/policewoman.webp"
-                      : "/images/murder-mystery/mortician.webp"
-                  }
-                  alt={currentCharacter}
-                  width={64}
-                  height={64}
-                  className="pixelated"
-                />
-              </div>
-              <div className="flex-1">
-                <p className="text-purple-300 font-pixel mb-2">
-                  {currentCharacter === "policewoman" ? "Policewoman:" : "Mortician:"}
-                </p>
-                <p className="text-gray-200 text-sm">{typedText}</p>
-              </div>
-            </div>
-
-            {/* Dialogue options inside popup */}
-            <div className="mt-4 text-center flex justify-center">
-              {showDialogue && (
-                <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
-                  {dialoguePath.length === 0 ? "Exit" : "Back"}
-                </Button>
-              )}
-              {/* Close Button */}
-              <Button
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
-                onClick={closeDialogue}
-              >
-                Close
-              </Button>
             </div>
           </div>
         </div>
