@@ -5,6 +5,8 @@ interface CharacterDialoguePopupProps {
   character: string
   dialogue: string
   onClose: () => void
+  onBack: () => void
+  hasParentDialogue?: boolean
   isGuardPopup?: boolean
   guardDialogIndex?: number
   level?: number
@@ -15,13 +17,15 @@ export default function CharacterDialoguePopup({
   character,
   dialogue,
   onClose,
+  onBack,
+  hasParentDialogue,
   isGuardPopup = false,
   guardDialogIndex = 0,
   level = 0,
   brainImage, // Destructure the new prop
 }: CharacterDialoguePopupProps) {
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
       <div
         className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
@@ -36,7 +40,7 @@ export default function CharacterDialoguePopup({
                     : "/images/sphinx.webp"
                   : character === "brain"
                     ? brainImage || "/images/brainlamp.webp" // Use the brainImage prop
-                    : `/images/${character}.webp`
+                    : `/images/murder-mystery/${character}.webp`
               }
               alt={
                 isGuardPopup
@@ -75,12 +79,14 @@ I have a body, that is crystal clear."`
           </div>
         </div>
         <div className="mt-4 text-center">
-          <button
-            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
-            onClick={onClose}
-          >
-            Close
-          </button>
+          {hasParentDialogue && (
+            <button
+              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+              onClick={onBack}
+            >
+              Back
+            </button>
+          )}
         </div>
       </div>
     </div>

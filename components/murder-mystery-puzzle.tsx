@@ -438,9 +438,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       Back
                     </Button>
                   )}
-                  <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
-                    Close
-                  </Button>
                 </div>
               </div>
             </div>
