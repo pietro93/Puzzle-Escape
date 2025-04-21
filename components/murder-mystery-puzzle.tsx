@@ -445,7 +445,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
               <Image
-                src="/images/murder-mystery/crime-scene.webp"
+                src="/components/crime-scene.webp"
                 alt="Crime Scene"
                 width={400}
                 height={400}
@@ -540,6 +540,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   </Button>
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Police Report</div>
+                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
+                  <p className="text-gray-500 font-pixel">Police Report Placeholder</p>
+                </div>
                 <div className="mt-4 space-y-2 text-sm font-pixel">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Victim:</span>
@@ -579,7 +582,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 <div className="flex items-center">
                   <div className="w-24 h-24 relative mr-4">
                     <Image
-                      src="/images/victim_passport-headshot.webp"
+                      src="/components/victim_passport-headshot.webp"
                       alt="Victim's Headshot"
                       width={96}
                       height={96}
