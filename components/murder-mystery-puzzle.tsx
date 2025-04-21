@@ -196,8 +196,8 @@ export default function MurderMysteryPuzzle({
 
   useEffect(() => {
     // Automatically start dialogue when entering the police station
-    if (currentLocation === "police station") {
-      startDialogue("policewoman")
+    if (currentLocation === "police station" || currentLocation === "morgue") {
+      startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
     }
   }, [currentLocation])
 
@@ -254,35 +254,6 @@ export default function MurderMysteryPuzzle({
   const switchSection = (sectionId: string) => {
     setCurrentSection(sectionId)
     setCurrentPage(0)
-  }
-
-  // Get current content based on book type and section
-  const getCurrentContent = () => {
-    if (!selectedBook) return null
-
-    if (selectedBook.sections) {
-      // For botany book with sections
-      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
-      if (section && section.pages[currentPage]) {
-        return section.pages[currentPage]
-      }
-      return null
-    } else {
-      // For regular books
-      return selectedBook.pages[currentPage]
-    }
-  }
-
-  // Get total pages for current view
-  const getTotalPages = () => {
-    if (!selectedBook) return 0
-
-    if (selectedBook.sections && currentSection) {
-      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
-      return section ? section.pages.length : 0
-    } else {
-      return selectedBook.pages.length
-    }
   }
 
   // Dialogue functions
@@ -364,6 +335,28 @@ export default function MurderMysteryPuzzle({
     setShowPoliceReport(false)
   }
 
+  const getCurrentContent = () => {
+    if (!selectedBook) return null
+
+    if (selectedBook.sections) {
+      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
+      return section ? section.pages[currentPage] : null
+    } else {
+      return selectedBook.pages[currentPage]
+    }
+  }
+
+  const getTotalPages = () => {
+    if (!selectedBook) return 0
+
+    if (selectedBook.sections) {
+      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
+      return section ? section.pages.length : 0
+    } else {
+      return selectedBook.pages.length
+    }
+  }
+
   const currentContent = getCurrentContent()
   const totalPages = getTotalPages()
 
@@ -395,42 +388,13 @@ export default function MurderMysteryPuzzle({
 
           {currentLocation === "police station" && (
             <div className="flex flex-col items-center">
-              {showDialogue && (
-                <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
-                  <div className="grid gap-2 max-h-[200px] overflow-y-auto dialogue-options">
-                    {currentDialogueOptions
-                      .filter((option) => {
-                        // Conditionally render "Is there a police report?" option
-                        if (option.id === "police-report") {
-                          return showPoliceReportOption
-                        }
-                        return true
-                      })
-                      .map((option) => (
-                        <button
-                          key={option.id}
-                          onClick={() => handleDialogueOption(option)}
-                          className={cn(
-                            "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
-                            askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
-                          )}
-                        >
-                          {option.text}
-                        </button>
-                      ))}
-                  </div>
-
-                  {/* Navigation Buttons */}
-                  <div className="flex justify-between mt-4">
-                    <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
-                      {dialoguePath.length === 0 ? "Exit" : "Back"}
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
-                      Close
-                    </Button>
-                  </div>
-                </div>
-              )}
+              <Image
+                src="/images/murder-mystery/policewoman.webp"
+                alt="Policewoman"
+                width={300}
+                height={300}
+                className="rounded-lg shadow-lg"
+              />
             </div>
           )}
 
@@ -441,8 +405,7 @@ export default function MurderMysteryPuzzle({
                 alt="Mortician"
                 width={300}
                 height={300}
-                className="rounded-lg shadow-lg cursor-pointer"
-                onClick={() => startDialogue("mortician")}
+                className="rounded-lg shadow-lg"
               />
             </div>
           )}
