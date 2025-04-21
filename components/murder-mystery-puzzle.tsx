@@ -72,9 +72,13 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
   const [currentSection, setCurrentSection] = useState<string | null>(null)
 
   const locations = [
-    { id: "crime scene", name: "Crime Scene" },
-    { id: "police station", name: "Police Station" },
-    { id: "morgue", name: "Morgue" },
+    { id: "crime scene", name: "Crime Scene", description: "A bloody mess with evidence scattered around." },
+    {
+      id: "police station",
+      name: "Police Station",
+      description: "Officers are busy with paperwork and interrogations.",
+    },
+    { id: "morgue", name: "Morgue", description: "Cold and clinical, with several bodies awaiting examination." },
     { id: "library", name: "Library", description: "Rows of books and ancient tomes line the walls." },
   ]
 
@@ -163,6 +167,7 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
+      <p className="text-gray-300 mb-2">Explore locations to gather clues and solve the mystery.</p>
 
       {/* Location Content */}
       <Card className="w-full bg-gray-800 border-gray-700">
@@ -172,39 +177,40 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
         <CardContent>
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
-              <Image
-                src="/images/murder-mystery/crime-scene.webp"
-                alt="Crime Scene"
-                width={400}
-                height={400}
-                className="rounded-lg shadow-lg"
-              />
+              <div className="relative w-full aspect-square max-w-xl">
+                <Image
+                  src="/images/murder-mystery/crime-scene.webp"
+                  alt="Crime Scene"
+                  fill
+                  className="object-contain rounded-lg"
+                />
+              </div>
             </div>
           )}
 
           {currentLocation === "police station" && (
             <div className="flex justify-center">
-              <Image
-                src="/images/murder-mystery/policewoman.webp"
-                alt="Policewoman"
-                width={300}
-                height={300}
-                className="rounded-lg shadow-lg cursor-pointer"
-                // Add onClick handler for dialogue tree here when implemented
-              />
+              <div className="relative w-full aspect-square max-w-xl">
+                <Image
+                  src="/images/murder-mystery/policewoman.webp"
+                  alt="Police Officer"
+                  fill
+                  className="object-contain rounded-lg"
+                />
+              </div>
             </div>
           )}
 
           {currentLocation === "morgue" && (
             <div className="flex justify-center">
-              <Image
-                src="/images/murder-mystery/mortician.webp"
-                alt="Mortician"
-                width={300}
-                height={300}
-                className="rounded-lg shadow-lg cursor-pointer"
-                // Add onClick handler for dialogue tree here when implemented
-              />
+              <div className="relative w-full aspect-square max-w-xl">
+                <Image
+                  src="/images/murder-mystery/mortician.webp"
+                  alt="Mortician"
+                  fill
+                  className="object-contain rounded-lg"
+                />
+              </div>
             </div>
           )}
 

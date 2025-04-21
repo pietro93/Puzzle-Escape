@@ -5,38 +5,11 @@ import { X } from "lucide-react"
 interface DevilDialogueProps {
   onClose: () => void
   currentFloor: number
-  level?: number
-  currentLocation?: string
 }
 
-export default function DevilDialogue({ onClose, currentFloor, level, currentLocation }: DevilDialogueProps) {
+export default function DevilDialogue({ onClose, currentFloor }: DevilDialogueProps) {
   // Get dialogue based on floor
-
-  // Update the devil's dialogue to include location-specific text for level 49
-
-  // Add location-specific dialogue for level 49 (murder mystery)
   const getDialogue = () => {
-    // For level 49 (murder mystery), provide location-specific dialogue
-    if (level === 49) {
-      switch (currentLocation) {
-        case "crime scene":
-          return "Look at this mess. Such beautiful chaos. The victim suffered greatly before death - just how I like it. Examine everything carefully. The killer was... creative."
-
-        case "police station":
-          return "Ah, the authorities. So earnest, so clueless. They're missing what's right in front of them. The policewoman might know more than she's letting on. Question her carefully."
-
-        case "morgue":
-          return "Death has such a pleasant aroma, doesn't it? The mortician has seen many bodies, but this one troubled even him. Ask about the unusual aspects of this killing."
-
-        case "library":
-          return "Knowledge is power, and these books contain secrets that might reveal our killer. I'm particularly fond of the botany section... plants can be so deadly in the right hands."
-
-        default:
-          return "This murder... it has a certain artistic quality to it. I appreciate the attention to detail. Find the killer, and perhaps I'll consider reducing your sentence."
-      }
-    }
-
-    // For other levels, use the existing dialogue based on floor
     switch (currentFloor) {
       // Hot hells
       case -1: // Samjiva
