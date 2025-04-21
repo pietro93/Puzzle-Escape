@@ -9,6 +9,8 @@ import { X, Book, MapPin, ChevronLeft, ChevronRight } from "lucide-react"
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
+  onLocationChange?: (location: string) => void
+  onShowDevilDialogue?: () => void
 }
 
 // Enhanced botany book with sections
@@ -65,25 +67,28 @@ const botanyBook = {
   ],
 }
 
-export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProps) {
+export default function MurderMysteryPuzzle({
+  onSolve,
+  onLocationChange,
+  onShowDevilDialogue,
+}: MurderMysteryPuzzleProps) {
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
   const [selectedBook, setSelectedBook] = useState<any>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
 
   const locations = [
-    { id: "crime scene", name: "Crime Scene", description: "A bloody mess with evidence scattered around." },
-    {
-      id: "police station",
-      name: "Police Station",
-      description: "Officers are busy with paperwork and interrogations.",
-    },
-    { id: "morgue", name: "Morgue", description: "Cold and clinical, with several bodies awaiting examination." },
-    { id: "library", name: "Library", description: "Rows of books and ancient tomes line the walls." },
+    { id: "crime scene", name: "Crime Scene" },
+    { id: "police station", name: "Police Station" },
+    { id: "morgue", name: "Morgue" },
+    { id: "library", name: "Library" },
   ]
 
   const navigateTo = (location: string) => {
     setCurrentLocation(location)
+    if (onLocationChange) {
+      onLocationChange(location)
+    }
   }
 
   const openBook = (book: any) => {
@@ -180,9 +185,9 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
               <Image
                 src="/images/murder-mystery/crime-scene.webp"
                 alt="Crime Scene"
-                width={500}
-                height={500}
-                className="rounded-lg max-h-[70vh] w-auto"
+                width={400}
+                height={400}
+                className="rounded-lg shadow-lg"
               />
             </div>
           )}
@@ -191,10 +196,13 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
             <div className="flex justify-center">
               <Image
                 src="/images/murder-mystery/policewoman.webp"
-                alt="Police Officer"
-                width={500}
-                height={500}
-                className="rounded-lg max-h-[70vh] w-auto"
+                alt="Policewoman"
+                width={300}
+                height={300}
+                className="rounded-lg shadow-lg cursor-pointer"
+                onClick={() => {
+                  // Trigger dialogue tree for the Policewoman
+                }}
               />
             </div>
           )}
@@ -204,9 +212,12 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
               <Image
                 src="/images/murder-mystery/mortician.webp"
                 alt="Mortician"
-                width={500}
-                height={500}
-                className="rounded-lg max-h-[70vh] w-auto"
+                width={300}
+                height={300}
+                className="rounded-lg shadow-lg cursor-pointer"
+                onClick={() => {
+                  // Trigger dialogue tree for the Mortician
+                }}
               />
             </div>
           )}

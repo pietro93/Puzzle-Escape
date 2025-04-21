@@ -128,8 +128,7 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 49,
     question: "The Devil challenges you to face death, in a sort of murder mystery game.",
-    description:
-      "The devil is sending you to investigate a murder. Navigate through the locations below to collect hints and find out who is the killer.",
+    description: "",
     imageUrl: "",
     solution: "professor hemlock",
     category: "puzzle",
