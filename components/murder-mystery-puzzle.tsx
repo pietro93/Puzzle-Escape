@@ -72,7 +72,14 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           id: "who-are-you",
           text: "Who are you?",
           response: "Who am I? Who are YOU? Some make-believe detective?",
-          followUp: [],
+          followUp: [
+            {
+              id: "devil-sent-me",
+              text: "The Devil sent me here.",
+              response: "Oh, did he now? Well, tell him I said 'hi'.",
+              followUp: [],
+            },
+          ],
         },
         {
           id: "tell-about-murder",
@@ -91,6 +98,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               text: "Was there no weapon?",
               response: "Told you, there was no murder. Are you even listening?",
               followUp: [],
+            },
+            {
+              id: "crime-scene-items",
+              text: "Did you find anything on the crime scene?",
+              response:
+                "Ah yes, we got lucky. He left this box of donuts untouched. Managed to rescue it before it goes to waste",
+              followUp: [
+                {
+                  id: "eating-donuts",
+                  text: "You're eating donuts from the crime scene?!",
+                  response: "Of course. Don't tell my boss. I don't want to share.",
+                  followUp: [],
+                },
+              ],
             },
             {
               id: "police-report",
@@ -154,6 +175,56 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   ],
                 },
               ],
+            },
+          ],
+        },
+        {
+          id: "were-there-any-witnesses",
+          text: "Where there any witnesses?",
+          response: "Nope. resuce team arrived on site and found the body",
+          condition: "asked-about-murder",
+          followUp: [
+            {
+              id: "who-called-rescue",
+              text: "Who called the rescue team?",
+              response: "well, the victim himself. he called an ambulance but died before they arrived on site",
+              followUp: [],
+            },
+            {
+              id: "victim-alive",
+              text: "Wait, so the victim was alive?",
+              response: "d'huh. I told you there was no murder. I think he just felt ill and died. Totally natural",
+              followUp: [],
+            },
+          ],
+        },
+        {
+          id: "can-see-report-again",
+          text: "Can I see that police report again?",
+          response: "Here you go, but don't say I didn't warn you.",
+          condition: "seen-police-report",
+          followUp: [
+            {
+              id: "check-police-report",
+              text: "Check police report",
+              response: "",
+              action: "showPoliceReport",
+              specialAction: () => setShowPoliceReport(true),
+            },
+          ],
+        },
+        {
+          id: "can-see-passport-again",
+          text: "Can I see that passport again?",
+          response: "Here you go, but don't say I didn't warn you.",
+          condition: "seen-passport",
+          followUp: [
+            {
+              id: "check-passport",
+              text: "Check victim's passport",
+              response: "",
+              action: "showPassport",
+              specialAction: () => setShowPassport(true),
             },
           ],
         },
@@ -354,6 +425,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
   // Conditionally render "Is there a police report?" option
   const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
+  const showWitnessesOption = askedQuestions.has("tell-about-murder")
+  const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
+  const showPassportAgainOption = askedQuestions.has("check-passport")
 
   const currentContent = getCurrentContent()
   const totalPages = getTotalPages()
@@ -361,7 +435,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
-      <p className="text-gray-300 mb-2">Explore locations to gather clues and solve the mystery.</p>
+      {/* <p className="text-gray-300 mb-2">Explore locations to gather clues and solve the mystery.</p> */}
 
       {/* Location Content */}
       <Card className="w-full bg-gray-800 border-gray-700">
@@ -385,8 +459,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {(currentLocation === "police station" || currentLocation === "morgue") && (
             <div className="flex flex-col">
               {/* Character Portrait and Speech Bubble */}
-              <div className="flex items-start mb-2 px-4">
-                <div className="w-24 h-24 relative">
+              <div className="flex flex-col items-center mb-2 px-4">
+                <div className="w-40 h-40 relative">
                   <Image
                     src={
                       currentCharacter === "policewoman"
@@ -394,14 +468,14 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                         : "/images/murder-mystery/mortician.webp"
                     }
                     alt={currentCharacter}
-                    width={96}
-                    height={96}
+                    width={160}
+                    height={160}
                     className="rounded-lg border-2 border-gray-700"
                   />
                 </div>
 
                 {/* Speech Bubble */}
-                <div className="ml-2 relative bg-gray-800 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
+                <div className="mt-2 relative bg-gray-800 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
                   <p className="font-pixel text-gray-200 text-sm">{typedText}</p>
                 </div>
               </div>
@@ -414,6 +488,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       // Conditionally render "Is there a police report?" option
                       if (option.id === "police-report") {
                         return showPoliceReportOption
+                      }
+                      if (option.id === "were-there-any-witnesses") {
+                        return showWitnessesOption
+                      }
+                      if (option.id === "can-see-report-again") {
+                        return showPoliceReportAgainOption
+                      }
+                      if (option.id === "can-see-passport-again") {
+                        return showPassportAgainOption
                       }
                       return true
                     })
@@ -471,8 +554,42 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     <span className="text-gray-300">2025-04-21-001</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Info:</span>
-                    <span className="text-gray-300">Death By Natural Causes</span>
+                    <span className="text-gray-400">Victim:</span>
+                    <span className="text-gray-300">Male, caucasian, early to mid 30s</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Height:</span>
+                    <span className="text-gray-300">5 ft 11 in / 1.80m</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Weight:</span>
+                    <span className="text-gray-300">165lbs / 75kg</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Eyes:</span>
+                    <span className="text-gray-300">Brown</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Hair:</span>
+                    <span className="text-gray-300">Brown, short, wavy</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Cause of death:</span>
+                    <span className="text-gray-300">suspected stroke, organ failure</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Visible trauma:</span>
+                    <span className="text-gray-300">none observed</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Pending:</span>
+                    <span className="text-gray-300">autopsy and toxicology report</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Notes:</span>
+                    <span className="text-gray-300">
+                      Victim found lying on their back, eyes closed. No signs of struggle or external wounds noted.
+                    </span>
                   </div>
                 </div>
               </div>
@@ -542,75 +659,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           )}
         </CardContent>
       </Card>
-
-      {/* Book Modal */}
-      {selectedBook && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-900 rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
-            {/* Header */}
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-800">
-              <h3 className="text-xl font-bold text-amber-300">{selectedBook.title}</h3>
-              <Button variant="ghost" size="sm" onClick={closeBook} className="text-gray-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Content - show either regular book pages or sections of the Botany book */}
-            <div className="p-6 book-page" style={{ maxHeight: "50vh", overflowY: "auto" }}>
-              {selectedBook.sections ? (
-                <>
-                  <div className="flex space-x-4 mb-4">
-                    {selectedBook.sections.map((section: any) => (
-                      <Button
-                        variant="link"
-                        key={section.id}
-                        onClick={() => switchSection(section.id)}
-                        className={cn(
-                          "text-sm text-gray-400 hover:text-gray-200",
-                          currentSection === section.id && "font-bold text-amber-300",
-                        )}
-                      >
-                        {section.title}
-                      </Button>
-                    ))}
-                  </div>
-                  {currentContent && (
-                    <>
-                      <h4 className="text-lg font-semibold text-gray-300 mb-2">{currentContent.title}</h4>
-                      <p className="text-sm text-gray-400">{currentContent.text}</p>
-                    </>
-                  )}
-                </>
-              ) : (
-                selectedBook.pages[currentPage]?.text
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="p-4 border-t border-gray-700 flex justify-between items-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={prevPage}
-                disabled={currentPage === 0}
-                className="font-pixel text-xs"
-              >
-                Previous
-              </Button>
-              <span className="text-sm text-gray-400">{`${currentPage + 1} / ${totalPages}`}</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={nextPage}
-                disabled={currentPage === totalPages - 1}
-                className="font-pixel text-xs"
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Location Map */}
       <div className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 border-t border-gray-700 z-10">

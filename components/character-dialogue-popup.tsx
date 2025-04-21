@@ -30,8 +30,9 @@ export default function CharacterDialoguePopup({
         className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start gap-3">
-          <div className="w-16 h-16 relative pixelated-container shrink-0">
+        {/* Character Image */}
+        <div className="flex justify-center mb-4">
+          <div className="w-32 h-32 relative pixelated-container">
             <Image
               src={
                 isGuardPopup
@@ -51,33 +52,19 @@ export default function CharacterDialoguePopup({
                     ? "Suffering Head"
                     : character
               }
-              width={64}
-              height={64}
+              width={128}
+              height={128}
               className="pixelated"
             />
           </div>
-          <div className="flex-1">
-            <p className="text-purple-300 font-pixel mb-2">
-              {isGuardPopup
-                ? level === 10
-                  ? "Guard:"
-                  : "Sphinx:"
-                : character === "brain"
-                  ? "Suffering Head:"
-                  : character.charAt(0).toUpperCase() + character.slice(1) + ":"}
-            </p>
-            <p className="text-gray-200 text-sm whitespace-pre-line">
-              {isGuardPopup
-                ? level === 10
-                  ? `"${dialogue}"`
-                  : `"I have a bed, where I make my way,
-I have a mouth, where I end my day.
-I have banks, that hold me near,
-I have a body, that is crystal clear."`
-                : `"${dialogue}"`}
-            </p>
-          </div>
         </div>
+
+        {/* Dialogue Text */}
+        <div className="p-4 min-h-[100px] bg-gray-900 border-b border-gray-700">
+          <p className="text-gray-200 text-sm whitespace-pre-line font-pixel">{dialogue}</p>
+        </div>
+
+        {/* Back Button */}
         <div className="mt-4 text-center">
           {hasParentDialogue && (
             <button
