@@ -158,7 +158,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "how-identify-victim",
               text: "How did you identify the victim?",
-              response: "Oh, that was easy. He had his passport on him.",
+              response: "Oh, that was easy. He had his ID on him.",
               followUp: [
                 {
                   id: "can-see-passport",
@@ -167,7 +167,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   followUp: [
                     {
                       id: "check-passport",
-                      text: "Check victim's passport",
+                      text: "Check victim's ID",
                       response: "",
                       action: "showPassport",
                       specialAction: () => setShowPassport(true),
@@ -215,13 +215,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         },
         {
           id: "can-see-passport-again",
-          text: "Can I see that passport again?",
+          text: "Can I see that ID again?",
           response: "Here you go, but don't say I didn't warn you.",
           condition: "seen-passport",
           followUp: [
             {
               id: "check-passport",
-              text: "Check victim's passport",
+              text: "Check victim's ID",
               response: "",
               action: "showPassport",
               specialAction: () => setShowPassport(true),
@@ -435,7 +435,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
-      {/* <p className="text-gray-300 mb-2">Explore locations to gather clues and solve the mystery.</p> */}
 
       {/* Location Content */}
       <Card className="w-full bg-gray-800 border-gray-700">
@@ -541,29 +540,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   </Button>
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Police Report</div>
-                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
-                  <p className="text-gray-500 font-pixel">Police Report Placeholder</p>
-                </div>
                 <div className="mt-4 space-y-2 text-sm font-pixel">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Reporting Officer:</span>
-                    <span className="text-gray-300">Officer Jenny</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Case:</span>
-                    <span className="text-gray-300">2025-04-21-001</span>
-                  </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Victim:</span>
                     <span className="text-gray-300">Male, caucasian, early to mid 30s</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Height:</span>
-                    <span className="text-gray-300">5 ft 11 in / 1.80m</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Weight:</span>
-                    <span className="text-gray-300">165lbs / 75kg</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Eyes:</span>
@@ -581,16 +561,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     <span className="text-gray-400">Visible trauma:</span>
                     <span className="text-gray-300">none observed</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Pending:</span>
-                    <span className="text-gray-300">autopsy and toxicology report</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Notes:</span>
-                    <span className="text-gray-300">
-                      Victim found lying on their back, eyes closed. No signs of struggle or external wounds noted.
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -605,22 +575,34 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="text-center text-gray-400 mb-2 font-pixel">Passport</div>
-                <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
-                  <p className="text-gray-500 font-pixel">Passport Image Placeholder</p>
-                </div>
-                <div className="mt-4 space-y-2 text-sm font-pixel">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Name:</span>
-                    <span className="text-gray-300">John Doe</span>
+                <div className="text-center text-gray-400 mb-2 font-pixel">ID</div>
+                <div className="flex items-center">
+                  <div className="w-24 h-24 relative mr-4">
+                    <Image
+                      src="/images/victim_passport-headshot.webp"
+                      alt="Victim's Headshot"
+                      width={96}
+                      height={96}
+                      className="rounded-lg shadow-lg"
+                    />
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Nationality:</span>
-                    <span className="text-gray-300">United States</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Date of Birth:</span>
-                    <span className="text-gray-300">01/01/1980</span>
+                  <div className="mt-4 space-y-2 text-sm font-pixel">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Name:</span>
+                      <span className="text-gray-300">Declan Tremblay</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Date of Birth:</span>
+                      <span className="text-gray-300">1993/04/21</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Height:</span>
+                      <span className="text-gray-300">180 cm</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Place of birth:</span>
+                      <span className="text-gray-300">Toronto, ON</span>
+                    </div>
                   </div>
                 </div>
               </div>
