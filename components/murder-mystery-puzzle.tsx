@@ -177,40 +177,37 @@ export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProp
         <CardContent>
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
-              <div className="relative w-full aspect-square max-w-xl">
-                <Image
-                  src="/images/murder-mystery/crime-scene.webp"
-                  alt="Crime Scene"
-                  fill
-                  className="object-contain rounded-lg"
-                />
-              </div>
+              <Image
+                src="/images/murder-mystery/crime-scene.webp"
+                alt="Crime Scene"
+                width={500}
+                height={500}
+                className="rounded-lg max-h-[70vh] w-auto"
+              />
             </div>
           )}
 
           {currentLocation === "police station" && (
             <div className="flex justify-center">
-              <div className="relative w-full aspect-square max-w-xl">
-                <Image
-                  src="/images/murder-mystery/policewoman.webp"
-                  alt="Police Officer"
-                  fill
-                  className="object-contain rounded-lg"
-                />
-              </div>
+              <Image
+                src="/images/murder-mystery/policewoman.webp"
+                alt="Police Officer"
+                width={500}
+                height={500}
+                className="rounded-lg max-h-[70vh] w-auto"
+              />
             </div>
           )}
 
           {currentLocation === "morgue" && (
             <div className="flex justify-center">
-              <div className="relative w-full aspect-square max-w-xl">
-                <Image
-                  src="/images/murder-mystery/mortician.webp"
-                  alt="Mortician"
-                  fill
-                  className="object-contain rounded-lg"
-                />
-              </div>
+              <Image
+                src="/images/murder-mystery/mortician.webp"
+                alt="Mortician"
+                width={500}
+                height={500}
+                className="rounded-lg max-h-[70vh] w-auto"
+              />
             </div>
           )}
 
