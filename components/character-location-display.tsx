@@ -258,7 +258,7 @@ export default function CharacterLocationDisplay({
   }
 
   // Special handling for level 51 (murder mystery)
-  if (level === 51) {
+  if (level === 49) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         {/* Crime Scene Image */}
