@@ -257,17 +257,17 @@ export default function CharacterLocationDisplay({
     )
   }
 
-  // Special handling for level 51 (murder mystery)
+  // Special handling for level 49 (murder mystery)
   if (level === 49) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        {/* Crime Scene Image */}
+        {/* Character image (Policewoman) */}
         <div className="flex justify-center items-center">
           <div className="w-40 h-40 relative pixelated-container bg-black">
             <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Ehfuz3nythu7PvV0aE7yXLaePwt3DD.png"
-              alt="Crime Scene"
+              src="/images/murder-mystery/policewoman.webp"
+              alt="Policewoman"
               width={160}
               height={160}
               className="pixelated z-10 relative"
@@ -275,13 +275,13 @@ export default function CharacterLocationDisplay({
           </div>
         </div>
 
-        {/* Victim ID Photo */}
+        {/* Location image (Police Station) */}
         <div className="flex justify-center items-center">
           <div className="w-40 h-40 relative pixelated-container bg-black">
             <div className="absolute inset-0 bg-black rounded-lg z-0"></div>
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-roWXY86XQmvAEzD4JM867U7v6WkKjW.png"
-              alt="Victim ID"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-exterior-KTmGONVi3wa6sx2G9nKqAybVn3qVV0.webp" // Use mansion exterior as police station for now
+              alt="Police Station"
               width={160}
               height={160}
               className="pixelated z-10 relative"
