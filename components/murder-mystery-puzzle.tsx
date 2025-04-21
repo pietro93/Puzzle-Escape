@@ -60,7 +60,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
 
-  // // // // // // DIALOGUE TREES  // // // // // // // // // // // // // // // // // // // // // //
   // Police Woman
   const policewomanDialogue = [
     {
@@ -447,13 +446,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         <CardContent>
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
-              <Image
-                src="/images/murder-mystery/crime-scene.webp"
-                alt="Crime Scene"
-                width={400}
-                height={400}
-                className="rounded-lg shadow-lg"
-              />
+              <div className="w-full relative pixelated-container bg-black">
+                <Image
+                  src="/images/murder-mystery/crime-scene.webp"
+                  alt="Crime Scene"
+                  width={400}
+                  height={400}
+                  className="pixelated w-full h-full object-contain"
+                />
+              </div>
             </div>
           )}
 
@@ -462,7 +463,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             <div className="flex flex-col">
               {/* Character Portrait and Speech Bubble */}
               <div className="flex flex-col items-center mb-2 px-4">
-                <div className="w-40 h-40 relative">
+                <div className="w-40 h-40 relative pixelated-container bg-black">
                   <Image
                     src={
                       currentCharacter === "policewoman"
@@ -472,7 +473,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     alt={currentCharacter}
                     width={160}
                     height={160}
-                    className="rounded-lg border-2 border-gray-700"
+                    className="rounded-lg pixelated"
                   />
                 </div>
 
@@ -580,13 +581,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">ID</div>
                 <div className="flex items-center">
-                  <div className="w-24 h-24 relative mr-4">
+                  <div className="w-24 h-24 relative mr-4 pixelated-container bg-black">
                     <Image
                       src="/images/murder-mystery/victim_passport-headshot.webp"
                       alt="Victim's Headshot"
                       width={96}
                       height={96}
-                      className="rounded-lg shadow-lg"
+                      className="rounded-lg shadow-lg pixelated"
                     />
                   </div>
                   <div className="mt-4 space-y-2 text-sm font-pixel">
