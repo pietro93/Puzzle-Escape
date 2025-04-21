@@ -435,9 +435,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
   const showPassportAgainOption = askedQuestions.has("check-passport")
 
-  const currentContent = getCurrentContent()
-  const totalPages = getTotalPages()
-
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
@@ -585,7 +582,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 <div className="flex items-center">
                   <div className="w-24 h-24 relative mr-4">
                     <Image
-                      src="/components/victim_passport-headshot.webp"
+                      src="/images/murder-mystery/victim_passport-headshot.webp"
                       alt="Victim's Headshot"
                       width={96}
                       height={96}
