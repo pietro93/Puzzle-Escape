@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { demonologyBook } from "@/data/books"
 import Image from "next/image"
-import { X, Book, MapPin, ChevronLeft, ChevronRight, FileText } from "lucide-react"
+import { X, Book, MapPin, FileText } from "lucide-react"
 import { botanyBook } from "@/data/books"
 import { cn } from "@/lib/utils"
 
@@ -60,111 +60,96 @@ export default function MurderMysteryPuzzle({
   // Define the policewoman dialogue tree
   const policewomanDialogue: DialogueOption[] = [
     {
-      id: "who-are-you",
-      text: "Who are you?",
-      response: "Who am I? Who are YOU? Some make-believe detective?",
-      followUp: [],
-    },
-    {
-      id: "tell-about-murder",
-      text: "Tell me about the murder.",
-      response:
-        "Murder? What murder? There was no murder. The victim died of natural causes. Just an accident, really.",
+      id: "initial-greeting",
+      text: "Start",
+      response: "Well, well, well. What do you want to know?",
       followUp: [
         {
-          id: "what-natural-causes",
-          text: "What natural causes?",
-          response: "How would I know? Ask forensics. I just know there was no murder.",
+          id: "who-are-you",
+          text: "Who are you?",
+          response: "Who am I? Who are YOU? Some make-believe detective?",
+          followUp: [],
+        },
+        {
+          id: "tell-about-murder",
+          text: "Tell me about the murder.",
+          response:
+            "Murder? What murder? There was no murder. The victim died of natural causes. Just an accident, really.",
           followUp: [
             {
-              id: "who-found-body",
-              text: "Who found the body?",
-              response:
-                "The rescuer found the body. The victim himself called for help but died before help could arrive.",
+              id: "what-natural-causes",
+              text: "What natural causes?",
+              response: "How would I know? Ask forensics. I just know there was no murder.",
               followUp: [],
             },
-          ],
-        },
-        {
-          id: "was-there-no-weapon",
-          text: "Was there no weapon?",
-          response: "Told you, there was no murder. Are you even listening?",
-          followUp: [
             {
-              id: "find-anything-crime-scene",
-              text: "Did you find anything on the crime scene?",
-              response:
-                "Ah yes, we got lucky. He left this box of donuts untouched. Managed to rescue it before it goes to waste.",
+              id: "was-there-no-weapon",
+              text: "Was there no weapon?",
+              response: "Told you, there was no murder. Are you even listening?",
+              followUp: [],
+            },
+            {
+              id: "police-report",
+              text: "Is there a police report?",
+              response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes.",
+              condition: "exhausted-murder-questions",
               followUp: [
                 {
-                  id: "eating-donuts",
-                  text: "You're eating donuts from the crime scene?!",
-                  response: "Of course. Don't tell my boss. I don't want to share.",
-                  followUp: [],
+                  id: "can-see-report",
+                  text: "Can I see the report?",
+                  response: "Sure, knock yourself out. It's just a formality anyway.",
+                  followUp: [
+                    {
+                      id: "check-police-report",
+                      text: "Check police report",
+                      response: "",
+                      action: "showPoliceReport",
+                      specialAction: () => setShowPoliceReport(true),
+                    },
+                  ],
                 },
               ],
             },
           ],
         },
-      ],
-    },
-    {
-      id: "who-is-victim",
-      text: "Who is the victim?",
-      response:
-        "Some tourist who was here on vacation by himself. Short man, kinda cute. Slightly too dead for my taste, I like 'em still warm.",
-      followUp: [
         {
-          id: "victim-name",
-          text: "Does he have a name?",
-          response: "I would assume so.",
-          followUp: [],
-        },
-        {
-          id: "more-about-victim",
-          text: "What else can you tell me about the victim?",
-          response: "I have got nothing to tell.",
-          followUp: [],
-        },
-        {
-          id: "how-identify-victim",
-          text: "How did you identify the victim?",
-          response: "Oh, that was easy. He had his passport on him.",
+          id: "who-is-victim",
+          text: "Who is the victim?",
+          response:
+            "Some tourist who was here on vacation by himself. Short man, kinda cute. Slightly too dead for my taste, I like 'em still warm.",
           followUp: [
             {
-              id: "can-see-passport",
-              text: "Can I see it?",
-              response: "Fine, but only if you promise to leave me alone.",
+              id: "victim-name",
+              text: "Does he have a name?",
+              response: "I would assume so.",
+              followUp: [],
+            },
+            {
+              id: "more-about-victim",
+              text: "What else can you tell me about the victim?",
+              response: "I have got nothing to tell.",
+              followUp: [],
+            },
+            {
+              id: "how-identify-victim",
+              text: "How did you identify the victim?",
+              response: "Oh, that was easy. He had his passport on him.",
               followUp: [
                 {
-                  id: "check-passport",
-                  text: "Check victim's passport",
-                  response: "",
-                  action: "showPassport",
-                  specialAction: () => setShowPassport(true),
+                  id: "can-see-passport",
+                  text: "Can I see it?",
+                  response: "Fine, but only if you promise to leave me alone.",
+                  followUp: [
+                    {
+                      id: "check-passport",
+                      text: "Check victim's passport",
+                      response: "",
+                      action: "showPassport",
+                      specialAction: () => setShowPassport(true),
+                    },
+                  ],
                 },
               ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: "police-report",
-      text: "Is there a police report?",
-      response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes.",
-      followUp: [
-        {
-          id: "can-see-report",
-          text: "Can I see the report?",
-          response: "Sure, knock yourself out. It's just a formality anyway.",
-          followUp: [
-            {
-              id: "check-police-report",
-              text: "Check police report",
-              response: "",
-              action: "showPoliceReport",
-              specialAction: () => setShowPoliceReport(true),
             },
           ],
         },
@@ -203,11 +188,18 @@ export default function MurderMysteryPuzzle({
   // Reset dialogue options when character changes
   useEffect(() => {
     if (currentCharacter === "policewoman") {
-      setCurrentDialogueOptions(policewomanDialogue)
+      setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
     } else if (currentCharacter === "mortician") {
       setCurrentDialogueOptions(morticianDialogue)
     }
   }, [currentCharacter])
+
+  useEffect(() => {
+    // Automatically start dialogue when entering the police station
+    if (currentLocation === "police station") {
+      startDialogue("policewoman")
+    }
+  }, [currentLocation])
 
   const navigateTo = (location: string) => {
     setCurrentLocation(location)
@@ -299,11 +291,12 @@ export default function MurderMysteryPuzzle({
     setShowDialogue(true)
     setCurrentResponse("")
     setTypedText("")
+    setAskedQuestions(new Set()) // Reset asked questions
 
     // Set initial dialogue options based on character
     if (character === "policewoman") {
-      setCurrentDialogueOptions(policewomanDialogue)
-      setCurrentResponse("*munches on donut* What do you want?")
+      setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
+      setCurrentResponse(policewomanDialogue[0].response)
       setIsTyping(true)
     } else if (character === "mortician") {
       setCurrentDialogueOptions(morticianDialogue)
@@ -348,7 +341,7 @@ export default function MurderMysteryPuzzle({
       if (newPath.length === 0) {
         // Back to root
         if (currentCharacter === "policewoman") {
-          setCurrentDialogueOptions(policewomanDialogue)
+          setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
         } else if (currentCharacter === "mortician") {
           setCurrentDialogueOptions(morticianDialogue)
         }
@@ -374,6 +367,9 @@ export default function MurderMysteryPuzzle({
   const currentContent = getCurrentContent()
   const totalPages = getTotalPages()
 
+  // Check if "Is there a police report?" option should be displayed
+  const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
+
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
@@ -398,21 +394,7 @@ export default function MurderMysteryPuzzle({
           )}
 
           {currentLocation === "police station" && (
-            <div className="flex justify-center">
-              <Image
-                src="/images/murder-mystery/policewoman.webp"
-                alt="Policewoman"
-                width={300}
-                height={300}
-                className="rounded-lg shadow-lg cursor-pointer"
-                onClick={() => startDialogue("policewoman")}
-              />
-              {!showDialogue && (
-                <div className="absolute bottom-4 bg-black/70 px-3 py-1 rounded text-white text-sm">
-                  Click to talk to the Policewoman
-                </div>
-              )}
-            </div>
+            <div className="flex flex-col items-center">{/* Removed the image and button */}</div>
           )}
 
           {currentLocation === "morgue" && (
@@ -425,11 +407,6 @@ export default function MurderMysteryPuzzle({
                 className="rounded-lg shadow-lg cursor-pointer"
                 onClick={() => startDialogue("mortician")}
               />
-              {!showDialogue && (
-                <div className="absolute bottom-4 bg-black/70 px-3 py-1 rounded text-white text-sm">
-                  Click to talk to the Mortician
-                </div>
-              )}
             </div>
           )}
 
@@ -498,18 +475,26 @@ export default function MurderMysteryPuzzle({
             {/* Dialogue Options */}
             <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
               <div className="grid gap-2 max-h-[200px] overflow-y-auto dialogue-options">
-                {currentDialogueOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => handleDialogueOption(option)}
-                    className={cn(
-                      "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
-                      askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
-                    )}
-                  >
-                    {option.text}
-                  </button>
-                ))}
+                {currentDialogueOptions
+                  .filter((option) => {
+                    // Conditionally render "Is there a police report?" option
+                    if (option.id === "police-report") {
+                      return showPoliceReportOption
+                    }
+                    return true
+                  })
+                  .map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => handleDialogueOption(option)}
+                      className={cn(
+                        "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
+                        askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
+                      )}
+                    >
+                      {option.text}
+                    </button>
+                  ))}
               </div>
 
               {/* Navigation Buttons */}
@@ -624,103 +609,7 @@ export default function MurderMysteryPuzzle({
         </div>
       </div>
 
-      {/* Book Modal - Enhanced to look more like a book */}
-      {selectedBook && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#2a2a2a] rounded-lg max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
-            {/* Book Header */}
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-[#1a1a1a]">
-              <h3 className="text-xl font-bold text-amber-300">{selectedBook.title}</h3>
-              <Button variant="ghost" size="sm" onClick={closeBook} className="text-gray-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Section Tabs for Botany Book */}
-            {selectedBook.sections && (
-              <div className="flex border-b border-gray-700">
-                {selectedBook.sections.map((section: any) => (
-                  <button
-                    key={section.id}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      currentSection === section.id
-                        ? "bg-green-900/30 text-green-300 border-b-2 border-green-500"
-                        : "text-gray-400 hover:text-white hover:bg-gray-700/30"
-                    }`}
-                    onClick={() => switchSection(section.id)}
-                  >
-                    {section.title}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Book Content */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-8 bg-[#252525] min-h-[300px] flex flex-col items-center">
-                {/* Book Page Content */}
-                <div className="max-w-md w-full bg-[#f5f5dc] text-gray-800 p-6 rounded shadow-md relative book-page">
-                  {currentContent?.title && (
-                    <h4 className="text-lg font-semibold text-center mb-4 text-gray-900 border-b border-gray-300 pb-2">
-                      {currentContent.title}
-                    </h4>
-                  )}
-
-                  {currentContent?.imageUrl && (
-                    <div className="flex justify-center mb-4">
-                      <div className="border border-gray-400 p-1 bg-white inline-block">
-                        <Image
-                          src={currentContent.imageUrl || "/placeholder.svg"}
-                          alt="Book illustration"
-                          width={200}
-                          height={150}
-                          className="object-cover"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="text-gray-700 whitespace-pre-line leading-relaxed font-serif">
-                    {currentContent?.text}
-                  </div>
-
-                  {/* Page number */}
-                  <div className="absolute bottom-2 right-2 text-gray-500 text-xs">{currentPage + 1}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Book Navigation */}
-            <div className="p-4 border-t border-gray-700 bg-[#1a1a1a] flex justify-between items-center">
-              <Button
-                variant="outline"
-                onClick={prevPage}
-                disabled={currentPage === 0}
-                className="flex items-center gap-1"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Previous
-              </Button>
-
-              <span className="text-gray-400 text-sm">
-                Page {currentPage + 1} of {totalPages}
-              </span>
-
-              <Button
-                variant="outline"
-                onClick={nextPage}
-                disabled={currentPage === totalPages - 1}
-                className="flex items-center gap-1"
-              >
-                Next
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style jsx global>{`
+      <style jsx>{`
         @font-face {
           font-family: 'PixelFont';
           src: url('/fonts/pixel.woff2') format('woff2');
