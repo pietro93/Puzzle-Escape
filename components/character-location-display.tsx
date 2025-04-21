@@ -1,10 +1,7 @@
 "use client"
-
-import type React from "react"
-
 import Image from "next/image"
-import { useEffect, useState } from "react"
-import { ChevronLeft, ChevronRight } from "react-feather"
+import CharacterImage from "./character-image"
+import LocationImage from "./location-image"
 
 interface CharacterLocationDisplayProps {
   level: number
@@ -24,20 +21,6 @@ interface CharacterLocationDisplayProps {
   onPyramidLocationImageClick?: () => void
 }
 
-// Define room types
-type Room = "entrance" | "isis" | "ra" | "mural1" | "mural2" | "mural3" | "mural4"
-
-// Define room connections
-const roomConnections: { [key in Room]: { left: Room | null; right: Room | null } } = {
-  entrance: { left: null, right: "isis" },
-  isis: { left: "entrance", right: "ra" },
-  ra: { left: "isis", right: "mural1" },
-  mural1: { left: "ra", right: "mural2" },
-  mural2: { left: "mural1", right: "mural3" },
-  mural3: { left: "mural2", right: "mural4" },
-  mural4: { left: "mural3", right: null },
-}
-
 export default function CharacterLocationDisplay({
   level,
   setting,
@@ -55,11 +38,6 @@ export default function CharacterLocationDisplay({
   onLocationClick,
   onPyramidLocationImageClick,
 }: CharacterLocationDisplayProps) {
-  const [currentRoom, setCurrentRoom] = useState<Room>("entrance")
-  const [sphinxMessage, setSphinxMessage] = useState<string>("")
-  const [hasTorch, setHasTorch] = useState<boolean>(false)
-  const [torchPosition, setTorchPosition] = useState({ x: 50, y: 50 })
-
   // Helper function to get the correct brain lamp image based on correct combinations
   const getBrainLampImage = (correctCount: number) => {
     switch (correctCount) {
@@ -122,178 +100,183 @@ export default function CharacterLocationDisplay({
     return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pyramid-inside-DpO8zywmCoFoK1uuVLRL6w0rd7yZTt.webp"
   }
 
-  // Get sphinx message based on current room
-  useEffect(() => {
-    switch (currentRoom) {
-      case "entrance":
-        setSphinxMessage("The mural in the entrance room depicts some kind of bird.")
-        break
-      case "isis":
-        setSphinxMessage("The mural in this chamber represents Isis, the goddess of magic and fertility.")
-        break
-      case "ra":
-        setSphinxMessage("The mural in this chamber represents Ra, the god of light.")
-        break
-      case "mural1":
-      case "mural2":
-      case "mural3":
-      case "mural4":
-        if (!hasTorch) {
-          setSphinxMessage("It's too dark to see anything in this chamber.")
-        } else {
-          // No descriptive messages when torch is active - let player discover the content
-          setSphinxMessage("")
-        }
-        break
-      default:
-        setSphinxMessage("")
-    }
-  }, [currentRoom, hasTorch])
-
-  // Handle navigation between rooms
-  const navigateToRoom = (direction: "left" | "right") => {
-    const connections = roomConnections[currentRoom as Room]
-    const targetRoom = direction === "left" ? connections.left : connections.right
-
-    if (targetRoom) {
-      onRoomChange(targetRoom)
-    }
-  }
-
-  // Handle mouse move for torch position
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (hasTorch && ["mural1", "mural2", "mural3", "mural4"].includes(currentRoom)) {
-      const rect = e.currentTarget.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
-      setTorchPosition({ x, y })
-    }
-  }
-
-  const getRoomImage = () => {
-    switch (currentRoom) {
-      case "entrance":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/entrance-mural.webp"
-      case "isis":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/isis-mural.webp"
-      case "ra":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ra-mural.webp"
-      case "mural1":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mural1.webp"
-      case "mural2":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mural2.webp"
-      case "mural3":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mural3.webp"
-      case "mural4":
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mural4.webp"
-      default:
-        return "/placeholder.svg"
-    }
-  }
-
-  const onRoomChange = (room: Room) => {
-    setCurrentRoom(room)
-  }
-
-  return (
-    <div className="w-full max-w-md mx-auto">
-      {/* Sphinx message */}
-      <div className="bg-gray-900/80 p-4 rounded-lg border border-gray-800 mb-4">
-        <p className="text-gray-300 font-mono text-sm">{sphinxMessage}</p>
-      </div>
-
-      {/* Room navigation and content */}
-      <div
-        className="relative w-full h-72 bg-black p-4 rounded-lg border border-gray-800 mb-4"
-        onMouseMove={handleMouseMove}
-      >
-        {/* Room content */}
-        <div className="relative w-full h-full">
-          {/* Room image */}
-          <Image
-            src={getRoomImage() || "/placeholder.svg"}
-            alt={`Chamber mural`}
-            width={600}
-            height={400}
-            className="w-full h-full object-contain"
-          />
-
-          {/* Torch light effect overlay */}
-          {hasTorch && ["mural1", "mural2", "mural3", "mural4"].includes(currentRoom) && (
-            <div
-              className="absolute inset-0 bg-black/90 pointer-events-none"
-              style={{
-                background: `radial-gradient(circle at ${torchPosition.x}% ${torchPosition.y}%, transparent 50px, rgba(0,0,0,0.95) 100px)`,
-              }}
+  // Special handling for level 17 (light switch puzzle)
+  if (level === 17) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        <div className="flex justify-center items-center">
+          <div className="w-40 h-40 relative pixelated-container">
+            <Image
+              src={
+                solved
+                  ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-butler-UiGmVrOHpSIeCMysGrv0fnFXeIKb8c.webp" // the-butler.webp
+                  : lightsOn
+                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-butler-undead-MP8fUsQPQyAfYNqQ8vh5jHD6ccDAiX.webp" // butler-undead.webp
+                    : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pitch-darkness-hHHhjqR7LwsUXdako3Kczz70K9LK40.webp" // pitch-darkness.webp
+              }
+              alt={lightsOn ? "Butler" : "Darkness"}
+              width={160}
+              height={160}
+              className="pixelated"
             />
-          )}
-
-          {/* Torch icon when active */}
-          {hasTorch && ["mural1", "mural2", "mural3", "mural4"].includes(currentRoom) && (
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                left: `calc(${torchPosition.x}% - 20px)`,
-                top: `calc(${torchPosition.y}% - 40px)`,
-                transform: "rotate(15deg)",
-              }}
-            >
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/torch-vYBOKJGWZQlwVTPz9rUymfNORDEEca.webp"
-                alt="Torch"
-                width={40}
-                height={80}
-                className="w-10 h-20 object-contain"
-              />
-            </div>
-          )}
+          </div>
         </div>
-
-        {/* Navigation buttons */}
-        <div className="flex justify-between items-center">
-          {roomConnections[currentRoom as Room].left ? (
-            <button
-              onClick={() => navigateToRoom("left")}
-              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center gap-1 text-sm"
-            >
-              <ChevronLeft className="w-4 h-4" /> Go Left
-            </button>
-          ) : (
-            <div></div>
-          )}
-
-          {/* Torch indicator */}
-          {hasTorch && (
-            <div className="flex items-center justify-center">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/torch-vYBOKJGWZQlwVTPz9rUymfNORDEEca.webp"
-                alt="Torch"
-                width={24}
-                height={48}
-                className="w-6 h-12 object-contain"
-              />
-            </div>
-          )}
-
-          {roomConnections[currentRoom as Room].right ? (
-            <button
-              onClick={() => navigateToRoom("right")}
-              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center gap-1 text-sm"
-            >
-              Go Right <ChevronRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <div></div>
-          )}
+        <div className="flex justify-center items-center">
+          <div className="w-40 h-40 relative pixelated-container">
+            <Image
+              src={
+                solved
+                  ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-8F0FXySQS7FpTruWOt1MsbbrL7IKiw.webp" // mansion.webp
+                  : lightsOn
+                    ? "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-lit-Y00BfTg0ZTovGTlXIoaVpm4btmNctX.webp" // Updated mansion-lit.webp
+                    : "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pitch-darkness-hHHhjqR7LwsUXdako3Kczz70K9LK40.webp" // pitch-darkness.webp
+              }
+              alt={lightsOn ? "Mansion" : "Darkness"}
+              width={160}
+              height={160}
+              className="pixelated"
+            />
+          </div>
         </div>
       </div>
+    )
+  }
 
-      {/* Instructions - removed as requested */}
-      {hasTorch && ["mural1", "mural2", "mural3", "mural4"].includes(currentRoom) && (
-        <div className="text-center text-xs text-gray-400 animate-pulse">
-          Move your cursor to shine the torch on different parts of the mural
+  // Special handling for level 29 (sign language puzzle)
+  if (level === 29) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        <div className="flex justify-center items-center">
+          <CharacterImage character={character} />
         </div>
-      )}
+        <div className="flex justify-center items-center">
+          <LocationImage setting={setting} customImage={puzzle.locationImage} hintImage={puzzle.imageHint} />
+        </div>
+      </div>
+    )
+  }
+
+  // Special handling for level 39 (Egyptian math puzzle)
+  if (level === 39) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        <div className="flex justify-center items-center">
+          <CharacterImage character={character} />
+        </div>
+        <div className="flex justify-center items-center">
+          <LocationImage setting={setting} customImage={null} hintImage={null} />
+        </div>
+      </div>
+    )
+  }
+
+  // Special handling for level 40 (pyramid puzzle)
+  if (level === 40) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
+          <CharacterImage character={character} />
+        </div>
+        <div className="flex justify-center items-center cursor-pointer" onClick={onPyramidLocationImageClick}>
+          <div className="w-40 h-40 relative pixelated-container">
+            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+            <Image
+              src={getPyramidLocationImage() || `/images/${setting}-bg.webp`}
+              alt={`${setting} location`}
+              width={160}
+              height={160}
+              className="pixelated z-10 relative"
+            />
+            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+            <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Special handling for level 47 (brain lamp puzzle)
+  if (level === 47) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
+          <CharacterImage character={character} />
+        </div>
+        <div
+          className="flex justify-center items-center cursor-pointer"
+          onClick={() => {
+            // Call the location click handler which will trigger the dialogue
+            if (onPyramidLocationImageClick) {
+              onPyramidLocationImageClick()
+            }
+          }}
+        >
+          <div className="w-40 h-40 relative pixelated-container">
+            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+            <Image
+              src={getBrainLampImage(binaryCorrectCombinations) || "/images/brainlamp.webp"}
+              alt="Brain Lamp"
+              width={160}
+              height={160}
+              className="pixelated z-10 relative w-full h-full object-contain"
+              style={{ opacity: getBrainLampOpacity(binaryCorrectCombinations) }}
+            />
+            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+            <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Special handling for level 50 (elevator puzzle)
+  if (level === 50) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        {/* Character image (Devil) */}
+        <div className="flex justify-center items-center">
+          <CharacterImage character="devil" />
+        </div>
+
+        {/* Location image - always clickable for elevator access */}
+        <div className="flex justify-center items-center cursor-pointer" onClick={onLocationClick}>
+          <div className="w-40 h-40 relative pixelated-container">
+            <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+            <Image
+              src={hasUsedElevator || showElevator || jigsawComplete ? "/images/elevator.webp" : "/images/hell-bg.webp"}
+              alt={`${setting} location`}
+              width={160}
+              height={160}
+              className="pixelated z-10 relative"
+            />
+            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+            <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Default display for all other levels
+  return (
+    <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+      <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
+        <CharacterImage character={character} />
+      </div>
+      <div className="flex justify-center items-center">
+        <div className="w-40 h-40 relative pixelated-container">
+          <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
+          <Image
+            src={puzzle.locationImage || `/images/${setting}-bg.webp`}
+            alt={`${setting} location`}
+            width={160}
+            height={160}
+            className="pixelated z-10 relative"
+          />
+          <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+          <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
+        </div>
+      </div>
     </div>
   )
 }

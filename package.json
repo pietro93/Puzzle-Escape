@@ -62,8 +62,7 @@
     "electron": "latest",
     "path": "latest",
     "fs": "latest",
-    "electron-squirrel-startup": "latest",
-    "react-feather": "latest"
+    "electron-squirrel-startup": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
