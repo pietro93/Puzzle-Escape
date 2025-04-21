@@ -7,11 +7,6 @@ export interface BookPage {
 export interface Book {
   title: string
   pages: BookPage[]
-  sections?: {
-    id: string
-    title: string
-    pages: BookPage[]
-  }[]
 }
 
 export const demonologyBook: Book = {
@@ -284,60 +279,5 @@ Signs on Victims: Blood drained but not fully, victims weakened, sometimes trans
   ],
 }
 
-export const botanyBook: Book = {
-  title: "Botany",
-  sections: [
-    {
-      id: "toxicology",
-      title: "Toxicology",
-      pages: [
-        {
-          title: "Aconitum",
-          text: "Aconitum, also known as monkshood or wolfsbane, is a highly poisonous plant containing aconitine, a potent neurotoxin and cardiotoxin. Symptoms of poisoning include nausea, vomiting, cardiac arrhythmia, paralysis, and death. All parts of the plant are toxic, but the roots and seeds are especially dangerous. Aconitine disrupts nerve and muscle function, leading to respiratory failure and cardiac arrest. There is no antidote, and treatment focuses on managing symptoms.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-        {
-          title: "Atropa belladonna",
-          text: "Atropa belladonna, commonly known as deadly nightshade, is a perennial herbaceous plant in the nightshade family, Solanaceae. It is native to Europe, North Africa, and Western Asia. The foliage and berries of Atropa belladonna are extremely toxic, containing tropane alkaloids that cause delirium, hallucinations, dilated pupils, sensitivity to light, blurred vision, tachycardia, loss of balance, staggering, headache, rash, severely dry mouth and throat, slurred speech, urinary retention, constipation, confusion, hallucinations, and convulsions. The root is generally the most toxic part of the plant, though this can vary from one specimen to another. Infants and children are most susceptible to belladonna poisoning because of their smaller body mass.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-        {
-          title: "Conium maculatum",
-          text: "Conium maculatum, or hemlock, is a highly poisonous biennial herbaceous flowering plant in the family Apiaceae, originating from Europe and North Africa. It is known for its potent neurotoxic alkaloids, including coniine and gamma-coniceine, which cause respiratory paralysis and death. All parts of the plant are poisonous, but the seeds and roots contain the highest concentrations of toxins. Symptoms of hemlock poisoning include muscle weakness, paralysis, nausea, vomiting, and respiratory failure. There is no antidote, and treatment focuses on supportive care.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-        {
-          title: "Ricinus communis",
-          text: "Ricinus communis, or castor bean, is a species of flowering plant in the spurge family, Euphorbiaceae. Its seeds contain ricin, a potent toxin that inhibits protein synthesis. Symptoms of ricin poisoning include nausea, vomiting, abdominal pain, diarrhea, and internal bleeding. Severe cases can lead to organ failure and death. Ricin is a ribosome-inactivating protein, meaning it disrupts the cellular machinery responsible for protein production. There is no antidote, and treatment focuses on supportive care.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-      ],
-    },
-    {
-      id: "medicinal",
-      title: "Medicinal Plants",
-      pages: [
-        {
-          title: "Aloe vera",
-          text: "Aloe vera is a succulent plant species of the genus Aloe. It grows wild in tropical climates around the world and is cultivated for agricultural and medicinal uses. Aloe vera is used in traditional medicine as a skin treatment. Clinical trials have shown that it is effective for healing first- and second-degree burns and accelerating wound healing. Aloe vera is also used for treating minor skin irritations, such as sunburn, insect bites, and rashes.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-        {
-          title: "Echinacea",
-          text: "Echinacea is a genus of herbaceous flowering plants in the daisy family, Asteraceae. It is native to North America. Echinacea is used in traditional medicine to treat colds, flu, and other respiratory infections. Clinical trials have shown that it may reduce the duration and severity of colds, but the evidence is not conclusive. Echinacea is also used to boost the immune system and treat skin conditions.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-        {
-          title: "Ginkgo biloba",
-          text: "Ginkgo biloba, also known as ginkgo or maidenhair tree, is a species of tree native to China. It is used in traditional medicine to improve memory and cognitive function. Clinical trials have shown that it may improve memory in people with Alzheimer's disease and other forms of dementia, but the evidence is not conclusive. Ginkgo biloba is also used to treat anxiety, depression, and other conditions.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-        {
-          title: "Hypericum perforatum",
-          text: "Hypericum perforatum, also known as St John's wort, is a flowering plant in the family Hypericaceae. It is native to Europe, North Africa, and Western Asia. St John's wort is used in traditional medicine to treat depression, anxiety, and other mood disorders. Clinical trials have shown that it may be effective for treating mild to moderate depression, but the evidence is not conclusive. St John's wort can interact with many medications, so it is important to talk to a doctor before using it.",
-          imageUrl: "/placeholder.svg?height=150&width=200",
-        },
-      ],
-    },
-  ],
-}
+// Note: We've moved the botany book directly into the murder-mystery-puzzle.tsx component
+// with the enhanced structure for sections
