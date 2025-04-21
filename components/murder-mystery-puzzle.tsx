@@ -281,30 +281,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }
 
-  const goBackInDialogue = () => {
-    if (dialoguePath.length === 0) {
-      // If at root level, close dialogue
-      setShowDialogue(false)
-    } else {
-      // Go back one level in the dialogue tree
-      const newPath = [...dialoguePath]
-      newPath.pop()
-      setDialoguePath(newPath)
-
-      if (newPath.length === 0) {
-        // Back to root
-        if (currentCharacter === "policewoman") {
-          setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
-        } else if (currentCharacter === "mortician") {
-          setCurrentDialogueOptions(morticianDialogue)
-        }
-      } else {
-        // Back to previous level
-        setCurrentDialogueOptions(newPath[newPath.length - 1].followUp || [])
-      }
-    }
-  }
-
   const closeDialogue = () => {
     setShowDialogue(false)
     setCurrentCharacter(null)
@@ -430,25 +406,24 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       </button>
                     ))}
                 </div>
-
-                {/* Navigation Buttons */}
-                <div className="flex justify-between mt-4">
-                  <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
-                    {dialoguePath.length === 0 ? "Back" : "Back"}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
-                    Close
-                  </Button>
-                </div>
               </div>
             </div>
           )}
 
           {/* Police Report Button */}
           {showPoliceReport && (
-            <div className="p-6">
-              {/* Placeholder for passport image - will be replaced with actual image */}
-              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full">
+            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full max-w-md">
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={closePoliceReport}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Police Report</div>
                 <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
                   <p className="text-gray-500 font-pixel">Police Report Placeholder</p>
@@ -471,11 +446,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
-          {/* Police Report Button */}
+          {/* Passport Button */}
           {showPassport && (
-            <div className="p-6">
-              {/* Placeholder for passport image - will be replaced with actual image */}
-              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full">
+            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+              <div className="bg-gray-800 p-4 rounded border border-gray-700 w-full max-w-md">
+                <div className="flex justify-end">
+                  <Button variant="ghost" size="sm" onClick={closePassport} className="text-gray-400 hover:text-white">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Passport</div>
                 <div className="aspect-[3/4] bg-gray-700 rounded flex items-center justify-center">
                   <p className="text-gray-500 font-pixel">Passport Image Placeholder</p>
