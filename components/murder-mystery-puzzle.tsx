@@ -281,6 +281,30 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }
 
+  const goBackInDialogue = () => {
+    if (dialoguePath.length === 0) {
+      // If at root level, close dialogue
+      setShowDialogue(false)
+    } else {
+      // Go back one level in the dialogue tree
+      const newPath = [...dialoguePath]
+      newPath.pop()
+      setDialoguePath(newPath)
+
+      if (newPath.length === 0) {
+        // Back to root
+        if (currentCharacter === "policewoman") {
+          setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
+        } else if (currentCharacter === "mortician") {
+          setCurrentDialogueOptions(morticianDialogue)
+        }
+      } else {
+        // Back to previous level
+        setCurrentDialogueOptions(newPath[newPath.length - 1].followUp || [])
+      }
+    }
+  }
+
   const closeDialogue = () => {
     setShowDialogue(false)
     setCurrentCharacter(null)
@@ -405,6 +429,18 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                         {option.text}
                       </button>
                     ))}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="flex justify-between mt-4">
+                  {dialoguePath.length > 0 && (
+                    <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
+                      Back
+                    </Button>
+                  )}
+                  <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
+                    Close
+                  </Button>
                 </div>
               </div>
             </div>
