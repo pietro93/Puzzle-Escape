@@ -62,7 +62,7 @@ export default function MurderMysteryPuzzle({
     {
       id: "initial-greeting",
       text: "Start",
-      response: "Well, well, well. What do you want to know?",
+      response: "How can I help you?",
       followUp: [
         {
           id: "who-are-you",
@@ -394,7 +394,44 @@ export default function MurderMysteryPuzzle({
           )}
 
           {currentLocation === "police station" && (
-            <div className="flex flex-col items-center">{/* Removed the image and button */}</div>
+            <div className="flex flex-col items-center">
+              {showDialogue && (
+                <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
+                  <div className="grid gap-2 max-h-[200px] overflow-y-auto dialogue-options">
+                    {currentDialogueOptions
+                      .filter((option) => {
+                        // Conditionally render "Is there a police report?" option
+                        if (option.id === "police-report") {
+                          return showPoliceReportOption
+                        }
+                        return true
+                      })
+                      .map((option) => (
+                        <button
+                          key={option.id}
+                          onClick={() => handleDialogueOption(option)}
+                          className={cn(
+                            "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
+                            askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
+                          )}
+                        >
+                          {option.text}
+                        </button>
+                      ))}
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex justify-between mt-4">
+                    <Button variant="outline" size="sm" onClick={goBackInDialogue} className="font-pixel text-xs">
+                      {dialoguePath.length === 0 ? "Exit" : "Back"}
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={closeDialogue} className="font-pixel text-xs">
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {currentLocation === "morgue" && (
