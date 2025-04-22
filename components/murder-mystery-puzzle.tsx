@@ -275,13 +275,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 {
                   id: "anemia-question",
                   text: "Anemia?",
-                  response: "Low blood levels. Caused organ failure. A rather... pale affair.",
+                  response: "Low blood levels. Caused organ failure. He'd been probably suffering from it for a while.",
                   followUp: [],
                 },
                 {
                   id: "natural-question",
                   text: "Was it natural?",
-                  response: "As natural as having almost no blood gets. A slow fade, like a dying ember.",
+                  response: "As natural as having nearly no blood flowing in your veins.",
                   followUp: [],
                 },
               ],
@@ -318,7 +318,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "be-your-friend",
           text: "I'll be your friend!",
-          response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
+          response: "Hell no. Please leave me alone. I prefer my relationships one-sided.",
           condition: "friendship-condition",
           specialAction: () => setCanSeeBody(true),
           followUp: [],
@@ -327,7 +327,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           id: "check-victim-body",
           text: "Can I see the victim's body?",
           condition: "can-see-body",
-          response: "Fine. But be quick about it. I have... work to do.",
+          response: "Fine. But be quick about it. And be careful. Some of these bite.",
           followUp: [
             {
               id: "check-body",
@@ -345,7 +345,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           id: "check-body-again",
           text: "I'd like to check the body again.",
           condition: "has-checked-body",
-          response: "Fine. But be quick about it. I have... work to do.",
+          response: "Fine.  But be quick about it. And be careful. Some of these bite.",
           followUp: [
             {
               id: "check-body",
