@@ -265,14 +265,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   id: "anemia-question",
                   text: "Anemia?",
                   response: "Low blood levels. Caused organ failure. A rather... pale affair.",
-                  followUp: [
-                    {
-                      id: "what-no-blood",
-                      text: "What do you mean almost no blood?",
-                      response: "The body was almost completely void of blood when it was found.",
-                      followUp: [],
-                    },
-                  ],
+                  followUp: [],
                 },
                 {
                   id: "natural-question",
@@ -295,6 +288,73 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 },
               ],
             },
+            {
+              id: "can-see-body-initial",
+              text: "Can I see the victim's body?",
+              response: "No.",
+              condition: "body-not-accessible",
+              followUp: [],
+            },
+          ],
+        },
+        {
+          id: "like-job",
+          text: "Do you like your job?",
+          response: "I enjoy the company. They're not demanding conversationalists.",
+          condition: "body-not-accessible",
+          followUp: [
+            {
+              id: "alone-with-corpses",
+              text: "Aren't you alone with corpses all the time?",
+              response: "As I said. I enjoy the company. They don't complain.",
+              followUp: [
+                {
+                  id: "any-friends",
+                  text: "Don't you have any friends?",
+                  response: "In this line of work, the living are more trouble than they're worth.",
+                  specialAction: () => setAskedAboutFriends(true),
+                  followUp: [
+                    {
+                      id: "be-your-friend",
+                      text: "I'll be your friend!",
+                      response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
+                      condition: "asked-about-friends",
+                      followUp: [
+                        {
+                          id: "hobbies",
+                          text: "Do you have any hobbies?",
+                          response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
+                          specialAction: () => setAskedHobbies(true),
+                          followUp: [],
+                        },
+                        {
+                          id: "puzzle-games",
+                          text: "Do you like puzzle games?",
+                          response: "What am I, some kind of loser? I have a life, you know.",
+                          specialAction: () => setAskedPuzzleGames(true),
+                          followUp: [],
+                        },
+                        {
+                          id: "unconditional-friendship",
+                          text: "I am not leaving until you accept my unconditional love and friendship.",
+                          response:
+                            "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
+                          condition: "asked-both-hobby-questions",
+                          specialAction: () => setCanSeeBody(true),
+                          followUp: [],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "macabre-stuff",
+              text: "You must have seen some pretty macabre stuff in here.",
+              response: "Your face is a contender. But I've seen worse.",
+              followUp: [],
+            },
           ],
         },
         {
@@ -303,30 +363,29 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           response:
             "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
           condition: "can-see-body",
-          followUp: [],
+          followUp: [
+            {
+              id: "weird-signs",
+              text: "What are those weird signs on the body?",
+              response:
+                "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
+              followUp: [],
+            },
+            {
+              id: "check-autopsy-report",
+              text: "Can I check the autopsy report?",
+              response: "Oh for fu--I mean sure, whatever.",
+              followUp: [],
+              specialAction: () => {
+                setShowAutopsyReport(true)
+                setLastAction("viewed-autopsy")
+              },
+            },
+          ],
           specialAction: () => {
             setShowVictimBody(true)
             setLastAction("viewed-body")
           },
-        },
-        {
-          id: "check-autopsy-report",
-          text: "Can I check the autopsy report?",
-          response: "Oh for fu--I mean sure, whatever.",
-          condition: "can-see-body",
-          followUp: [],
-          specialAction: () => {
-            setShowAutopsyReport(true)
-            setLastAction("viewed-autopsy")
-          },
-        },
-        {
-          id: "weird-signs",
-          text: "What are those weird signs on the body?",
-          response:
-            "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
-          condition: "can-see-body",
-          followUp: [],
         },
         {
           id: "after-viewing-evidence",
