@@ -57,7 +57,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [isTyping, setIsTyping] = useState(false)
   const [typedText, setTypedText] = useState("")
   const [dialoguePath, setDialoguePath] = useState<DialogueOption[]>([])
-  const [askedToSeeBody, setAskedToSeeBody] = useState(false)
   const [askedAboutFriends, setAskedAboutFriends] = useState(false)
   const [canSeeBody, setCanSeeBody] = useState(false)
   const [hasCheckedBody, setHasCheckedBody] = useState(false)
@@ -264,17 +263,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           ],
         },
         {
-          id: "check-body-again",
-          text: "I'd like to check the body again.",
-          response: "Fine. But be quick about it. I have... work to do.",
-          condition: "has-checked-body",
-          specialAction: () => {
-            setShowVictimBody(true)
-            setCurrentBodyPart("head")
-          },
-          followUp: [],
-        },
-        {
           id: "tell-about-body",
           text: "What can you tell me about the body that was found by the lake?",
           response: "It's dead. Obviously.",
@@ -342,36 +330,39 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "puzzle-games",
               text: "Do you like puzzle games?",
-              response: "What am I, some kind of loser? I prefer the puzzle of mortality. Unsolvable, that one.",
+              response: "What am I, some kind of loser? I have a life, you know.",
               followUp: [],
             },
             {
               id: "not-leaving",
               text: "I am not leaving until you accept my friendship.",
               response: "You must be kidding me. Fine. I'll humor you.",
-              followUp: [
-                {
-                  id: "smile",
-                  text: "Yay! Best friends! Can I bead your dreadlocks?",
-                  response: "Enough! I show you the body, you get the HELL out of here, as fast as you can. okay?",
-                  followUp: [
-                    {
-                      id: "check-victim-body",
-                      text: "Let's check the victim's body alright.",
-                      response:
-                        "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
-                      specialAction: () => {
-                        setCanSeeBody(true)
-                        setShowVictimBody(true)
-                        setCurrentBodyPart("head")
-                      },
-                      followUp: [],
-                    },
-                  ],
-                },
-              ],
+              specialAction: () => setCanSeeBody(true),
+              followUp: [],
             },
           ],
+        },
+        {
+          id: "check-victim-body",
+          text: "Let's check the victim's body alright.",
+          response:
+            "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
+          condition: "can-see-body",
+          specialAction: () => {
+            setShowVictimBody(true)
+            setCurrentBodyPart("head")
+          },
+          followUp: [],
+        },
+        {
+          id: "check-body-again-root",
+          text: "I'd like to check the body again.",
+          condition: "has-checked-body",
+          specialAction: () => {
+            setShowVictimBody(true)
+            setCurrentBodyPart("head")
+          },
+          followUp: [],
         },
       ],
     },
@@ -648,15 +639,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       }
                       if (option.id === "can-see-passport-again") {
                         return showPassportAgainOption
-                      }
-                      if (option.id === "check-victim-body") {
-                        return showCheckVictimBodyOption
-                      }
-                      if (option.condition === "friendship-condition") {
-                        return askedAboutFriends
-                      }
-                      if (option.condition === "has-checked-body") {
-                        return hasCheckedBody
                       }
                       return true
                     })
