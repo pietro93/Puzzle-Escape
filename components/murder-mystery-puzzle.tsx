@@ -61,6 +61,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [askedAboutFriends, setAskedAboutFriends] = useState(false)
   const [canSeeBody, setCanSeeBody] = useState(false)
 
+  // First, let's add state for tracking which body part is being viewed
+  const [currentBodyPart, setCurrentBodyPart] = useState<string>("head")
+  const [hasCheckedBody, setHasCheckedBody] = useState<boolean>(false)
+
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -69,7 +73,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     {
       id: "initial-greeting",
       text: "Start",
-      response: "How can I help you?",
+      response: "Hey you! This is a restricted area. What are you doing here?",
       followUp: [
         {
           id: "who-are-you",
@@ -241,12 +245,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     },
   ]
 
-  // Mortician
+  // Modify the morticianDialogue to include an intro dialogue
   const morticianDialogue = [
     {
       id: "initial-greeting",
       text: "Start",
-      response: "...",
+      response: "Hmm? A visitor? How... unusual. What do you want?",
       followUp: [
         {
           id: "who-are-you",
@@ -260,6 +264,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               followUp: [],
             },
           ],
+        },
+        // Add the check body option to root level if they've seen it before
+        {
+          id: "check-body-again",
+          text: "I'd like to check the body again.",
+          response: "Fine. But be quick about it. I have... work to do.",
+          condition: "has-checked-body",
+          specialAction: () => setShowVictimBody(true),
+          followUp: [],
         },
         {
           id: "tell-about-body",
@@ -347,7 +360,11 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       text: "Let's check the victim's body alright.",
                       response:
                         "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
-                      specialAction: () => setCanSeeBody(true),
+                      specialAction: () => {
+                        setCanSeeBody(true)
+                        setShowVictimBody(true)
+                        setCurrentBodyPart("head")
+                      },
                       followUp: [],
                     },
                   ],
@@ -364,11 +381,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const closePassport = () => {
     setShowPassport(false)
   }
+
+  // Modify the closeVictimBody function to update state
+  const closeVictimBody = () => {
+    setShowVictimBody(false)
+    setHasCheckedBody(true)
+  }
+
   const closePoliceReport = () => {
     setShowPoliceReport(false)
   }
-  const closeVictimBody = () => {
-    setShowVictimBody(false)
+
+  // Add a function to change which body part is being viewed
+  const changeBodyPart = (part: string) => {
+    setCurrentBodyPart(part)
   }
 
   // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
@@ -446,6 +472,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     setCurrentResponse("")
     setTypedText("")
     setAskedQuestions(new Set()) // Reset asked questions
+    setDialoguePath([])
 
     // Set initial dialogue options based on character
     if (character === "policewoman") {
@@ -631,6 +658,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.condition === "can-see-body") {
                         return canSeeBody
                       }
+                      if (option.condition === "has-checked-body") {
+                        return hasCheckedBody
+                      }
                       return true
                     })
                     .map((option) => (
@@ -743,7 +773,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
-          {/* Victim Body */}
+          {/* Replace the Victim Body modal with this updated version */}
           {showVictimBody && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
               <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
@@ -758,43 +788,108 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   </Button>
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Victim's Body</div>
-                <div className="flex items-center justify-center">
+                <div className="flex flex-col items-center justify-center">
+                  {/* Show only the current body part */}
+                  <div className="mb-4">
+                    {currentBodyPart === "head" && (
+                      <Image
+                        src="/images/murder-mystery/victim-head.webp"
+                        alt="Victim's Head"
+                        width={200}
+                        height={200}
+                        className="pixelated"
+                      />
+                    )}
+                    {currentBodyPart === "leftHand" && (
+                      <Image
+                        src="/images/murder-mystery/victim-left-hand.webp"
+                        alt="Victim's Left Hand"
+                        width={200}
+                        height={200}
+                        className="pixelated"
+                      />
+                    )}
+                    {currentBodyPart === "rightHand" && (
+                      <Image
+                        src="/images/murder-mystery/victim-right-hand.webp"
+                        alt="Victim's Right Hand"
+                        width={200}
+                        height={200}
+                        className="pixelated"
+                      />
+                    )}
+                    {currentBodyPart === "leftLeg" && (
+                      <Image
+                        src="/images/murder-mystery/victim-left-leg.webp"
+                        alt="Victim's Left Leg"
+                        width={200}
+                        height={200}
+                        className="pixelated"
+                      />
+                    )}
+                    {currentBodyPart === "rightLeg" && (
+                      <Image
+                        src="/images/murder-mystery/victim-right-leg.webp"
+                        alt="Victim's Right Leg"
+                        width={200}
+                        height={200}
+                        className="pixelated"
+                      />
+                    )}
+                  </div>
+
+                  {/* Navigation buttons for body parts */}
                   <div className="grid grid-cols-2 gap-2">
-                    <Image
-                      src="/images/murder-mystery/victim-head.webp"
-                      alt="Victim's Head"
-                      width={128}
-                      height={128}
-                      className="pixelated"
-                    />
-                    <Image
-                      src="/images/murder-mystery/victim-left-hand.webp"
-                      alt="Victim's Left Hand"
-                      width={128}
-                      height={128}
-                      className="pixelated"
-                    />
-                    <Image
-                      src="/images/murder-mystery/victim-right-hand.webp"
-                      alt="Victim's Right Hand"
-                      width={128}
-                      height={128}
-                      className="pixelated"
-                    />
-                    <Image
-                      src="/images/murder-mystery/victim-left-leg.webp"
-                      alt="Victim's Left Leg"
-                      width={128}
-                      height={128}
-                      className="pixelated"
-                    />
-                    <Image
-                      src="/images/murder-mystery/victim-right-leg.webp"
-                      alt="Victim's Right Leg"
-                      width={128}
-                      height={128}
-                      className="pixelated"
-                    />
+                    {currentBodyPart !== "head" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changeBodyPart("head")}
+                        className="text-gray-300"
+                      >
+                        Check Head
+                      </Button>
+                    )}
+                    {currentBodyPart !== "leftHand" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changeBodyPart("leftHand")}
+                        className="text-gray-300"
+                      >
+                        Check Left Arm
+                      </Button>
+                    )}
+                    {currentBodyPart !== "rightHand" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changeBodyPart("rightHand")}
+                        className="text-gray-300"
+                      >
+                        Check Right Arm
+                      </Button>
+                    )}
+                    {currentBodyPart !== "leftLeg" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changeBodyPart("leftLeg")}
+                        className="text-gray-300"
+                      >
+                        Check Left Leg
+                      </Button>
+                    )}
+                    {currentBodyPart !== "rightLeg" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changeBodyPart("rightLeg")}
+                        className="text-gray-300"
+                      >
+                        Check Right Leg
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
