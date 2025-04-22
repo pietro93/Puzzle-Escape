@@ -1,5 +1,7 @@
 "use client"
 
+import { useCallback } from "react"
+
 import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -450,7 +452,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }
 
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
-  const startDialogue = (character: string) => {
+  const startDialogue = useCallback((character: string) => {
     setCurrentCharacter(character)
     setShowDialogue(true)
     setCurrentResponse("")
@@ -463,7 +465,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     } else if (character === "mortician") {
       setCurrentDialogueOptions(morticianDialogue[0].followUp || [])
     }
-  }
+  }, [])
 
   const handleDialogueOption = (option: DialogueOption) => {
     // Mark this question as asked
@@ -541,11 +543,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }, [isTyping, currentResponse])
 
   useEffect(() => {
-    // Automatically start dialogue when entering the police station
-    if (currentLocation === "police station" || currentLocation === "morgue") {
-      startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
+    // Automatically start dialogue when entering the police station or morgue
+    if (currentLocation === "police station") {
+      startDialogue("policewoman")
+    } else if (currentLocation === "morgue") {
+      startDialogue("mortician")
     }
-  }, [currentLocation])
+  }, [currentLocation, startDialogue])
 
   // // // // // // FUNCTION CALLS  // // // // // // // // // // // // // // // // // // // // // //
   const navigateTo = (location: string) => {
@@ -623,7 +627,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.id === "police-report") {
                         return showPoliceReportOption
                       }
-                      if (option.id === "check-victim-body") {
+                      if (option.id === "check-victim-body-root") {
                         return showCheckVictimBodyOption
                       }
                       return true
@@ -689,49 +693,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   <div className="flex justify-between">
                     <span className="text-gray-400">Visible trauma:</span>
                     <span className="text-gray-300">none observed</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Passport Button */}
-          {showPassport && (
-            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
-                <div className="flex justify-end">
-                  <Button variant="ghost" size="sm" onClick={closePassport} className="text-gray-400 hover:text-white">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="text-center text-gray-400 mb-2 font-pixel">ID</div>
-                <div className="flex items-center">
-                  <div className="w-24 h-24 relative mr-4 pixelated-container bg-black p-0">
-                    <Image
-                      src="/images/murder-mystery/victim_passport-headshot.webp"
-                      alt="Victim's Headshot"
-                      width={96}
-                      height={96}
-                      className="pixelated"
-                    />
-                  </div>
-                  <div className="mt-4 space-y-2 text-sm font-pixel">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Name:</span>
-                      <span className="text-gray-300">Declan Tremblay</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Date of Birth:</span>
-                      <span className="text-gray-300">1993/04/21</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Height:</span>
-                      <span className="text-gray-300">180 cm</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Place of birth:</span>
-                      <span className="text-gray-300">Toronto, ON</span>
-                    </div>
                   </div>
                 </div>
               </div>
