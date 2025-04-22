@@ -45,6 +45,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [showPoliceReport, setShowPoliceReport] = useState(false)
   const [showPassport, setShowPassport] = useState(false)
   const [showVictimBody, setShowVictimBody] = useState(false)
+  const [showAutopsyReport, setShowAutopsyReport] = useState(false)
 
   // Dialogue State
   const [showDialogue, setShowDialogue] = useState(false)
@@ -132,7 +133,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               condition: "exhausted-murder-questions",
               followUp: [
                 {
-                  id: "check-police-report",
+                  id: "can-see-report",
                   text: "Can I see the report?",
                   response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
                   followUp: [],
@@ -154,7 +155,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "victim-name",
               text: "Does he have a name?",
-              response: "I would assume so. I'm not his biographer, you know.",
+              response: "I would assume so. I didn't bother to ask him, though.",
               followUp: [],
             },
             {
@@ -264,82 +265,35 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   id: "anemia-question",
                   text: "Anemia?",
                   response: "Low blood levels. Caused organ failure. A rather... pale affair.",
-                  followUp: [],
+                  followUp: [
+                    {
+                      id: "what-no-blood",
+                      text: "What do you mean almost no blood?",
+                      response: "The body was almost completely void of blood when it was found.",
+                      followUp: [],
+                    },
+                  ],
                 },
                 {
                   id: "natural-question",
                   text: "Was it natural?",
                   response: "As natural as having almost no blood gets. A slow fade, like a dying ember.",
-                  followUp: [],
-                },
-              ],
-            },
-            {
-              id: "can-see-body-initial",
-              text: "Can I see the victim's body?",
-              response: "No.",
-              condition: "body-not-accessible",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "like-job",
-          text: "Do you like your job?",
-          response: "I enjoy the company. They're not demanding conversationalists.",
-          condition: "body-not-accessible",
-          followUp: [
-            {
-              id: "alone-with-corpses",
-              text: "Aren't you alone with corpses all the time?",
-              response: "As I said. I enjoy the company. They don't complain.",
-              followUp: [
-                {
-                  id: "any-friends",
-                  text: "Don't you have any friends?",
-                  response: "In this line of work, the living are more trouble than they're worth.",
-                  specialAction: () => setAskedAboutFriends(true),
                   followUp: [
                     {
-                      id: "be-your-friend",
-                      text: "I'll be your friend!",
-                      response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
-                      condition: "asked-about-friends",
-                      followUp: [
-                        {
-                          id: "hobbies",
-                          text: "Do you have any hobbies?",
-                          response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
-                          specialAction: () => setAskedHobbies(true),
-                          followUp: [],
-                        },
-                        {
-                          id: "puzzle-games",
-                          text: "Do you like puzzle games?",
-                          response: "What am I, some kind of loser? I have a life, you know.",
-                          specialAction: () => setAskedPuzzleGames(true),
-                          followUp: [],
-                        },
-                        {
-                          id: "unconditional-friendship",
-                          text: "I am not leaving until you accept my unconditional love and friendship.",
-                          response:
-                            "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
-                          condition: "asked-both-hobby-questions",
-                          specialAction: () => setCanSeeBody(true),
-                          followUp: [],
-                        },
-                      ],
+                      id: "what-no-blood",
+                      text: "What do you mean almost no blood?",
+                      response: "The body was almost completely void of blood when it was found.",
+                      followUp: [],
+                    },
+                    {
+                      id: "murder-question",
+                      text: "Are you sure this wasn't murder?",
+                      response: "Oh, I guess it could be. Not my concern.",
+                      followUp: [],
                     },
                   ],
                 },
               ],
-            },
-            {
-              id: "macabre-stuff",
-              text: "You must have seen some pretty macabre stuff in here.",
-              response: "Your face is a contender. But I've seen worse.",
-              followUp: [],
             },
           ],
         },
@@ -354,6 +308,25 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             setShowVictimBody(true)
             setLastAction("viewed-body")
           },
+        },
+        {
+          id: "check-autopsy-report",
+          text: "Can I check the autopsy report?",
+          response: "Oh for fu--I mean sure, whatever.",
+          condition: "can-see-body",
+          followUp: [],
+          specialAction: () => {
+            setShowAutopsyReport(true)
+            setLastAction("viewed-autopsy")
+          },
+        },
+        {
+          id: "weird-signs",
+          text: "What are those weird signs on the body?",
+          response:
+            "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
+          condition: "can-see-body",
+          followUp: [],
         },
         {
           id: "after-viewing-evidence",
@@ -388,6 +361,14 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     setHasCheckedBody(true)
     setLastAction("viewed-body")
     setCurrentResponse("Seen enough? The body isn't going anywhere. Neither am I, unfortunately.")
+    setTypedText("")
+    setIsTyping(true)
+  }
+
+  const closeAutopsyReport = () => {
+    setShowAutopsyReport(false)
+    setLastAction("viewed-autopsy")
+    setCurrentResponse("Satisfied? Now get out of here.")
     setTypedText("")
     setIsTyping(true)
   }
@@ -552,14 +533,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           setCurrentDialogueOptions(
             morticianDialogue[0].followUp.filter((opt) => {
               if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
-                return !canSeeBody // Hide these options once body can be seen
+                return !canSeeBody
               }
               if (opt.id === "check-victim-body") {
                 return canSeeBody
               }
               if (opt.id === "after-viewing-evidence") {
                 return (
-                  lastAction === "viewed-body" || lastAction === "viewed-passport" || lastAction === "viewed-report"
+                  lastAction === "viewed-body" ||
+                  lastAction === "viewed-passport" ||
+                  lastAction === "viewed-report" ||
+                  lastAction === "viewed-autopsy"
                 )
               }
               return true
@@ -569,22 +553,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       } else {
         // At a nested level
         const parentOption = dialoguePath[dialoguePath.length - 1]
-        if (parentOption.followUp) {
-          setCurrentDialogueOptions(
-            parentOption.followUp.filter((opt) => {
-              if (opt.id === "be-your-friend") {
-                return askedAboutFriends
-              }
-              if (opt.id === "unconditional-friendship") {
-                return askedHobbies && askedPuzzleGames
-              }
-              if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
-                return false // Hide hobby questions once both are asked
-              }
-              return true
-            }) || [],
-          )
-        }
+        setCurrentDialogueOptions(
+          parentOption.followUp?.filter((opt) => {
+            if (opt.id === "be-your-friend") {
+              return askedAboutFriends
+            }
+            if (opt.id === "unconditional-friendship") {
+              return askedHobbies && askedPuzzleGames
+            }
+            if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
+              return false
+            }
+            return true
+          }) || [],
+        )
       }
     }
   }
@@ -709,7 +691,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             return canSeeBody
           }
           if (opt.id === "after-viewing-evidence") {
-            return lastAction === "viewed-body" || lastAction === "viewed-passport" || lastAction === "viewed-report"
+            return (
+              lastAction === "viewed-body" ||
+              lastAction === "viewed-passport" ||
+              lastAction === "viewed-report" ||
+              lastAction === "viewed-autopsy"
+            )
           }
           return true
         }) || [],
@@ -801,22 +788,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.id === "can-see-passport-again") {
                         return showPassportAgainOption
                       }
-                      if (option.id === "be-your-friend") {
-                        return askedAboutFriends
-                      }
-                      if (option.id === "unconditional-friendship") {
-                        return askedHobbies && askedPuzzleGames
-                      }
-                      if (
-                        (option.id === "hobbies" || option.id === "puzzle-games") &&
-                        askedHobbies &&
-                        askedPuzzleGames
-                      ) {
-                        return false
-                      }
-                      if (option.id === "like-job" || option.id === "can-see-body-initial") {
-                        return !canSeeBody
-                      }
                       if (option.id === "check-victim-body") {
                         return canSeeBody
                       }
@@ -824,7 +795,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                         return (
                           lastAction === "viewed-body" ||
                           lastAction === "viewed-passport" ||
-                          lastAction === "viewed-report"
+                          lastAction === "viewed-report" ||
+                          lastAction === "viewed-autopsy"
                         )
                       }
                       return true
@@ -1106,6 +1078,79 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                         Check Right Leg
                       </Button>
                     )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Autopsy Report Button */}
+          {showAutopsyReport && (
+            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={closeAutopsyReport}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="text-center text-gray-400 mb-2 font-pixel">Autopsy Report</div>
+                <div className="mt-4 space-y-2 text-sm font-pixel">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Name:</span>
+                    <span className="text-gray-300">Declan Tremblay</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Age:</span>
+                    <span className="text-gray-300">Early 30s</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Eyes:</span>
+                    <span className="text-gray-300">Brown</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Hair:</span>
+                    <span className="text-gray-300">Brown</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Clinical summary:</span>
+                    <span className="text-gray-300">
+                      The decedent was found dead following a suspected organ failure attributed to complications from
+                      anemia. Prior to death, the individual had called emergency services reporting feeling unwell.
+                      Upon arrival, paramedics found the victim deceased. There was no history or evidence of trauma or
+                      injury. The clinical picture is consistent with severe anemia leading to multiorgan compromise and
+                      failure.
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">External examination:</span>
+                    <span className="text-gray-300">
+                      Height: 168 cm The body exhibited pallor with a slight reddish tint to the skin, consistent with
+                      anemia-related hypoxia and circulatory changes. Notably, ecchymoses were present on the arms and
+                      legs, indicative of minor subcutaneous bleeding or bruising without associated trauma. The body
+                      showed signs of reduced blood volume, with visibly low levels of blood noted at the scene. No
+                      external injuries, wounds, or signs of violence were observed.
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Toxicology:</span>
+                    <span className="text-gray-300">
+                      Comprehensive toxicological analysis revealed no evidence of poison, venom, or other toxic
+                      substances contributing to death.
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Summary:</span>
+                    <span className="text-gray-300">
+                      The external and clinical findings support death due to organ failure secondary to complications
+                      of anemia, with no indication of external trauma or intoxication. The presence of ecchymoses may
+                      reflect underlying hematologic fragility or coagulopathy associated with the anemia. This aligns
+                      with known fatal outcomes in severe anemia cases complicated by multiorgan dysfunction.
+                    </span>
                   </div>
                 </div>
               </div>
