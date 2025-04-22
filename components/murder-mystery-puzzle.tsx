@@ -357,7 +357,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   followUp: [
                     {
                       id: "check-victim-body",
-                      text: "Let's check the body.",
+                      text: "Let's check the victim's body alright.",
                       response:
                         "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
                       specialAction: () => {
