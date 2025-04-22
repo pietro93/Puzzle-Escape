@@ -24,8 +24,7 @@ export const puzzlesSet5: Puzzle[] = [
     question: "The Devil challenges you to a game of infernal chess.",
     description:
       "The chess pieces are made of bone and ember, and they move of their own accord. 'Find the winning move,' the Devil says with a smirk.",
-    imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level42-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
+    imageUrl: "/images/level42-placeholder.webp",
     solution: "queen to h7",
     category: "logic",
     hints: [
@@ -38,8 +37,7 @@ export const puzzlesSet5: Puzzle[] = [
     level: 43,
     question: "The Devil shows you a series of damned souls, each bearing a number.",
     description: "Five souls stand in a line, each with a number branded on their forehead: 8, 5, 4, 9, ?",
-    imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level43-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
+    imageUrl: "/images/level43-placeholder.webp",
     solution: "1",
     category: "pattern",
     hints: [
@@ -149,10 +147,5 @@ export const puzzlesSet5: Puzzle[] = [
     solution:
       "dark haunting pain|dark plaguing limb|dark stinging limb|dark unliving pain|grim burning pains|grim hiding ruins|grim killing limbs|grim haunting ruin|grim plaguing pain|grim stinging pain|grim unliving ruin|harsh burning limbs|harsh hiding pains|harsh killing ruins|harsh plaguing ruin|harsh stinging ruin|lurid burning vault|lurid hiding blight|lurid killing limb|rigid burning limb|rigid hiding vault|rigid killing pain|brutal burning scar|brutal hiding vault|brutal killing ruin|dark burning ruins|dark hiding limbs|dark killing pains",
     category: "riddle",
-    hints: [
-      "The elevator takes you to different realms of Buddhist hell.",
-      "Each floor has a specific name. Try to identify them from the descriptions.",
-      "The Sanskrit word for the Buddhist hell realms is the solution.",
-    ],
   },
 ]
