@@ -166,7 +166,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "how-identify-victim",
               text: "How did you identify the victim?",
-              response: "Oh, that was easy. He had his ID on him. Lucky for us, or we'd be calling John Doe.",
+              response: "Oh, that was easy. He had his ID on him. Lucky for us, or we'd be calling him John Doe.",
               followUp: [
                 {
                   id: "can-see-passport",
@@ -320,49 +320,44 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           text: "I'll be your friend!",
           response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
           condition: "friendship-condition",
+          specialAction: () => setCanSeeBody(true),
+          followUp: [],
+        },
+        {
+          id: "check-victim-body",
+          text: "Can I see the victim's body?",
+          condition: "can-see-body",
+          response: "Fine. But be quick about it. I have... work to do.",
           followUp: [
             {
-              id: "hobbies",
-              text: "Do you have any hobbies?",
-              response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
-              followUp: [],
-            },
-            {
-              id: "puzzle-games",
-              text: "Do you like puzzle games?",
-              response: "What am I, some kind of loser? I have a life, you know.",
-              followUp: [],
-            },
-            {
-              id: "not-leaving",
-              text: "I am not leaving until you accept my friendship.",
-              response: "You must be kidding me. Fine. I'll humor you.",
-              specialAction: () => setCanSeeBody(true),
-              followUp: [],
+              id: "check-body",
+              text: "Check the body",
+              response: "",
+              action: "showVictimBody",
+              specialAction: () => {
+                setShowVictimBody(true)
+                setCurrentBodyPart("head")
+              },
             },
           ],
         },
         {
-          id: "check-victim-body",
-          text: "Let's check the victim's body alright.",
-          response:
-            "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
-          condition: "can-see-body",
-          specialAction: () => {
-            setShowVictimBody(true)
-            setCurrentBodyPart("head")
-          },
-          followUp: [],
-        },
-        {
-          id: "check-body-again-root",
+          id: "check-body-again",
           text: "I'd like to check the body again.",
           condition: "has-checked-body",
-          specialAction: () => {
-            setShowVictimBody(true)
-            setCurrentBodyPart("head")
-          },
-          followUp: [],
+          response: "Fine. But be quick about it. I have... work to do.",
+          followUp: [
+            {
+              id: "check-body",
+              text: "Check the body",
+              response: "",
+              action: "showVictimBody",
+              specialAction: () => {
+                setShowVictimBody(true)
+                setCurrentBodyPart("head")
+              },
+            },
+          ],
         },
       ],
     },
@@ -385,7 +380,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     setCurrentBodyPart(part)
   }
 
-  // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
   const openBook = (book: any) => {
     setSelectedBook(book)
     setCurrentPage(0)
@@ -556,22 +550,16 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }, [currentLocation])
 
-  // // // // // // FUNCTION CALLS  // // // // // // // // // // // // // // // // // // // // // //
-  const navigateTo = (location: string) => {
-    setCurrentLocation(location)
-    setShowDialogue(false)
-
-    if (onLocationChange) {
-      onLocationChange(location)
-    }
-  }
-
   // Conditionally render "Is there a police report?" option
   const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
   const showWitnessesOption = askedQuestions.has("tell-about-murder")
   const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
   const showPassportAgainOption = askedQuestions.has("check-passport")
-  const showCheckVictimBodyOption = canSeeBody
+
+  const navigateTo = (location: string) => {
+    setCurrentLocation(location)
+    onLocationChange?.(location)
+  }
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
