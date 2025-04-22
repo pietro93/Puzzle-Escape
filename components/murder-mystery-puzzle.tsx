@@ -46,6 +46,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [showPassport, setShowPassport] = useState(false)
   const [showVictimBody, setShowVictimBody] = useState(false)
   const [showAutopsyReport, setShowAutopsyReport] = useState(false)
+  const [currentAutopsyPage, setCurrentAutopsyPage] = useState(0)
 
   // Dialogue State
   const [showDialogue, setShowDialogue] = useState(false)
@@ -780,6 +781,41 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPassportAgainOption = askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
 
+  // Autopsy Report Data
+  const autopsyReportPages = [
+    {
+      title: "Autopsy Report - Page 1",
+      content: `Name: Declan Tremblay
+Age: Early 30s
+Eyes: Brown
+Hair: Brown`,
+    },
+    {
+      title: "Autopsy Report - Page 2",
+      content: `Clinical summary: The decedent was found dead following a suspected organ failure attributed to complications from anemia. Prior to death, the individual had called emergency services reporting feeling unwell. Upon arrival, paramedics found the victim deceased. There was no history or evidence of trauma or injury. The clinical picture is consistent with severe anemia leading to multiorgan compromise and failure.`,
+    },
+    {
+      title: "Autopsy Report - Page 3",
+      content: `External examination: Height: 168 cm The body exhibited pallor with a slight reddish tint to the skin, consistent with anemia-related hypoxia and circulatory changes. Notably, ecchymoses were present on the arms and legs, indicative of minor subcutaneous bleeding or bruising without associated trauma. The body showed signs of reduced blood volume, with visibly low levels of blood noted at the scene. No external injuries, wounds, or signs of violence were observed.`,
+    },
+    {
+      title: "Autopsy Report - Page 4",
+      content: `Toxicology: Comprehensive toxicological analysis revealed no evidence of poison, venom, or other toxic substances contributing to death.`,
+    },
+    {
+      title: "Autopsy Report - Page 5",
+      content: `Summary: The external and clinical findings support death due to organ failure secondary to complications of anemia, with no indication of external trauma or intoxication. The presence of ecchymoses may reflect underlying hematologic fragility or coagulopathy associated with the anemia. This aligns with known fatal outcomes in severe anemia cases complicated by multiorgan dysfunction.`,
+    },
+  ]
+
+  const handleNextAutopsyPage = () => {
+    setCurrentAutopsyPage((prev) => (prev + 1) % autopsyReportPages.length)
+  }
+
+  const handlePrevAutopsyPage = () => {
+    setCurrentAutopsyPage((prev) => (prev - 1 + autopsyReportPages.length) % autopsyReportPages.length)
+  }
+
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
@@ -847,17 +883,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.id === "can-see-passport-again") {
                         return showPassportAgainOption
                       }
-                      if (option.id === "check-victim-body") {
-                        return canSeeBody
-                      }
-                      if (option.id === "after-viewing-evidence") {
-                        return (
-                          lastAction === "viewed-body" ||
-                          lastAction === "viewed-passport" ||
-                          lastAction === "viewed-report" ||
-                          lastAction === "viewed-autopsy"
-                        )
-                      }
                       return true
                     })
                     .map((option) => (
@@ -890,7 +915,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {showPoliceReport && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
               <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
-                <div className="flex justify-end">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="text-center text-gray-400 font-pixel">Police Report</div>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -900,7 +926,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="text-center text-gray-400 mb-2 font-pixel">Police Report</div>
                 <div className="mt-4 space-y-2 text-sm font-pixel">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Victim:</span>
@@ -931,12 +956,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {showPassport && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
               <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
-                <div className="flex justify-end">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="text-center text-gray-400 font-pixel">ID</div>
                   <Button variant="ghost" size="sm" onClick={closePassport} className="text-gray-400 hover:text-white">
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="text-center text-gray-400 mb-2 font-pixel">ID</div>
                 <div className="flex items-center">
                   <div className="w-24 h-24 relative mr-4 pixelated-container bg-black p-0">
                     <Image
@@ -1147,7 +1172,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           {showAutopsyReport && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
               <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
-                <div className="flex justify-end">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="text-center text-gray-400 font-pixel">
+                    Autopsy Report - Page {currentAutopsyPage + 1}
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -1157,60 +1185,28 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="text-center text-gray-400 mb-2 font-pixel">Autopsy Report</div>
                 <div className="mt-4 space-y-2 text-sm font-pixel">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Name:</span>
-                    <span className="text-gray-300">Declan Tremblay</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Age:</span>
-                    <span className="text-gray-300">Early 30s</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Eyes:</span>
-                    <span className="text-gray-300">Brown</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Hair:</span>
-                    <span className="text-gray-300">Brown</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Clinical summary:</span>
-                    <span className="text-gray-300">
-                      The decedent was found dead following a suspected organ failure attributed to complications from
-                      anemia. Prior to death, the individual had called emergency services reporting feeling unwell.
-                      Upon arrival, paramedics found the victim deceased. There was no history or evidence of trauma or
-                      injury. The clinical picture is consistent with severe anemia leading to multiorgan compromise and
-                      failure.
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">External examination:</span>
-                    <span className="text-gray-300">
-                      Height: 168 cm The body exhibited pallor with a slight reddish tint to the skin, consistent with
-                      anemia-related hypoxia and circulatory changes. Notably, ecchymoses were present on the arms and
-                      legs, indicative of minor subcutaneous bleeding or bruising without associated trauma. The body
-                      showed signs of reduced blood volume, with visibly low levels of blood noted at the scene. No
-                      external injuries, wounds, or signs of violence were observed.
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Toxicology:</span>
-                    <span className="text-gray-300">
-                      Comprehensive toxicological analysis revealed no evidence of poison, venom, or other toxic
-                      substances contributing to death.
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Summary:</span>
-                    <span className="text-gray-300">
-                      The external and clinical findings support death due to organ failure secondary to complications
-                      of anemia, with no indication of external trauma or intoxication. The presence of ecchymoses may
-                      reflect underlying hematologic fragility or coagulopathy associated with the anemia. This aligns
-                      with known fatal outcomes in severe anemia cases complicated by multiorgan dysfunction.
-                    </span>
-                  </div>
+                  <p>{autopsyReportPages[currentAutopsyPage].content}</p>
+                </div>
+                <div className="flex justify-between mt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePrevAutopsyPage}
+                    disabled={currentAutopsyPage === 0}
+                    className="text-gray-300"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleNextAutopsyPage}
+                    disabled={currentAutopsyPage === autopsyReportPages.length - 1}
+                    className="text-gray-300"
+                  >
+                    Next
+                  </Button>
                 </div>
               </div>
             </div>
