@@ -60,10 +60,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [askedToSeeBody, setAskedToSeeBody] = useState(false)
   const [askedAboutFriends, setAskedAboutFriends] = useState(false)
   const [canSeeBody, setCanSeeBody] = useState(false)
-
-  // First, let's add state for tracking which body part is being viewed
-  const [currentBodyPart, setCurrentBodyPart] = useState<string>("head")
-  const [hasCheckedBody, setHasCheckedBody] = useState<boolean>(false)
+  const [hasCheckedBody, setHasCheckedBody] = useState(false)
+  const [currentBodyPart, setCurrentBodyPart] = useState("head")
 
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
@@ -245,7 +243,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     },
   ]
 
-  // Modify the morticianDialogue to include an intro dialogue
+  // Mortician
   const morticianDialogue = [
     {
       id: "initial-greeting",
@@ -265,13 +263,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             },
           ],
         },
-        // Add the check body option to root level if they've seen it before
         {
           id: "check-body-again",
           text: "I'd like to check the body again.",
           response: "Fine. But be quick about it. I have... work to do.",
           condition: "has-checked-body",
-          specialAction: () => setShowVictimBody(true),
+          specialAction: () => {
+            setShowVictimBody(true)
+            setCurrentBodyPart("head")
+          },
           followUp: [],
         },
         {
@@ -381,18 +381,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const closePassport = () => {
     setShowPassport(false)
   }
-
-  // Modify the closeVictimBody function to update state
+  const closePoliceReport = () => {
+    setShowPoliceReport(false)
+  }
   const closeVictimBody = () => {
     setShowVictimBody(false)
     setHasCheckedBody(true)
   }
 
-  const closePoliceReport = () => {
-    setShowPoliceReport(false)
-  }
-
-  // Add a function to change which body part is being viewed
+  // Function to change which body part is being viewed
   const changeBodyPart = (part: string) => {
     setCurrentBodyPart(part)
   }
@@ -471,15 +468,19 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     setShowDialogue(true)
     setCurrentResponse("")
     setTypedText("")
-    setAskedQuestions(new Set()) // Reset asked questions
     setDialoguePath([])
 
-    // Set initial dialogue options based on character
+    // Set initial response based on character
     if (character === "policewoman") {
+      setCurrentResponse(policewomanDialogue[0].response)
       setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
     } else if (character === "mortician") {
+      setCurrentResponse(morticianDialogue[0].response)
       setCurrentDialogueOptions(morticianDialogue[0].followUp || [])
     }
+
+    // Start typing animation
+    setIsTyping(true)
   }
 
   const handleDialogueOption = (option: DialogueOption) => {
@@ -558,7 +559,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }, [isTyping, currentResponse])
 
   useEffect(() => {
-    // Automatically start dialogue when entering the police station
+    // Automatically start dialogue when entering the police station or morgue
     if (currentLocation === "police station" || currentLocation === "morgue") {
       startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
     }
@@ -651,12 +652,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.id === "check-victim-body") {
                         return showCheckVictimBodyOption
                       }
-
                       if (option.condition === "friendship-condition") {
                         return askedAboutFriends
-                      }
-                      if (option.condition === "can-see-body") {
-                        return canSeeBody
                       }
                       if (option.condition === "has-checked-body") {
                         return hasCheckedBody
@@ -773,7 +770,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
-          {/* Replace the Victim Body modal with this updated version */}
+          {/* Victim Body Modal - Modified to show one body part at a time */}
           {showVictimBody && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
               <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
