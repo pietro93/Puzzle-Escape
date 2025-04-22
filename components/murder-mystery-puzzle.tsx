@@ -166,7 +166,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "how-identify-victim",
               text: "How did you identify the victim?",
-              response: "Oh, that was easy. He had his ID on him. Lucky for us, or we'd be calling him John Doe.",
+              response: "Oh, that was easy. He had his ID on him. Lucky for us, or we'd be calling John Doe.",
               followUp: [
                 {
                   id: "can-see-passport",
@@ -275,13 +275,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 {
                   id: "anemia-question",
                   text: "Anemia?",
-                  response: "Low blood levels. Caused organ failure. He'd been probably suffering from it for a while.",
+                  response: "Low blood levels. Caused organ failure. A rather... pale affair.",
                   followUp: [],
                 },
                 {
                   id: "natural-question",
                   text: "Was it natural?",
-                  response: "As natural as having nearly no blood flowing in your veins.",
+                  response: "As natural as having almost no blood gets. A slow fade, like a dying ember.",
                   followUp: [],
                 },
               ],
@@ -318,46 +318,51 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "be-your-friend",
           text: "I'll be your friend!",
-          response: "Hell no. Please leave me alone. I prefer my relationships one-sided.",
-          condition: "friendship-condition",
-          specialAction: () => setCanSeeBody(true),
-          followUp: [],
+          response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
+          condition: "asked-about-friends",
+          followUp: [
+            {
+              id: "hobbies",
+              text: "Do you have any hobbies?",
+              response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
+              followUp: [],
+            },
+            {
+              id: "puzzle-games",
+              text: "Do you like puzzle games?",
+              response: "What am I, some kind of loser? I have a life, you know.",
+              followUp: [],
+            },
+            {
+              id: "not-leaving",
+              text: "I am not leaving until you accept my friendship.",
+              response: "You must be kidding me. Fine. I'll humor you.",
+              specialAction: () => setCanSeeBody(true),
+              followUp: [],
+            },
+          ],
         },
         {
           id: "check-victim-body",
-          text: "Can I see the victim's body?",
+          text: "Let's check the victim's body alright.",
+          response:
+            "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
           condition: "can-see-body",
-          response: "Fine. But be quick about it. And be careful. Some of these bite.",
-          followUp: [
-            {
-              id: "check-body",
-              text: "Check the body",
-              response: "",
-              action: "showVictimBody",
-              specialAction: () => {
-                setShowVictimBody(true)
-                setCurrentBodyPart("head")
-              },
-            },
-          ],
+          specialAction: () => {
+            setShowVictimBody(true)
+            setCurrentBodyPart("head")
+          },
+          followUp: [],
         },
         {
-          id: "check-body-again",
+          id: "check-body-again-root",
           text: "I'd like to check the body again.",
           condition: "has-checked-body",
-          response: "Fine.  But be quick about it. And be careful. Some of these bite.",
-          followUp: [
-            {
-              id: "check-body",
-              text: "Check the body",
-              response: "",
-              action: "showVictimBody",
-              specialAction: () => {
-                setShowVictimBody(true)
-                setCurrentBodyPart("head")
-              },
-            },
-          ],
+          specialAction: () => {
+            setShowVictimBody(true)
+            setCurrentBodyPart("head")
+          },
+          followUp: [],
         },
       ],
     },
@@ -380,6 +385,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     setCurrentBodyPart(part)
   }
 
+  // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
   const openBook = (book: any) => {
     setSelectedBook(book)
     setCurrentPage(0)
@@ -485,7 +491,33 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     // Update dialogue path for nested navigation
     if (option.followUp && option.followUp.length > 0) {
       setDialoguePath((prev) => [...prev, option])
-      setCurrentDialogueOptions(option.followUp)
+      setCurrentDialogueOptions(
+        option.followUp.filter((opt) => {
+          // Filter options based on conditions
+          if (opt.condition === "friendship-condition") {
+            return askedAboutFriends
+          }
+          if (opt.condition === "can-see-body") {
+            return canSeeBody
+          }
+          if (opt.condition === "has-checked-body") {
+            return hasCheckedBody
+          }
+          if (opt.condition === "asked-about-murder") {
+            return askedQuestions.has("tell-about-murder")
+          }
+          if (opt.condition === "exhausted-murder-questions") {
+            return askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
+          }
+          if (opt.condition === "seen-police-report") {
+            return askedQuestions.has("check-police-report")
+          }
+          if (opt.condition === "seen-passport") {
+            return askedQuestions.has("check-passport")
+          }
+          return true
+        }),
+      )
     }
   }
 
@@ -550,16 +582,22 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }, [currentLocation])
 
+  // // // // // // FUNCTION CALLS  // // // // // // // // // // // // // // // // // // // // // //
+  const navigateTo = (location: string) => {
+    setCurrentLocation(location)
+    setShowDialogue(false)
+
+    if (onLocationChange) {
+      onLocationChange(location)
+    }
+  }
+
   // Conditionally render "Is there a police report?" option
   const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
   const showWitnessesOption = askedQuestions.has("tell-about-murder")
   const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
   const showPassportAgainOption = askedQuestions.has("check-passport")
-
-  const navigateTo = (location: string) => {
-    setCurrentLocation(location)
-    onLocationChange?.(location)
-  }
+  const showCheckVictimBodyOption = canSeeBody
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
@@ -615,7 +653,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 <div className="grid gap-2 max-h-[200px] overflow-y-auto">
                   {currentDialogueOptions
                     .filter((option) => {
-                      // Conditionally render "Is there a police report?" option
+                      // Filter based on conditions
                       if (option.id === "police-report") {
                         return showPoliceReportOption
                       }
@@ -627,6 +665,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       }
                       if (option.id === "can-see-passport-again") {
                         return showPassportAgainOption
+                      }
+                      if (option.id === "be-your-friend") {
+                        return askedAboutFriends
+                      }
+                      if (option.id === "check-victim-body") {
+                        return canSeeBody
+                      }
+                      if (option.id === "check-body-again-root") {
+                        return hasCheckedBody
                       }
                       return true
                     })
@@ -760,7 +807,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   <div className="mb-4">
                     {currentBodyPart === "head" && (
                       <Image
-                        src="/images/murder-mystery/victim-head.webp"
+                        src={`/images/murder-mystery/victim-${
+                          currentBodyPart === "head"
+                            ? "head"
+                            : currentBodyPart === "leftHand"
+                              ? "left-hand"
+                              : currentBodyPart === "rightHand"
+                                ? "right-hand"
+                                : currentBodyPart === "leftLeg"
+                                  ? "left-leg"
+                                  : "right-leg"
+                        }.webp`}
                         alt="Victim's Head"
                         width={200}
                         height={200}
@@ -769,7 +826,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     )}
                     {currentBodyPart === "leftHand" && (
                       <Image
-                        src="/images/murder-mystery/victim-left-hand.webp"
+                        src={`/images/murder-mystery/victim-${
+                          currentBodyPart === "head"
+                            ? "head"
+                            : currentBodyPart === "leftHand"
+                              ? "left-hand"
+                              : currentBodyPart === "rightHand"
+                                ? "right-hand"
+                                : currentBodyPart === "leftLeg"
+                                  ? "left-leg"
+                                  : "right-leg"
+                        }.webp`}
                         alt="Victim's Left Hand"
                         width={200}
                         height={200}
@@ -778,7 +845,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     )}
                     {currentBodyPart === "rightHand" && (
                       <Image
-                        src="/images/murder-mystery/victim-right-hand.webp"
+                        src={`/images/murder-mystery/victim-${
+                          currentBodyPart === "head"
+                            ? "head"
+                            : currentBodyPart === "leftHand"
+                              ? "left-hand"
+                              : currentBodyPart === "rightHand"
+                                ? "right-hand"
+                                : currentBodyPart === "leftLeg"
+                                  ? "left-leg"
+                                  : "right-leg"
+                        }.webp`}
                         alt="Victim's Right Hand"
                         width={200}
                         height={200}
@@ -787,7 +864,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     )}
                     {currentBodyPart === "leftLeg" && (
                       <Image
-                        src="/images/murder-mystery/victim-left-leg.webp"
+                        src={`/images/murder-mystery/victim-${
+                          currentBodyPart === "head"
+                            ? "head"
+                            : currentBodyPart === "leftHand"
+                              ? "left-hand"
+                              : currentBodyPart === "rightHand"
+                                ? "right-hand"
+                                : currentBodyPart === "leftLeg"
+                                  ? "left-leg"
+                                  : "right-leg"
+                        }.webp`}
                         alt="Victim's Left Leg"
                         width={200}
                         height={200}
@@ -796,7 +883,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     )}
                     {currentBodyPart === "rightLeg" && (
                       <Image
-                        src="/images/murder-mystery/victim-right-leg.webp"
+                        src={`/images/murder-mystery/victim-${
+                          currentBodyPart === "head"
+                            ? "head"
+                            : currentBodyPart === "leftHand"
+                              ? "left-hand"
+                              : currentBodyPart === "rightHand"
+                                ? "right-hand"
+                                : currentBodyPart === "leftLeg"
+                                  ? "left-leg"
+                                  : "right-leg"
+                        }.webp`}
                         alt="Victim's Right Leg"
                         width={200}
                         height={200}
