@@ -288,13 +288,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           ],
         },
         {
-          id: "see-body",
-          text: "Can I see the body?",
-          response: "No.",
-          specialAction: () => setAskedToSeeBody(true),
-          followUp: [],
-        },
-        {
           id: "like-job",
           text: "Do you like your job?",
           response: "I enjoy the company. They're not demanding conversationalists.",
@@ -348,21 +341,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   id: "smile",
                   text: "Yay! Best friends! Can I bead your dreadlocks?",
                   response: "Enough! I show you the body, you get the HELL out of here, as fast as you can. okay?",
-                  specialAction: () => setCanSeeBody(true),
-                  followUp: [],
+                  followUp: [
+                    {
+                      id: "check-victim-body",
+                      text: "Let's check the victim's body alright.",
+                      response:
+                        "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
+                      specialAction: () => setCanSeeBody(true),
+                      followUp: [],
+                    },
+                  ],
                 },
               ],
             },
           ],
-        },
-        {
-          id: "check-victim-body",
-          text: "Let's check the victim's body alright.",
-          response:
-            "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
-          condition: "can-see-body",
-          specialAction: () => setShowVictimBody(true),
-          followUp: [],
         },
       ],
     },
@@ -458,12 +450,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     // Set initial dialogue options based on character
     if (character === "policewoman") {
       setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
-      setCurrentResponse(policewomanDialogue[0].response)
-      setIsTyping(true)
     } else if (character === "mortician") {
       setCurrentDialogueOptions(morticianDialogue[0].followUp || [])
-      setCurrentResponse(morticianDialogue[0].response)
-      setIsTyping(true)
     }
   }
 
