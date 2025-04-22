@@ -50,6 +50,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // BODY
   const [showVictimPart, setShowVictimPart] = useState<"head" | "leftArm" | "rightArm" | "leftLeg" | "rightLeg">("head")
   const [canSeeBody, setCanSeeBody] = useState(false)
+  const [showVictimBody, setShowVictimBody] = useState(false) // Added this line
 
   // Dialogue State
   const [showDialogue, setShowDialogue] = useState(false)
@@ -381,6 +382,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }
   const closePoliceReport = () => {
     setShowPoliceReport(false)
+  }
+  const closeVictimBody = () => {
+    setShowVictimBody(false)
   }
 
   // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
