@@ -65,6 +65,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Add these state variables near the other state declarations
   const [askedHobbies, setAskedHobbies] = useState(false)
   const [askedPuzzleGames, setAskedPuzzleGames] = useState(false)
+  const [lastAction, setLastAction] = useState<string | null>(null)
 
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
@@ -131,19 +132,14 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               condition: "exhausted-murder-questions",
               followUp: [
                 {
-                  id: "can-see-report",
+                  id: "check-police-report",
                   text: "Can I see the report?",
-                  response:
-                    "Sure, knock yourself out. It's just a formality anyway. Don't expect any juicy details, though.",
-                  followUp: [
-                    {
-                      id: "check-police-report",
-                      text: "Check police report",
-                      response: "",
-                      action: "showPoliceReport",
-                      specialAction: () => setShowPoliceReport(true),
-                    },
-                  ],
+                  response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
+                  followUp: [],
+                  specialAction: () => {
+                    setShowPoliceReport(true)
+                    setLastAction("viewed-report")
+                  },
                 },
               ],
             },
@@ -158,7 +154,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             {
               id: "victim-name",
               text: "Does he have a name?",
-              response: "I would assume so. I didn't bother to ask him, though.",
+              response: "I would assume so. I'm not his biographer, you know.",
               followUp: [],
             },
             {
@@ -176,15 +172,11 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   id: "can-see-passport",
                   text: "Can I see it?",
                   response: "Fine, but only if you promise to leave me alone. I'm on my break, you know.",
-                  followUp: [
-                    {
-                      id: "check-passport",
-                      text: "Check victim's ID",
-                      response: "",
-                      action: "showPassport",
-                      specialAction: () => setShowPassport(true),
-                    },
-                  ],
+                  followUp: [],
+                  specialAction: () => {
+                    setShowPassport(true)
+                    setLastAction("viewed-passport")
+                  },
                 },
               ],
             },
@@ -217,30 +209,22 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           text: "Can I see that police report again?",
           response: "Here you go, but don't say I didn't warn you. It's about as thrilling as watching paint dry.",
           condition: "seen-police-report",
-          followUp: [
-            {
-              id: "check-police-report",
-              text: "Check police report",
-              response: "",
-              action: "showPoliceReport",
-              specialAction: () => setShowPoliceReport(true),
-            },
-          ],
+          followUp: [],
+          specialAction: () => {
+            setShowPoliceReport(true)
+            setLastAction("viewed-report")
+          },
         },
         {
           id: "can-see-passport-again",
           text: "Can I see that ID again?",
           response: "Here you go, but don't say I didn't warn you. It's not like it's gonna change anything.",
           condition: "seen-passport",
-          followUp: [
-            {
-              id: "check-passport",
-              text: "Check victim's ID",
-              response: "",
-              action: "showPassport",
-              specialAction: () => setShowPassport(true),
-            },
-          ],
+          followUp: [],
+          specialAction: () => {
+            setShowPassport(true)
+            setLastAction("viewed-passport")
+          },
         },
       ],
     },
@@ -290,18 +274,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                 },
               ],
             },
+            {
+              id: "can-see-body-initial",
+              text: "Can I see the victim's body?",
+              response: "No.",
+              condition: "body-not-accessible",
+              followUp: [],
+            },
           ],
-        },
-        {
-          id: "can-see-body-initial",
-          text: "Can I see the victim's body?",
-          response: "No.",
-          followUp: [],
         },
         {
           id: "like-job",
           text: "Do you like your job?",
           response: "I enjoy the company. They're not demanding conversationalists.",
+          condition: "body-not-accessible",
           followUp: [
             {
               id: "alone-with-corpses",
@@ -313,7 +299,39 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                   text: "Don't you have any friends?",
                   response: "In this line of work, the living are more trouble than they're worth.",
                   specialAction: () => setAskedAboutFriends(true),
-                  followUp: [],
+                  followUp: [
+                    {
+                      id: "be-your-friend",
+                      text: "I'll be your friend!",
+                      response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
+                      condition: "asked-about-friends",
+                      followUp: [
+                        {
+                          id: "hobbies",
+                          text: "Do you have any hobbies?",
+                          response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
+                          specialAction: () => setAskedHobbies(true),
+                          followUp: [],
+                        },
+                        {
+                          id: "puzzle-games",
+                          text: "Do you like puzzle games?",
+                          response: "What am I, some kind of loser? I have a life, you know.",
+                          specialAction: () => setAskedPuzzleGames(true),
+                          followUp: [],
+                        },
+                        {
+                          id: "unconditional-friendship",
+                          text: "I am not leaving until you accept my unconditional love and friendship.",
+                          response:
+                            "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
+                          condition: "asked-both-hobby-questions",
+                          specialAction: () => setCanSeeBody(true),
+                          followUp: [],
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },
@@ -326,53 +344,22 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           ],
         },
         {
-          id: "be-your-friend",
-          text: "I'll be your friend!",
-          response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
-          condition: "asked-about-friends",
-          followUp: [
-            {
-              id: "hobbies",
-              text: "Do you have any hobbies?",
-              response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
-              followUp: [],
-            },
-            {
-              id: "puzzle-games",
-              text: "Do you like puzzle games?",
-              response: "What am I, some kind of loser? I have a life, you know.",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "unconditional-friendship",
-          text: "I am not leaving until you accept my unconditional love and friendship.",
-          response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
-          condition: "asked-both-hobby-questions",
-          specialAction: () => setCanSeeBody(true),
-          followUp: [],
-        },
-        {
           id: "check-victim-body",
-          text: "Let's check the victim's body alright.",
+          text: "Let's check the victim's body.",
           response:
             "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
           condition: "can-see-body",
+          followUp: [],
           specialAction: () => {
             setShowVictimBody(true)
-            setCurrentBodyPart("head")
+            setLastAction("viewed-body")
           },
-          followUp: [],
         },
         {
-          id: "check-body-again-root",
-          text: "I'd like to check the body again.",
-          condition: "has-checked-body",
-          specialAction: () => {
-            setShowVictimBody(true)
-            setCurrentBodyPart("head")
-          },
+          id: "after-viewing-evidence",
+          text: "...",
+          response: "Are you done staring? I don't have all day for this nonsense.",
+          condition: "after-viewing-evidence",
           followUp: [],
         },
       ],
@@ -382,13 +369,27 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
   const closePassport = () => {
     setShowPassport(false)
+    setLastAction("viewed-passport")
+    setCurrentResponse("Seen enough? I've got work to do, you know.")
+    setTypedText("")
+    setIsTyping(true)
   }
+
   const closePoliceReport = () => {
     setShowPoliceReport(false)
+    setLastAction("viewed-report")
+    setCurrentResponse("Told you it wasn't anything special. Just a routine report.")
+    setTypedText("")
+    setIsTyping(true)
   }
+
   const closeVictimBody = () => {
     setShowVictimBody(false)
     setHasCheckedBody(true)
+    setLastAction("viewed-body")
+    setCurrentResponse("Seen enough? The body isn't going anywhere. Neither am I, unfortunately.")
+    setTypedText("")
+    setIsTyping(true)
   }
 
   // Function to change which body part is being viewed
@@ -471,6 +472,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     setCurrentResponse("")
     setTypedText("")
     setDialoguePath([])
+    setLastAction(null)
 
     // Set initial response based on character
     if (character === "policewoman") {
@@ -489,6 +491,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const handleDialogueOption = (option: DialogueOption) => {
     // Mark this question as asked
     setAskedQuestions((prev) => new Set([...prev, option.id]))
+    setLastAction(null)
 
     // Set the response and start typing animation
     setCurrentResponse(option.response)
@@ -514,30 +517,75 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       setCurrentDialogueOptions(
         option.followUp.filter((opt) => {
           // Filter options based on conditions
-          if (opt.condition === "friendship-condition") {
+          if (opt.condition === "asked-about-friends") {
             return askedAboutFriends
           }
-          if (opt.condition === "can-see-body") {
-            return canSeeBody
-          }
-          if (opt.condition === "has-checked-body") {
-            return hasCheckedBody
-          }
-          if (opt.condition === "asked-about-murder") {
-            return askedQuestions.has("tell-about-murder")
-          }
-          if (opt.condition === "exhausted-murder-questions") {
-            return askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
-          }
-          if (opt.condition === "seen-police-report") {
-            return askedQuestions.has("check-police-report")
-          }
-          if (opt.condition === "seen-passport") {
-            return askedQuestions.has("check-passport")
+          if (opt.condition === "asked-both-hobby-questions") {
+            return askedHobbies && askedPuzzleGames
           }
           return true
         }),
       )
+    } else {
+      // If there are no follow-ups, update the dialogue options based on the current level
+      if (dialoguePath.length === 0) {
+        // At root level
+        if (currentCharacter === "policewoman") {
+          setCurrentDialogueOptions(
+            policewomanDialogue[0].followUp.filter((opt) => {
+              if (opt.id === "police-report") {
+                return showPoliceReportOption
+              }
+              if (opt.id === "were-there-any-witnesses") {
+                return showWitnessesOption
+              }
+              if (opt.id === "can-see-report-again") {
+                return showPoliceReportAgainOption
+              }
+              if (opt.id === "can-see-passport-again") {
+                return showPassportAgainOption
+              }
+              return true
+            }) || [],
+          )
+        } else if (currentCharacter === "mortician") {
+          setCurrentDialogueOptions(
+            morticianDialogue[0].followUp.filter((opt) => {
+              if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
+                return !canSeeBody // Hide these options once body can be seen
+              }
+              if (opt.id === "check-victim-body") {
+                return canSeeBody
+              }
+              if (opt.id === "after-viewing-evidence") {
+                return (
+                  lastAction === "viewed-body" || lastAction === "viewed-passport" || lastAction === "viewed-report"
+                )
+              }
+              return true
+            }) || [],
+          )
+        }
+      } else {
+        // At a nested level
+        const parentOption = dialoguePath[dialoguePath.length - 1]
+        if (parentOption.followUp) {
+          setCurrentDialogueOptions(
+            parentOption.followUp.filter((opt) => {
+              if (opt.id === "be-your-friend") {
+                return askedAboutFriends
+              }
+              if (opt.id === "unconditional-friendship") {
+                return askedHobbies && askedPuzzleGames
+              }
+              if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
+                return false // Hide hobby questions once both are asked
+              }
+              return true
+            }) || [],
+          )
+        }
+      }
     }
   }
 
@@ -550,18 +598,65 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       const newPath = [...dialoguePath]
       newPath.pop()
       setDialoguePath(newPath)
+      setLastAction(null)
 
       if (newPath.length === 0) {
         // Back to root
         if (currentCharacter === "policewoman") {
-          setCurrentDialogueOptions(policewomanDialogue[0].followUp || [])
+          setCurrentDialogueOptions(
+            policewomanDialogue[0].followUp.filter((opt) => {
+              if (opt.id === "police-report") {
+                return showPoliceReportOption
+              }
+              if (opt.id === "were-there-any-witnesses") {
+                return showWitnessesOption
+              }
+              if (opt.id === "can-see-report-again") {
+                return showPoliceReportAgainOption
+              }
+              if (opt.id === "can-see-passport-again") {
+                return showPassportAgainOption
+              }
+              return true
+            }) || [],
+          )
+          setCurrentResponse(policewomanDialogue[0].response)
         } else if (currentCharacter === "mortician") {
-          setCurrentDialogueOptions(morticianDialogue[0].followUp || [])
+          setCurrentDialogueOptions(
+            morticianDialogue[0].followUp.filter((opt) => {
+              if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
+                return !canSeeBody
+              }
+              if (opt.id === "check-victim-body") {
+                return canSeeBody
+              }
+              return true
+            }) || [],
+          )
+          setCurrentResponse(morticianDialogue[0].response)
         }
       } else {
         // Back to previous level
-        setCurrentDialogueOptions(newPath[newPath.length - 1].followUp || [])
+        const parentOption = newPath[newPath.length - 1]
+        setCurrentDialogueOptions(
+          parentOption.followUp?.filter((opt) => {
+            if (opt.id === "be-your-friend") {
+              return askedAboutFriends
+            }
+            if (opt.id === "unconditional-friendship") {
+              return askedHobbies && askedPuzzleGames
+            }
+            if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
+              return false
+            }
+            return true
+          }) || [],
+        )
+        setCurrentResponse(parentOption.response)
       }
+
+      setTypedText("")
+      setIsTyping(true)
     }
   }
 
@@ -601,6 +696,26 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
     }
   }, [currentLocation])
+
+  // Update dialogue options when canSeeBody changes
+  useEffect(() => {
+    if (currentCharacter === "mortician" && dialoguePath.length === 0) {
+      setCurrentDialogueOptions(
+        morticianDialogue[0].followUp.filter((opt) => {
+          if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
+            return !canSeeBody
+          }
+          if (opt.id === "check-victim-body") {
+            return canSeeBody
+          }
+          if (opt.id === "after-viewing-evidence") {
+            return lastAction === "viewed-body" || lastAction === "viewed-passport" || lastAction === "viewed-report"
+          }
+          return true
+        }) || [],
+      )
+    }
+  }, [canSeeBody, lastAction, currentCharacter, dialoguePath])
 
   // // // // // // FUNCTION CALLS  // // // // // // // // // // // // // // // // // // // // // //
   const navigateTo = (location: string) => {
@@ -664,7 +779,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
                 {/* Speech Bubble */}
                 <div className="mt-2 relative bg-gray-900 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
-                  <p className="font-pixel text-gray-200 text-sm">{typedText}</p>
+                  <p className="font-pixel text-gray-200 text-sm">{typedText || "..."}</p>
                 </div>
               </div>
 
@@ -692,14 +807,25 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.id === "unconditional-friendship") {
                         return askedHobbies && askedPuzzleGames
                       }
-                      if (option.id === "hobbies" || option.id === "puzzle-games") {
-                        return !(askedHobbies && askedPuzzleGames)
+                      if (
+                        (option.id === "hobbies" || option.id === "puzzle-games") &&
+                        askedHobbies &&
+                        askedPuzzleGames
+                      ) {
+                        return false
+                      }
+                      if (option.id === "like-job" || option.id === "can-see-body-initial") {
+                        return !canSeeBody
                       }
                       if (option.id === "check-victim-body") {
                         return canSeeBody
                       }
-                      if (option.id === "check-body-again-root") {
-                        return hasCheckedBody
+                      if (option.id === "after-viewing-evidence") {
+                        return (
+                          lastAction === "viewed-body" ||
+                          lastAction === "viewed-passport" ||
+                          lastAction === "viewed-report"
+                        )
                       }
                       return true
                     })
