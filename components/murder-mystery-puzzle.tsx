@@ -44,10 +44,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Police Data State
   const [showPoliceReport, setShowPoliceReport] = useState(false)
   const [showPassport, setShowPassport] = useState(false)
-  const [showVictimBody, setShowVictimBody] = useState(false)
-  const [currentBodyPart, setCurrentBodyPart] = useState<"head" | "leftArm" | "rightArm" | "leftLeg" | "rightLeg">(
-    "head",
-  )
+
+  // BODY
+  const [showVictimPart, setShowVictimPart] = useState<"head" | "leftArm" | "rightArm" | "leftLeg" | "rightLeg">("head")
+  const [canSeeBody, setCanSeeBody] = useState(false)
 
   // Dialogue State
   const [showDialogue, setShowDialogue] = useState(false)
@@ -60,9 +60,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [isTyping, setIsTyping] = useState(false)
   const [typedText, setTypedText] = useState("")
   const [dialoguePath, setDialoguePath] = useState<DialogueOption[]>([])
-  const [askedToSeeBody, setAskedToSeeBody] = useState(false)
   const [askedAboutFriends, setAskedAboutFriends] = useState(false)
-  const [canSeeBody, setCanSeeBody] = useState(false)
+  const [activeCharacter, setActiveCharacter] = useState<string | null>(null)
 
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
@@ -72,7 +71,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     {
       id: "initial-greeting",
       text: "Start",
-      response: "How can I help you?",
+      response: "Name's Mallory, I can help you with the bodies.",
       followUp: [
         {
           id: "who-are-you",
@@ -126,7 +125,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               id: "police-report",
               text: "Is there a police report?",
               response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes. Yawn.",
-              condition: "exhausted-murder-questions",
               followUp: [
                 {
                   id: "can-see-report",
@@ -192,7 +190,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           id: "were-there-any-witnesses",
           text: "Where there any witnesses?",
           response: "Nope. rescue team arrived on site and found the body",
-          condition: "asked-about-murder",
           followUp: [
             {
               id: "who-called-rescue",
@@ -249,7 +246,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     {
       id: "initial-greeting",
       text: "Start",
-      response: "Another one bites the dust. What do you want?",
+      response: "There are bodies to see.",
       followUp: [
         {
           id: "who-are-you",
@@ -267,12 +264,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "tell-about-body",
           text: "What can you tell me about the body that was found by the lake?",
-          response: "It's dead. Obviously.",
+          response: "Dead as a doornail. More's the pity.",
           followUp: [
             {
               id: "cause-of-death",
               text: "What was the cause of death?",
-              response: "Anemia.",
+              response: "Anemia. Blood was almost non existant.",
               followUp: [
                 {
                   id: "anemia-question",
@@ -359,9 +356,22 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             },
           ],
         },
+        {
+          id: "check-victim-body-root",
+          text: "Check the victim's body.",
+          condition: "can-see-body",
+          response: "Here's the body. Don't touch anything.",
+          followUp: [],
+        },
       ],
     },
   ]
+
+  // // // // // // BODY CHECK OPTIONS // // // // // // // // // // // // // // // // // // // // // //
+  const handleCheckBody = () => {
+    setShowDialogue(false)
+    setActiveCharacter(null)
+  }
 
   // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
   const closePassport = () => {
@@ -369,9 +379,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }
   const closePoliceReport = () => {
     setShowPoliceReport(false)
-  }
-  const closeVictimBody = () => {
-    setShowVictimBody(false)
   }
 
   // // // // // // BOOK MODAL  // // // // // // // // // // // // // // // // // // // // // //
@@ -550,11 +557,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }
 
+  const handlePartClick = (bodyPart: "head" | "leftArm" | "rightArm" | "leftLeg" | "rightLeg") => {
+    setShowVictimPart(bodyPart)
+  }
+
   // Conditionally render "Is there a police report?" option
   const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
-  const showWitnessesOption = askedQuestions.has("tell-about-murder")
-  const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
-  const showPassportAgainOption = askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
 
   return (
@@ -615,14 +623,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                       if (option.id === "police-report") {
                         return showPoliceReportOption
                       }
-                      if (option.id === "were-there-any-witnesses") {
-                        return showWitnessesOption
-                      }
-                      if (option.id === "can-see-report-again") {
-                        return showPoliceReportAgainOption
-                      }
-                      if (option.id === "can-see-passport-again") {
-                        return showPassportAgainOption
+                      if (option.id === "check-victim-body") {
+                        return showCheckVictimBodyOption
                       }
                       return true
                     })
@@ -681,8 +683,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
                     <span className="text-gray-300">Brown, short, wavy</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Cause of death:</span>
-                    <span className="text-gray-300">suspected stroke, organ failure</span>
+                    <span className="text-gray-400">Suspected Cause of death:</span>
+                    <span className="text-gray-300">Anemia leading to organ failure</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Visible trauma:</span>
@@ -736,115 +738,75 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
-          {/* Victim Body */}
-          {showVictimBody && (
+          {/* Victim Body Options */}
+          {canSeeBody && (
             <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
-                <div className="flex justify-end">
+              <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md flex flex-col items-center">
+                <div className="flex justify-end self-end w-full">
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={closeVictimBody}
+                    onClick={handleCheckBody}
                     className="text-gray-400 hover:text-white"
                   >
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="text-center text-gray-400 mb-2 font-pixel">Victim's Body</div>
-                <div className="flex items-center justify-center">
-                  {currentBodyPart === "head" && (
-                    <Image
-                      src="/images/murder-mystery/victim-head.webp"
-                      alt="Victim's Head"
-                      width={256}
-                      height={256}
-                      className="pixelated"
-                    />
-                  )}
-                  {currentBodyPart === "leftArm" && (
-                    <Image
-                      src="/images/murder-mystery/victim-left-hand.webp"
-                      alt="Victim's Left Hand"
-                      width={256}
-                      height={256}
-                      className="pixelated"
-                    />
-                  )}
-                  {currentBodyPart === "rightArm" && (
-                    <Image
-                      src="/images/murder-mystery/victim-right-hand.webp"
-                      alt="Victim's Right Hand"
-                      width={256}
-                      height={256}
-                      className="pixelated"
-                    />
-                  )}
-                  {currentBodyPart === "leftLeg" && (
-                    <Image
-                      src="/images/murder-mystery/victim-left-leg.webp"
-                      alt="Victim's Left Leg"
-                      width={256}
-                      height={256}
-                      className="pixelated"
-                    />
-                  )}
-                  {currentBodyPart === "rightLeg" && (
-                    <Image
-                      src="/images/murder-mystery/victim-right-leg.webp"
-                      alt="Victim's Right Leg"
-                      width={256}
-                      height={256}
-                      className="pixelated"
-                    />
-                  )}
+                <div className="relative w-32 h-32 mb-4">
+                  <Image
+                    src={`/images/murder-mystery/victim-${showVictimPart}.webp`}
+                    alt={`Victim's ${showVictimPart}`}
+                    width={128}
+                    height={128}
+                    className="pixelated"
+                  />
                 </div>
-                <div className="flex justify-between mt-4">
-                  {currentBodyPart === "head" ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentBodyPart("leftArm")}
-                      className="font-pixel text-xs"
-                    >
-                      Check Left Arm
-                    </Button>
-                  ) : currentBodyPart === "leftArm" ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentBodyPart("rightArm")}
-                      className="font-pixel text-xs"
-                    >
-                      Check Right Arm
-                    </Button>
-                  ) : currentBodyPart === "rightArm" ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentBodyPart("leftLeg")}
-                      className="font-pixel text-xs"
-                    >
-                      Check Left Leg
-                    </Button>
-                  ) : currentBodyPart === "leftLeg" ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentBodyPart("rightLeg")}
-                      className="font-pixel text-xs"
-                    >
-                      Check Right Leg
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentBodyPart("head")}
-                      className="font-pixel text-xs"
-                    >
-                      Check Head
-                    </Button>
-                  )}
+                <div className="flex flex-wrap justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePartClick("head")}
+                    className={showVictimPart === "head" ? "bg-blue-800 text-blue-200" : "bg-gray-800 text-gray-300"}
+                  >
+                    Check Head
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePartClick("leftArm")}
+                    className={showVictimPart === "leftArm" ? "bg-blue-800 text-blue-200" : "bg-gray-800 text-gray-300"}
+                  >
+                    Check Left Arm
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePartClick("rightArm")}
+                    className={
+                      showVictimPart === "rightArm" ? "bg-blue-800 text-blue-200" : "bg-gray-800 text-gray-300"
+                    }
+                  >
+                    Check Right Arm
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePartClick("leftLeg")}
+                    className={showVictimPart === "leftLeg" ? "bg-blue-800 text-blue-200" : "bg-gray-800 text-gray-300"}
+                  >
+                    Check Left Leg
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePartClick("rightLeg")}
+                    className={
+                      showVictimPart === "rightLeg" ? "bg-blue-800 text-blue-200" : "bg-gray-800 text-gray-300"
+                    }
+                  >
+                    Check Right Leg
+                  </Button>
                 </div>
               </div>
             </div>
