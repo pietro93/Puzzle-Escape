@@ -1015,17 +1015,7 @@ Hair: Brown`,
                   <div className="mb-4">
                     {currentBodyPart === "head" && (
                       <Image
-                        src={`/images/murder-mystery/victim-${
-                          currentBodyPart === "head"
-                            ? "head"
-                            : currentBodyPart === "leftHand"
-                              ? "left-hand"
-                              : currentBodyPart === "rightHand"
-                                ? "right-hand"
-                                : currentBodyPart === "leftLeg"
-                                  ? "left-leg"
-                                  : "right-leg"
-                        }.webp`}
+                        src={`/images/murder-mystery/victim-head.webp`}
                         alt="Victim's Head"
                         width={200}
                         height={200}
@@ -1034,17 +1024,7 @@ Hair: Brown`,
                     )}
                     {currentBodyPart === "leftHand" && (
                       <Image
-                        src={`/images/murder-mystery/victim-${
-                          currentBodyPart === "head"
-                            ? "head"
-                            : currentBodyPart === "leftHand"
-                              ? "left-hand"
-                              : currentBodyPart === "rightHand"
-                                ? "right-hand"
-                                : currentBodyPart === "leftLeg"
-                                  ? "left-leg"
-                                  : "right-leg"
-                        }.webp`}
+                        src={`/images/murder-mystery/victim-left-hand.webp`}
                         alt="Victim's Left Hand"
                         width={200}
                         height={200}
@@ -1053,17 +1033,7 @@ Hair: Brown`,
                     )}
                     {currentBodyPart === "rightHand" && (
                       <Image
-                        src={`/images/murder-mystery/victim-${
-                          currentBodyPart === "head"
-                            ? "head"
-                            : currentBodyPart === "leftHand"
-                              ? "left-hand"
-                              : currentBodyPart === "rightHand"
-                                ? "right-hand"
-                                : currentBodyPart === "leftLeg"
-                                  ? "left-leg"
-                                  : "right-leg"
-                        }.webp`}
+                        src={`/images/murder-mystery/victim-right-hand.webp`}
                         alt="Victim's Right Hand"
                         width={200}
                         height={200}
@@ -1072,17 +1042,7 @@ Hair: Brown`,
                     )}
                     {currentBodyPart === "leftLeg" && (
                       <Image
-                        src={`/images/murder-mystery/victim-${
-                          currentBodyPart === "head"
-                            ? "head"
-                            : currentBodyPart === "leftHand"
-                              ? "left-hand"
-                              : currentBodyPart === "rightHand"
-                                ? "right-hand"
-                                : currentBodyPart === "leftLeg"
-                                  ? "left-leg"
-                                  : "right-leg"
-                        }.webp`}
+                        src={`/images/murder-mystery/victim-left-leg.webp`}
                         alt="Victim's Left Leg"
                         width={200}
                         height={200}
@@ -1091,17 +1051,7 @@ Hair: Brown`,
                     )}
                     {currentBodyPart === "rightLeg" && (
                       <Image
-                        src={`/images/murder-mystery/victim-${
-                          currentBodyPart === "head"
-                            ? "head"
-                            : currentBodyPart === "leftHand"
-                              ? "left-hand"
-                              : currentBodyPart === "rightHand"
-                                ? "right-hand"
-                                : currentBodyPart === "leftLeg"
-                                  ? "left-leg"
-                                  : "right-leg"
-                        }.webp`}
+                        src={`/images/murder-mystery/victim-right-leg.webp`}
                         alt="Victim's Right Leg"
                         width={200}
                         height={200}
