@@ -373,16 +373,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             },
           ],
         },
-        {
-          id: "check-body-again-root",
-          text: "I'd like to check the body again.",
-          condition: "has-checked-body",
-          specialAction: () => {
-            setShowVictimBody(true)
-            setCurrentBodyPart("head")
-          },
-          followUp: [],
-        },
       ],
     },
   ]
