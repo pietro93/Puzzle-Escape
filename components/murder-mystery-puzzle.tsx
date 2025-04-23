@@ -9,16 +9,9 @@ import { X, Book, MapPin } from "lucide-react"
 import { botanyBook } from "@/data/books"
 import { cn } from "@/lib/utils"
 
-// Define the dialogue tree structure
-interface DialogueOption {
-  id: string
-  text: string
-  response: string
-  followUp?: DialogueOption[]
-  condition?: string
-  action?: string
-  specialAction?: () => void
-}
+// Import data
+import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
+import { autopsyReportPages } from "@/components/murder-mystery/evidence-data"
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
@@ -26,15 +19,24 @@ interface MurderMysteryPuzzleProps {
   currentQuestion?: string
 }
 
+interface DialogueOption {
+  id: string
+  text: string
+  response: string
+  followUp?: DialogueOption[]
+  condition?: string
+  specialAction?: () => void
+}
+
 export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
   // Location State
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
-  const locations = [
+  const [locations] = useState([
     { id: "crime scene", name: "Crime Scene" },
     { id: "police station", name: "Police Station" },
     { id: "morgue", name: "Morgue" },
     { id: "library", name: "Library" },
-  ]
+  ])
 
   // Book Modal State
   const [selectedBook, setSelectedBook] = useState<any>(null)
@@ -71,333 +73,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
   const typingSpeed = 30
   const typingRef = useRef<NodeJS.Timeout | null>(null)
-
-  // Police Woman
-  const policewomanDialogue = [
-    {
-      id: "initial-greeting",
-      text: "Start",
-      response: "Hey you! This is a restricted area. What are you doing here?",
-      followUp: [
-        {
-          id: "who-are-you",
-          text: "Who are you?",
-          response: "Who am I? Who are YOU? Some make-believe detective?",
-          followUp: [
-            {
-              id: "devil-sent-me",
-              text: "The Devil sent me here.",
-              response:
-                "Oh, did he now? Well, tell him I said 'hi'. And that he still owes me five bucks from that poker game last Tuesday.",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "tell-about-murder",
-          text: "Tell me about the murder.",
-          response:
-            "Murder? What murder? There was no murder. The victim died of natural causes. Just an accident, really. Happens all the time, ya know?",
-          followUp: [
-            {
-              id: "what-natural-causes",
-              text: "What natural causes?",
-              response:
-                "How would I know? Ask forensics. I just know there was no murder. And I'm not supposed to talk about it, so shhh!",
-              followUp: [],
-            },
-            {
-              id: "was-there-no-weapon",
-              text: "Was there no weapon?",
-              response: "Told you, there was no murder. Are you even listening? Maybe you need a hearing aid, gramps.",
-              followUp: [],
-            },
-            {
-              id: "crime-scene-items",
-              text: "Did you find anything on the crime scene?",
-              response:
-                "Ah yes, we got lucky. He left this box of donuts untouched. Managed to rescue it before it goes to waste",
-              followUp: [
-                {
-                  id: "eating-donuts",
-                  text: "You're eating donuts from the crime scene?!",
-                  response:
-                    "Of course. Don't tell my boss. I don't want to share. Besides, they're evidence... of deliciousness!",
-                  followUp: [],
-                },
-              ],
-            },
-            {
-              id: "police-report",
-              text: "Is there a police report?",
-              response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes. Yawn.",
-              condition: "exhausted-murder-questions",
-              followUp: [
-                {
-                  id: "can-see-report",
-                  text: "Can I see the report?",
-                  response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
-                  followUp: [],
-                  specialAction: () => {
-                    setShowPoliceReport(true)
-                    setLastAction("viewed-report")
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: "who-is-victim",
-          text: "Who is the victim?",
-          response:
-            "Some tourist who was here on vacation by himself. Short man, kinda cute. Slightly too dead for my taste, I like 'em still warm.",
-          followUp: [
-            {
-              id: "victim-name",
-              text: "Does he have a name?",
-              response: "I would assume so. I didn't bother to ask him, though.",
-              followUp: [],
-            },
-            {
-              id: "more-about-victim",
-              text: "What else can you tell me about the victim?",
-              response: "I have got nothing to tell. I'm not his biographer, you know.",
-              followUp: [],
-            },
-            {
-              id: "how-identify-victim",
-              text: "How did you identify the victim?",
-              response: "Oh, that was easy. He had his ID on him. Lucky for us, or we'd be calling John Doe.",
-              followUp: [
-                {
-                  id: "can-see-passport",
-                  text: "Can I see it?",
-                  response: "Fine, but only if you promise to leave me alone. I'm on my break, you know.",
-                  followUp: [],
-                  specialAction: () => {
-                    setShowPassport(true)
-                    setLastAction("viewed-passport")
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: "were-there-any-witnesses",
-          text: "Where there any witnesses?",
-          response: "Nope. rescue team arrived on site and found the body",
-          condition: "asked-about-murder",
-          followUp: [
-            {
-              id: "who-called-rescue",
-              text: "Who called the rescue team?",
-              response:
-                "Well, the victim himself. He called an ambulance but died before they arrived on site. Talk about bad luck, eh?",
-              followUp: [],
-            },
-            {
-              id: "victim-alive",
-              text: "Wait, so the victim was alive?",
-              response:
-                "D'huh. I told you there was no murder. I think he just felt ill and died. Totally natural. Happens all the time, ya know?",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "can-see-report-again",
-          text: "Can I see that police report again?",
-          response: "Here you go, but don't say I didn't warn you. It's about as thrilling as watching paint dry.",
-          condition: "seen-police-report",
-          followUp: [],
-          specialAction: () => {
-            setShowPoliceReport(true)
-            setLastAction("viewed-report")
-          },
-        },
-        {
-          id: "can-see-passport-again",
-          text: "Can I see that ID again?",
-          response: "Here you go, but don't say I didn't warn you. It's not like it's gonna change anything.",
-          condition: "seen-passport",
-          followUp: [],
-          specialAction: () => {
-            setShowPassport(true)
-            setLastAction("viewed-passport")
-          },
-        },
-      ],
-    },
-  ]
-
-  // Mortician
-  const morticianDialogue = [
-    {
-      id: "initial-greeting",
-      text: "Start",
-      response: "Hmm? A visitor? How... unusual. What do you want?",
-      followUp: [
-        {
-          id: "who-are-you",
-          text: "Who are you?",
-          response: "Name's Psychopompus. Psycho for short.",
-          followUp: [
-            {
-              id: "hello-psycho",
-              text: "Huh... hello, Psycho.",
-              response: "...",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "tell-about-body",
-          text: "What can you tell me about the body that was found by the lake?",
-          response: "It's dead. Obviously.",
-          followUp: [
-            {
-              id: "cause-of-death",
-              text: "What was the cause of death?",
-              response: "Anemia.",
-              followUp: [
-                {
-                  id: "anemia-question",
-                  text: "Anemia?",
-                  response: "Low blood levels. Caused organ failure. A rather... pale affair.",
-                  followUp: [],
-                },
-                {
-                  id: "natural-question",
-                  text: "Was it natural?",
-                  response: "As natural as having almost no blood gets. A slow fade, like a dying ember.",
-                  followUp: [
-                    {
-                      id: "what-no-blood",
-                      text: "What do you mean almost no blood?",
-                      response: "The body was almost completely void of blood when it was found.",
-                      followUp: [],
-                    },
-                    {
-                      id: "murder-question",
-                      text: "Are you sure this wasn't murder?",
-                      response: "Oh, I guess it could be. Not my concern.",
-                      followUp: [],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              id: "can-see-body-initial",
-              text: "Can I see the victim's body?",
-              response: "No.",
-              condition: "body-not-accessible",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "like-job",
-          text: "Do you like your job?",
-          response: "I enjoy the company. They're not demanding conversationalists.",
-          condition: "body-not-accessible",
-          followUp: [
-            {
-              id: "alone-with-corpses",
-              text: "Aren't you alone with corpses all the time?",
-              response: "As I said. I enjoy the company. They don't complain.",
-              followUp: [
-                {
-                  id: "any-friends",
-                  text: "Don't you have any friends?",
-                  response: "In this line of work, the living are more trouble than they're worth.",
-                  specialAction: () => setAskedAboutFriends(true),
-                  followUp: [
-                    {
-                      id: "be-your-friend",
-                      text: "I'll be your friend!",
-                      response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
-                      condition: "asked-about-friends",
-                      followUp: [
-                        {
-                          id: "hobbies",
-                          text: "Do you have any hobbies?",
-                          response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
-                          specialAction: () => setAskedHobbies(true),
-                          followUp: [],
-                        },
-                        {
-                          id: "puzzle-games",
-                          text: "Do you like puzzle games?",
-                          response: "What am I, some kind of loser? I have a life, you know.",
-                          specialAction: () => setAskedPuzzleGames(true),
-                          followUp: [],
-                        },
-                        {
-                          id: "unconditional-friendship",
-                          text: "I am not leaving until you accept my unconditional love and friendship.",
-                          response:
-                            "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
-                          condition: "asked-both-hobby-questions",
-                          specialAction: () => setCanSeeBody(true),
-                          followUp: [],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              id: "macabre-stuff",
-              text: "You must have seen some pretty macabre stuff in here.",
-              response: "Your face is a contender. But I've seen worse.",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "check-victim-body",
-          text: "Let's check the victim's body.",
-          response:
-            "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
-          condition: "can-see-body",
-          followUp: [
-            {
-              id: "weird-signs",
-              text: "What are those weird signs on the body?",
-              response:
-                "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
-              followUp: [],
-            },
-            {
-              id: "check-autopsy-report",
-              text: "Can I check the autopsy report?",
-              response: "Oh for fu--I mean sure, whatever.",
-              followUp: [],
-              specialAction: () => {
-                setShowAutopsyReport(true)
-                setLastAction("viewed-autopsy")
-              },
-            },
-          ],
-          specialAction: () => {
-            setShowVictimBody(true)
-            setLastAction("viewed-body")
-          },
-        },
-        {
-          id: "after-viewing-evidence",
-          text: "...",
-          response: "Are you done staring? I don't have all day for this nonsense.",
-          condition: "after-viewing-evidence",
-          followUp: [],
-        },
-      ],
-    },
-  ]
 
   // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
   const closePassport = () => {
@@ -557,7 +232,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       setDialoguePath((prev) => [...prev, option])
       setCurrentDialogueOptions(
         option.followUp.filter((opt) => {
-          // Filter options based on conditions
+          // Filter based on conditions
           if (opt.condition === "asked-about-friends") {
             return askedAboutFriends
           }
@@ -565,7 +240,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             return askedHobbies && askedPuzzleGames
           }
           return true
-        }),
+        }) || [],
       )
     } else {
       // If there are no follow-ups, update the dialogue options based on the current level
@@ -597,14 +272,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               }
               if (opt.id === "check-victim-body") {
                 return canSeeBody
-              }
-              if (opt.id === "after-viewing-evidence") {
-                return (
-                  lastAction === "viewed-body" ||
-                  lastAction === "viewed-passport" ||
-                  lastAction === "viewed-report" ||
-                  lastAction === "viewed-autopsy"
-                )
               }
               return true
             }) || [],
@@ -732,38 +399,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }, [isTyping, currentResponse])
 
-  useEffect(() => {
-    // Automatically start dialogue when entering the police station or morgue
-    if (currentLocation === "police station" || currentLocation === "morgue") {
-      startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
-    }
-  }, [currentLocation])
-
-  // Update dialogue options when canSeeBody changes
-  useEffect(() => {
-    if (currentCharacter === "mortician" && dialoguePath.length === 0) {
-      setCurrentDialogueOptions(
-        morticianDialogue[0].followUp.filter((opt) => {
-          if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
-            return !canSeeBody
-          }
-          if (opt.id === "check-victim-body") {
-            return canSeeBody
-          }
-          if (opt.id === "after-viewing-evidence") {
-            return (
-              lastAction === "viewed-body" ||
-              lastAction === "viewed-passport" ||
-              lastAction === "viewed-report" ||
-              lastAction === "viewed-autopsy"
-            )
-          }
-          return true
-        }) || [],
-      )
-    }
-  }, [canSeeBody, lastAction, currentCharacter, dialoguePath])
-
   // // // // // // FUNCTION CALLS  // // // // // // // // // // // // // // // // // // // // // //
   const navigateTo = (location: string) => {
     setCurrentLocation(location)
@@ -774,47 +409,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }
 
+  const handlePrevAutopsyPage = () => {
+    setCurrentAutopsyPage((prevPage) => Math.max(prevPage - 1, 0))
+  }
+
+  const handleNextAutopsyPage = () => {
+    setCurrentAutopsyPage((prevPage) => Math.min(prevPage + 1, autopsyReportPages.length - 1))
+  }
+
   // Conditionally render "Is there a police report?" option
   const showPoliceReportOption = askedQuestions.has("what-natural-causes") && askedQuestions.has("was-there-no-weapon")
   const showWitnessesOption = askedQuestions.has("tell-about-murder")
   const showPoliceReportAgainOption = askedQuestions.has("check-police-report")
   const showPassportAgainOption = askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
-
-  // Autopsy Report Data
-  const autopsyReportPages = [
-    {
-      title: "Autopsy Report - Page 1",
-      content: `Name: Declan Tremblay
-Age: Early 30s
-Eyes: Brown
-Hair: Brown`,
-    },
-    {
-      title: "Autopsy Report - Page 2",
-      content: `Clinical summary: The decedent was found dead following a suspected organ failure attributed to complications from anemia. Prior to death, the individual had called emergency services reporting feeling unwell. Upon arrival, paramedics found the victim deceased. There was no history or evidence of trauma or injury. The clinical picture is consistent with severe anemia leading to multiorgan compromise and failure.`,
-    },
-    {
-      title: "Autopsy Report - Page 3",
-      content: `External examination: Height: 168 cm The body exhibited pallor with a slight reddish tint to the skin, consistent with anemia-related hypoxia and circulatory changes. Notably, ecchymoses were present on the arms and legs, indicative of minor subcutaneous bleeding or bruising without associated trauma. The body showed signs of reduced blood volume, with visibly low levels of blood noted at the scene. No external injuries, wounds, or signs of violence were observed.`,
-    },
-    {
-      title: "Autopsy Report - Page 4",
-      content: `Toxicology: Comprehensive toxicological analysis revealed no evidence of poison, venom, or other toxic substances contributing to death.`,
-    },
-    {
-      title: "Autopsy Report - Page 5",
-      content: `Summary: The external and clinical findings support death due to organ failure secondary to complications of anemia, with no indication of external trauma or intoxication. The presence of ecchymoses may reflect underlying hematologic fragility or coagulopathy associated with the anemia. This aligns with known fatal outcomes in severe anemia cases complicated by multiorgan dysfunction.`,
-    },
-  ]
-
-  const handleNextAutopsyPage = () => {
-    setCurrentAutopsyPage((prev) => (prev + 1) % autopsyReportPages.length)
-  }
-
-  const handlePrevAutopsyPage = () => {
-    setCurrentAutopsyPage((prev) => (prev - 1 + autopsyReportPages.length) % autopsyReportPages.length)
-  }
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
@@ -841,7 +449,7 @@ Hair: Brown`,
           )}
 
           {/* Police and Mortician Dialogue  */}
-          {(currentLocation === "police station" || currentLocation === "morgue") && (
+          {(currentLocation === "police station" || currentLocation === "morgue") && showDialogue && (
             <div className="flex flex-col bg-black">
               {/* Character Portrait and Speech Bubble */}
               <div className="flex flex-col items-center mb-2 p-6 pt-0 bg-black">
