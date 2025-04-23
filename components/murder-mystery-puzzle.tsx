@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
+import { demonologyBook } from "@/library-books/demonology"
+import { botanyBook } from "@/library-books/botany"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -21,10 +23,6 @@ import { LibraryView } from "@/components/murder-mystery/library-view"
 // Import data
 import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
 import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
-
-// Import book data from new files
-import { demonologyBook } from "@/library-books/demonology"
-import { botanyBook } from "@/library-books/botany"
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
@@ -197,6 +195,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPoliceReportAgainOption = dialogue.askedQuestions.has("check-police-report")
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
+
+  // Automatically start dialogue when entering the police station or morgue
+  useEffect(() => {
+    if (currentLocation === "police station" || currentLocation === "morgue") {
+      dialogue.startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
+    }
+  }, [currentLocation])
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
