@@ -506,15 +506,6 @@ export default function PuzzleContent({
         </div>
       )}
       {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
-      {level === 49 && puzzle.isMouthOfTruthPuzzle && (
-        <MurderMysteryPuzzle
-          onSolve={handleParrotSolve}
-          onLocationChange={(location) => {
-            // Handle location change logic
-          }}
-          currentQuestion={puzzle.question}
-        />
-      )}
     </div>
   )
 }

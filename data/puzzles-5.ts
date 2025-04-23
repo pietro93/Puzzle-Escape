@@ -1,4 +1,5 @@
 import type { Puzzle } from "@/types/puzzle"
+import MurderMysteryPuzzle from "@/components/murder-mystery-puzzle"
 
 // Hell - Devil (Levels 41-50)
 export const puzzlesSet5: Puzzle[] = [
@@ -124,17 +125,19 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 49,
-    question: "Who killed the tourist?",
-    description: "Solve the murder mystery to find the killer.",
-    solution: "vampire",
-    category: "Logic",
+    question: "The Devil challenges you to face death, in a sort of murder mystery game.",
+    description: "",
+    imageUrl: "",
+    solution: "professor hemlock",
+    category: "puzzle",
+    isMurderMysteryPuzzle: true,
+    component: MurderMysteryPuzzle,
     hints: [
-      "Check all the evidence carefully.",
-      "The victim died from severe anemia - extreme blood loss.",
-      "There were no wounds or signs of trauma on the body.",
-      "The demonology book might have useful information.",
+      "Visit all locations to gather clues about the murder.",
+      "Pay special attention to the books in the library.",
+      "The killer's name is related to a poisonous plant.",
+      "Look for connections between the toxicology report and botanical knowledge.",
     ],
-    isMouthOfTruthPuzzle: true,
   },
   {
     level: 50,
