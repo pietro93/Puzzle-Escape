@@ -13,26 +13,6 @@ export const demonologyBook: Book = {
   title: "Demonology",
   pages: [
     {
-      title: "Introduction to Demonology",
-      text: "Demonology is the study of demons or beliefs about demons. Demons are supernatural beings prevalent in religion, occultism, mythology, and folklore. This ancient field of study has evolved over centuries, with different cultures developing their own interpretations and classifications of demonic entities.",
-      imageUrl: "/placeholder.svg?height=150&width=200",
-    },
-    {
-      title: "Classifications of Demons",
-      text: "Throughout history, scholars have attempted to categorize demons based on their origins, powers, and hierarchies. The most notable classification comes from the Ars Goetia, which lists 72 demons commanded by King Solomon. Other systems organize demons by the seven deadly sins they represent or by their roles in the infernal hierarchy.",
-      imageUrl: "/placeholder.svg?height=150&width=200",
-    },
-    {
-      title: "Signs of Demonic Presence",
-      text: "Unusual cold spots, unexplained sounds, persistent nightmares, and feelings of being watched are commonly reported signs of demonic activity. More severe manifestations include physical marks appearing on the body, objects moving without explanation, and dramatic personality changes in the affected individual.",
-      imageUrl: "/placeholder.svg?height=150&width=200",
-    },
-    {
-      title: "Protection Against Demons",
-      text: "Various methods of protection against demonic entities exist across cultures. Common protective measures include religious symbols, salt barriers, iron implements, and specific herbs like sage and rosemary. Rituals of protection often involve prayer, meditation, and the invocation of protective deities or angels.",
-      imageUrl: "/placeholder.svg?height=150&width=200",
-    },
-    {
       title: "Abaddon / Apollyon",
       text: `**Origin:** Rooted in Judeo-Christian apocalyptic tradition, Abaddon—also called Apollyon—is the “*Angel of the Abyss*.”\n
 **Appearance:** Often depicted as a dark, armored warrior or a terrifying swarm of locusts, he embodies destruction and the void.\n
