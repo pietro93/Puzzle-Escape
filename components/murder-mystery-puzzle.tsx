@@ -22,7 +22,23 @@ import { LibraryView } from "@/components/murder-mystery/library-view"
 
 // Import data
 import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
-import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
+import { autopsyReportPages } from "@/components/murder-mystery/evidence-data"
+
+// Define the dialogue tree structure more explicitly
+interface DialogueOption {
+  id: string
+  text: string
+  response: string
+  followUp?: DialogueOption[]
+  condition?: string
+  action?: string
+  specialAction?: () => void
+}
+
+interface Location {
+  id: string
+  name: string
+}
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
@@ -31,8 +47,16 @@ interface MurderMysteryPuzzleProps {
 }
 
 export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
+  // Group related state variables together with comments
+
   // Location State
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
+  const locations = [
+    { id: "crime scene", name: "Crime Scene" },
+    { id: "police station", name: "Police Station" },
+    { id: "morgue", name: "Morgue" },
+    { id: "library", name: "Library" },
+  ]
 
   // Evidence State
   const [showPoliceReport, setShowPoliceReport] = useState(false)
@@ -55,7 +79,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Initialize book system
   const bookSystem = useBookSystem()
 
-  // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
+  // ==================== MODAL HANDLERS ====================
   const closePassport = () => {
     setShowPassport(false)
     dialogue.setLastAction("viewed-passport")
@@ -89,7 +113,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     dialogue.setIsTyping(true)
   }
 
-  // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
+  // ==================== DIALOGUE HANDLERS ====================
   // Custom filter for policewoman dialogue options
   const filterPoliceOptions = (options: any[]) => {
     return options.filter((opt) => {
@@ -172,7 +196,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }
 
-  // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // // //
+  // ==================== NAVIGATION HANDLERS ====================
   const navigateTo = (location: string) => {
     setCurrentLocation(location)
     dialogue.closeDialogue()
