@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { demonologyBook } from "@/library-books/demonology"
-import { botanyBook } from "@/library-books/botany"
+import { demonologyBook } from "@/data/books"
+import { botanyBook } from "@/data/books"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -18,7 +18,7 @@ import {
 import { BookModal } from "@/components/murder-mystery/book-modal"
 import { DialogueInterface } from "@/components/murder-mystery/dialogue-interface"
 import { LocationMap } from "@/components/murder-mystery/location-map"
-import { LibrarianDialogue } from "@/components/murder-mystery/librarian-dialogue"
+import { LibraryView } from "@/components/murder-mystery/library-view"
 
 // Import data
 import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
@@ -46,19 +46,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [hasCheckedBody, setHasCheckedBody] = useState(false)
   const [askedHobbies, setAskedHobbies] = useState(false)
   const [askedPuzzleGames, setAskedPuzzleGames] = useState(false)
-  const [currentBodyPart, setCurrentBodyPart] = useState<string | null>(null)
-  const [askedAboutAnemia, setAskedAboutAnemia] = useState(false)
-  const [askedAboutMarks, setAskedAboutMarks] = useState(false)
 
   // Initialize dialogue system
   const dialogue = useDialogueSystem({
-    initialDialogue:
-      currentLocation === "police station"
-        ? policewomanDialogue
-        : currentLocation === "morgue"
-          ? morticianDialogue
-          : [],
-    // initialDialogue: currentLocation === "police station" ? policewomanDialogue : morticianDialogue,
+    initialDialogue: currentLocation === "police station" ? policewomanDialogue : morticianDialogue,
   })
 
   // Initialize book system
@@ -96,11 +87,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     dialogue.setCurrentResponse("Satisfied? Now get out of here.")
     dialogue.setTypedText("")
     dialogue.setIsTyping(true)
-  }
-
-  // Function to change which body part is being viewed
-  const changeBodyPart = (part: string) => {
-    setCurrentBodyPart(part)
   }
 
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
@@ -153,19 +139,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     })
   }
 
-  // Custom filter for librarian dialogue options
-  const filterLibrarianOptions = (options: any[]) => {
-    return options.filter((opt) => {
-      if (opt.id === "blood-diseases") {
-        return askedAboutAnemia
-      }
-      if (opt.id === "demons-evil") {
-        return askedAboutMarks
-      }
-      return true
-    })
-  }
-
   // Handle dialogue option selection with special actions
   const handleDialogueOption = (option: any) => {
     // Special actions based on option ID
@@ -177,31 +150,25 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       setAskedPuzzleGames(true)
     } else if (option.id === "unconditional-friendship") {
       setCanSeeBody(true)
+    } else if (option.id === "can-see-report" || option.id === "can-see-report-again") {
+      setShowPoliceReport(true)
+      dialogue.setLastAction("viewed-report")
+    } else if (option.id === "can-see-passport" || option.id === "can-see-passport-again") {
+      setShowPassport(true)
+      dialogue.setLastAction("viewed-passport")
     } else if (option.id === "check-victim-body") {
       setShowVictimBody(true)
       dialogue.setLastAction("viewed-body")
     } else if (option.id === "check-autopsy-report") {
       setShowAutopsyReport(true)
       dialogue.setLastAction("viewed-autopsy")
-    } else if (option.id === "tell-about-body") {
-      // Check if the mortician mentions anemia
-      if (option.response.includes("anemia")) {
-        setAskedAboutAnemia(true)
-      }
-    } else if (option.id === "weird-signs") {
-      // Check if the mortician mentions marks
-      if (option.response.includes("tattoos")) {
-        setAskedAboutMarks(true)
-      }
     }
 
     // Use the dialogue system to handle the option
     if (dialogue.currentCharacter === "policewoman") {
       dialogue.handleDialogueOption(option, filterPoliceOptions)
-    } else if (dialogue.currentCharacter === "mortician") {
+    } else {
       dialogue.handleDialogueOption(option, filterMorticianOptions)
-    } else if (dialogue.currentCharacter === "librarian") {
-      dialogue.handleDialogueOption(option, filterLibrarianOptions)
     }
   }
 
@@ -221,87 +188,11 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showWitnessesOption = dialogue.askedQuestions.has("tell-about-murder")
   const showPoliceReportAgainOption = dialogue.askedQuestions.has("check-police-report")
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
-  const showCheckVictimBodyOption = canSeeBody
 
-  // Define librarian dialogue tree
-  const librarianDialogueTree = [
-    {
-      id: "initial-greeting",
-      text: "Start",
-      response: "Shhhhhhhhh!!!",
-      followUp: [
-        {
-          id: "who-are-you",
-          text: "Who are you?",
-          response: "Shhhhhhhhh!!! You think I have time for introductions, beta?",
-          followUp: [],
-        },
-        {
-          id: "investigating-murder",
-          text: "I'm investigating a murder.",
-          response:
-            "This is a library! Not a crime scene, la! Now keep it down, or I'll have you thrown out, you hear?",
-          followUp: [],
-        },
-        {
-          id: "looking-for-book",
-          text: "I'm looking for a book.",
-          response: "Okay. So? You think I'm just gonna hand it over, like that? What kind of book, huh?",
-          followUp: [
-            {
-              id: "book-puppies",
-              text: "I need a book about puppies.",
-              response: "Puppies? You think this is a petting zoo, ah? Fine, I'll get you your silly puppy book.",
-              specialAction: () => {},
-              followUp: [],
-            },
-            {
-              id: "book-serial-killers",
-              text: "I need a book about serial killers.",
-              response: "Serial killers, eh? You planning something, you rascal? Just kidding, here's your book.",
-              specialAction: () => {},
-              followUp: [],
-            },
-            {
-              id: "book-botany",
-              text: "I need a book about botany.",
-              response: "Botany? You think you're some kind of plant whisperer, huh? Here, take your book and go.",
-              specialAction: () => bookSystem.openBook(botanyBook),
-              followUp: [],
-            },
-            {
-              id: "book-blood-diseases",
-              text: "I need a book about blood diseases.",
-              response:
-                "Blood diseases? You look a bit pale yourself, beta. You sure you're not catching something? Here's your book, now shoo!",
-              condition: "askedAboutAnemia",
-              specialAction: () => {},
-              followUp: [],
-            },
-            {
-              id: "book-demons-evil",
-              text: "I need a book about demons and evil creatures.",
-              response:
-                "Demons and evil, you say? You think you're some kind of ghostbuster, huh? Don't come crying to me when you summon something you can't handle, okay?",
-              condition: "askedAboutMarks",
-              specialAction: () => bookSystem.openBook(demonologyBook),
-              followUp: [],
-            },
-          ],
-        },
-      ],
-    },
-  ]
-
-  // Function to start librarian dialogue
-  const startLibrarianDialogue = () => {
-    dialogue.startDialogue("librarian", librarianDialogueTree)
-  }
-
-  // Automatically start librarian dialogue when entering the library
+  // Automatically start dialogue when entering the police station or morgue
   useEffect(() => {
-    if (currentLocation === "library") {
-      startLibrarianDialogue()
+    if (currentLocation === "police station" || currentLocation === "morgue") {
+      dialogue.startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
     }
   }, [currentLocation])
 
@@ -348,16 +239,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             />
           )}
 
-          {/* Librarian Dialogue */}
-          {currentLocation === "library" && dialogue.showDialogue && (
-            <LibrarianDialogue
-              typedText={dialogue.typedText}
-              dialogueOptions={dialogue.currentDialogueOptions}
-              askedQuestions={dialogue.askedQuestions}
-              dialoguePath={dialogue.dialoguePath}
-              onSelectOption={handleDialogueOption}
-              onGoBack={() => dialogue.goBackInDialogue(filterLibrarianOptions)}
-            />
+          {/* Library View */}
+          {currentLocation === "library" && (
+            <LibraryView onOpenBook={bookSystem.openBook} demonologyBook={demonologyBook} botanyBook={botanyBook} />
           )}
         </CardContent>
       </Card>
@@ -365,7 +249,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       {/* Evidence Modals */}
       <PoliceReportModal isOpen={showPoliceReport} onClose={closePoliceReport} />
       <PassportModal isOpen={showPassport} onClose={closePassport} />
-      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} changeBodyPart={changeBodyPart} />
+      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} />
       <AutopsyReportModal isOpen={showAutopsyReport} onClose={closeAutopsyReport} pages={autopsyReportPages} />
 
       {/* Book Modal */}
