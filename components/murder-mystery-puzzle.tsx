@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { demonologyBook } from "@/data/books"
-import { botanyBook } from "@/data/books"
+import { demonologyBook, botanyBook, genghisKhanBook, dogsInCostumesBook } from "@/data/books/index"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -196,6 +195,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }, [currentLocation])
 
+  const handleOpenBook = (book: any) => {
+    bookSystem.openBook(book)
+  }
+
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
@@ -241,7 +244,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
           {/* Library View */}
           {currentLocation === "library" && (
-            <LibraryView onOpenBook={bookSystem.openBook} demonologyBook={demonologyBook} botanyBook={botanyBook} />
+            <LibraryView
+              onOpenBook={handleOpenBook}
+              demonologyBook={demonologyBook}
+              botanyBook={botanyBook}
+              genghisKhanBook={genghisKhanBook}
+              dogsInCostumesBook={dogsInCostumesBook}
+            />
           )}
         </CardContent>
       </Card>
