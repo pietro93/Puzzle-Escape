@@ -257,6 +257,48 @@ export default function CharacterLocationDisplay({
     )
   }
 
+  // Check for level 49 specific handling
+  if (level === 49) {
+    console.log(
+      "Level 49 image path:",
+      level === 49
+        ? puzzle.isMouthOfTruthPuzzle
+          ? "/images/murder-mystery/crime-scene.webp"
+          : puzzle.locationImage
+        : "Not level 49",
+    )
+    return (
+      <div className="grid grid-cols-2 gap-4 mb-4 animate-fadeIn">
+        {/* Character Image */}
+        <div className="flex flex-col items-center cursor-pointer" onClick={onGuardClick}>
+          <CharacterImage character={character} level={level} />
+          <div className="text-xs text-center mt-1 font-pixel text-purple-300">
+            {character === "skeleton" ? "Guard" : character}
+          </div>
+        </div>
+
+        {/* Location Image */}
+        <div className="flex flex-col items-center cursor-pointer" onClick={onLocationClick}>
+          <LocationImage
+            setting={setting}
+            level={level}
+            customImage={
+              level === 49 && puzzle.isMouthOfTruthPuzzle
+                ? "/images/murder-mystery/crime-scene.webp" // Make sure this path is correct
+                : puzzle.locationImage
+            }
+            hintImage={
+              level === 49 && !puzzle.locationImage && !puzzle.isMouthOfTruthPuzzle
+                ? "/images/hell-bg.webp" // Fallback image for level 49
+                : puzzle.hintImage
+            }
+          />
+          <div className="text-xs text-center mt-1 font-pixel text-purple-300">{setting}</div>
+        </div>
+      </div>
+    )
+  }
+
   // Default display for all other levels
   return (
     <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">

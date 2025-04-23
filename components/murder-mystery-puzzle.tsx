@@ -263,6 +263,51 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             />
           )}
 
+          {currentLocation === "police station" && dialogue.showDialogue && (
+            <div className="flex justify-center">
+              <Image
+                src={
+                  dialogue.currentCharacter === "policewoman"
+                    ? "/images/murder-mystery/policewoman.webp"
+                    : "/images/murder-mystery/mortician.webp"
+                }
+                alt={dialogue.currentCharacter || ""}
+                width={160}
+                height={160}
+                className="pixelated"
+              />
+            </div>
+          )}
+
+          {currentLocation === "morgue" && dialogue.showDialogue && (
+            <>
+              <div className="flex justify-center">
+                <Image
+                  src={
+                    dialogue.currentCharacter === "policewoman"
+                      ? "/images/murder-mystery/policewoman.webp"
+                      : "/images/murder-mystery/mortician.webp"
+                  }
+                  alt={dialogue.currentCharacter || ""}
+                  width={160}
+                  height={160}
+                  className="pixelated"
+                />
+              </div>
+              {showVictimBody && (
+                <div className="flex justify-center">
+                  <Image
+                    src={`/images/murder-mystery/victim-head.webp`}
+                    alt="Victim's Head"
+                    width={200}
+                    height={200}
+                    className="pixelated"
+                  />
+                </div>
+              )}
+            </>
+          )}
+
           {/* Library View */}
           {currentLocation === "library" && (
             <LibraryView onOpenBook={bookSystem.openBook} demonologyBook={demonologyBook} botanyBook={botanyBook} />

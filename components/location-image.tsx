@@ -1,3 +1,6 @@
+// Let's check how location images are handled
+// This is the full file to see how images are loaded
+
 import Image from "next/image"
 
 interface LocationImageProps {
