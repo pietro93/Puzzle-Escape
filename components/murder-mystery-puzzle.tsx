@@ -223,15 +223,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
 
-  // Automatically start dialogue when entering the police station or morgue
-  useEffect(() => {
-    if (currentLocation === "police station") {
-      dialogue.startDialogue("policewoman", policewomanDialogue)
-    } else if (currentLocation === "morgue") {
-      dialogue.startDialogue("mortician", morticianDialogue)
-    }
-  }, [currentLocation])
-
   // Define librarian dialogue tree
   const librarianDialogueTree = [
     {
@@ -242,50 +233,56 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "who-are-you",
           text: "Who are you?",
-          response: "Shhhhhhhhh!!!",
+          response: "Shhhhhhhhh!!! You think I have time for introductions, beta?",
           followUp: [],
         },
         {
           id: "investigating-murder",
           text: "I'm investigating a murder.",
-          response: "This is a library!",
+          response:
+            "This is a library! Not a crime scene, la! Now keep it down, or I'll have you thrown out, you hear?",
           followUp: [],
         },
         {
           id: "looking-for-book",
           text: "I'm looking for a book.",
-          response: "Okay. So?",
+          response: "Okay. So? You think I'm just gonna hand it over, like that? What kind of book, huh?",
           followUp: [
             {
               id: "book-puppies",
               text: "I need a book about puppies.",
-              response: "(opens a book with images of puppies)",
+              response: "Puppies? You think this is a petting zoo, ah? Fine, I'll get you your silly puppy book.",
+              specialAction: () => {},
               followUp: [],
             },
             {
               id: "book-serial-killers",
               text: "I need a book about serial killers.",
-              response: "(opens a book about famous serial killers)",
+              response: "Serial killers, eh? You planning something, you rascal? Just kidding, here's your book.",
+              specialAction: () => {},
               followUp: [],
             },
             {
               id: "book-botany",
               text: "I need a book about botany.",
-              response: "(opens botany book)",
+              response: "Botany? You think you're some kind of plant whisperer, huh? Here, take your book and go.",
               specialAction: () => bookSystem.openBook(botanyBook),
               followUp: [],
             },
             {
               id: "book-blood-diseases",
               text: "I need a book about blood diseases.",
-              response: "(opens a book about blood diseases)",
+              response:
+                "Blood diseases? You look a bit pale yourself, beta. You sure you're not catching something? Here's your book, now shoo!",
               condition: "askedAboutAnemia",
+              specialAction: () => {},
               followUp: [],
             },
             {
               id: "book-demons-evil",
               text: "I need a book about demons and evil creatures.",
-              response: "(opens demonology book)",
+              response:
+                "Demons and evil, you say? You think you're some kind of ghostbuster, huh? Don't come crying to me when you summon something you can't handle, okay?",
               condition: "askedAboutMarks",
               specialAction: () => bookSystem.openBook(demonologyBook),
               followUp: [],
@@ -362,11 +359,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               onGoBack={() => dialogue.goBackInDialogue(filterLibrarianOptions)}
             />
           )}
-
-          {/* Library View */}
-          {/* {currentLocation === "library" && (
-            <LibraryView onOpenBook={bookSystem.openBook} demonologyBook={demonologyBook} botanyBook={botanyBook} />
-          )} */}
         </CardContent>
       </Card>
 
