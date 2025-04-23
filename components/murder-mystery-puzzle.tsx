@@ -1,10 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { demonologyBook } from "@/data/books"
-import { botanyBook } from "@/data/books"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -23,6 +21,10 @@ import { LibraryView } from "@/components/murder-mystery/library-view"
 // Import data
 import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
 import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
+
+// Import book data from new files
+import { demonologyBook } from "@/library-books/demonology"
+import { botanyBook } from "@/library-books/botany"
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
@@ -46,6 +48,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [hasCheckedBody, setHasCheckedBody] = useState(false)
   const [askedHobbies, setAskedHobbies] = useState(false)
   const [askedPuzzleGames, setAskedPuzzleGames] = useState(false)
+  const [currentBodyPart, setCurrentBodyPart] = useState<string | null>(null)
 
   // Initialize dialogue system
   const dialogue = useDialogueSystem({
@@ -87,6 +90,11 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     dialogue.setCurrentResponse("Satisfied? Now get out of here.")
     dialogue.setTypedText("")
     dialogue.setIsTyping(true)
+  }
+
+  // Function to change which body part is being viewed
+  const changeBodyPart = (part: string) => {
+    setCurrentBodyPart(part)
   }
 
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
@@ -188,13 +196,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showWitnessesOption = dialogue.askedQuestions.has("tell-about-murder")
   const showPoliceReportAgainOption = dialogue.askedQuestions.has("check-police-report")
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
-
-  // Automatically start dialogue when entering the police station or morgue
-  useEffect(() => {
-    if (currentLocation === "police station" || currentLocation === "morgue") {
-      dialogue.startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
-    }
-  }, [currentLocation])
+  const showCheckVictimBodyOption = canSeeBody
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
@@ -249,7 +251,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       {/* Evidence Modals */}
       <PoliceReportModal isOpen={showPoliceReport} onClose={closePoliceReport} />
       <PassportModal isOpen={showPassport} onClose={closePassport} />
-      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} />
+      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} changeBodyPart={changeBodyPart} />
       <AutopsyReportModal isOpen={showAutopsyReport} onClose={closeAutopsyReport} pages={autopsyReportPages} />
 
       {/* Book Modal */}
