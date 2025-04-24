@@ -1,8 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
-
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
 import type { DialogueOption } from "@/components/murder-mystery/types"
 
 interface UseDialogueSystemProps {
@@ -25,7 +23,7 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
   const typingRef = useRef<NodeJS.Timeout | null>(null)
 
   // Start dialogue with a character
-  const startDialogue = useCallback((character: string, customDialogue?: DialogueOption[]) => {
+  const startDialogue = (character: string, customDialogue?: DialogueOption[]) => {
     setCurrentCharacter(character)
     setShowDialogue(true)
     setCurrentResponse("")
@@ -42,72 +40,84 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
 
     // Start typing animation
     setIsTyping(true)
-  }, [])
+  }
 
   // Handle dialogue option selection
-  const handleDialogueOption = useCallback(
-    (option: DialogueOption, filterOptions?: (options: DialogueOption[]) => DialogueOption[]) => {
-      // Mark this question as asked
-      setAskedQuestions((prev) => new Set([...prev, option.id]))
+  const handleDialogueOption = (
+    option: DialogueOption,
+    filterOptions?: (options: DialogueOption[]) => DialogueOption[],
+  ) => {
+    // Mark this question as asked
+    setAskedQuestions((prev) => new Set([...prev, option.id]))
+    setLastAction(null)
+
+    // Set the response and start typing animation
+    setCurrentResponse(option.response)
+    setTypedText("")
+    setIsTyping(true)
+
+    // Handle special actions
+    if (option.specialAction) {
+      option.specialAction()
+    }
+
+    // Update dialogue path for nested navigation
+    if (option.followUp && option.followUp.length > 0) {
+      setDialoguePath((prev) => [...prev, option])
+
+      // Apply custom filtering if provided
+      const filteredOptions = filterOptions ? filterOptions(option.followUp) : option.followUp
+
+      setCurrentDialogueOptions(filteredOptions)
+    } else {
+      // If there are no follow-ups, update based on the current level
+      if (dialoguePath.length === 0) {
+        // At root level
+        const rootOptions = initialDialogue[0].followUp || []
+        setCurrentDialogueOptions(filterOptions ? filterOptions(rootOptions) : rootOptions)
+      } else {
+        // At a nested level
+        const parentOption = dialoguePath[dialoguePath.length - 1]
+        const nestedOptions = parentOption.followUp || []
+        setCurrentDialogueOptions(filterOptions ? filterOptions(nestedOptions) : nestedOptions)
+      }
+    }
+  }
+
+  // Go back in dialogue tree
+  const goBackInDialogue = (filterRootOptions?: (options: DialogueOption[]) => DialogueOption[]) => {
+    if (dialoguePath.length === 0) {
+      // If at root level, close dialogue
+      setShowDialogue(false)
+    } else {
+      // Go back one level in the dialogue tree
+      const newPath = [...dialoguePath]
+      newPath.pop()
+      setDialoguePath(newPath)
       setLastAction(null)
 
-      // Set the response and start typing animation
-      setCurrentResponse(option.response)
-      setTypedText("")
-      setIsTyping(true)
-
-      // Handle special actions
-      if (option.specialAction) {
-        option.specialAction()
-      }
-
-      // Update dialogue path for nested navigation
-      if (option.followUp && option.followUp.length > 0) {
-        setDialoguePath((prev) => [...prev, option])
-
-        // Apply custom filtering if provided
-        const filteredOptions = filterOptions ? filterOptions(option.followUp) : option.followUp
-
-        setCurrentDialogueOptions(filteredOptions)
-      } else {
-        // If there are no follow-ups, update based on the current level
-        setCurrentDialogueOptions([])
-      }
-    },
-    [],
-  )
-
-  // Go back in the dialogue tree
-  const goBackInDialogue = useCallback(() => {
-    if (dialoguePath.length > 0) {
-      // Remove the last option from the path
-      const newPath = [...dialoguePath]
-      const lastOption = newPath.pop()
-      setDialoguePath(newPath)
-
       if (newPath.length === 0) {
-        // If we're back at the root, show the initial options
-        const initialOption = initialDialogue[0]
-        setCurrentResponse(initialOption.response)
-        setCurrentDialogueOptions(initialOption.followUp || [])
+        // Back to root
+        const rootOptions = initialDialogue[0].followUp || []
+        setCurrentDialogueOptions(filterRootOptions ? filterRootOptions(rootOptions) : rootOptions)
+        setCurrentResponse(initialDialogue[0].response)
       } else {
-        // Otherwise, show the options for the last option in the path
-        const lastOption = newPath[newPath.length - 1]
-        setCurrentResponse(lastOption.response)
-        setCurrentDialogueOptions(lastOption.followUp || [])
+        // Back to previous level
+        const parentOption = newPath[newPath.length - 1]
+        setCurrentDialogueOptions(parentOption.followUp || [])
+        setCurrentResponse(parentOption.response)
       }
 
-      // Reset the typing effect
       setTypedText("")
       setIsTyping(true)
     }
-  }, [dialoguePath, initialDialogue])
+  }
 
-  // Close the dialogue
-  const closeDialogue = useCallback(() => {
+  // Close dialogue
+  const closeDialogue = () => {
     setShowDialogue(false)
     setCurrentCharacter(null)
-  }, [])
+  }
 
   // Text typing animation effect
   useEffect(() => {

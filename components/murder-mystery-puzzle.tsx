@@ -1,8 +1,10 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
+import { demonologyBook } from "@/data/books"
+import { botanyBook } from "@/data/books"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -16,18 +18,11 @@ import {
 import { BookModal } from "@/components/murder-mystery/book-modal"
 import { DialogueInterface } from "@/components/murder-mystery/dialogue-interface"
 import { LocationMap } from "@/components/murder-mystery/location-map"
+import { LibraryView } from "@/components/murder-mystery/library-view"
 
 // Import data
-import { policewomanDialogue, morticianDialogue, librarianDialogue } from "@/components/murder-mystery/dialogue-data"
+import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
 import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
-
-// Define the DialogueOption type
-interface DialogueOption {
-  id: string
-  text: string
-  response: string
-  next?: string
-}
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
@@ -51,20 +46,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [hasCheckedBody, setHasCheckedBody] = useState(false)
   const [askedHobbies, setAskedHobbies] = useState(false)
   const [askedPuzzleGames, setAskedPuzzleGames] = useState(false)
-  const [currentBodyPart, setCurrentBodyPart] = useState<string | null>(null)
-  const [askedAboutAnemia, setAskedAboutAnemia] = useState(false)
-  const [askedAboutMarks, setAskedAboutMarks] = useState(false)
 
   // Initialize dialogue system
   const dialogue = useDialogueSystem({
-    initialDialogue:
-      currentLocation === "police station"
-        ? policewomanDialogue
-        : currentLocation === "morgue"
-          ? morticianDialogue
-          : currentLocation === "library"
-            ? librarianDialogue
-            : [],
+    initialDialogue: currentLocation === "police station" ? policewomanDialogue : morticianDialogue,
   })
 
   // Initialize book system
@@ -104,14 +89,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     dialogue.setIsTyping(true)
   }
 
-  // Function to change which body part is being viewed
-  const changeBodyPart = (part: string) => {
-    setCurrentBodyPart(part)
-  }
-
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
-  // Custom filter for dialogue options
-  const filterDialogueOptions = (options: any[]) => {
+  // Custom filter for policewoman dialogue options
+  const filterPoliceOptions = (options: any[]) => {
     return options.filter((opt) => {
       if (opt.id === "police-report") {
         return showPoliceReportOption
@@ -125,6 +105,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       if (opt.id === "can-see-passport-again") {
         return showPassportAgainOption
       }
+      return true
+    })
+  }
+
+  // Custom filter for mortician dialogue options
+  const filterMorticianOptions = (options: any[]) => {
+    return options.filter((opt) => {
       if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
         return !canSeeBody
       }
@@ -148,12 +135,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
         return false
       }
-      if (opt.id === "blood-diseases") {
-        return askedAboutAnemia
-      }
-      if (opt.id === "demons-evil") {
-        return askedAboutMarks
-      }
       return true
     })
   }
@@ -169,26 +150,26 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       setAskedPuzzleGames(true)
     } else if (option.id === "unconditional-friendship") {
       setCanSeeBody(true)
+    } else if (option.id === "can-see-report" || option.id === "can-see-report-again") {
+      setShowPoliceReport(true)
+      dialogue.setLastAction("viewed-report")
+    } else if (option.id === "can-see-passport" || option.id === "can-see-passport-again") {
+      setShowPassport(true)
+      dialogue.setLastAction("viewed-passport")
     } else if (option.id === "check-victim-body") {
       setShowVictimBody(true)
       dialogue.setLastAction("viewed-body")
     } else if (option.id === "check-autopsy-report") {
       setShowAutopsyReport(true)
       dialogue.setLastAction("viewed-autopsy")
-    } else if (option.id === "tell-about-body") {
-      // Check if the mortician mentions anemia
-      if (option.response.includes("anemia")) {
-        setAskedAboutAnemia(true)
-      }
-    } else if (option.id === "weird-signs") {
-      // Check if the mortician mentions marks
-      if (option.response.includes("tattoos")) {
-        setAskedAboutMarks(true)
-      }
     }
 
     // Use the dialogue system to handle the option
-    dialogue.handleDialogueOption(option, filterDialogueOptions)
+    if (dialogue.currentCharacter === "policewoman") {
+      dialogue.handleDialogueOption(option, filterPoliceOptions)
+    } else {
+      dialogue.handleDialogueOption(option, filterMorticianOptions)
+    }
   }
 
   // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // // //
@@ -207,26 +188,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showWitnessesOption = dialogue.askedQuestions.has("tell-about-murder")
   const showPoliceReportAgainOption = dialogue.askedQuestions.has("check-police-report")
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
-  const showCheckVictimBodyOption = canSeeBody
 
-  // Function to start dialogue
-  const startDialogue = useCallback(
-    (character: string, customDialogue?: DialogueOption[]) => {
-      dialogue.startDialogue(character, customDialogue)
-    },
-    [dialogue],
-  )
-
-  // Automatically start dialogue when entering a location
+  // Automatically start dialogue when entering the police station or morgue
   useEffect(() => {
-    if (currentLocation === "police station") {
-      startDialogue("policewoman", policewomanDialogue)
-    } else if (currentLocation === "morgue") {
-      startDialogue("mortician", morticianDialogue)
-    } else if (currentLocation === "library") {
-      startDialogue("librarian", librarianDialogue)
+    if (currentLocation === "police station" || currentLocation === "morgue") {
+      dialogue.startDialogue(currentLocation === "police station" ? "policewoman" : "mortician")
     }
-  }, [currentLocation, startDialogue])
+  }, [currentLocation])
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
@@ -252,31 +220,36 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
-          {/* Dialogue Interface */}
-          {(currentLocation === "police station" || currentLocation === "morgue" || currentLocation === "library") &&
-            dialogue.showDialogue && (
-              <DialogueInterface
-                character={dialogue.currentCharacter}
-                typedText={dialogue.typedText}
-                dialogueOptions={dialogue.currentDialogueOptions}
-                askedQuestions={dialogue.askedQuestions}
-                dialoguePath={dialogue.dialoguePath}
-                onSelectOption={handleDialogueOption}
-                onGoBack={dialogue.goBackInDialogue}
-              />
-            )}
+          {/* Police and Mortician Dialogue */}
+          {(currentLocation === "police station" || currentLocation === "morgue") && dialogue.showDialogue && (
+            <DialogueInterface
+              character={dialogue.currentCharacter}
+              typedText={dialogue.typedText}
+              dialogueOptions={dialogue.currentDialogueOptions}
+              askedQuestions={dialogue.askedQuestions}
+              dialoguePath={dialogue.dialoguePath}
+              onSelectOption={handleDialogueOption}
+              onGoBack={() => {
+                if (dialogue.currentCharacter === "policewoman") {
+                  dialogue.goBackInDialogue(filterPoliceOptions)
+                } else {
+                  dialogue.goBackInDialogue(filterMorticianOptions)
+                }
+              }}
+            />
+          )}
 
           {/* Library View */}
-          {/* {currentLocation === "library" && (
+          {currentLocation === "library" && (
             <LibraryView onOpenBook={bookSystem.openBook} demonologyBook={demonologyBook} botanyBook={botanyBook} />
-          )} */}
+          )}
         </CardContent>
       </Card>
 
       {/* Evidence Modals */}
       <PoliceReportModal isOpen={showPoliceReport} onClose={closePoliceReport} />
       <PassportModal isOpen={showPassport} onClose={closePassport} />
-      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} changeBodyPart={changeBodyPart} />
+      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} />
       <AutopsyReportModal isOpen={showAutopsyReport} onClose={closeAutopsyReport} pages={autopsyReportPages} />
 
       {/* Book Modal */}
