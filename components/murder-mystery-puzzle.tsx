@@ -3,11 +3,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { demonologyBook } from "@/library-books/demonology"
-import { botanyBook } from "@/library-books/botany"
-import { puppiesBook } from "@/library-books/puppies"
-import { librarianFavoriteBook } from "@/library-books/librarian-favorite"
-import { serialKillersBook } from "@/library-books/serial-killers"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -21,11 +16,18 @@ import {
 import { BookModal } from "@/components/murder-mystery/book-modal"
 import { DialogueInterface } from "@/components/murder-mystery/dialogue-interface"
 import { LocationMap } from "@/components/murder-mystery/location-map"
-import { LibrarianDialogue } from "@/components/murder-mystery/librarian-dialogue"
 
 // Import data
-import { policewomanDialogue, morticianDialogue } from "@/components/murder-mystery/dialogue-data"
+import { policewomanDialogue, morticianDialogue, librarianDialogue } from "@/components/murder-mystery/dialogue-data"
 import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
+
+// Define the DialogueOption type
+interface DialogueOption {
+  id: string
+  text: string
+  response: string
+  next?: string
+}
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
@@ -60,8 +62,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         ? policewomanDialogue
         : currentLocation === "morgue"
           ? morticianDialogue
-          : [],
-    // initialDialogue: currentLocation === "police station" ? policewomanDialogue : morticianDialogue,
+          : currentLocation === "library"
+            ? librarianDialogue
+            : [],
   })
 
   // Initialize book system
@@ -107,8 +110,8 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }
 
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
-  // Custom filter for policewoman dialogue options
-  const filterPoliceOptions = (options: any[]) => {
+  // Custom filter for dialogue options
+  const filterDialogueOptions = (options: any[]) => {
     return options.filter((opt) => {
       if (opt.id === "police-report") {
         return showPoliceReportOption
@@ -122,13 +125,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       if (opt.id === "can-see-passport-again") {
         return showPassportAgainOption
       }
-      return true
-    })
-  }
-
-  // Custom filter for mortician dialogue options
-  const filterMorticianOptions = (options: any[]) => {
-    return options.filter((opt) => {
       if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
         return !canSeeBody
       }
@@ -152,13 +148,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
         return false
       }
-      return true
-    })
-  }
-
-  // Custom filter for librarian dialogue options
-  const filterLibrarianOptions = (options: any[]) => {
-    return options.filter((opt) => {
       if (opt.id === "blood-diseases") {
         return askedAboutAnemia
       }
@@ -199,13 +188,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
 
     // Use the dialogue system to handle the option
-    if (dialogue.currentCharacter === "policewoman") {
-      dialogue.handleDialogueOption(option, filterPoliceOptions)
-    } else if (dialogue.currentCharacter === "mortician") {
-      dialogue.handleDialogueOption(option, filterMorticianOptions)
-    } else if (dialogue.currentCharacter === "librarian") {
-      dialogue.handleDialogueOption(option, filterLibrarianOptions)
-    }
+    dialogue.handleDialogueOption(option, filterDialogueOptions)
   }
 
   // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // // //
@@ -226,141 +209,24 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
 
-  // Function to start librarian dialogue
-  const startLibrarianDialogue = useCallback(() => {
-    dialogue.startDialogue("librarian", librarianDialogueTree)
-  }, [dialogue])
-
-  // Automatically start librarian dialogue when entering the library
-  useEffect(() => {
-    if (currentLocation === "library") {
-      startLibrarianDialogue()
-    }
-  }, [currentLocation, startLibrarianDialogue])
-
-  // Define librarian dialogue tree
-  const librarianDialogueTree = [
-    {
-      id: "initial-greeting",
-      text: "Start",
-      response: "Shhhhhhhhh!!!",
-      followUp: [
-        {
-          id: "who-are-you",
-          text: "Who are you?",
-          response: "Shhhhhhhhh!!! Have you no respect for silence?",
-          followUp: [],
-        },
-        {
-          id: "investigating-murder",
-          text: "I'm investigating a murder.",
-          response: "This is a library! Not some detective agency, haan?",
-          followUp: [
-            {
-              id: "reading-for-case",
-              text: "Do you have any reading that could help me with my case?",
-              response: "I'm afraid your 'case' is a lost cause, ji. Such a waste of time.",
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "favorite-book",
-          text: "What's your favorite book?",
-          response: "Oh, this one never fails to bring a smile. Here.",
-          followUp: [
-            {
-              id: "check-favorite-book",
-              text: "Check librarian's favorite book",
-              response: "(hands you a well-worn book with a mischievous smile)",
-              specialAction: () => bookSystem.openBook(librarianFavoriteBook),
-              followUp: [],
-            },
-          ],
-        },
-        {
-          id: "looking-for-book",
-          text: "I'm looking for a book.",
-          response: "Color me impressed. At least you know what a library is for.",
-          followUp: [
-            {
-              id: "book-puppies",
-              text: "I need a book about puppies.",
-              response: "I think this is appropriate for your mental age. Very suitable, no?",
-              followUp: [
-                {
-                  id: "open-puppies-book",
-                  text: '*Open book: "Adorable Photos of Cutesy-cute Puppies for Kids and the Mentally Impaired"*',
-                  response: "(opens a book with images of puppies)",
-                  specialAction: () => bookSystem.openBook(puppiesBook),
-                  followUp: [],
-                },
-              ],
-            },
-            {
-              id: "book-serial-killers",
-              text: "I need a book about serial killers.",
-              response: "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art, you see.",
-              followUp: [
-                {
-                  id: "open-serial-killers-book",
-                  text: '*Open book: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days"*',
-                  response: "(opens a book about famous serial killers)",
-                  specialAction: () => bookSystem.openBook(serialKillersBook),
-                  followUp: [],
-                },
-              ],
-            },
-            {
-              id: "book-botany",
-              text: "I need a book about botany.",
-              response: "Looking for creative ways to get high, huh? Just leave the frogs alone, please.",
-              followUp: [
-                {
-                  id: "open-botany-book",
-                  text: '*Open book: "Plant Identification Manual"*',
-                  response: "(opens botany book)",
-                  specialAction: () => bookSystem.openBook(botanyBook),
-                  followUp: [],
-                },
-              ],
-            },
-            {
-              id: "book-blood-diseases",
-              text: "I need a book about blood diseases.",
-              response: "You do look awful, beta. But I would recommend going to see a doctor.",
-              condition: "askedAboutAnemia",
-              followUp: [
-                {
-                  id: "open-blood-diseases-book",
-                  text: '*Open Book: "Blood diseases: Causes, Signs and Symptoms"*',
-                  response: "(opens a book about blood diseases)",
-                  specialAction: () => {}, // This will be handled in the component for opening the blood diseases book
-                  followUp: [],
-                },
-              ],
-            },
-            {
-              id: "book-demons-evil",
-              text: "I need a book about demons and evil creatures.",
-              response:
-                "Another worshipper, huh? If you summon the Devil, tell him he owes me 5,000 rupees and a kitten.",
-              condition: "askedAboutMarks",
-              followUp: [
-                {
-                  id: "open-demons-book",
-                  text: '*Open Book: "Monsters, Demons and Other Evil Creatures from Around the World"*',
-                  response: "(opens demonology book)",
-                  specialAction: () => bookSystem.openBook(demonologyBook),
-                  followUp: [],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+  // Function to start dialogue
+  const startDialogue = useCallback(
+    (character: string, customDialogue?: DialogueOption[]) => {
+      dialogue.startDialogue(character, customDialogue)
     },
-  ]
+    [dialogue],
+  )
+
+  // Automatically start dialogue when entering a location
+  useEffect(() => {
+    if (currentLocation === "police station") {
+      startDialogue("policewoman", policewomanDialogue)
+    } else if (currentLocation === "morgue") {
+      startDialogue("mortician", morticianDialogue)
+    } else if (currentLocation === "library") {
+      startDialogue("librarian", librarianDialogue)
+    }
+  }, [currentLocation, startDialogue])
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
@@ -386,30 +252,19 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             </div>
           )}
 
-          {/* Police and Mortician Dialogue */}
-          {(currentLocation === "police station" || currentLocation === "morgue") && dialogue.showDialogue && (
-            <DialogueInterface
-              character={dialogue.currentCharacter}
-              typedText={dialogue.typedText}
-              dialogueOptions={dialogue.currentDialogueOptions}
-              askedQuestions={dialogue.askedQuestions}
-              dialoguePath={dialogue.dialoguePath}
-              onSelectOption={handleDialogueOption}
-              onGoBack={dialogue.goBackInDialogue}
-            />
-          )}
-
-          {/* Librarian Dialogue */}
-          {currentLocation === "library" && dialogue.showDialogue && (
-            <LibrarianDialogue
-              typedText={dialogue.typedText}
-              dialogueOptions={dialogue.currentDialogueOptions}
-              askedQuestions={dialogue.askedQuestions}
-              dialoguePath={dialogue.dialoguePath}
-              onSelectOption={handleDialogueOption}
-              onGoBack={dialogue.goBackInDialogue}
-            />
-          )}
+          {/* Dialogue Interface */}
+          {(currentLocation === "police station" || currentLocation === "morgue" || currentLocation === "library") &&
+            dialogue.showDialogue && (
+              <DialogueInterface
+                character={dialogue.currentCharacter}
+                typedText={dialogue.typedText}
+                dialogueOptions={dialogue.currentDialogueOptions}
+                askedQuestions={dialogue.askedQuestions}
+                dialoguePath={dialogue.dialoguePath}
+                onSelectOption={handleDialogueOption}
+                onGoBack={dialogue.goBackInDialogue}
+              />
+            )}
 
           {/* Library View */}
           {/* {currentLocation === "library" && (
