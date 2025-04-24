@@ -1,11 +1,31 @@
+export interface DialogueOption {
+  id: string
+  text: string
+  response: string
+  followUp: DialogueOption[]
+  condition?: string
+  specialAction?: () => void
+}
+
+export interface AutopsyReportPage {
+  title: string
+  content: string
+}
+
 export interface Book {
   title: string
-  pages: any[] // Replace 'any' with a more specific type if possible
+  pages: BookPage[]
   sections?: {
     id: string
     title: string
-    pages: any[] // Replace 'any' with a more specific type if possible
+    pages: BookPage[]
   }[]
+}
+
+export interface BookPage {
+  text?: string
+  imageUrl?: string
+  title?: string
 }
 
 export interface Location {
