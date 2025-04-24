@@ -242,50 +242,61 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         {
           id: "who-are-you",
           text: "Who are you?",
-          response: "Shhhhhhhhh!!!",
+          response: "Shhhhhhhhh!!! Have you no respect for silence?",
           followUp: [],
         },
         {
           id: "investigating-murder",
           text: "I'm investigating a murder.",
-          response: "This is a library!",
-          followUp: [],
+          response: "This is a library! Not some detective agency, haan?",
+          followUp: [
+            {
+              id: "reading-for-case",
+              text: "Do you have any reading that could help me with my case?",
+              response: "I'm afraid your 'case' is a lost cause, ji. Such a waste of time.",
+              followUp: [],
+            },
+          ],
         },
         {
           id: "looking-for-book",
           text: "I'm looking for a book.",
-          response: "Okay. So?",
+          response: "Color me impressed. At least you know what a library is for.",
           followUp: [
             {
               id: "book-puppies",
               text: "I need a book about puppies.",
-              response: "(opens a book with images of puppies)",
+              response: "I think this is appropriate for your mental age. Very suitable, no?",
+              specialAction: () => {}, // This will be handled in the component for opening the puppies book
               followUp: [],
             },
             {
               id: "book-serial-killers",
               text: "I need a book about serial killers.",
-              response: "(opens a book about famous serial killers)",
+              response: "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art, you see.",
+              specialAction: () => {}, // This will be handled in the component for opening the serial killers book
               followUp: [],
             },
             {
               id: "book-botany",
               text: "I need a book about botany.",
-              response: "(opens botany book)",
+              response: "Looking for creative ways to get high, huh? Just leave the frogs alone, please.",
               specialAction: () => bookSystem.openBook(botanyBook),
               followUp: [],
             },
             {
               id: "book-blood-diseases",
               text: "I need a book about blood diseases.",
-              response: "(opens a book about blood diseases)",
+              response: "You do look awful, beta. But I would recommend going to see a doctor.",
               condition: "askedAboutAnemia",
+              specialAction: () => {}, // This will be handled in the component for opening the blood diseases book
               followUp: [],
             },
             {
               id: "book-demons-evil",
               text: "I need a book about demons and evil creatures.",
-              response: "(opens demonology book)",
+              response:
+                "Another worshipper, huh? If you summon the Devil, tell him he owes me 5,000 rupees and a kitten.",
               condition: "askedAboutMarks",
               specialAction: () => bookSystem.openBook(demonologyBook),
               followUp: [],
