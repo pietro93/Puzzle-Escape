@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { demonologyBook } from "@/library-books/demonology"
 import { botanyBook } from "@/library-books/botany"
+import { puppiesBook } from "@/library-books/puppies"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -267,7 +268,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               id: "book-puppies",
               text: "I need a book about puppies.",
               response: "I think this is appropriate for your mental age. Very suitable, no?",
-              specialAction: () => {}, // This will be handled in the component for opening the puppies book
+              specialAction: () => bookSystem.openBook(puppiesBook),
               followUp: [],
             },
             {
