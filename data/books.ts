@@ -7,11 +7,6 @@ export interface BookPage {
 export interface Book {
   title: string
   pages: BookPage[]
-  sections?: {
-    id: string
-    title: string
-    pages: BookPage[]
-  }[]
 }
 
 // Define the demonology book

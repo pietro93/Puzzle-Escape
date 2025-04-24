@@ -35,7 +35,7 @@ export function BookModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-auto">
+      <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 w-full max-w-2xl">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-gray-200">{book.title}</h3>
           <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white">
@@ -74,12 +74,12 @@ export function BookModal({
                   alt={content.title || "Book illustration"}
                   width={200}
                   height={150}
-                  className="rounded-md pixelated"
+                  className="rounded-md"
                 />
               </div>
             )}
 
-            {content.text && <div className="text-gray-300" dangerouslySetInnerHTML={{ __html: content.text }} />}
+            {content.text && <div className="text-gray-300 whitespace-pre-line">{content.text}</div>}
           </div>
         )}
 
