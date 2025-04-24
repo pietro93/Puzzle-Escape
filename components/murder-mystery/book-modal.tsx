@@ -74,7 +74,7 @@ export function BookModal({
                   alt={content.title || "Book illustration"}
                   width={200}
                   height={150}
-                  className="rounded-md"
+                  className="rounded-md pixelated"
                 />
               </div>
             )}
