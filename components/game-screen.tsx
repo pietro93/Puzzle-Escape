@@ -380,7 +380,7 @@ export default function GameScreen({
           "It burns...",
           "My... thoughts...",
         ]
-        dialogue = earlyDialogues[Math.floor(Math.random() * earlyDialogues.length)]
+        dialogue = earlyDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       } else if (binaryCorrectCombinations <= 3) {
         // Middle stage - increasing pain, less coherent
         const middleDialogues = [
@@ -400,7 +400,7 @@ export default function GameScreen({
           "*gurgling sounds*",
           "END... THIS...",
         ]
-        dialogue = lateDialogues[Math.floor(Math.random() * lateDialogues.length)]
+        dialogue = lateDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       }
     }
 
