@@ -6,6 +6,8 @@ import Image from "next/image"
 import { demonologyBook } from "@/library-books/demonology"
 import { botanyBook } from "@/library-books/botany"
 import { puppiesBook } from "@/library-books/puppies"
+import { librarianFavoriteBook } from "@/library-books/librarian-favorite"
+import { serialKillersBook } from "@/library-books/serial-killers"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -260,6 +262,20 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
           ],
         },
         {
+          id: "favorite-book",
+          text: "What's your favorite book?",
+          response: "Oh, this one never fails to bring a smile. Here.",
+          followUp: [
+            {
+              id: "check-favorite-book",
+              text: "Check librarian's favorite book",
+              response: "(hands you a well-worn book with a mischievous smile)",
+              specialAction: () => bookSystem.openBook(librarianFavoriteBook),
+              followUp: [],
+            },
+          ],
+        },
+        {
           id: "looking-for-book",
           text: "I'm looking for a book.",
           response: "Color me impressed. At least you know what a library is for.",
@@ -268,30 +284,58 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               id: "book-puppies",
               text: "I need a book about puppies.",
               response: "I think this is appropriate for your mental age. Very suitable, no?",
-              specialAction: () => bookSystem.openBook(puppiesBook),
-              followUp: [],
+              followUp: [
+                {
+                  id: "open-puppies-book",
+                  text: '*Open book: "Adorable Photos of Cutesy-cute Puppies for Kids and the Mentally Impaired"*',
+                  response: "(opens a book with images of puppies)",
+                  specialAction: () => bookSystem.openBook(puppiesBook),
+                  followUp: [],
+                },
+              ],
             },
             {
               id: "book-serial-killers",
               text: "I need a book about serial killers.",
               response: "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art, you see.",
-              specialAction: () => {}, // This will be handled in the component for opening the serial killers book
-              followUp: [],
+              followUp: [
+                {
+                  id: "open-serial-killers-book",
+                  text: '*Open book: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days"*',
+                  response: "(opens a book about famous serial killers)",
+                  specialAction: () => bookSystem.openBook(serialKillersBook),
+                  followUp: [],
+                },
+              ],
             },
             {
               id: "book-botany",
               text: "I need a book about botany.",
               response: "Looking for creative ways to get high, huh? Just leave the frogs alone, please.",
-              specialAction: () => bookSystem.openBook(botanyBook),
-              followUp: [],
+              followUp: [
+                {
+                  id: "open-botany-book",
+                  text: '*Open book: "Plant Identification Manual"*',
+                  response: "(opens botany book)",
+                  specialAction: () => bookSystem.openBook(botanyBook),
+                  followUp: [],
+                },
+              ],
             },
             {
               id: "book-blood-diseases",
               text: "I need a book about blood diseases.",
               response: "You do look awful, beta. But I would recommend going to see a doctor.",
               condition: "askedAboutAnemia",
-              specialAction: () => {}, // This will be handled in the component for opening the blood diseases book
-              followUp: [],
+              followUp: [
+                {
+                  id: "open-blood-diseases-book",
+                  text: '*Open Book: "Blood diseases: Causes, Signs and Symptoms"*',
+                  response: "(opens a book about blood diseases)",
+                  specialAction: () => {}, // This will be handled in the component for opening the blood diseases book
+                  followUp: [],
+                },
+              ],
             },
             {
               id: "book-demons-evil",
@@ -299,8 +343,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               response:
                 "Another worshipper, huh? If you summon the Devil, tell him he owes me 5,000 rupees and a kitten.",
               condition: "askedAboutMarks",
-              specialAction: () => bookSystem.openBook(demonologyBook),
-              followUp: [],
+              followUp: [
+                {
+                  id: "open-demons-book",
+                  text: '*Open Book: "Monsters, Demons and Other Evil Creatures from Around the World"*',
+                  response: "(opens demonology book)",
+                  specialAction: () => bookSystem.openBook(demonologyBook),
+                  followUp: [],
+                },
+              ],
             },
           ],
         },
