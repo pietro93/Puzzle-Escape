@@ -233,7 +233,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     } else if (currentLocation === "morgue") {
       dialogue.startDialogue("mortician", morticianDialogue)
     }
-  }, [currentLocation])
+  }, [currentLocation, dialogue.startDialogue])
 
   // Define librarian dialogue tree
   const librarianDialogueTree = [
@@ -406,9 +406,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               onSelectOption={handleDialogueOption}
               onGoBack={() => {
                 if (dialogue.currentCharacter === "policewoman") {
-                  dialogue.goBackInDialogue(filterPoliceOptions)
+                  dialogue.goBackInDialogue()
                 } else {
-                  dialogue.goBackInDialogue(filterMorticianOptions)
+                  dialogue.goBackInDialogue()
                 }
               }}
             />
@@ -422,7 +422,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               askedQuestions={dialogue.askedQuestions}
               dialoguePath={dialogue.dialoguePath}
               onSelectOption={handleDialogueOption}
-              onGoBack={() => dialogue.goBackInDialogue(filterLibrarianOptions)}
+              onGoBack={dialogue.goBackInDialogue}
             />
           )}
 

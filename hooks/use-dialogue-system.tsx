@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
+
 import { useState, useRef, useCallback } from "react"
 import type { DialogueOption } from "@/components/murder-mystery/types"
 
@@ -69,16 +71,7 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
         setCurrentDialogueOptions(filteredOptions)
       } else {
         // If there are no follow-ups, update based on the current level
-        if (dialoguePath.length === 0) {
-          // At root level
-          const rootOptions = initialDialogue[0].followUp || []
-          setCurrentDialogueOptions(filterOptions ? filterOptions(rootOptions) : rootOptions)
-        } else {
-          // At a nested level
-          const parentOption = dialoguePath[dialoguePath.length - 1]
-          const nestedOptions = parentOption.followUp || []
-          setCurrentDialogueOptions(filterOptions ? filterOptions(nestedOptions) : nestedOptions)
-        }
+        setCurrentDialogueOptions([])
       }
     },
     [],
@@ -89,7 +82,7 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     if (dialoguePath.length > 0) {
       // Remove the last option from the path
       const newPath = [...dialoguePath]
-      newPath.pop()
+      const lastOption = newPath.pop()
       setDialoguePath(newPath)
 
       if (newPath.length === 0) {
@@ -115,6 +108,31 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     setShowDialogue(false)
     setCurrentCharacter(null)
   }, [])
+
+  // Text typing animation effect
+  useEffect(() => {
+    if (isTyping && currentResponse) {
+      let currentIndex = 0
+
+      const typeNextCharacter = () => {
+        if (currentIndex < currentResponse.length) {
+          setTypedText(currentResponse.substring(0, currentIndex + 1))
+          currentIndex++
+          typingRef.current = setTimeout(typeNextCharacter, typingSpeed)
+        } else {
+          setIsTyping(false)
+        }
+      }
+
+      typingRef.current = setTimeout(typeNextCharacter, typingSpeed)
+
+      return () => {
+        if (typingRef.current) {
+          clearTimeout(typingRef.current)
+        }
+      }
+    }
+  }, [isTyping, currentResponse, typingSpeed])
 
   return {
     showDialogue,
