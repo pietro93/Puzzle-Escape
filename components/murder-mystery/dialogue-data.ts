@@ -306,3 +306,126 @@ export const morticianDialogue: DialogueOption[] = [
     ],
   },
 ]
+
+// Librarian dialogue tree
+export const librarianDialogue: DialogueOption[] = [
+  {
+    id: "initial-greeting",
+    text: "Start",
+    response: "...",
+    followUp: [
+      {
+        id: "who-are-you",
+        text: "Who are you?",
+        response: "Shhhhhhhhh!!!",
+        followUp: [],
+      },
+      {
+        id: "investigating-murder",
+        text: "I'm investigating a murder.",
+        response: "This is a library!",
+        followUp: [
+          {
+            id: "reading-for-case",
+            text: "Do you have any reading that could help me with my case?",
+            response: "Whatever \"case\" you may be suffering from, I'm afraid it's a lost cause.",
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "looking-for-book",
+        text: "I'm looking for a book.",
+        response: "Color me impressed.",
+        followUp: [
+          {
+            id: "whats-your-favorite",
+            text: "What's your favorite?",
+            response: "This one never fails to put a smile on my face.",
+            followUp: [
+              {
+                id: "read-favorite-book",
+                text: "Read the librarian's favorite book",
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-puppies",
+            text: "I need a book about puppies.",
+            response: "I think this is appropriate for your mental age.",
+            followUp: [
+              {
+                id: "read-puppies-book",
+                text: 'Read book: "Adorable Photos of Cutesy-cute Puppies for Kids and the Mentally Impaired"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-serial-killers",
+            text: "I need a book about serial killers.",
+            response: "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art.",
+            followUp: [
+              {
+                id: "read-serial-killers-book",
+                text: 'Read book: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-botany",
+            text: "I need a book about botany.",
+            response: "Looking for creative ways to get high huh? Just leave the frogs alone.",
+            followUp: [
+              {
+                id: "read-botany-book",
+                text: 'Read book: "Plant Identification Manual"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-blood-diseases",
+            text: "I need a book about blood diseases.",
+            response: "You do look awful. But I would recommend going to see a doctor.",
+            condition: "knows-about-anemia",
+            followUp: [
+              {
+                id: "read-blood-diseases-book",
+                text: 'Read Book: "Blood diseases: Causes, Signs and Symptoms"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-demons",
+            text: "I need a book about demons and evil creatures.",
+            response: "Another worshipper huh? If you summon the Devil, tell him he owes me 5,000 rupees and a kitten.",
+            condition: "knows-about-body-marks",
+            followUp: [
+              {
+                id: "read-demons-book",
+                text: 'Read Book: "Monsters, Demons and Other Evil Creatures from Around the World"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+]
