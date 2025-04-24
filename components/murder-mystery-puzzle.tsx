@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { demonologyBook } from "@/library-books/demonology"
@@ -226,14 +226,17 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
   const showCheckVictimBodyOption = canSeeBody
 
-  // Automatically start dialogue when entering the police station or morgue
+  // Function to start librarian dialogue
+  const startLibrarianDialogue = useCallback(() => {
+    dialogue.startDialogue("librarian", librarianDialogueTree)
+  }, [dialogue])
+
+  // Automatically start librarian dialogue when entering the library
   useEffect(() => {
-    if (currentLocation === "police station") {
-      dialogue.startDialogue("policewoman", policewomanDialogue)
-    } else if (currentLocation === "morgue") {
-      dialogue.startDialogue("mortician", morticianDialogue)
+    if (currentLocation === "library") {
+      startLibrarianDialogue()
     }
-  }, [currentLocation, dialogue.startDialogue])
+  }, [currentLocation, startLibrarianDialogue])
 
   // Define librarian dialogue tree
   const librarianDialogueTree = [
@@ -359,18 +362,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     },
   ]
 
-  // Function to start librarian dialogue
-  const startLibrarianDialogue = () => {
-    dialogue.startDialogue("librarian", librarianDialogueTree)
-  }
-
-  // Automatically start librarian dialogue when entering the library
-  useEffect(() => {
-    if (currentLocation === "library") {
-      startLibrarianDialogue()
-    }
-  }, [currentLocation])
-
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
@@ -404,13 +395,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               askedQuestions={dialogue.askedQuestions}
               dialoguePath={dialogue.dialoguePath}
               onSelectOption={handleDialogueOption}
-              onGoBack={() => {
-                if (dialogue.currentCharacter === "policewoman") {
-                  dialogue.goBackInDialogue()
-                } else {
-                  dialogue.goBackInDialogue()
-                }
-              }}
+              onGoBack={dialogue.goBackInDialogue}
             />
           )}
 
