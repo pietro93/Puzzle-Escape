@@ -94,7 +94,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const filterPoliceOptions = (options: any[]) => {
     return options.filter((opt) => {
       if (opt.id === "police-report") {
-        return showPoliceReportOption
+        // Show police report option only if all required questions have been asked
+        return (
+          dialogue.askedQuestions.has("what-natural-causes") &&
+          dialogue.askedQuestions.has("was-there-no-weapon") &&
+          dialogue.askedQuestions.has("crime-scene-items")
+        )
       }
       if (opt.id === "were-there-any-witnesses") {
         return showWitnessesOption

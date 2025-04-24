@@ -215,6 +215,36 @@ export const morticianDialogue: DialogueOption[] = [
         ],
       },
       {
+        id: "be-your-friend",
+        text: "I'll be your friend!",
+        response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
+        condition: "asked-about-friends",
+        followUp: [
+          {
+            id: "hobbies",
+            text: "Do you have any hobbies?",
+            response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
+            specialAction: () => {}, // This will be handled in the component
+            followUp: [],
+          },
+          {
+            id: "puzzle-games",
+            text: "Do you like puzzle games?",
+            response: "What am I, some kind of loser? I have a life, you know.",
+            specialAction: () => {}, // This will be handled in the component
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "unconditional-friendship",
+        text: "I am not leaving until you accept my unconditional love and friendship.",
+        response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
+        condition: "asked-both-hobby-questions",
+        specialAction: () => {}, // This will be handled in the component
+        followUp: [],
+      },
+      {
         id: "like-job",
         text: "Do you like your job?",
         response: "I enjoy the company. They're not demanding conversationalists.",
@@ -230,38 +260,7 @@ export const morticianDialogue: DialogueOption[] = [
                 text: "Don't you have any friends?",
                 response: "In this line of work, the living are more trouble than they're worth.",
                 specialAction: () => {}, // This will be handled in the component
-                followUp: [
-                  {
-                    id: "be-your-friend",
-                    text: "I'll be your friend!",
-                    response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
-                    condition: "asked-about-friends",
-                    followUp: [
-                      {
-                        id: "hobbies",
-                        text: "Do you have any hobbies?",
-                        response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
-                        specialAction: () => {}, // This will be handled in the component
-                        followUp: [],
-                      },
-                      {
-                        id: "puzzle-games",
-                        text: "Do you like puzzle games?",
-                        response: "What am I, some kind of loser? I have a life, you know.",
-                        specialAction: () => {}, // This will be handled in the component
-                        followUp: [],
-                      },
-                      {
-                        id: "unconditional-friendship",
-                        text: "I am not leaving until you accept my unconditional love and friendship.",
-                        response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
-                        condition: "asked-both-hobby-questions",
-                        specialAction: () => {}, // This will be handled in the component
-                        followUp: [],
-                      },
-                    ],
-                  },
-                ],
+                followUp: [],
               },
             ],
           },
