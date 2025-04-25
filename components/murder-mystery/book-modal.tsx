@@ -70,7 +70,7 @@ export function BookModal({
         {/* Book content */}
         {content && (
           <div className="p-4 bg-gray-800 rounded-lg">
-            {content.title && <h4 className="text-lg font-medium text-gray-200 font-pixel">{content.title}</h4>}
+            {content.title && <h4 className="text-lg font-medium text-red-500 font-pixel mb-4">{content.title}</h4>}
 
             {content.imageUrl && (
               <div className="mb-4 flex flex-col items-center">
@@ -90,7 +90,10 @@ export function BookModal({
             )}
 
             {content.text && (
-              <div className="text-gray-300 font-pixel text-sm whitespace-pre-line leading-relaxed">{content.text}</div>
+              <div
+                className="text-gray-300 font-pixel text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: content.text }}
+              />
             )}
           </div>
         )}
