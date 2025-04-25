@@ -307,7 +307,7 @@ export const morticianDialogue: DialogueOption[] = [
   },
 ]
 
-// Librarian dialogue tree - completely replaced with the exact text provided
+// Librarian dialogue tree - updated to include Genghis Khan book as favorite
 export const librarianDialogue: DialogueOption[] = [
   {
     id: "initial-greeting",
@@ -338,6 +338,20 @@ export const librarianDialogue: DialogueOption[] = [
         text: "I'm looking for a book.",
         response: "Color me impressed.",
         followUp: [
+          {
+            id: "whats-your-favorite",
+            text: "What's your favorite?",
+            response: "This one never fails to put a smile on my face.",
+            followUp: [
+              {
+                id: "read-favorite-book",
+                text: 'Read book: "Absolutely True* Facts About Genghis Khan (*Not Actually True)"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
           {
             id: "book-about-puppies",
             text: "I need a book about puppies.",
