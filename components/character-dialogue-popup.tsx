@@ -41,7 +41,9 @@ export default function CharacterDialoguePopup({
                     : "/images/sphinx.webp"
                   : character === "brain"
                     ? brainImage || "/images/brainlamp.webp" // Use the brainImage prop
-                    : `/images/murder-mystery/${character}.webp`
+                    : character === "devil"
+                      ? "/images/devil.webp"
+                      : `/images/murder-mystery/${character}.webp`
               }
               alt={
                 isGuardPopup
@@ -50,7 +52,9 @@ export default function CharacterDialoguePopup({
                     : "Sphinx"
                   : character === "brain"
                     ? "Suffering Head"
-                    : character
+                    : character === "devil"
+                      ? "Devil"
+                      : character
               }
               width={128}
               height={128}
@@ -74,6 +78,14 @@ export default function CharacterDialoguePopup({
               Back
             </button>
           )}
+
+          {/* Close Button */}
+          <button
+            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel ml-2"
+            onClick={onClose}
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
