@@ -490,6 +490,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [knowsAboutAnemia, setKnowsAboutAnemia] = useState(false)
   const [knowsAboutBodyMarks, setKnowsAboutBodyMarks] = useState(false)
 
+  // Track if the demonology book has been opened
+  const [demonologyBookOpened, setDemonologyBookOpened] = useState(false)
+
   // Initialize dialogue system
   const dialogue = useDialogueSystem({
     initialDialogue:
@@ -657,31 +660,31 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
   // Handle opening books
   const handleOpenBook = (bookId: string) => {
-    let book
-    switch (bookId) {
-      case "favorite":
-        book = genghisKhanBook
-        break
-      case "puppies":
-        book = puppiesBook
-        break
-      case "serial-killers":
-        book = serialKillersBook
-        break
-      case "botany":
-        book = botanyBook
-        break
-      case "blood-diseases":
-        book = bloodDiseasesBook
-        break
-      case "demons":
-        book = demonologyBook
-        break
-      default:
-        book = { title: "Unknown Book", sections: [{ title: "Content", pages: ["This book doesn't exist."] }] }
+    let book = null
+    if (bookId === "favorite") {
+      book = genghisKhanBook
+    } else if (bookId === "puppies") {
+      book = puppiesBook
+    } else if (bookId === "serial-killers") {
+      book = serialKillersBook
+    } else if (bookId === "botany") {
+      book = botanyBook
+    } else if (bookId === "blood-diseases") {
+      book = bloodDiseasesBook
+    } else if (bookId === "demons") {
+      book = demonologyBook
     }
 
-    bookSystem.openBook(book)
+    if (book) {
+      // Check if it's the demonology book and it hasn't been opened before
+      if (book.title === "Demonology" && !demonologyBookOpened) {
+        // Trigger the devil dialogue
+        dialogue.startDialogue("devil")
+        // Mark the demonology book as opened
+        setDemonologyBookOpened(true)
+      }
+      bookSystem.openBook(book)
+    }
   }
 
   // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // // //
