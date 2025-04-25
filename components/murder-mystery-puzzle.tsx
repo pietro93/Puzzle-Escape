@@ -21,7 +21,6 @@ import {
 import { BookModal } from "@/components/murder-mystery/book-modal"
 import { DialogueInterface } from "@/components/murder-mystery/dialogue-interface"
 import { LocationMap } from "@/components/murder-mystery/location-map"
-import CharacterDialoguePopup from "@/components/character-dialogue-popup"
 
 // Import data
 import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
@@ -470,13 +469,6 @@ const librarianDialogue: DialogueOption[] = [
   },
 ]
 
-// Devil dialogue for when the demonology book is opened
-const devilDialogue = {
-  character: "devil",
-  dialogue:
-    "Ah, I see you've found my little collection! *chuckles* I took the liberty of... editing it a bit. All those demon names were so BORING. Much more mysterious with my special symbol, don't you think? Makes the investigation more fun! Good luck figuring out which demon is draining your victim dry! *evil laugh*",
-}
-
 export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
   // Location State
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
@@ -486,9 +478,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [showPassport, setShowPassport] = useState(false)
   const [showVictimBody, setShowVictimBody] = useState(false)
   const [showAutopsyReport, setShowAutopsyReport] = useState(false)
-
-  // Devil dialogue state
-  const [showDevilDialogue, setShowDevilDialogue] = useState(false)
 
   // Local State
   const [askedAboutFriends, setAskedAboutFriends] = useState(false)
@@ -549,11 +538,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     dialogue.setCurrentResponse("Satisfied? Now get out of here.")
     dialogue.setTypedText("")
     dialogue.setIsTyping(true)
-  }
-
-  // Close devil dialogue
-  const closeDevilDialogue = () => {
-    setShowDevilDialogue(false)
   }
 
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
@@ -689,14 +673,16 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       book = bloodDiseasesBook
     } else if (bookId === "demons") {
       book = demonologyBook
-      // Show devil dialogue if this is the first time opening the demonology book
-      if (!demonologyBookOpened) {
-        setShowDevilDialogue(true)
-        setDemonologyBookOpened(true)
-      }
     }
 
     if (book) {
+      // Check if it's the demonology book and it hasn't been opened before
+      if (book.title === "Demonology" && !demonologyBookOpened) {
+        // Trigger the devil dialogue
+        dialogue.startDialogue("devil")
+        // Mark the demonology book as opened
+        setDemonologyBookOpened(true)
+      }
       bookSystem.openBook(book)
     }
   }
@@ -715,7 +701,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const showPoliceReportOption =
     dialogue.askedQuestions.has("what-natural-causes") && dialogue.askedQuestions.has("was-there-no-weapon")
   const showWitnessesOption = dialogue.askedQuestions.has("tell-about-murder")
-  const showPoliceReportAgainOption = dialogue.askedQuestions.has("check-police-report")("check-police-report")
+  const showPoliceReportAgainOption = dialogue.askedQuestions.has("check-police-report")
   const showPassportAgainOption = dialogue.askedQuestions.has("check-passport")
 
   // Automatically start dialogue when entering the police station, morgue, or library
@@ -803,17 +789,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       <PassportModal isOpen={showPassport} onClose={closePassport} />
       <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} />
       <AutopsyReportModal isOpen={showAutopsyReport} onClose={closeAutopsyReport} pages={autopsyReportPages} />
-
-      {/* Devil Dialogue Popup */}
-      {showDevilDialogue && (
-        <CharacterDialoguePopup
-          character="devil"
-          dialogue={devilDialogue.dialogue}
-          onClose={closeDevilDialogue}
-          onBack={() => {}}
-          hasParentDialogue={false}
-        />
-      )}
 
       {/* Book Modal */}
       <BookModal
