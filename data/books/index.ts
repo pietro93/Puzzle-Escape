@@ -1,6 +1,6 @@
 import { bloodDiseasesBook } from "./blood-diseases"
 import { serialKillersBook } from "./serial-killers"
-import { demonologyBook } from "../books"
+import { demonologyBook } from "./demonology"
 import { botanyBook } from "../books"
 import { puppiesBook } from "./puppies"
 import { genghisKhanBook } from "./genghis-khan"

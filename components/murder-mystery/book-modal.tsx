@@ -37,8 +37,13 @@ export function BookModal({
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 w-full max-w-2xl">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold text-gray-200">{book.title}</h3>
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white">
+          <h3 className="text-xl font-semibold text-gray-200 font-pixel">{book.title}</h3>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="text-gray-400 font-pixel text-sm hover:text-white"
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -52,8 +57,8 @@ export function BookModal({
                 onClick={() => onSwitchSection(section.id)}
                 className={`px-4 py-2 whitespace-nowrap ${
                   currentSection === section.id
-                    ? "text-purple-300 border-b-2 border-purple-300"
-                    : "text-gray-400 hover:text-gray-200"
+                    ? "text-purple-300 font-pixel text-sm border-b-2 border-purple-300"
+                    : "text-gray-400 font-pixel text-sm hover:text-gray-200"
                 }`}
               >
                 {section.title}
@@ -65,7 +70,7 @@ export function BookModal({
         {/* Book content */}
         {content && (
           <div className="p-4 bg-gray-800 rounded-lg">
-            {content.title && <h4 className="text-lg font-medium text-gray-200 mb-2">{content.title}</h4>}
+            {content.title && <h4 className="text-lg font-medium text-gray-200 font-pixel">{content.title}</h4>}
 
             {content.imageUrl && (
               <div className="mb-4 flex flex-col items-center">
@@ -76,23 +81,41 @@ export function BookModal({
                   height={300}
                   className="rounded-md pixelated object-contain"
                 />
-                {content.caption && <p className="text-gray-300 mt-2 text-center italic">{content.caption}</p>}
+                {content.caption && (
+                  <p className="text-gray-300 font-pixel text-sm mt-2 text-center italic leading-relaxed">
+                    {content.caption}
+                  </p>
+                )}
               </div>
             )}
 
-            {content.text && <div className="text-gray-300 whitespace-pre-line">{content.text}</div>}
+            {content.text && (
+              <div className="text-gray-300 font-pixel text-sm whitespace-pre-line leading-relaxed">{content.text}</div>
+            )}
           </div>
         )}
 
         {/* Navigation */}
         <div className="flex justify-between mt-4">
-          <Button variant="outline" size="sm" onClick={onPrevPage} disabled={currentPage === 0}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onPrevPage}
+            disabled={currentPage === 0}
+            className="font-pixel text-sm"
+          >
             Previous Page
           </Button>
-          <span className="text-gray-400">
+          <span className="text-gray-400 font-pixel text-sm">
             Page {currentPage + 1} of {totalPages}
           </span>
-          <Button variant="outline" size="sm" onClick={onNextPage} disabled={currentPage === totalPages - 1}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onNextPage}
+            disabled={currentPage === totalPages - 1}
+            className="font-pixel text-sm"
+          >
             Next Page
           </Button>
         </div>
