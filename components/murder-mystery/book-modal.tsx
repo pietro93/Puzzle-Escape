@@ -45,12 +45,12 @@ export function BookModal({
 
         {/* Section tabs for books with sections */}
         {book.sections && (
-          <div className="flex mb-4 border-b border-gray-700">
+          <div className="flex mb-4 border-b border-gray-700 overflow-x-auto">
             {book.sections.map((section) => (
               <button
                 key={section.id}
                 onClick={() => onSwitchSection(section.id)}
-                className={`px-4 py-2 ${
+                className={`px-4 py-2 whitespace-nowrap ${
                   currentSection === section.id
                     ? "text-purple-300 border-b-2 border-purple-300"
                     : "text-gray-400 hover:text-gray-200"
@@ -68,14 +68,15 @@ export function BookModal({
             {content.title && <h4 className="text-lg font-medium text-gray-200 mb-2">{content.title}</h4>}
 
             {content.imageUrl && (
-              <div className="mb-4 flex justify-center">
+              <div className="mb-4 flex flex-col items-center">
                 <Image
                   src={content.imageUrl || "/placeholder.svg"}
-                  alt={content.title || "Book illustration"}
-                  width={200}
-                  height={150}
-                  className="rounded-md"
+                  alt={content.caption || content.title || "Book illustration"}
+                  width={300}
+                  height={300}
+                  className="rounded-md pixelated object-contain"
                 />
+                {content.caption && <p className="text-gray-300 mt-2 text-center italic">{content.caption}</p>}
               </div>
             )}
 

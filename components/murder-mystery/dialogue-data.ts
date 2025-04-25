@@ -307,7 +307,7 @@ export const morticianDialogue: DialogueOption[] = [
   },
 ]
 
-// Librarian dialogue tree
+// Librarian dialogue tree - completely replaced with the exact text provided
 export const librarianDialogue: DialogueOption[] = [
   {
     id: "initial-greeting",
@@ -328,7 +328,7 @@ export const librarianDialogue: DialogueOption[] = [
           {
             id: "reading-for-case",
             text: "Do you have any reading that could help me with my case?",
-            response: "Whatever \"case\" you may be suffering from, I'm afraid it's a lost cause.",
+            response: 'I\'m afraid your "case" is a lost cause.',
             followUp: [],
           },
         ],
@@ -338,20 +338,6 @@ export const librarianDialogue: DialogueOption[] = [
         text: "I'm looking for a book.",
         response: "Color me impressed.",
         followUp: [
-          {
-            id: "whats-your-favorite",
-            text: "What's your favorite?",
-            response: "This one never fails to put a smile on my face.",
-            followUp: [
-              {
-                id: "read-favorite-book",
-                text: "Read the librarian's favorite book",
-                response: "",
-                followUp: [],
-                specialAction: () => {}, // This will be handled in the component
-              },
-            ],
-          },
           {
             id: "book-about-puppies",
             text: "I need a book about puppies.",

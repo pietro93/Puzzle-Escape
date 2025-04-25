@@ -14,18 +14,21 @@ export interface AutopsyReportPage {
 
 export interface Book {
   title: string
+  pages?: BookPage[]
+  sections?: BookSection[]
+}
+
+export interface BookSection {
+  id: string
+  title: string
   pages: BookPage[]
-  sections?: {
-    id: string
-    title: string
-    pages: BookPage[]
-  }[]
 }
 
 export interface BookPage {
+  title?: string
   text?: string
   imageUrl?: string
-  title?: string
+  caption?: string
 }
 
 export interface Location {
