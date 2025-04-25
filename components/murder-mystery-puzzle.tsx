@@ -6,6 +6,8 @@ import Image from "next/image"
 import { demonologyBook } from "@/data/books"
 import { botanyBook } from "@/data/books"
 import { puppiesBook } from "@/data/books/puppies"
+import { genghisKhanBook } from "@/data/books/genghis-khan"
+import { serialKillersBook } from "@/data/books/serial-killers"
 
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
@@ -348,30 +350,23 @@ export const librarianDialogue: DialogueOption[] = [
   {
     id: "initial-greeting",
     text: "Start",
-    response: "Welcome to the library. Shhh! How can I help you?",
+    response: "...",
     followUp: [
       {
         id: "who-are-you",
         text: "Who are you?",
-        response: "I am the librarian. I guard the books.",
-        followUp: [
-          {
-            id: "guard-books",
-            text: "You guard the books?",
-            response: "Yes. They are very important.",
-            followUp: [],
-          },
-        ],
+        response: "Shhhhhhhhh!!!",
+        followUp: [],
       },
       {
-        id: "tell-about-murder",
+        id: "investigating-murder",
         text: "I'm investigating a murder.",
-        response: "A murder? How exciting! I mean, how terrible.",
+        response: "This is a library!",
         followUp: [
           {
-            id: "what-know",
-            text: "What do you know about it?",
-            response: "Nothing. I just read books.",
+            id: "reading-for-case",
+            text: "Do you have any reading that could help me with my case?",
+            response: 'I\'m afraid your "case" is a lost cause.',
             followUp: [],
           },
         ],
@@ -379,87 +374,89 @@ export const librarianDialogue: DialogueOption[] = [
       {
         id: "looking-for-book",
         text: "I'm looking for a book.",
-        response: "Oh, we have many books. What kind of book are you looking for?",
+        response: "Color me impressed.",
         followUp: [
           {
-            id: "favorite-book",
-            text: "What's your favorite book?",
-            response: "Oh, I have so many! But I do love a good mystery.",
+            id: "whats-your-favorite",
+            text: "What's your favorite?",
+            response: "This one never fails to put a smile on my face.",
             followUp: [
               {
                 id: "read-favorite-book",
-                text: "Can I read it?",
-                response: "Sure, but be careful! It's very old.",
+                text: 'Read book: "Absolutely True* Facts About Genghis Khan (*Not Actually True)"',
+                response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
           {
-            id: "puppies-book",
-            text: "Do you have any books about puppies?",
-            response: "Of course! We have a whole section on adorable animals.",
+            id: "book-about-puppies",
+            text: "I need a book about puppies.",
+            response: "I think this is appropriate for your mental age.",
             followUp: [
               {
                 id: "read-puppies-book",
-                text: "Can I read one?",
-                response: "Sure, but don't get any drool on the pages!",
+                text: 'Read book: "Adorable Photos of Cutesy-cute Puppies for Kids and the Mentally Impaired"',
+                response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
           {
-            id: "serial-killers-book",
-            text: "Do you have any books about serial killers?",
-            response: "We have a true crime section, but I wouldn't recommend it.",
+            id: "book-about-serial-killers",
+            text: "I need a book about serial killers.",
+            response: "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art.",
             followUp: [
               {
                 id: "read-serial-killers-book",
-                text: "Can I read one anyway?",
-                response: "If you insist, but don't say I didn't warn you.",
+                text: 'Read book: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days"',
+                response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
           {
-            id: "botany-book",
-            text: "Do you have any books about botany?",
-            response: "Yes, we have a whole section on plants.",
+            id: "book-about-botany",
+            text: "I need a book about botany.",
+            response: "Looking for creative ways to get high huh? Just leave the frogs alone.",
             followUp: [
               {
                 id: "read-botany-book",
-                text: "Can I read one?",
-                response: "Of course! Knowledge is power!",
+                text: 'Read book: "Plant Identification Manual"',
+                response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
           {
-            id: "blood-diseases-book",
-            text: "Do you have any books about blood diseases?",
-            response: "Yes, we have a whole section on medical books.",
+            id: "book-about-blood-diseases",
+            text: "I need a book about blood diseases.",
+            response: "You do look awful. But I would recommend going to see a doctor.",
+            condition: "knows-about-anemia",
             followUp: [
               {
-                id: "book-about-blood-diseases",
-                text: "Can I read one?",
-                response: "Sure, but don't get any blood on the pages!",
+                id: "read-blood-diseases-book",
+                text: 'Read Book: "Blood diseases: Causes, Signs and Symptoms"',
+                response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
           {
-            id: "demons-book",
-            text: "Do you have any books about demons?",
-            response: "Yes, we have a whole section on mythology.",
+            id: "book-about-demons",
+            text: "I need a book about demons and evil creatures.",
+            response: "Another worshipper huh? If you summon the Devil, tell him he owes me 5,000 rupees and a kitten.",
+            condition: "knows-about-body-marks",
             followUp: [
               {
-                id: "book-about-demons",
-                text: "Can I read one?",
-                response: "Sure, but don't summon anything!",
+                id: "read-demons-book",
+                text: 'Read Book: "Monsters, Demons and Other Evil Creatures from Around the World"',
+                response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component
               },
@@ -662,19 +659,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     let book
     switch (bookId) {
       case "favorite":
-        book = {
-          title: "Librarian's Favorite Book",
-          sections: [{ title: "Content", pages: ["This is a placeholder for the librarian's favorite book."] }],
-        }
+        book = genghisKhanBook
         break
       case "puppies":
         book = puppiesBook
         break
       case "serial-killers":
-        book = {
-          title: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days",
-          sections: [{ title: "Content", pages: ["This is a placeholder for the serial killers book."] }],
-        }
+        book = serialKillersBook
         break
       case "botany":
         book = botanyBook
