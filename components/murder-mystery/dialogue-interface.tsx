@@ -24,17 +24,29 @@ export function DialogueInterface({
   onSelectOption,
   onGoBack,
 }: DialogueInterfaceProps) {
+  let characterImage = ""
+
+  switch (character) {
+    case "policewoman":
+      characterImage = "/images/murder-mystery/policewoman.webp"
+      break
+    case "mortician":
+      characterImage = "/images/murder-mystery/mortician.webp"
+      break
+    case "librarian":
+      characterImage = "/images/murder-mystery/librarian.webp"
+      break
+    default:
+      characterImage = "/images/murder-mystery/policewoman.webp" // Default image
+  }
+
   return (
     <div className="flex flex-col bg-black">
       {/* Character Portrait and Speech Bubble */}
       <div className="flex flex-col items-center mb-2 p-6 pt-0 bg-black">
         <div className="w-40 h-40 relative pixelated-container bg-black p-0">
           <Image
-            src={
-              character === "policewoman"
-                ? "/images/murder-mystery/policewoman.webp"
-                : "/images/murder-mystery/mortician.webp"
-            }
+            src={characterImage || "/placeholder.svg"}
             alt={character || ""}
             width={160}
             height={160}
