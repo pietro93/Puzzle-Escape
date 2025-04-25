@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { demonologyBook } from "@/data/books"
-import { botanyBook } from "@/data/books"
+import { demonologyBook } from "@/data/books/demonology"
+import { botanyBook } from "@/data/books/botany"
 import { puppiesBook } from "@/data/books/puppies"
 import { genghisKhanBook } from "@/data/books/genghis-khan"
 import { serialKillersBook } from "@/data/books/serial-killers"
 import { bloodDiseasesBook } from "@/data/books/blood-diseases"
-
 // Import refactored components and hooks
 import { useDialogueSystem } from "@/hooks/use-dialogue-system"
 import { useBookSystem } from "@/hooks/use-book-system"
