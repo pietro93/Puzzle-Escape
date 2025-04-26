@@ -13,24 +13,6 @@ interface DialogueInterfaceProps {
   dialoguePath: DialogueOption[]
   onSelectOption: (option: DialogueOption) => void
   onGoBack: () => void
-  setDialogueFlags: (flags: (prevState: any) => any) => void // Added setDialogueFlags
-  showEvidenceModal: (evidenceType: string) => void // Added showEvidenceModal
-  setCurrentEvidence: (evidenceType: string) => string // Added setCurrentEvidence
-  setShowEvidenceModal: (show: boolean) => void // Added setShowEvidenceModal
-  onUpdateFlags?: (flag: string, value: boolean) => void
-  onSpecialAction?: (action: string) => void
-  dialogueFlags: any
-  setAskedQuestions: (questions: Set<string>) => void
-}
-
-function filterOptions(options: DialogueOption[], dialogueFlags: any): DialogueOption[] {
-  return options.filter((option) => {
-    // Only show options that don't have a condition, or whose condition is met
-    if (!option.condition) return true
-
-    // Check if the condition is met in the dialogue flags
-    return dialogueFlags[option.condition] === true
-  })
 }
 
 export function DialogueInterface({
@@ -41,45 +23,7 @@ export function DialogueInterface({
   dialoguePath,
   onSelectOption,
   onGoBack,
-  setDialogueFlags,
-  showEvidenceModal,
-  setCurrentEvidence,
-  setShowEvidenceModal,
-  onUpdateFlags,
-  onSpecialAction,
-  dialogueFlags,
-  setAskedQuestions,
 }: DialogueInterfaceProps) {
-  // Function to update dialogue flags
-  const updateDialogueFlags = (flag: string, value: boolean) => {
-    if (onUpdateFlags) {
-      onUpdateFlags(flag, value)
-    }
-  }
-
-  const handleOptionClick = (option: DialogueOption) => {
-    setAskedQuestions(new Set([...Array.from(askedQuestions), option.id]))
-
-    // Handle special actions if any
-    if (option.specialAction === "show-police-report") {
-      // Set flag that police report has been seen
-      updateDialogueFlags("seen-police-report", true)
-      onSpecialAction && onSpecialAction("show-police-report")
-    } else if (option.specialAction === "show-passport") {
-      // Set flag that passport has been seen
-      updateDialogueFlags("seen-passport", true)
-      onSpecialAction && onSpecialAction("show-passport")
-    } else if (option.specialAction === "set-asked-about-murder") {
-      // Set flag that asked about murder
-      updateDialogueFlags("asked-about-murder", true)
-    }
-    // Add other special actions as needed...
-
-    onSelectOption(option)
-  }
-
-  const filteredOptions = filterOptions(dialogueOptions, dialogueFlags)
-
   return (
     <div className="flex flex-col bg-black">
       {/* Character Portrait and Speech Bubble */}
@@ -109,10 +53,10 @@ export function DialogueInterface({
       {/* Dialogue Options */}
       <div className="bg-gray-900/95 border-t-2 border-gray-700 p-4 rounded-t-lg">
         <div className="grid gap-2 max-h-[200px] overflow-y-auto">
-          {filteredOptions.map((option) => (
+          {dialogueOptions.map((option) => (
             <button
               key={option.id}
-              onClick={() => handleOptionClick(option)}
+              onClick={() => onSelectOption(option)}
               className={cn(
                 "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
                 askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",

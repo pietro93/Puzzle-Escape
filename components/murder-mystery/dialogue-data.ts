@@ -26,7 +26,6 @@ export const policewomanDialogue: DialogueOption[] = [
         text: "Tell me about the murder.",
         response:
           "Murder? What murder? There was no murder. The victim died of natural causes. Just an accident, really. Happens all the time, ya know?",
-        specialAction: "set-asked-about-murder", // Add this line to set a flag when this option is selected
         followUp: [
           {
             id: "what-natural-causes",
@@ -60,13 +59,14 @@ export const policewomanDialogue: DialogueOption[] = [
             id: "police-report",
             text: "Is there a police report?",
             response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes. Yawn.",
+            condition: "exhausted-murder-questions",
             followUp: [
               {
                 id: "can-see-report",
                 text: "Can I see the report?",
                 response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
                 followUp: [],
-                specialAction: "show-police-report", // Change to a string identifier
+                specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
@@ -100,7 +100,7 @@ export const policewomanDialogue: DialogueOption[] = [
                 text: "Can I see it?",
                 response: "Fine, but only if you promise to leave me alone. I'm on my break, you know.",
                 followUp: [],
-                specialAction: "show-passport", // Change to a string identifier
+                specialAction: () => {}, // This will be handled in the component
               },
             ],
           },
@@ -110,7 +110,7 @@ export const policewomanDialogue: DialogueOption[] = [
         id: "were-there-any-witnesses",
         text: "Where there any witnesses?",
         response: "Nope. rescue team arrived on site and found the body",
-        condition: "asked-about-murder", // This should match the flag set by the specialAction above
+        condition: "asked-about-murder",
         followUp: [
           {
             id: "who-called-rescue",
@@ -132,17 +132,17 @@ export const policewomanDialogue: DialogueOption[] = [
         id: "can-see-report-again",
         text: "Can I see that police report again?",
         response: "Here you go, but don't say I didn't warn you. It's about as thrilling as watching paint dry.",
-        condition: "seen-police-report", // This should be set when the report is shown
+        condition: "seen-police-report",
         followUp: [],
-        specialAction: "show-police-report", // Change to a string identifier
+        specialAction: () => {}, // This will be handled in the component
       },
       {
         id: "can-see-passport-again",
         text: "Can I see that ID again?",
         response: "Here you go, but don't say I didn't warn you. It's not like it's gonna change anything.",
-        condition: "seen-passport", // This should be set when the passport is shown
+        condition: "seen-passport",
         followUp: [],
-        specialAction: "show-passport", // Change to a string identifier
+        specialAction: () => {}, // This will be handled in the component
       },
     ],
   },

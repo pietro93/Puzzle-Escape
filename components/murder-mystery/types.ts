@@ -1,12 +1,10 @@
-// Update the DialogueOption type to support string-based specialActions
-
 export interface DialogueOption {
   id: string
   text: string
   response: string
   followUp: DialogueOption[]
   condition?: string
-  specialAction?: string | (() => void)
+  specialAction?: () => void
 }
 
 export interface AutopsyReportPage {

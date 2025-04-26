@@ -149,17 +149,6 @@ export default function GameScreen({
       setAnswer("")
       setFeedback("Restarting level...")
 
-      // Reset any level-specific state including dialogue flags
-      if (puzzle.type === "murder-mystery") {
-        // Find the murder mystery component and reset its dialogue flags
-        const murderMysteryElement = document.getElementById("murder-mystery-puzzle")
-        if (murderMysteryElement && murderMysteryElement.__reactProps$) {
-          if (murderMysteryElement.__reactProps$.resetDialogueFlags) {
-            murderMysteryElement.__reactProps$.resetDialogueFlags()
-          }
-        }
-      }
-
       setTimeout(() => {
         setFeedback("")
         // Reset any level-specific state here

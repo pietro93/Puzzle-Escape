@@ -144,18 +144,6 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     }
   }, [isTyping, currentResponse, typingSpeed])
 
-  // Add a resetDialogue function to reset all dialogue state
-  const resetDialogue = () => {
-    setCurrentDialogueOptions(initialDialogue[0].followUp || [])
-    setAskedQuestions(new Set())
-    setCurrentResponse("")
-    setTypedText("")
-    setDialoguePath([])
-    setLastAction(null)
-    setIsTyping(false)
-    setShowDialogue(false)
-  }
-
   return {
     showDialogue,
     currentCharacter,
@@ -174,6 +162,5 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     setCurrentResponse,
     setTypedText,
     setIsTyping,
-    resetDialogue,
   }
 }
