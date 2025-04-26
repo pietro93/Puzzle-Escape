@@ -493,6 +493,12 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Track if the demonology book has been opened
   const [demonologyBookOpened, setDemonologyBookOpened] = useState(false)
 
+  // State for tracking dialogue conditions
+  const [askedAboutMurder, setAskedAboutMurder] = useState(false)
+  const [seenPoliceReport, setSeenPoliceReport] = useState(false)
+  const [seenPassport, setSeenPassport] = useState(false)
+  const [exhaustedMurderQuestions, setExhaustedMurderQuestions] = useState(false)
+
   // Initialize dialogue system
   const dialogue = useDialogueSystem({
     initialDialogue:
@@ -509,6 +515,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
   const closePassport = () => {
     setShowPassport(false)
+    setSeenPassport(true)
     dialogue.setLastAction("viewed-passport")
     dialogue.setCurrentResponse("Seen enough? I've got work to do, you know.")
     dialogue.setTypedText("")
@@ -517,6 +524,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
   const closePoliceReport = () => {
     setShowPoliceReport(false)
+    setSeenPoliceReport(true)
     dialogue.setLastAction("viewed-report")
     dialogue.setCurrentResponse("Told you it wasn't anything special. Just a routine report.")
     dialogue.setTypedText("")
@@ -542,25 +550,28 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
 
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
   // Custom filter for policewoman dialogue options
-  const filterPoliceOptions = (options: any[]) => {
+  const filterPoliceOptions = (options: DialogueOption[]) => {
     return options.filter((opt) => {
+      // Police report option should only appear after exhausting murder questions
       if (opt.id === "police-report") {
-        // Show police report option only if all required questions have been asked
-        return (
-          dialogue.askedQuestions.has("what-natural-causes") &&
-          dialogue.askedQuestions.has("was-there-no-weapon") &&
-          dialogue.askedQuestions.has("crime-scene-items")
-        )
+        return exhaustedMurderQuestions
       }
+
+      // Witnesses option should only appear after asking about murder
       if (opt.id === "were-there-any-witnesses") {
-        return showWitnessesOption
+        return askedAboutMurder
       }
+
+      // "See report again" option should only appear after seeing the report once
       if (opt.id === "can-see-report-again") {
-        return showPoliceReportAgainOption
+        return seenPoliceReport
       }
+
+      // "See ID again" option should only appear after seeing the ID once
       if (opt.id === "can-see-passport-again") {
-        return showPassportAgainOption
+        return seenPassport
       }
+
       return true
     })
   }
@@ -609,7 +620,42 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   }
 
   // Handle dialogue option selection with special actions
-  const handleDialogueOption = (option: any) => {
+  const handleDialogueOption = (option: DialogueOption) => {
+    // Track dialogue conditions
+    if (option.id === "tell-about-murder") {
+      setAskedAboutMurder(true)
+    }
+
+    // Check if all murder questions have been asked
+    if (
+      dialogue.askedQuestions.has("what-natural-causes") &&
+      dialogue.askedQuestions.has("was-there-no-weapon") &&
+      dialogue.askedQuestions.has("crime-scene-items")
+    ) {
+      setExhaustedMurderQuestions(true)
+    }
+
+    // Track when police report is viewed
+    if (option.id === "can-see-report") {
+      setSeenPoliceReport(true)
+      setShowPoliceReport(true)
+    }
+
+    // Track when passport/ID is viewed
+    if (option.id === "can-see-passport") {
+      setSeenPassport(true)
+      setShowPassport(true)
+    }
+
+    // Handle "see again" options
+    if (option.id === "can-see-report-again") {
+      setShowPoliceReport(true)
+    }
+
+    if (option.id === "can-see-passport-again") {
+      setShowPassport(true)
+    }
+
     // Special actions based on option ID
     if (option.id === "any-friends") {
       setAskedAboutFriends(true)
@@ -619,12 +665,6 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       setAskedPuzzleGames(true)
     } else if (option.id === "unconditional-friendship") {
       setCanSeeBody(true)
-    } else if (option.id === "can-see-report" || option.id === "can-see-report-again") {
-      setShowPoliceReport(true)
-      dialogue.setLastAction("viewed-report")
-    } else if (option.id === "can-see-passport" || option.id === "can-see-passport-again") {
-      setShowPassport(true)
-      dialogue.setLastAction("viewed-passport")
     } else if (option.id === "check-victim-body") {
       setShowVictimBody(true)
       dialogue.setLastAction("viewed-body")

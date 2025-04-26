@@ -42,46 +42,67 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     setIsTyping(true)
   }
 
-  // Handle dialogue option selection
+  // Add support for condition checking in the useDialogueSystem hook
+
+  // Update the filterDialogueOptions function to check conditions
+  const filterDialogueOptions = (
+    options: DialogueOption[],
+    customFilter?: (options: DialogueOption[]) => DialogueOption[],
+  ) => {
+    let filteredOptions = options.filter((option) => {
+      // Check for conditions
+      if (option.condition === "exhausted-murder-questions") {
+        return (
+          askedQuestions.has("what-natural-causes") &&
+          askedQuestions.has("was-there-no-weapon") &&
+          askedQuestions.has("crime-scene-items")
+        )
+      }
+
+      if (option.condition === "asked-about-murder") {
+        return askedQuestions.has("tell-about-murder")
+      }
+
+      if (option.condition === "seen-police-report") {
+        return lastAction === "viewed-report"
+      }
+
+      if (option.condition === "seen-passport") {
+        return lastAction === "viewed-passport"
+      }
+
+      // Add other conditions as needed
+
+      return !option.condition // If no condition, show by default
+    })
+
+    // Apply custom filter if provided
+    if (customFilter) {
+      filteredOptions = customFilter(filteredOptions)
+    }
+
+    return filteredOptions
+  }
+
+  // Update the handleDialogueOption function to use the improved filtering
   const handleDialogueOption = (
     option: DialogueOption,
-    filterOptions?: (options: DialogueOption[]) => DialogueOption[],
+    customFilter?: (options: DialogueOption[]) => DialogueOption[],
   ) => {
-    // Mark this question as asked
+    // Add the option to asked questions
     setAskedQuestions((prev) => new Set([...prev, option.id]))
-    setLastAction(null)
 
-    // Set the response and start typing animation
+    // Set the current response
     setCurrentResponse(option.response)
     setTypedText("")
     setIsTyping(true)
 
-    // Handle special actions
-    if (option.specialAction) {
-      option.specialAction()
-    }
+    // Update dialogue path
+    setDialoguePath((prev) => [...prev, option])
 
-    // Update dialogue path for nested navigation
-    if (option.followUp && option.followUp.length > 0) {
-      setDialoguePath((prev) => [...prev, option])
-
-      // Apply custom filtering if provided
-      const filteredOptions = filterOptions ? filterOptions(option.followUp) : option.followUp
-
-      setCurrentDialogueOptions(filteredOptions)
-    } else {
-      // If there are no follow-ups, update based on the current level
-      if (dialoguePath.length === 0) {
-        // At root level
-        const rootOptions = initialDialogue[0].followUp || []
-        setCurrentDialogueOptions(filterOptions ? filterOptions(rootOptions) : rootOptions)
-      } else {
-        // At a nested level
-        const parentOption = dialoguePath[dialoguePath.length - 1]
-        const nestedOptions = parentOption.followUp || []
-        setCurrentDialogueOptions(filterOptions ? filterOptions(nestedOptions) : nestedOptions)
-      }
-    }
+    // Filter follow-up options based on conditions
+    const filteredOptions = filterDialogueOptions(option.followUp, customFilter)
+    setCurrentDialogueOptions(filteredOptions)
   }
 
   // Go back in dialogue tree

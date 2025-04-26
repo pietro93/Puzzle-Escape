@@ -1,5 +1,7 @@
 import type { DialogueOption } from "./types"
 
+// Update the policewoman dialogue tree to fix conditional logic issues
+
 // Police Woman dialogue tree
 export const policewomanDialogue: DialogueOption[] = [
   {
@@ -55,21 +57,6 @@ export const policewomanDialogue: DialogueOption[] = [
               },
             ],
           },
-          {
-            id: "police-report",
-            text: "Is there a police report?",
-            response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes. Yawn.",
-            condition: "exhausted-murder-questions",
-            followUp: [
-              {
-                id: "can-see-report",
-                text: "Can I see the report?",
-                response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
-                followUp: [],
-                specialAction: () => {}, // This will be handled in the component
-              },
-            ],
-          },
         ],
       },
       {
@@ -107,9 +94,24 @@ export const policewomanDialogue: DialogueOption[] = [
         ],
       },
       {
+        id: "police-report",
+        text: "Is there a police report?",
+        response: "Yeah, I wrote it up. Not much to say though. Open and shut case of natural causes. Yawn.",
+        condition: "exhausted-murder-questions",
+        followUp: [
+          {
+            id: "can-see-report",
+            text: "Can I see the report?",
+            response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
+            followUp: [],
+            specialAction: () => {}, // This will be handled in the component
+          },
+        ],
+      },
+      {
         id: "were-there-any-witnesses",
-        text: "Where there any witnesses?",
-        response: "Nope. rescue team arrived on site and found the body",
+        text: "Were there any witnesses?",
+        response: "Nope. Rescue team arrived on site and found the body.",
         condition: "asked-about-murder",
         followUp: [
           {
