@@ -124,9 +124,6 @@ export default function GameScreen({
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
 
-  // Track previous level to detect level changes
-  const prevLevelRef = useRef<number>(level)
-
   // Focus input when component mounts
   useEffect(() => {
     if (inputRef.current) {
@@ -144,41 +141,6 @@ export default function GameScreen({
     return () => clearTimeout(timer)
   }, [])
 
-  // Reset state when level changes
-  useEffect(() => {
-    if (level !== prevLevelRef.current) {
-      // Reset all dialogue and puzzle state when level changes
-      setGuardDialogIndex(0)
-      setShowGuardPopup(false)
-      setJigsawComplete(false)
-      setLightsOn(false)
-      setSolved(false)
-      setDynamicSolution(null)
-      setCurrentPyramidRoom("entrance")
-      setHasPyramidTorch(false)
-      setShowDevilDialogue(false)
-      setCurrentElevatorFloor(0)
-      setFloorLabels({})
-      setHasUsedElevator(false)
-      setIsSubmitButtonHovered(false)
-      setShowElevator(true)
-      setShowElevatorPanel(false)
-      setElevatorDescription("")
-      setCharacterDialogue("")
-      setShowCharacterDialogue(false)
-      setBinaryCorrectCombinations(0)
-      setUserInput("")
-      setHintIndex(0)
-      setHintsUsed(0)
-      setAttempts(0)
-      setBrainDialogue("")
-      setShowBrainDialogue(false)
-
-      // Update the ref
-      prevLevelRef.current = level
-    }
-  }, [level])
-
   const checkAnswer = () => {
     if (!answer.trim()) return
 
@@ -187,35 +149,20 @@ export default function GameScreen({
       setAnswer("")
       setFeedback("Restarting level...")
 
+      // Reset any level-specific state including dialogue flags
+      if (puzzle.type === "murder-mystery") {
+        // Find the murder mystery component and reset its dialogue flags
+        const murderMysteryElement = document.getElementById("murder-mystery-puzzle")
+        if (murderMysteryElement && murderMysteryElement.__reactProps$) {
+          if (murderMysteryElement.__reactProps$.resetDialogueFlags) {
+            murderMysteryElement.__reactProps$.resetDialogueFlags()
+          }
+        }
+      }
+
       setTimeout(() => {
         setFeedback("")
         // Reset any level-specific state here
-        setGuardDialogIndex(0)
-        setShowGuardPopup(false)
-        setJigsawComplete(false)
-        setLightsOn(false)
-        setSolved(false)
-        setDynamicSolution(null)
-        setCurrentPyramidRoom("entrance")
-        setHasPyramidTorch(false)
-        setShowDevilDialogue(false)
-        setCurrentElevatorFloor(0)
-        setFloorLabels({})
-        setHasUsedElevator(false)
-        setIsSubmitButtonHovered(false)
-        setShowElevator(true)
-        setShowElevatorPanel(false)
-        setElevatorDescription("")
-        setCharacterDialogue("")
-        setShowCharacterDialogue(false)
-        setBinaryCorrectCombinations(0)
-        setUserInput("")
-        setHintIndex(0)
-        setHintsUsed(0)
-        setAttempts(0)
-        setBrainDialogue("")
-        setShowBrainDialogue(false)
-
         if (puzzle.isQuestionnairePuzzle && questionnaireRef.current) {
           questionnaireRef.current.initializePuzzle()
         }
