@@ -13,6 +13,10 @@ interface DialogueInterfaceProps {
   dialoguePath: DialogueOption[]
   onSelectOption: (option: DialogueOption) => void
   onGoBack: () => void
+  setDialogueFlags: (flags: (prevState: any) => any) => void // Added setDialogueFlags
+  showEvidenceModal: (evidenceType: string) => void // Added showEvidenceModal
+  setCurrentEvidence: (evidenceType: string) => void // Added setCurrentEvidence
+  setShowEvidenceModal: (show: boolean) => void // Added setShowEvidenceModal
 }
 
 export function DialogueInterface({
@@ -23,7 +27,37 @@ export function DialogueInterface({
   dialoguePath,
   onSelectOption,
   onGoBack,
+  setDialogueFlags,
+  showEvidenceModal,
+  setCurrentEvidence,
+  setShowEvidenceModal,
 }: DialogueInterfaceProps) {
+  const handleOptionClick = (selectedOption: DialogueOption) => {
+    if (typeof selectedOption.specialAction === "string") {
+      // Handle string-based actions
+      switch (selectedOption.specialAction) {
+        case "set-asked-about-murder":
+          setDialogueFlags((prev) => ({ ...prev, "asked-about-murder": true }))
+          break
+        case "show-police-report":
+          setDialogueFlags((prev) => ({ ...prev, "seen-police-report": true }))
+          // Code to show the police report modal
+          showEvidenceModal("police-report")
+          break
+        case "show-passport":
+          setDialogueFlags((prev) => ({ ...prev, "seen-passport": true }))
+          // Code to show the passport modal
+          showEvidenceModal("passport")
+          break
+        // Add other cases as needed
+      }
+    } else if (typeof selectedOption.specialAction === "function") {
+      // Handle function-based actions (for backward compatibility)
+      selectedOption.specialAction()
+    }
+    onSelectOption(selectedOption)
+  }
+
   return (
     <div className="flex flex-col bg-black">
       {/* Character Portrait and Speech Bubble */}
@@ -56,7 +90,7 @@ export function DialogueInterface({
           {dialogueOptions.map((option) => (
             <button
               key={option.id}
-              onClick={() => onSelectOption(option)}
+              onClick={() => handleOptionClick(option)}
               className={cn(
                 "text-left p-2 rounded font-pixel transition-colors hover:bg-gray-700",
                 askedQuestions.has(option.id) ? "text-gray-300" : "text-purple-300 font-bold",
