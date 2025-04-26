@@ -1,8 +1,6 @@
 import type { DialogueOption } from "./types"
 
-// Update the policewoman dialogue tree to fix conditional logic issues
-
-// Police Woman dialogue tree
+// Police Woman dialogue tree with improved condition handling
 export const policewomanDialogue: DialogueOption[] = [
   {
     id: "initial-greeting",
@@ -87,7 +85,7 @@ export const policewomanDialogue: DialogueOption[] = [
                 text: "Can I see it?",
                 response: "Fine, but only if you promise to leave me alone. I'm on my break, you know.",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "show-passport",
               },
             ],
           },
@@ -104,7 +102,7 @@ export const policewomanDialogue: DialogueOption[] = [
             text: "Can I see the report?",
             response: "Sure, knock yourself out. It's about as thrilling as watching paint dry.",
             followUp: [],
-            specialAction: () => {}, // This will be handled in the component
+            specialAction: "show-police-report",
           },
         ],
       },
@@ -136,7 +134,7 @@ export const policewomanDialogue: DialogueOption[] = [
         response: "Here you go, but don't say I didn't warn you. It's about as thrilling as watching paint dry.",
         condition: "seen-police-report",
         followUp: [],
-        specialAction: () => {}, // This will be handled in the component
+        specialAction: "show-police-report",
       },
       {
         id: "can-see-passport-again",
@@ -144,7 +142,7 @@ export const policewomanDialogue: DialogueOption[] = [
         response: "Here you go, but don't say I didn't warn you. It's not like it's gonna change anything.",
         condition: "seen-passport",
         followUp: [],
-        specialAction: () => {}, // This will be handled in the component
+        specialAction: "show-passport",
       },
     ],
   },
@@ -226,14 +224,14 @@ export const morticianDialogue: DialogueOption[] = [
             id: "hobbies",
             text: "Do you have any hobbies?",
             response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
-            specialAction: () => {}, // This will be handled in the component
+            specialAction: "mark-asked-hobbies",
             followUp: [],
           },
           {
             id: "puzzle-games",
             text: "Do you like puzzle games?",
             response: "What am I, some kind of loser? I have a life, you know.",
-            specialAction: () => {}, // This will be handled in the component
+            specialAction: "mark-asked-puzzle-games",
             followUp: [],
           },
         ],
@@ -243,7 +241,7 @@ export const morticianDialogue: DialogueOption[] = [
         text: "I am not leaving until you accept my unconditional love and friendship.",
         response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
         condition: "asked-both-hobby-questions",
-        specialAction: () => {}, // This will be handled in the component
+        specialAction: "allow-body-access",
         followUp: [],
       },
       {
@@ -261,7 +259,7 @@ export const morticianDialogue: DialogueOption[] = [
                 id: "any-friends",
                 text: "Don't you have any friends?",
                 response: "In this line of work, the living are more trouble than they're worth.",
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "mark-asked-about-friends",
                 followUp: [],
               },
             ],
@@ -286,6 +284,7 @@ export const morticianDialogue: DialogueOption[] = [
             text: "What are those weird signs on the body?",
             response:
               "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
+            specialAction: "mark-knows-about-body-marks",
             followUp: [],
           },
           {
@@ -293,10 +292,10 @@ export const morticianDialogue: DialogueOption[] = [
             text: "Can I check the autopsy report?",
             response: "Oh for fu--I mean sure, whatever.",
             followUp: [],
-            specialAction: () => {}, // This will be handled in the component
+            specialAction: "show-autopsy-report",
           },
         ],
-        specialAction: () => {}, // This will be handled in the component
+        specialAction: "show-victim-body",
       },
       {
         id: "after-viewing-evidence",
@@ -350,7 +349,7 @@ export const librarianDialogue: DialogueOption[] = [
                 text: 'Read book: "Absolutely True* Facts About Genghis Khan (*Not Actually True)"',
                 response: "",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "open-book-favorite",
               },
             ],
           },
@@ -364,7 +363,7 @@ export const librarianDialogue: DialogueOption[] = [
                 text: 'Read book: "Adorable Photos of Cutesy-cute Puppies for Kids and the Mentally Impaired"',
                 response: "",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "open-book-puppies",
               },
             ],
           },
@@ -378,7 +377,7 @@ export const librarianDialogue: DialogueOption[] = [
                 text: 'Read book: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days"',
                 response: "",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "open-book-serial-killers",
               },
             ],
           },
@@ -392,7 +391,7 @@ export const librarianDialogue: DialogueOption[] = [
                 text: 'Read book: "Plant Identification Manual"',
                 response: "",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "open-book-botany",
               },
             ],
           },
@@ -407,7 +406,7 @@ export const librarianDialogue: DialogueOption[] = [
                 text: 'Read Book: "Blood diseases: Causes, Signs and Symptoms"',
                 response: "",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "open-book-blood-diseases",
               },
             ],
           },
@@ -422,7 +421,7 @@ export const librarianDialogue: DialogueOption[] = [
                 text: 'Read Book: "Monsters, Demons and Other Evil Creatures from Around the World"',
                 response: "",
                 followUp: [],
-                specialAction: () => {}, // This will be handled in the component
+                specialAction: "open-book-demons",
               },
             ],
           },
