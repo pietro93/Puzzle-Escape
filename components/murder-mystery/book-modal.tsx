@@ -91,8 +91,13 @@ export function BookModal({
 
             {content.text && (
               <div
-                className="text-gray-300 font-pixel text-sm leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: content.text }}
+                className="text-gray-300 font-pixel text-sm leading-relaxed space-y-4"
+                dangerouslySetInnerHTML={{
+                  __html: content.text
+                    .replace(/<b>(.*?):<\/b>/g, '<b class="text-purple-400">$1:</b>')
+                    .replace(/\n\n/g, "</p><p>")
+                    .replace(/^(.+)/, "<p>$1</p>"),
+                }}
               />
             )}
           </div>
