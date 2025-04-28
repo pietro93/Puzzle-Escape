@@ -33,11 +33,11 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 23,
-    question: "The gypsy woman's crystal ball reveals celestial patterns.",
+    question: "The gypsy woman's crystal ball reveals shadows from a faraway land.",
     description:
-      "The crystal ball clouds over, then clears to reveal shifting patterns of light. 'The heavens speak to those who know how to listen,' the gypsy woman whispers. 'Tell me what celestial body governs these patterns.'",
+      "",
     imageUrl: "/images/zodiac-animation.webp",
-    solution: "MOON",
+    solution: "1639:Mèo",
     category: "pattern",
     hints: [
       "The shifting patterns in the crystal ball resemble phases or cycles.",
