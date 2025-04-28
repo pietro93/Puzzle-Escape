@@ -243,6 +243,17 @@ export function AutopsyReportModal({ isOpen, onClose, pages }: AutopsyReportModa
     setCurrentPage((prev) => (prev - 1 + pages.length) % pages.length)
   }
 
+  // Function to format text with bold and line breaks
+  const formatText = (text: string) => {
+    // Replace markdown-style bold with HTML bold
+    const boldFormatted = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+
+    // Replace newlines with HTML line breaks
+    const lineBreakFormatted = boldFormatted.replace(/\n\n/g, "<br/><br/>")
+
+    return lineBreakFormatted
+  }
+
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
@@ -253,7 +264,10 @@ export function AutopsyReportModal({ isOpen, onClose, pages }: AutopsyReportModa
           </Button>
         </div>
         <div className="mt-4 space-y-2 text-sm font-pixel">
-          <p>{pages[currentPage].content}</p>
+          <div
+            dangerouslySetInnerHTML={{ __html: formatText(pages[currentPage].content) }}
+            className="text-gray-300 leading-relaxed"
+          />
         </div>
         <div className="flex justify-between mt-4">
           <Button

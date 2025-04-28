@@ -1,130 +1,125 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
-import type { Book as BookType } from "./types"
+import type { Book } from "./types"
 
 interface BookModalProps {
-  book: BookType | null
-  currentPage: number
-  currentSection: string | null
+  isOpen: boolean
   onClose: () => void
-  onNextPage: () => void
-  onPrevPage: () => void
-  onSwitchSection: (sectionId: string) => void
-  getCurrentContent: () => any
-  getTotalPages: () => number
+  book: Book
 }
 
-export function BookModal({
-  book,
-  currentPage,
-  currentSection,
-  onClose,
-  onNextPage,
-  onPrevPage,
-  onSwitchSection,
-  getCurrentContent,
-  getTotalPages,
-}: BookModalProps) {
-  if (!book) return null
+export function BookModal({ isOpen, onClose, book }: BookModalProps) {
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0)
+  const [currentPageIndex, setCurrentPageIndex] = useState(0)
 
-  const content = getCurrentContent()
-  const totalPages = getTotalPages()
+  if (!isOpen) return null
+
+  const currentSection = book.sections[currentSectionIndex]
+  const currentPage = currentSection.pages[currentPageIndex]
+
+  const handleNextPage = () => {
+    if (currentPageIndex < currentSection.pages.length - 1) {
+      setCurrentPageIndex(currentPageIndex + 1)
+    } else if (currentSectionIndex < book.sections.length - 1) {
+      setCurrentSectionIndex(currentSectionIndex + 1)
+      setCurrentPageIndex(0)
+    }
+  }
+
+  const handlePrevPage = () => {
+    if (currentPageIndex > 0) {
+      setCurrentPageIndex(currentPageIndex - 1)
+    } else if (currentSectionIndex > 0) {
+      setCurrentSectionIndex(currentSectionIndex - 1)
+      setCurrentPageIndex(book.sections[currentSectionIndex - 1].pages.length - 1)
+    }
+  }
+
+  const handleSectionChange = (sectionIndex: number) => {
+    setCurrentSectionIndex(sectionIndex)
+    setCurrentPageIndex(0)
+  }
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 w-full max-w-2xl">
+      <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-2xl">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold text-gray-200 font-pixel">{book.title}</h3>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="text-gray-400 font-pixel text-sm hover:text-white"
-          >
+          <div className="text-xl text-gray-300 font-pixel">{book.title}</div>
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white">
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Section tabs for books with sections */}
-        {book.sections && (
-          <div className="flex mb-4 border-b border-gray-700 overflow-x-auto">
-            {book.sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => onSwitchSection(section.id)}
-                className={`px-4 py-2 whitespace-nowrap ${
-                  currentSection === section.id
-                    ? "text-purple-300 font-pixel text-sm border-b-2 border-purple-300"
-                    : "text-gray-400 font-pixel text-sm hover:text-gray-200"
-                }`}
-              >
-                {section.title}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Section tabs */}
+        <div className="flex mb-4 overflow-x-auto pb-2">
+          {book.sections.map((section, index) => (
+            <Button
+              key={section.id}
+              variant={currentSectionIndex === index ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleSectionChange(index)}
+              className="mr-2 whitespace-nowrap"
+            >
+              {section.title}
+            </Button>
+          ))}
+        </div>
 
-        {/* Book content */}
-        {content && (
-          <div className="p-4 bg-gray-800 rounded-lg">
-            {content.title && <h4 className="text-lg font-medium text-red-500 font-pixel mb-4">{content.title}</h4>}
-
-            {content.imageUrl && (
-              <div className="mb-4 flex flex-col items-center">
+        {/* Page content */}
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Image */}
+          {currentPage.imageUrl && (
+            <div className="flex-shrink-0 flex justify-center items-start">
+              <div className="relative w-48 h-48 pixelated-container">
                 <Image
-                  src={content.imageUrl || "/placeholder.svg"}
-                  alt={content.caption || content.title || "Book illustration"}
-                  width={300}
-                  height={300}
-                  className="rounded-md pixelated object-contain"
+                  src={currentPage.imageUrl || "/placeholder.svg"}
+                  alt={currentPage.title}
+                  fill
+                  className="pixelated object-contain"
                 />
-                {content.caption && (
-                  <p className="text-gray-300 font-pixel text-sm mt-2 text-center italic leading-relaxed">
-                    {content.caption}
-                  </p>
-                )}
               </div>
-            )}
+            </div>
+          )}
 
-            {content.text && (
-              <div
-                className="text-gray-300 font-pixel text-sm leading-relaxed space-y-4"
-                dangerouslySetInnerHTML={{
-                  __html: content.text
-                    .replace(/<b>(.*?):<\/b>/g, '<b class="text-purple-400">$1:</b>')
-                    .replace(/\n\n/g, "</p><p>")
-                    .replace(/^(.+)/, "<p>$1</p>"),
-                }}
-              />
-            )}
+          {/* Text content */}
+          <div className="flex-grow">
+            <h3 className="text-lg text-gray-300 mb-2 font-pixel">{currentPage.title}</h3>
+            <div
+              className="text-gray-400 text-sm font-pixel space-y-2"
+              dangerouslySetInnerHTML={{ __html: currentPage.text }}
+            />
           </div>
-        )}
+        </div>
 
         {/* Navigation */}
         <div className="flex justify-between mt-4">
           <Button
             variant="outline"
             size="sm"
-            onClick={onPrevPage}
-            disabled={currentPage === 0}
-            className="font-pixel text-sm"
+            onClick={handlePrevPage}
+            disabled={currentSectionIndex === 0 && currentPageIndex === 0}
+            className="text-gray-300"
           >
-            Previous Page
+            <ChevronLeft className="h-4 w-4 mr-1" /> Previous
           </Button>
-          <span className="text-gray-400 font-pixel text-sm">
-            Page {currentPage + 1} of {totalPages}
-          </span>
+          <div className="text-gray-400 text-sm">
+            Page {currentPageIndex + 1} of {currentSection.pages.length}
+          </div>
           <Button
             variant="outline"
             size="sm"
-            onClick={onNextPage}
-            disabled={currentPage === totalPages - 1}
-            className="font-pixel text-sm"
+            onClick={handleNextPage}
+            disabled={
+              currentSectionIndex === book.sections.length - 1 &&
+              currentPageIndex === book.sections[book.sections.length - 1].pages.length - 1
+            }
+            className="text-gray-300"
           >
-            Next Page
+            Next <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
         </div>
       </div>
