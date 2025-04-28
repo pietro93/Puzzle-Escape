@@ -146,10 +146,276 @@ export const policewomanDialogue: DialogueOption[] = [
 
 // Mortician dialogue tree
 export const morticianDialogue: DialogueOption[] = [
-  // Mortician dialogue content...
+  {
+    id: "initial-greeting",
+    text: "Start",
+    response: "Hmm? A visitor? How... unusual. What do you want?",
+    followUp: [
+      {
+        id: "who-are-you",
+        text: "Who are you?",
+        response: "Name's Psychopompus. Psycho for short.",
+        followUp: [
+          {
+            id: "hello-psycho",
+            text: "Huh... hello, Psycho.",
+            response: "...",
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "tell-about-body",
+        text: "What can you tell me about the body that was found by the lake?",
+        response: "It's dead. Obviously.",
+        followUp: [
+          {
+            id: "cause-of-death",
+            text: "What was the cause of death?",
+            response: "Anemia.",
+            followUp: [
+              {
+                id: "anemia-question",
+                text: "Anemia?",
+                response: "Low blood levels. Caused organ failure. A rather... pale affair.",
+                followUp: [],
+              },
+              {
+                id: "natural-question",
+                text: "Was it natural?",
+                response: "As natural as having almost no blood gets. A slow fade, like a dying ember.",
+                followUp: [
+                  {
+                    id: "what-no-blood",
+                    text: "What do you mean almost no blood?",
+                    response: "The body was almost completely void of blood when it was found.",
+                    followUp: [],
+                  },
+                  {
+                    id: "murder-question",
+                    text: "Are you sure this wasn't murder?",
+                    response: "Oh, I guess it could be. Not my concern.",
+                    followUp: [],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: "can-see-body-initial",
+            text: "Can I see the victim's body?",
+            response: "No.",
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "be-your-friend",
+        text: "I'll be your friend!",
+        response: "Hell no. Please leave me alone. I prefer my relationships... one-sided.",
+        followUp: [
+          {
+            id: "hobbies",
+            text: "Do you have any hobbies?",
+            response: "Fondling dead people. Arranging them in pleasing poses. You know, the usual.",
+            specialAction: () => {}, // This will be handled in the component
+            followUp: [],
+          },
+          {
+            id: "puzzle-games",
+            text: "Do you like puzzle games?",
+            response: "What am I, some kind of loser? I have a life, you know.",
+            specialAction: () => {}, // This will be handled in the component
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "unconditional-friendship",
+        text: "I am not leaving until you accept my unconditional love and friendship.",
+        response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
+        specialAction: () => {}, // This will be handled in the component
+        followUp: [],
+      },
+      {
+        id: "like-job",
+        text: "Do you like your job?",
+        response: "I enjoy the company. They're not demanding conversationalists.",
+        followUp: [
+          {
+            id: "alone-with-corpses",
+            text: "Aren't you alone with corpses all the time?",
+            response: "As I said. I enjoy the company. They don't complain.",
+            followUp: [
+              {
+                id: "any-friends",
+                text: "Don't you have any friends?",
+                response: "In this line of work, the living are more trouble than they're worth.",
+                specialAction: () => {}, // This will be handled in the component
+                followUp: [],
+              },
+            ],
+          },
+          {
+            id: "macabre-stuff",
+            text: "You must have seen some pretty macabre stuff in here.",
+            response: "Your face is a contender. But I've seen worse.",
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "check-victim-body",
+        text: "Let's check the victim's body.",
+        response:
+          "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
+        followUp: [
+          {
+            id: "weird-signs",
+            text: "What are those weird signs on the body?",
+            response:
+              "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
+            followUp: [],
+          },
+          {
+            id: "check-autopsy-report",
+            text: "Can I check the autopsy report?",
+            response: "Oh for fu--I mean sure, whatever.",
+            followUp: [],
+            specialAction: () => {}, // This will be handled in the component
+          },
+        ],
+        specialAction: () => {}, // This will be handled in the component
+      },
+      {
+        id: "after-viewing-evidence",
+        text: "...",
+        response: "Are you done staring? I don't have all day for this nonsense.",
+        followUp: [],
+      },
+    ],
+  },
 ]
 
 // Librarian dialogue tree
 export const librarianDialogue: DialogueOption[] = [
-  // Librarian dialogue content...
+  {
+    id: "initial-greeting",
+    text: "Start",
+    response: "...",
+    followUp: [
+      {
+        id: "who-are-you",
+        text: "Who are you?",
+        response: "Shhhhhhhhh!!!",
+        followUp: [],
+      },
+      {
+        id: "investigating-murder",
+        text: "I'm investigating a murder.",
+        response: "This is a library!",
+        followUp: [
+          {
+            id: "reading-for-case",
+            text: "Do you have any reading that could help me with my case?",
+            response: 'I\'m afraid your "case" is a lost cause.',
+            followUp: [],
+          },
+        ],
+      },
+      {
+        id: "looking-for-book",
+        text: "I'm looking for a book.",
+        response: "Color me impressed.",
+        followUp: [
+          {
+            id: "whats-your-favorite",
+            text: "What's your favorite?",
+            response: "This one never fails to put a smile on my face.",
+            followUp: [
+              {
+                id: "read-favorite-book",
+                text: 'Read book: "Absolutely True* Facts About Genghis Khan (*Not Actually True)"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-puppies",
+            text: "I need a book about puppies.",
+            response: "I think this is appropriate for your mental age.",
+            followUp: [
+              {
+                id: "read-puppies-book",
+                text: 'Read book: "Adorable Photos of Cutesy-cute Puppies for Kids and the Mentally Impaired"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-serial-killers",
+            text: "I need a book about serial killers.",
+            response: "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art.",
+            followUp: [
+              {
+                id: "read-serial-killers-book",
+                text: 'Read book: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-botany",
+            text: "I need a book about botany.",
+            response: "Looking for creative ways to get high huh? Just leave the frogs alone.",
+            followUp: [
+              {
+                id: "read-botany-book",
+                text: 'Read book: "Plant Identification Manual"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-blood-diseases",
+            text: "I need a book about blood diseases.",
+            response: "You do look awful. But I would recommend going to see a doctor.",
+            condition: "knows-about-anemia",
+            followUp: [
+              {
+                id: "read-blood-diseases-book",
+                text: 'Read Book: "Blood diseases: Causes, Signs and Symptoms"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+          {
+            id: "book-about-demons",
+            text: "I need a book about demons and evil creatures.",
+            response: "Another worshipper huh? If you summon the Devil, tell him he owes me 5,000 rupees and a kitten.",
+            condition: "knows-about-body-marks",
+            followUp: [
+              {
+                id: "read-demons-book",
+                text: 'Read Book: "Monsters, Demons and Other Evil Creatures from Around the World"',
+                response: "",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ]

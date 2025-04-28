@@ -61,7 +61,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Track if the demonology book has been opened
   const [demonologyBookOpened, setDemonologyBookOpened] = useState(false)
 
-  // Initialize dialogue system with the appropriate dialogue tree
+  // Initialize dialogue system with the appropriate dialogue tree based on current location
   const dialogue = useDialogueSystem({
     initialDialogue:
       currentLocation === "police station"
@@ -271,10 +271,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Automatically start dialogue when entering the police station, morgue, or library
   useEffect(() => {
     if (currentLocation === "police station") {
+      // Start dialogue with policewoman and apply police filter
       dialogue.startDialogue("policewoman", policewomanDialogue, filterPoliceOptions)
     } else if (currentLocation === "morgue") {
+      // Start dialogue with mortician and apply mortician filter
       dialogue.startDialogue("mortician", morticianDialogue, filterMorticianOptions)
     } else if (currentLocation === "library") {
+      // Start dialogue with librarian and apply librarian filter
       dialogue.startDialogue("librarian", librarianDialogue, filterLibrarianOptions)
     }
   }, [currentLocation])

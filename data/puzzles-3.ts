@@ -33,15 +33,16 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 23,
-    question: "The gypsy woman peers into her crystal ball, which begins to swirl with mist.",
-    description: "The crystal ball shows a sequence: 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, ...\nWhat is the next number?",
-    imageUrl: "",
-    solution: "6",
+    question: "The gypsy woman's crystal ball reveals celestial patterns.",
+    description:
+      "The crystal ball clouds over, then clears to reveal shifting patterns of light. 'The heavens speak to those who know how to listen,' the gypsy woman whispers. 'Tell me what celestial body governs these patterns.'",
+    imageUrl: "/images/zodiac-animation.webp",
+    solution: "MOON",
     category: "pattern",
     hints: [
-      "Each number represents something about the numbers themselves.",
-      "Count the letters when you write each number as a word.",
-      "THREE has 5 letters, FOUR has 4 letters, FIVE has 4 letters...",
+      "The shifting patterns in the crystal ball resemble phases or cycles.",
+      "Consider what celestial body changes its appearance regularly as viewed from Earth.",
+      "This celestial body controls the tides and is associated with intuition and emotions in mystical traditions.",
     ],
   },
   {
