@@ -35,15 +35,15 @@ export const puzzlesSet3: Puzzle[] = [
     level: 23,
     question: "The gypsy woman's crystal ball reveals shadows from a faraway land.",
     description:
-      "The crystal ball clouds over, then clears to reveal shifting patterns of light. 'The heavens speak to those who know how to listen,' the gypsy woman whispers. 'Tell me what celestial body governs these patterns.'",
+      "The crystal ball clouds over, then clears to reveal shifting patterns of light. 'I see a distant culture, an ancient zodiac cycle,' the gypsy whispers. 'Tell me the year and animal I'm seeing.'",
     imageUrl: "/images/zodiac-animation.webp",
     isPuzzleImage: true,
-    solution: "MOON",
+    solution: "1639:Mèo|1639:mèo",
     category: "pattern",
     hints: [
-      "The shifting patterns in the crystal ball resemble phases or cycles.",
-      "Consider what celestial body changes its appearance regularly as viewed from Earth.",
-      "This celestial body controls the tides and is associated with intuition and emotions in mystical traditions.",
+      "The shifting patterns in the crystal ball reveal an Eastern zodiac cycle.",
+      "Look carefully at the symbols - they represent a specific year in the Vietnamese zodiac.",
+      "The format should be [year]:[animal] - the animal name should be in Vietnamese with the correct accent mark.",
     ],
   },
   {
