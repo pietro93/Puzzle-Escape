@@ -19,6 +19,7 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
   const [typedText, setTypedText] = useState("")
   const [dialoguePath, setDialoguePath] = useState<DialogueOption[]>([])
   const [lastAction, setLastAction] = useState<string | null>(null)
+  const [dialogueTree, setDialogueTree] = useState<DialogueOption[]>(initialDialogue)
 
   const typingRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -30,6 +31,13 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     setTypedText("")
     setDialoguePath([])
     setLastAction(null)
+
+    // Set the dialogue tree if custom dialogue is provided
+    if (customDialogue) {
+      setDialogueTree(customDialogue)
+    } else {
+      setDialogueTree(initialDialogue)
+    }
 
     // Set initial response based on character and dialogue
     const dialogue = customDialogue || initialDialogue
@@ -73,7 +81,7 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
       // If there are no follow-ups, update based on the current level
       if (dialoguePath.length === 0) {
         // At root level
-        const rootOptions = initialDialogue[0].followUp || []
+        const rootOptions = dialogueTree[0].followUp || []
         setCurrentDialogueOptions(filterOptions ? filterOptions(rootOptions) : rootOptions)
       } else {
         // At a nested level
@@ -98,9 +106,9 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
 
       if (newPath.length === 0) {
         // Back to root
-        const rootOptions = initialDialogue[0].followUp || []
+        const rootOptions = dialogueTree[0].followUp || []
         setCurrentDialogueOptions(filterRootOptions ? filterRootOptions(rootOptions) : rootOptions)
-        setCurrentResponse(initialDialogue[0].response)
+        setCurrentResponse(dialogueTree[0].response)
       } else {
         // Back to previous level
         const parentOption = newPath[newPath.length - 1]
