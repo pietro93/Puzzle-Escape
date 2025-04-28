@@ -57,6 +57,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   const [askedAboutFriends, setAskedAboutFriends] = useState(false)
   const [askedHobbies, setAskedHobbies] = useState(false)
   const [askedPuzzleGames, setAskedPuzzleGames] = useState(false)
+  const [showedUnconditionalFriendship, setShowedUnconditionalFriendship] = useState(false)
 
   // Track if the demonology book has been opened
   const [demonologyBookOpened, setDemonologyBookOpened] = useState(false)
@@ -160,8 +161,10 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       if (opt.id === "be-your-friend") {
         return askedAboutFriends
       }
-      if (opt.id === "unconditional-friendship") {
-        return askedHobbies && askedPuzzleGames
+      // Show the "let-me-see-body" option only if both hobbies and puzzle games have been asked about
+      // and it hasn't been shown before
+      if (opt.id === "let-me-see-body") {
+        return askedHobbies && askedPuzzleGames && !showedUnconditionalFriendship
       }
       if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
         return false
@@ -192,8 +195,9 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       setAskedHobbies(true)
     } else if (option.id === "puzzle-games") {
       setAskedPuzzleGames(true)
-    } else if (option.id === "unconditional-friendship") {
+    } else if (option.id === "let-me-see-body") {
       setCanSeeBody(true)
+      setShowedUnconditionalFriendship(true)
     } else if (option.id === "can-see-report" || option.id === "can-see-report-again") {
       setShowPoliceReport(true)
       dialogue.setLastAction("viewing-report")

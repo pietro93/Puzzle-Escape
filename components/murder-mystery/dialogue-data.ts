@@ -231,7 +231,7 @@ export const morticianDialogue: DialogueOption[] = [
         ],
       },
       {
-        id: "unconditional-friendship",
+        id: "let-me-see-body",
         text: "I am not leaving until you accept my unconditional love and friendship.",
         response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
         specialAction: () => {}, // This will be handled in the component
