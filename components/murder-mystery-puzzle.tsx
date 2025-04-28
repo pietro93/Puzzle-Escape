@@ -271,11 +271,11 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
   // Automatically start dialogue when entering the police station, morgue, or library
   useEffect(() => {
     if (currentLocation === "police station") {
-      dialogue.startDialogue("policewoman", policewomanDialogue)
+      dialogue.startDialogue("policewoman", policewomanDialogue, filterPoliceOptions)
     } else if (currentLocation === "morgue") {
-      dialogue.startDialogue("mortician", morticianDialogue)
+      dialogue.startDialogue("mortician", morticianDialogue, filterMorticianOptions)
     } else if (currentLocation === "library") {
-      dialogue.startDialogue("librarian", librarianDialogue)
+      dialogue.startDialogue("librarian", librarianDialogue, filterLibrarianOptions)
     }
   }, [currentLocation])
 
@@ -339,7 +339,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               </div>
               <button
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-                onClick={() => dialogue.startDialogue("librarian", librarianDialogue)}
+                onClick={() => dialogue.startDialogue("librarian", librarianDialogue, filterLibrarianOptions)}
               >
                 Talk to Librarian
               </button>

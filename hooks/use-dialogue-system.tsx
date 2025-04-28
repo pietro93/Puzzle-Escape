@@ -24,7 +24,11 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
   const typingRef = useRef<NodeJS.Timeout | null>(null)
 
   // Start dialogue with a character
-  const startDialogue = (character: string, customDialogue?: DialogueOption[]) => {
+  const startDialogue = (
+    character: string,
+    customDialogue?: DialogueOption[],
+    filterOptions?: (options: DialogueOption[]) => DialogueOption[],
+  ) => {
     setCurrentCharacter(character)
     setShowDialogue(true)
     setCurrentResponse("")
@@ -33,17 +37,16 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDial
     setLastAction(null)
 
     // Set the dialogue tree if custom dialogue is provided
-    if (customDialogue) {
-      setDialogueTree(customDialogue)
-    } else {
-      setDialogueTree(initialDialogue)
-    }
+    const dialogue = customDialogue || initialDialogue
+    setDialogueTree(dialogue)
 
     // Set initial response based on character and dialogue
-    const dialogue = customDialogue || initialDialogue
     if (dialogue && dialogue.length > 0) {
       setCurrentResponse(dialogue[0].response)
-      setCurrentDialogueOptions(dialogue[0].followUp || [])
+
+      // Apply filter to initial options if provided
+      const initialOptions = dialogue[0].followUp || []
+      setCurrentDialogueOptions(filterOptions ? filterOptions(initialOptions) : initialOptions)
     }
 
     // Start typing animation
