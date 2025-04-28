@@ -1,19 +1,14 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import type { DialogueOption, DialogueAction } from "@/components/murder-mystery/types"
-import { useDialogueContext } from "@/components/murder-mystery/dialogue-context"
+import type { DialogueOption } from "@/components/murder-mystery/types"
 
 interface UseDialogueSystemProps {
   initialDialogue: DialogueOption[]
   typingSpeed?: number
-  onSpecialAction?: (action: DialogueAction) => void
 }
 
-export function useDialogueSystem({ initialDialogue, typingSpeed = 30, onSpecialAction }: UseDialogueSystemProps) {
-  // Get dialogue context
-  const dialogueContext = useDialogueContext()
-
+export function useDialogueSystem({ initialDialogue, typingSpeed = 30 }: UseDialogueSystemProps) {
   // Dialogue State
   const [showDialogue, setShowDialogue] = useState(false)
   const [currentCharacter, setCurrentCharacter] = useState<string | null>(null)
@@ -40,79 +35,57 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30, onSpecial
     const dialogue = customDialogue || initialDialogue
     if (dialogue && dialogue.length > 0) {
       setCurrentResponse(dialogue[0].response)
-
-      // Filter initial options based on conditions
-      const filteredOptions = filterDialogueOptions(dialogue[0].followUp || [])
-      setCurrentDialogueOptions(filteredOptions)
+      setCurrentDialogueOptions(dialogue[0].followUp || [])
     }
 
     // Start typing animation
     setIsTyping(true)
   }
 
-  // Filter dialogue options based on conditions
-  const filterDialogueOptions = (options: DialogueOption[]): DialogueOption[] => {
-    return options.filter((option) => dialogueContext.checkCondition(option.condition))
-  }
-
   // Handle dialogue option selection
-  const handleDialogueOption = (option: DialogueOption) => {
+  const handleDialogueOption = (
+    option: DialogueOption,
+    filterOptions?: (options: DialogueOption[]) => DialogueOption[],
+  ) => {
     // Mark this question as asked
     setAskedQuestions((prev) => new Set([...prev, option.id]))
-
-    // Check for special actions
-    if (option.specialAction) {
-      dialogueContext.executeAction(option.specialAction)
-      if (onSpecialAction) {
-        onSpecialAction(option.specialAction)
-      }
-    }
-
-    // Update dialogue state based on option ID
-    if (option.id === "tell-about-murder") {
-      dialogueContext.executeAction("mark-asked-about-murder")
-    } else if (option.id === "anemia-question") {
-      dialogueContext.executeAction("mark-knows-about-anemia")
-    }
-
-    // Check if all murder questions have been asked
-    if (
-      askedQuestions.has("what-natural-causes") &&
-      askedQuestions.has("was-there-no-weapon") &&
-      askedQuestions.has("crime-scene-items")
-    ) {
-      dialogueContext.executeAction("mark-exhausted-murder-questions")
-    }
+    setLastAction(null)
 
     // Set the response and start typing animation
     setCurrentResponse(option.response)
     setTypedText("")
     setIsTyping(true)
 
+    // Handle special actions
+    if (option.specialAction) {
+      option.specialAction()
+    }
+
     // Update dialogue path for nested navigation
     if (option.followUp && option.followUp.length > 0) {
       setDialoguePath((prev) => [...prev, option])
 
-      // Filter follow-up options based on conditions
-      const filteredOptions = filterDialogueOptions(option.followUp)
+      // Apply custom filtering if provided
+      const filteredOptions = filterOptions ? filterOptions(option.followUp) : option.followUp
+
       setCurrentDialogueOptions(filteredOptions)
     } else {
       // If there are no follow-ups, update based on the current level
       if (dialoguePath.length === 0) {
         // At root level
         const rootOptions = initialDialogue[0].followUp || []
-        setCurrentDialogueOptions(filterDialogueOptions(rootOptions))
+        setCurrentDialogueOptions(filterOptions ? filterOptions(rootOptions) : rootOptions)
       } else {
         // At a nested level
         const parentOption = dialoguePath[dialoguePath.length - 1]
         const nestedOptions = parentOption.followUp || []
-        setCurrentDialogueOptions(filterDialogueOptions(nestedOptions))
+        setCurrentDialogueOptions(filterOptions ? filterOptions(nestedOptions) : nestedOptions)
       }
     }
   }
 
   // Go back in dialogue tree
-  const goBackInDialogue = () => {
+  const goBackInDialogue = (filterRootOptions?: (options: DialogueOption[]) => DialogueOption[]) => {
     if (dialoguePath.length === 0) {
       // If at root level, close dialogue
       setShowDialogue(false)
@@ -126,12 +99,12 @@ export function useDialogueSystem({ initialDialogue, typingSpeed = 30, onSpecial
       if (newPath.length === 0) {
         // Back to root
         const rootOptions = initialDialogue[0].followUp || []
-        setCurrentDialogueOptions(filterDialogueOptions(rootOptions))
+        setCurrentDialogueOptions(filterRootOptions ? filterRootOptions(rootOptions) : rootOptions)
         setCurrentResponse(initialDialogue[0].response)
       } else {
         // Back to previous level
         const parentOption = newPath[newPath.length - 1]
-        setCurrentDialogueOptions(filterDialogueOptions(parentOption.followUp || []))
+        setCurrentDialogueOptions(parentOption.followUp || [])
         setCurrentResponse(parentOption.response)
       }
 
