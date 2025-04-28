@@ -4,6 +4,9 @@ export const serialKillersBook: Book = {
   title: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days",
   pages: [
     {
+      imageUrl: "/images/murder-mystery/books/serial-killers-cover.webp",
+    },
+    {
       title: "Introduction",
       text: "So, you're considering a career in murder? Excellent. While others pursue mundane paths, you've recognized the allure of leaving a lasting, albeit controversial, legacy. This manual outlines the critical first step: cultivating a profoundly unhealthy relationship with your mother. Think of it as method acting, but with lifelong consequences",
     },

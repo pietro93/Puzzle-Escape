@@ -6,6 +6,9 @@ export const genghisKhanBook: Book = {
   coverImage: "/images/murder-mystery/books/genghis-khan.webp",
   pages: [
     {
+      imageUrl: "/images/murder-mystery/books/genghis-khan-cover.webp",
+    },
+    {
       title: "Divine Birth Legend",
       text: "According to Mongol legend, Genghis Khan was born clutching a blood clot in his fist, which was interpreted as a sign that he was destined for greatness.\n\nMost infants arrive bawling for milk; he arrived pre-packaged with a prophecy of doom for his enemies. Talk about setting expectations early! While other babies were gumming their fists, baby Genghis was clearly thinking, 'This will hold a sword one day.'",
     },

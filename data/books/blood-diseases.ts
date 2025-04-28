@@ -4,6 +4,9 @@ export const bloodDiseasesBook: Book = {
   title: "Hematological Disorders: A Medical Reference",
   pages: [
     {
+      imageUrl: "/images/murder-mystery/books/blood-diseases-cover.webp",
+    },
+    {
       title: "Introduction to Blood Disorders",
       text: "Blood disorders affect one or more components of blood, including red blood cells, white blood cells, platelets, and the plasma. These disorders can be acute or chronic and range from mild to life-threatening. This reference provides an overview of common blood disorders, their symptoms, and treatments.",
     },
