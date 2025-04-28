@@ -234,8 +234,32 @@ export const morticianDialogue: DialogueOption[] = [
         id: "let-me-see-body",
         text: "I am not leaving until you accept my unconditional love and friendship.",
         response: "Enough of this nonsense! I'll let you check the body, just leave me the HELL alone.",
+        followUp: [
+          {
+            id: "check-victim-body",
+            text: "Let's check the victim's body.",
+            response:
+              "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living.",
+            followUp: [
+              {
+                id: "weird-signs",
+                text: "What are those weird signs on the body?",
+                response:
+                  "What weird signs? Probably tattoos or something. Kids these days have no respect for their own body.",
+                followUp: [],
+              },
+              {
+                id: "check-autopsy-report",
+                text: "Can I check the autopsy report?",
+                response: "Oh for fu--I mean sure, whatever.",
+                followUp: [],
+                specialAction: () => {}, // This will be handled in the component
+              },
+            ],
+            specialAction: () => {}, // This will be handled in the component
+          },
+        ],
         specialAction: () => {}, // This will be handled in the component
-        followUp: [],
       },
       {
         id: "like-job",

@@ -196,8 +196,15 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     } else if (option.id === "puzzle-games") {
       setAskedPuzzleGames(true)
     } else if (option.id === "let-me-see-body") {
+      // Immediately set canSeeBody to true and mark the option as shown
       setCanSeeBody(true)
       setShowedUnconditionalFriendship(true)
+
+      // After handling the dialogue response, immediately show the check body option
+      setTimeout(() => {
+        // Force update the dialogue options to show the check body option
+        dialogue.setCurrentDialogueOptions(filterMorticianOptions(dialogue.currentDialogueOptions))
+      }, 100)
     } else if (option.id === "can-see-report" || option.id === "can-see-report-again") {
       setShowPoliceReport(true)
       dialogue.setLastAction("viewing-report")
