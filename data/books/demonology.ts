@@ -3,7 +3,7 @@ import type { Book } from "@/components/murder-mystery/types"
 // Character Combinations
 const apollyonCombo = "⤟꧂〰⤪"
 const adzeCombo = "⟿꧂෴"
-const baalberithCombo = "⤠⤪〰"
+const asmodeusCombo = "⤠⤪〰"
 const aziDahakaCombo = "⤪〰෴꧂"
 const babaYagaCombo = "꧂෴⟿⤪"
 const churelCombo = "〰⤪⤟⟴"
@@ -33,38 +33,87 @@ const impunduluCombo = "⤪⤟෴❦"
 export const demonologyBook: Book = {
   title: `Demonology`,
   pages: [
+    // Apollyon - Image
+    {
+      title: `${apollyonCombo}`,
+      imageUrl: "/images/demonology/apollyon.webp",
+    },
+    // Apollyon - Text
     {
       title: `${apollyonCombo}`,
       text: `<b>Origin:</b> Rooted in Judeo-Christian apocalyptic tradition, <b><span style="color:red">${apollyonCombo}</span></b> is the <i>"Angel of the Abyss."</i>\n\n<b>Appearance:</b> Often depicted as a dark, armored warrior or a terrifying swarm of locusts, he embodies destruction and the void.\n\n<b>Modus Operandi:</b> <b><span style="color:red">${apollyonCombo}</span></b> commands legions of locusts and destructive forces that bring plagues and widespread death. His arrival signals divine wrath and catastrophic ruin.\n\n<b>Habitat:</b> Emerges from the abyss or desolate battlefields where devastation reigns.`,
     },
+    // Adze - Image
+    {
+      title: `${adzeCombo}`,
+      imageUrl: "/images/demonology/adze.webp",
+    },
+    // Adze - Text
     {
       title: `${adzeCombo}`,
       text: `<b>Origin:</b> Ewe folklore of West Africa.\n\n<b>Appearance:</b> A vampiric entity that can take the form of a glowing firefly or a shadowy humanoid with red eyes and claws.\n\n<b>Modus Operandi:</b> In firefly form, it slips into homes unnoticed to feed on the blood of victims, causing wasting illness and misfortune. In humanoid form, it becomes aggressive and dangerous.\n\n<b>Habitat:</b> Villages and homes, especially at night.`,
     },
+    // Asmodeus - Image
     {
-      title: `${baalberithCombo}`,
+      title: `${asmodeusCombo}`,
+      imageUrl: "/images/demonology/asmodeus.webp",
+    },
+    // Asmodeus - Text (replacing Baalberith)
+    {
+      title: `${asmodeusCombo}`,
       text: `<b>Origin:</b> Middle Eastern and European demonology.\n\n<b>Appearance:</b> A fearsome demon with three heads—a bull, a ram, and a man—sometimes riding a dragon or wielding a lance.\n\n<b>Modus Operandi:</b> Tempts mortals into lust, jealousy, and corruption, eroding virtue and spreading discord.\n\n<b>Habitat:</b> Places of vice, such as brothels, temples of forbidden worship, and courts rife with intrigue.`,
     },
+    // Azi Dahaka - Image
+    {
+      title: `${aziDahakaCombo}`,
+      imageUrl: "/images/demonology/azi-dahaka.webp",
+    },
+    // Azi Dahaka - Text
     {
       title: `${aziDahakaCombo}`,
       text: `<b>Origin:</b> Persian mythology.\n\n<b>Appearance:</b> A monstrous three-headed dragon or serpent with fiery breath and immense size.\n\n<b>Modus Operandi:</b> Spreads plague and destruction, devouring livestock and humans, poisoning the land with his presence.\n\n<b>Habitat:</b> Mountains, caves, and desolate wastelands.`,
     },
+    // Baba Yaga - Image
+    {
+      title: `${babaYagaCombo}`,
+      imageUrl: "/images/demonology/baba-yaga.webp",
+    },
+    // Baba Yaga - Text
     {
       title: `${babaYagaCombo}`,
       text: `<b>Origin:</b> Slavic folklore.\n\n<b>Appearance:</b> An old witch with a fearsome visage, often depicted riding a mortar and wielding a pestle, dwelling in a hut on chicken legs.\n\n<b>Modus Operandi:</b> Kidnaps and eats children, curses trespassers, and misleads travelers, embodying both menace and ambiguous wisdom.\n\n<b>Habitat:</b> Deep forests and remote wilderness.`,
     },
+    // Churel - Image
+    {
+      title: `${churelCombo}`,
+      imageUrl: "/images/demonology/churel.webp",
+    },
+    // Churel - Text
     {
       title: `${churelCombo}`,
       text: `<b>Origin:</b> South Asian folklore.\n\n<b>Appearance:</b> A hideous female spirit with backward-facing feet, disheveled hair, and a gaunt, terrifying face.\n\n<b>Modus Operandi:</b> Drains the life force of men, causing rapid aging and death, often targeting those who wronged her in life.\n\n<b>Habitat:</b> Graveyards, crossroads, and places associated with injustice.`,
     },
+    // Duppy - Image
+    {
+      title: `${duppyCombo}`,
+      imageUrl: "/images/demonology/duppy.webp",
+    },
+    // Duppy - Text
     {
       title: `${duppyCombo}`,
       text: `<b>Origin:</b> Caribbean folklore.\n\n<b>Appearance:</b> Malevolent spirits or ghosts, often invisible but sometimes appearing as shadowy figures or glowing lights.\n\n<b>Modus Operandi:</b> Haunt and torment the living, causing illness, accidents, madness, or death.\n\n<b>Habitat:</b> Cemeteries, abandoned places, and homes.`,
     },
+    // Draugr - Image
+    {
+      title: `${draugrCombo}`,
+      imageUrl: "/images/demonology/draugr.webp",
+    },
+    // Draugr - Text
     {
       title: `${draugrCombo}`,
       text: `<b>Origin:</b> Norse and Icelandic mythology.\n\n<b>Appearance:</b> Undead warriors with bloated, decaying bodies and supernatural strength.\n\n<b>Modus Operandi:</b> Guard their graves fiercely, attacking trespassers and spreading death or madness.\n\n<b>Habitat:</b> Burial mounds, ancient tombs, and coastal areas.`,
     },
+    // Remaining demons without images (for now)
     {
       title: `${incubusCombo}`,
       text: `<b>Origin:</b> European folklore.\n\n<b>Appearance:</b> Male demons, often dark and muscular with horns and wings.\n\n<b>Modus Operandi:</b> Assault women in their sleep, draining energy and causing nightmares, illness, or death.\n\n<b>Habitat:</b> Bedrooms and dream realms.`,
