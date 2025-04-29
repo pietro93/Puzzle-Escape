@@ -13,6 +13,7 @@ const incubusCombo = "⤪෴⟿"
 const djinnCombo = "෴〰⤪"
 const jorogumoCombo = "⤟⟿⤪"
 const laLloronaCombo = "⤪〰෴"
+const lamashtuCombo = "⤪〰⤟෴"
 const lilithCombo = "⟿⤠꧂"
 const oniCombo = "෴⤪〰⤞"
 const pazuzuCombo = "⤪〰⤠"
@@ -113,27 +114,72 @@ export const demonologyBook: Book = {
       title: `${draugrCombo}`,
       text: `<b>Origin:</b> Norse and Icelandic mythology.\n\n<b>Appearance:</b> Undead warriors with bloated, decaying bodies and supernatural strength.\n\n<b>Modus Operandi:</b> Guard their graves fiercely, attacking trespassers and spreading death or madness.\n\n<b>Habitat:</b> Burial mounds, ancient tombs, and coastal areas.`,
     },
-    // Remaining demons without images (for now)
+    // Incubus - Image
+    {
+      title: `${incubusCombo}`,
+      imageUrl: "/images/demonology/incubus.webp",
+    },
+    // Incubus - Text
     {
       title: `${incubusCombo}`,
       text: `<b>Origin:</b> European folklore.\n\n<b>Appearance:</b> Male demons, often dark and muscular with horns and wings.\n\n<b>Modus Operandi:</b> Assault women in their sleep, draining energy and causing nightmares, illness, or death.\n\n<b>Habitat:</b> Bedrooms and dream realms.`,
     },
+    // Djinn - Image
+    {
+      title: `${djinnCombo}`,
+      imageUrl: "/images/demonology/djinn.webp",
+    },
+    // Djinn - Text
     {
       title: `${djinnCombo}`,
       text: `<b>Origin:</b> Middle Eastern and North African folklore.\n\n<b>Appearance:</b> Shape-shifting spirits of fire, capable of appearing as humans, animals, or elemental forms.\n\n<b>Modus Operandi:</b> Trick, possess, or curse humans; some are malevolent, others neutral or benevolent. They can cause madness, illness, or misfortune.\n\n<b>Habitat:</b> Deserts, ruins, and remote places.`,
     },
+    // Jorogumo - Image
+    {
+      title: `${jorogumoCombo}`,
+      imageUrl: "/images/demonology/jorogumo.webp",
+    },
+    // Jorogumo - Text
     {
       title: `${jorogumoCombo}`,
       text: `<b>Origin:</b> Japanese Folklore.\n\n<b>Appearance:</b> A beautiful woman who can transform into a giant spider with multiple eyes and hairy legs.\n\n<b>Modus Operandi:</b> She lures men with her beauty, then ensnares them in webs to devour them at her leisure.\n\n<b>Habitat:</b> Remote mountain forests and abandoned houses.`,
     },
+    // La Llorona - Image
+    {
+      title: `${laLloronaCombo}`,
+      imageUrl: "/images/demonology/lallorona.webp",
+    },
+    // La Llorona - Text
     {
       title: `${laLloronaCombo}`,
       text: `<b>Origin:</b> Latin American Folklore.\n\n<b>Appearance:</b> The weeping woman, a ghostly figure in white, often with long flowing hair and a mournful expression.\n\n<b>Modus Operandi:</b> She haunts waterways, luring victims to drown, especially children.\n\n<b>Habitat:</b> Rivers, lakes, and marshes.`,
     },
+    // Lamashtu - Image
+    {
+      title: `${lamashtuCombo}`,
+      imageUrl: "/images/demonology/lamashtu.webp",
+    },
+    // Lamashtu - Text
+    {
+      title: `${lamashtuCombo}`,
+      text: `<b>Origin:</b> Ancient Mesopotamia.\n\n<b>Appearance:</b> A monstrous female with a lioness's head, donkey's teeth and ears, long fingers, and bird-like feet.\n\n<b>Modus Operandi:</b> She attacks pregnant women and newborns, causing miscarriages, infant death, and disease through curses and direct assault.\n\n<b>Habitat:</b> Childbirth huts and homes of expectant mothers.`,
+    },
+    // Lilith - Image
+    {
+      title: `${lilithCombo}`,
+      imageUrl: "/images/demonology/lilith.webp",
+    },
+    // Lilith - Text
     {
       title: `${lilithCombo}`,
       text: `<b>Origin:</b> Jewish Folklore.\n\n<b>Appearance:</b> A beautiful yet fearsome winged woman with serpentine features.\n\n<b>Modus Operandi:</b> She preys on newborn infants, bringing illness and death, and seduces men in their sleep to drain their vitality.\n\n<b>Habitat:</b> Roams nighttime wilderness near homes with newborns or sleeping men.`,
     },
+    // Oni - Image
+    {
+      title: `${oniCombo}`,
+      imageUrl: "/images/demonology/oni.webp",
+    },
+    // Oni - Text
     {
       title: `${oniCombo}`,
       text: `<b>Origin:</b> Japanese Folklore.\n\n<b>Appearance:</b> Large, horned ogres with red or blue skin, wild hair, sharp claws, and iron clubs.\n\n<b>Modus Operandi:</b> <b><span style="color:red">${oniCombo}</span></b> attack with brute force, crushing or devouring victims, and are associated with natural disasters and punishment of sinners.\n\n<b>Habitat:</b> Mountains, caves, and hellish realms.`,
@@ -166,6 +212,12 @@ export const demonologyBook: Book = {
       title: `${strigoiCombo}`,
       text: `<b>Origin:</b> Romanian folklore.\n\n<b>Appearance:</b> Undead vampires with pale skin, sharp teeth, and glowing eyes.\n\n<b>Modus Operandi:</b> They rise from the grave to drink the blood of the living, spreading death and disease.\n\n<b>Habitat:</b> Graveyards, villages, and rural homes.`,
     },
+    // Succubus - Image
+    {
+      title: `${succubusCombo}`,
+      imageUrl: "/images/demonology/succubus.webp",
+    },
+    // Succubus - Text
     {
       title: `${succubusCombo}`,
       text: `<b>Origin:</b> European folklore.\n\n<b>Appearance:</b> Seductive female demons with alluring beauty, often adorned with bat wings or horns.\n\n<b>Modus Operandi:</b> They visit men in dreams to seduce and drain their life force, causing weakness or death.\n\n<b>Habitat:</b> Bedrooms and dream realms.`,
