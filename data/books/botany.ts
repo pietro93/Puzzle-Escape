@@ -1,131 +1,113 @@
 import type { Book } from "@/components/murder-mystery/types"
 
 export const botanyBook: Book = {
-  title: "Plant Identification Manual",
+  title: "Botany: Trees of the World",
   sections: [
     {
-      id: "poisonous-plants",
-      title: "Poisonous Plants",
+      id: "deciduous",
+      title: "Deciduous Trees",
       pages: [
         {
-          title: "Deadly Nightshade (Atropa belladonna)",
-          text: "<b>Classification:</b> Highly toxic perennial herb in the Solanaceae family.\n\n<b>Toxicity:</b> Contains atropine and scopolamine. Causes hallucinations, delirium, paralysis, and death. Symptoms include dilated pupils, blurred vision, and seizures.\n\n<b>Habitat:</b> Woodland edges and disturbed areas in Europe, North Africa, and Western Asia.",
-        },
-        {
-          title: "Hemlock (Conium maculatum)",
-          text: "<b>Classification:</b> Poisonous biennial herb in the Apiaceae family.\n\n<b>Toxicity:</b> Contains coniine alkaloids causing paralysis and respiratory failure. Symptoms progress from muscle weakness to paralysis and death.\n\n<b>Habitat:</b> Damp areas along streams and ditches in Europe and North Africa.",
-        },
-        {
-          title: "Monkshood (Aconitum)",
-          text: "<b>Classification:</b> Poisonous perennial in the Ranunculaceae family.\n\n<b>Toxicity:</b> Contains aconitine, a potent neurotoxin and cardiotoxin. Causes nausea, numbness, cardiac arrhythmias, and respiratory paralysis.\n\n<b>Habitat:</b> Mountain meadows and forests in the Northern Hemisphere.",
-        },
-        {
-          title: "Castor Bean (Ricinus communis)",
-          text: "<b>Classification:</b> Flowering plant in the Euphorbiaceae family.\n\n<b>Toxicity:</b> Seeds contain ricin, inhibiting protein synthesis. Causes nausea, vomiting, dehydration, seizures, and organ failure.\n\n<b>Habitat:</b> Native to Mediterranean Basin, East Africa, and India. Naturalized in tropical regions.",
-        },
-        {
-          title: "Oleander (Nerium oleander)",
-          text: "<b>Classification:</b> Poisonous evergreen shrub in the Apocynaceae family.\n\n<b>Toxicity:</b> Contains cardiac glycosides affecting heart function. Causes nausea, abdominal pain, dizziness, irregular heartbeat, and seizures.\n\n<b>Habitat:</b> Mediterranean region and Asia, commonly planted as an ornamental.",
-        },
-        {
-          title: "Foxglove (Digitalis purpurea)",
-          text: "<b>Classification:</b> Biennial herb in the Plantaginaceae family.\n\n<b>Toxicity:</b> Contains cardiac glycosides like digoxin. Causes nausea, confusion, irregular heartbeat, and visual disturbances.\n\n<b>Habitat:</b> Woodland edges, gardens, and disturbed areas in Europe.",
-        },
-      ],
-    },
-    {
-      id: "trees",
-      title: "Trees",
-      pages: [
-        {
-          title: "African Baobab (Adansonia digitata)",
-          text: "<b>Classification:</b> Deciduous tree in the Malvaceae family.\n\n<b>Habitat:</b> Semi-arid regions of sub-Saharan Africa, particularly in savanna ecosystems.",
-          imageUrl: "/images/murder-mystery/books/botany/baobab-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
-        },
-        {
-          title: "Japanese Flowering Cherry (Prunus serrulata)",
-          text: "<b>Classification:</b> Ornamental flowering tree in the Rosaceae family.\n\n<b>Habitat:</b> Native to Japan, Korea, and China, now cultivated worldwide for its spectacular spring blossoms.",
-          imageUrl: "/images/murder-mystery/books/botany/cherry-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
-        },
-        {
-          title: "Sugar Maple (Acer saccharum)",
-          text: "<b>Classification:</b> Deciduous tree in the Sapindaceae family.\n\n<b>Habitat:</b> Native to the northeastern United States and southeastern Canada, thriving in cool, moist climates with well-drained soils.",
-          imageUrl: "/images/murder-mystery/books/botany/maple-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
-        },
-        {
-          title: "Moreton Bay Fig (Ficus macrophylla)",
-          text: "<b>Classification:</b> Evergreen tree in the Moraceae family.\n\n<b>Habitat:</b> Native to eastern Australia, particularly rainforest environments.",
-          imageUrl: "/images/murder-mystery/books/botany/moreton-bay-fig-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
-        },
-        {
-          title: "English Oak (Quercus robur)",
-          text: "<b>Classification:</b> Deciduous tree in the Fagaceae family.\n\n<b>Habitat:</b> Native to most of Europe, extending to the Caucasus Mountains and North Africa, preferring lowland forests with rich, deep soils.",
+          title: "Oak Tree",
           imageUrl: "/images/murder-mystery/books/botany/oak-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "The mighty oak is a symbol of strength and endurance. These trees can live for hundreds of years and provide habitat for countless species. Their acorns are an important food source for wildlife. Oak wood is prized for its durability and has been used in shipbuilding, furniture, and barrel-making for centuries.",
         },
         {
-          title: "Canary Island Date Palm (Phoenix canariensis)",
-          text: "<b>Classification:</b> Flowering plant in the Arecaceae family.\n\n<b>Habitat:</b> Native to the Canary Islands, now widely cultivated in Mediterranean and subtropical climates worldwide.",
-          imageUrl: "/images/murder-mystery/books/botany/palm-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
+          title: "Maple Tree",
+          imageUrl: "/images/murder-mystery/books/botany/maple-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "Maple trees are known for their vibrant autumn colors and sweet sap that can be processed into syrup. There are approximately 128 species of maple. The distinctive maple leaf is featured on the Canadian flag. Maple wood is often used for furniture, flooring, and musical instruments due to its attractive grain patterns.",
         },
         {
-          title: "Ponderosa Pine (Pinus ponderosa)",
-          text: "<b>Classification:</b> Evergreen coniferous tree in the Pinaceae family.\n\n<b>Habitat:</b> Native to mountain regions of western North America, from British Columbia to Mexico, thriving at elevations between 1,800 and 2,600 meters.",
-          imageUrl: "/images/murder-mystery/books/botany/pine-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
+          title: "Cherry Tree",
+          imageUrl: "/images/murder-mystery/books/botany/cherry-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "Cherry trees are celebrated for their beautiful spring blossoms, particularly in Japan where cherry blossom viewing (hanami) is a cultural tradition. Beyond their ornamental value, many cherry species produce edible fruits. Cherry wood is highly valued for furniture making due to its rich color and smooth grain.",
         },
         {
-          title: "Socotra Dragon Tree (Dracaena cinnabari)",
-          text: "<b>Classification:</b> Flowering plant in the Asparagaceae family.\n\n<b>Habitat:</b> Endemic to the Socotra archipelago, part of Yemen.",
-          imageUrl: "/images/murder-mystery/books/botany/socotra-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
-        },
-        {
-          title: "Weeping Willow (Salix babylonica)",
-          text: "<b>Classification:</b> Deciduous tree in the Salicaceae family.\n\n<b>Habitat:</b> Native to dry areas of northern China, now widely cultivated near water bodies throughout temperate regions worldwide.",
+          title: "Willow Tree",
           imageUrl: "/images/murder-mystery/books/botany/willow-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "Willows are easily recognized by their slender, drooping branches and narrow leaves. They typically grow near water sources and have extensive root systems that help prevent soil erosion. Willow bark contains salicylic acid, a compound similar to aspirin, and has been used medicinally for centuries to treat pain and inflammation.",
         },
         {
-          title: "Yew (Taxus baccata)",
-          text: "<b>Classification:</b> Coniferous trees and shrubs in the Taxaceae family.\n\n<b>Habitat:</b> Temperate regions of Europe, Asia, North Africa, and North America.",
+          title: "Yew Tree",
           imageUrl: "/images/murder-mystery/books/botany/yew-tree.webp",
-          imageStyle: { width: "250px", height: "250px", objectFit: "contain" },
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "Yew trees are ancient conifers that can live for thousands of years. Despite being highly toxic, they have important medicinal properties. The compound taxol, derived from yew bark, is used in cancer treatments. Historically, yew wood was prized for making longbows due to its flexibility and strength.",
         },
       ],
     },
     {
-      id: "mushrooms",
-      title: "Mushrooms",
+      id: "coniferous",
+      title: "Coniferous Trees",
       pages: [
         {
-          title: "Death Cap (Amanita phalloides)",
-          text: "<b>Classification:</b> Deadly poisonous mushroom in the Amanitaceae family.\n\n<b>Toxicity:</b> Contains amatoxins causing liver and kidney failure. Symptoms appear 6-24 hours after ingestion, including severe pain followed by organ failure.\n\n<b>Habitat:</b> Woodlands with oak and broadleaf trees in Europe, Asia, and North America.",
+          title: "Pine Tree",
+          imageUrl: "/images/murder-mystery/books/botany/pine-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "Pine trees are evergreen conifers characterized by their needle-like leaves and distinctive cones. They are among the most commercially important tree species, valued for timber, paper production, and resin. Pines are highly adaptable and can be found in diverse environments from mountains to coastal areas.",
         },
         {
-          title: "Destroying Angel (Amanita bisporigera)",
-          text: "<b>Classification:</b> Deadly poisonous mushroom in the Amanitaceae family.\n\n<b>Toxicity:</b> Contains amatoxins causing liver and kidney failure. Mortality rate exceeds 50% even with treatment.\n\n<b>Habitat:</b> Hardwood and mixed forests in eastern North America, forming relationships with oak trees.",
+          title: "Palm Tree",
+          imageUrl: "/images/murder-mystery/books/botany/palm-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "While not true conifers, palms are often grouped with them due to their similar growth pattern. These iconic tropical trees have unbranched stems and a crown of large leaves. Palms provide valuable resources including dates, coconuts, and palm oil. Their fronds have been used for thatching, basket-weaving, and ceremonial purposes across many cultures.",
+        },
+      ],
+    },
+    {
+      id: "exotic",
+      title: "Exotic Trees",
+      pages: [
+        {
+          title: "Baobab Tree",
+          imageUrl: "/images/murder-mystery/books/botany/baobab-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "The baobab is often called the 'upside-down tree' because its branches resemble roots. Native to Africa, these massive trees can live for thousands of years and store thousands of liters of water in their trunks to survive drought conditions. Baobab fruit is highly nutritious, containing more vitamin C than oranges and more calcium than milk.",
         },
         {
-          title: "Chanterelle (Cantharellus cibarius)",
-          text: "<b>Classification:</b> Edible mushroom in the Cantharellaceae family.\n\n<b>Habitat:</b> Coniferous and deciduous forests throughout Europe, North America, and Asia, forming relationships with trees.",
+          title: "Moreton Bay Fig Tree",
+          imageUrl: "/images/murder-mystery/books/botany/moreton-bay-fig-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "Native to eastern Australia, the Moreton Bay Fig is known for its massive buttress roots and wide canopy. These trees can grow to over 60 meters tall with a canopy spread of 40 meters. They begin life as epiphytes, germinating in the branches of a host tree before sending roots to the ground and eventually enveloping the host.",
         },
         {
-          title: "Fly Agaric (Amanita muscaria)",
-          text: "<b>Classification:</b> Psychoactive mushroom in the Amanitaceae family.\n\n<b>Toxicity:</b> Contains ibotenic acid and muscimol, causing hallucinations, confusion, and gastrointestinal upset.\n\n<b>Habitat:</b> Forms relationships with pine, spruce, and birch trees in temperate regions worldwide.",
-        },
-        {
-          title: "Morel (Morchella)",
-          text: "<b>Classification:</b> Edible mushroom in the Morchellaceae family.\n\n<b>Habitat:</b> Appears in spring, particularly after forest fires or in disturbed ground. Found in deciduous forests across North America, Europe, and Asia.",
-        },
-        {
-          title: "Psilocybe Mushrooms (Psilocybe)",
-          text: "<b>Classification:</b> Psychedelic mushrooms in the Hymenogastraceae family.\n\n<b>Effects:</b> Contain psilocybin and psilocin, causing altered perceptions, visual hallucinations, and euphoria.\n\n<b>Habitat:</b> Various species grow in different habitats worldwide, including grasslands, forests, and dung.",
+          title: "Socotra Dragon Tree",
+          imageUrl: "/images/murder-mystery/books/botany/socotra-tree.webp",
+          imageStyle: {
+            width: "250px",
+            height: "250px",
+          },
+          text: "The Dragon Blood Tree is native to the Socotra archipelago in Yemen. Its distinctive umbrella-shaped canopy evolved to provide shade and reduce evaporation in its arid environment. The tree gets its name from its dark red resin, known as 'dragon's blood,' which has been used in medicine, dyes, and varnish for centuries.",
         },
       ],
     },
