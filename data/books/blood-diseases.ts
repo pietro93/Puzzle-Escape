@@ -4,7 +4,7 @@ export const bloodDiseasesBook: Book = {
   title: "Hematological Disorders: A Medical Reference",
   pages: [
     {
-      imageUrl: "/images/murder-mystery/books/blood-diseases-cover.webp",
+      imageUrl: "/images/murder-mystery/books/blood-diseases-book-cover.webp",
     },
     {
       title: "Introduction to Blood Disorders",

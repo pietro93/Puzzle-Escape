@@ -102,7 +102,7 @@ export function BookModal({
       return `/images/demonology/${imageUrl}`
     } else {
       // For other books, use a generic path
-      return `/images/murder-mystery/books/${book.id}/${imageUrl}`
+      return `/images/murder-mystery/books/${imageUrl}`
     }
   }
 
