@@ -54,39 +54,38 @@ export function useBookSystem() {
     setCurrentPage(0)
   }
 
-  const goToPage = (pageIndex: number) => {
-    if (selectedBook) {
-      const maxPage =
-        selectedBook.sections && currentSection
-          ? selectedBook.sections.find((s) => s.id === currentSection)?.pages.length || 0
-          : selectedBook.pages.length
-
-      if (pageIndex >= 0 && pageIndex < maxPage) {
-        setCurrentPage(pageIndex)
-      }
-    }
+  const handleSwitchSection = (sectionId: string) => {
+    setCurrentSection(sectionId)
+    setCurrentPage(0)
   }
 
   const getCurrentContent = () => {
     if (!selectedBook) return null
 
-    if (selectedBook.sections && currentSection) {
+    if (currentSection && selectedBook.sections) {
       const section = selectedBook.sections.find((s) => s.id === currentSection)
-      return section ? section.pages[currentPage] : null
-    } else {
+      if (section && section.pages.length > currentPage) {
+        return section.pages[currentPage]
+      }
+      return null
+    }
+
+    if (selectedBook.pages.length > currentPage) {
       return selectedBook.pages[currentPage]
     }
+
+    return null
   }
 
   const getTotalPages = () => {
     if (!selectedBook) return 0
 
-    if (selectedBook.sections && currentSection) {
+    if (currentSection && selectedBook.sections) {
       const section = selectedBook.sections.find((s) => s.id === currentSection)
       return section ? section.pages.length : 0
-    } else {
-      return selectedBook.pages.length
     }
+
+    return selectedBook.pages.length
   }
 
   return {
@@ -98,8 +97,8 @@ export function useBookSystem() {
     nextPage,
     prevPage,
     switchSection,
-    goToPage,
     getCurrentContent,
     getTotalPages,
+    onSwitchSection: handleSwitchSection,
   }
 }
