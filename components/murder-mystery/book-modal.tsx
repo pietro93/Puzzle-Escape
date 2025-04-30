@@ -15,7 +15,7 @@ interface BookModalProps {
   onClose: () => void
   onNextPage: () => void
   onPrevPage: () => void
-  onSwitchSection: (sectionId: string) => void
+  onSwitchSection: (sectionId: string | null) => void
   getCurrentContent: () => any
   getTotalPages: () => number
 }
@@ -117,7 +117,9 @@ export function BookModal({
                     .map((section) => (
                       <button
                         key={section.id}
-                        onClick={() => onSwitchSection(section.id)}
+                        onClick={() =>
+                          currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
+                        }
                         className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors flex-shrink-0 ${
                           currentSection === section.id
                             ? "bg-purple-900/50 text-purple-300 font-pixel border border-purple-300"
@@ -138,7 +140,6 @@ export function BookModal({
                   <ChevronRight className="h-4 w-4 text-purple-300" />
                 </Button>
               </div>
-              <div className="mt-1 text-xs text-center text-purple-300/70 font-pixel">By Origin</div>
             </div>
 
             {/* Type/Nature Categories (Second Carousel) */}
@@ -163,7 +164,9 @@ export function BookModal({
                     .map((section) => (
                       <button
                         key={section.id}
-                        onClick={() => onSwitchSection(section.id)}
+                        onClick={() =>
+                          currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
+                        }
                         className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors flex-shrink-0 ${
                           currentSection === section.id
                             ? "bg-red-900/50 text-red-300 font-pixel border border-red-300"
@@ -184,7 +187,6 @@ export function BookModal({
                   <ChevronRight className="h-4 w-4 text-red-300" />
                 </Button>
               </div>
-              <div className="mt-1 text-xs text-center text-red-300/70 font-pixel">By Type</div>
             </div>
           </div>
         )}

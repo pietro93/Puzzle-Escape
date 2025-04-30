@@ -12,12 +12,8 @@ export function useBookSystem() {
     setSelectedBook(book)
     setCurrentPage(0)
 
-    // If it's a book with sections, set the initial section
-    if (book.sections && book.sections.length > 0) {
-      setCurrentSection(book.sections[0].id)
-    } else {
-      setCurrentSection(null)
-    }
+    // Start with no section selected
+    setCurrentSection(null)
   }
 
   const closeBook = () => {
@@ -49,7 +45,7 @@ export function useBookSystem() {
     }
   }
 
-  const switchSection = (sectionId: string) => {
+  const switchSection = (sectionId: string | null) => {
     setCurrentSection(sectionId)
     setCurrentPage(0)
   }
@@ -62,6 +58,7 @@ export function useBookSystem() {
   const getCurrentContent = () => {
     if (!selectedBook) return null
 
+    // If a section is selected and the book has sections
     if (currentSection && selectedBook.sections) {
       const section = selectedBook.sections.find((s) => s.id === currentSection)
       if (section && section.pages.length > currentPage) {
@@ -70,6 +67,27 @@ export function useBookSystem() {
       return null
     }
 
+    // If no section is selected but the book has sections, show all pages alphabetically
+    if (!currentSection && selectedBook.sections) {
+      // Collect all pages from all sections
+      const allPages = selectedBook.sections.flatMap((section) => section.pages)
+
+      // Sort pages alphabetically by title
+      const sortedPages = [...allPages].sort((a, b) => {
+        if (a.title && b.title) {
+          return a.title.localeCompare(b.title)
+        }
+        return 0
+      })
+
+      // Return the current page from the sorted list
+      if (sortedPages.length > currentPage) {
+        return sortedPages[currentPage]
+      }
+      return null
+    }
+
+    // For books without sections
     if (selectedBook.pages.length > currentPage) {
       return selectedBook.pages[currentPage]
     }
@@ -80,11 +98,19 @@ export function useBookSystem() {
   const getTotalPages = () => {
     if (!selectedBook) return 0
 
+    // If a section is selected and the book has sections
     if (currentSection && selectedBook.sections) {
       const section = selectedBook.sections.find((s) => s.id === currentSection)
       return section ? section.pages.length : 0
     }
 
+    // If no section is selected but the book has sections, count all pages
+    if (!currentSection && selectedBook.sections) {
+      const allPagesCount = selectedBook.sections.reduce((total, section) => total + section.pages.length, 0)
+      return allPagesCount
+    }
+
+    // For books without sections
     return selectedBook.pages.length
   }
 
