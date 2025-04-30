@@ -64,9 +64,6 @@ export function BookModal({
     "witchcraft",
   ]
 
-  // Botany book sections
-  const botanyBookSections = ["poisonous-plants", "trees", "mushrooms"]
-
   // Check if this is the botany book
   const isBotanyBook = book.title === "Plant Identification Manual"
 
@@ -103,13 +100,11 @@ export function BookModal({
           <div className="mb-4 space-y-3">
             {/* Botany Book Tabs - Simple horizontal tabs */}
             {isBotanyBook && (
-              <div className="flex space-x-2 overflow-x-auto py-2">
+              <div className="flex justify-center space-x-4">
                 {book.sections.map((section) => (
                   <button
                     key={section.id}
-                    onClick={() =>
-                      currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
-                    }
+                    onClick={() => onSwitchSection(section.id)}
                     className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors ${
                       currentSection === section.id
                         ? "bg-green-900/50 text-green-300 font-pixel border border-green-300"
@@ -139,7 +134,7 @@ export function BookModal({
 
                     <div
                       ref={geoCarouselRef}
-                      className="flex overflow-x-auto scrollbar-hide py-2 px-8 space-x-2 w-full scroll-smooth"
+                      className="flex overflow-x-auto py-2 px-8 space-x-2 w-full scroll-smooth"
                       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                     >
                       {book.sections
@@ -186,7 +181,7 @@ export function BookModal({
 
                     <div
                       ref={typeCarouselRef}
-                      className="flex overflow-x-auto scrollbar-hide py-2 px-8 space-x-2 w-full scroll-smooth"
+                      className="flex overflow-x-auto py-2 px-8 space-x-2 w-full scroll-smooth"
                       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                     >
                       {book.sections
@@ -225,8 +220,8 @@ export function BookModal({
 
         {/* Book content */}
         {content && (
-          <div className="p-4 bg-gray-800 rounded-lg">
-            {content.title && <h4 className="text-lg font-medium text-red-500 font-pixel mb-4">{content.title}</h4>}
+          <div className="p-4 bg-[#f5f2e8] rounded-lg">
+            {content.title && <h4 className="text-lg font-medium text-red-700 font-pixel mb-4">{content.title}</h4>}
 
             {content.imageUrl && (
               <div className="mb-4 flex flex-col items-center">
@@ -239,7 +234,7 @@ export function BookModal({
                   />
                 </div>
                 {content.caption && (
-                  <p className="text-gray-300 font-pixel text-sm mt-2 text-center italic leading-relaxed">
+                  <p className="text-gray-700 font-pixel text-sm mt-2 text-center italic leading-relaxed">
                     {content.caption}
                   </p>
                 )}
@@ -248,10 +243,10 @@ export function BookModal({
 
             {content.text && (
               <div
-                className="text-gray-300 font-pixel text-sm leading-relaxed space-y-4"
+                className="text-gray-800 font-pixel text-sm leading-relaxed space-y-4"
                 dangerouslySetInnerHTML={{
                   __html: content.text
-                    .replace(/<b>(.*?):<\/b>/g, '<b class="text-purple-400">$1:</b>')
+                    .replace(/<b>(.*?):<\/b>/g, '<b class="text-purple-800">$1:</b>')
                     .replace(/\n\n/g, "</p><p>")
                     .replace(/^(.+)/, "<p>$1</p>"),
                 }}
