@@ -92,7 +92,7 @@ export function BookModal({
       return imageUrl
     }
 
-    // For different book types, use the appropriate path
+    // For different book types, use the appropriate subfolder
     if (isBotanyBook) {
       return `/images/murder-mystery/books/botany/${imageUrl}`
     } else if (isPuppiesBook) {
