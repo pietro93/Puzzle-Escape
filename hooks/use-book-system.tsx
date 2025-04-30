@@ -1,132 +1,107 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
+import { BookModal } from "@/components/murder-mystery/book-modal"
 import type { Book } from "@/components/murder-mystery/types"
 
 export function useBookSystem() {
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+  const [currentBook, setCurrentBook] = useState<Book | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
 
-  const openBook = (book: Book) => {
-    setSelectedBook(book)
-    setCurrentPage(0)
-
-    // For botany book, always select "plants" section by default
-    if (book.title === "Plant Identification Manual") {
-      setCurrentSection("plants")
-    } else {
-      // For other books, start with no section selected
-      setCurrentSection(null)
-    }
-  }
-
-  const closeBook = () => {
-    setSelectedBook(null)
+  const openBook = useCallback((book: Book) => {
+    setCurrentBook(book)
     setCurrentPage(0)
     setCurrentSection(null)
-  }
+  }, [])
 
-  const nextPage = () => {
-    if (selectedBook) {
-      const totalPages = getTotalPages()
-      if (currentPage < totalPages - 1) {
-        setCurrentPage(currentPage + 1)
-      }
+  const closeBook = useCallback(() => {
+    setCurrentBook(null)
+    setCurrentPage(0)
+    setCurrentSection(null)
+  }, [])
+
+  const nextPage = useCallback(() => {
+    if (!currentBook) return
+
+    const totalPages = getTotalPages()
+    if (currentPage < totalPages - 1) {
+      setCurrentPage((prev) => prev + 1)
     }
-  }
+  }, [currentBook, currentPage])
 
-  const prevPage = () => {
+  const prevPage = useCallback(() => {
     if (currentPage > 0) {
-      setCurrentPage(currentPage - 1)
+      setCurrentPage((prev) => prev - 1)
     }
-  }
+  }, [currentPage])
 
-  const switchSection = (sectionId: string | null) => {
-    // For botany book, don't allow null section
-    if (selectedBook?.title === "Plant Identification Manual" && sectionId === null) {
-      return
-    }
-
+  const switchSection = useCallback((sectionId: string | null) => {
     setCurrentSection(sectionId)
     setCurrentPage(0)
-  }
+  }, [])
 
-  const handleSwitchSection = (sectionId: string) => {
-    setCurrentSection(sectionId)
-    setCurrentPage(0)
-  }
+  const getCurrentContent = useCallback(() => {
+    if (!currentBook) return null
 
-  const getCurrentContent = () => {
-    if (!selectedBook) return null
-
-    // If a section is selected and the book has sections
-    if (currentSection && selectedBook.sections) {
-      const section = selectedBook.sections.find((s) => s.id === currentSection)
-      if (section && section.pages.length > currentPage) {
-        return section.pages[currentPage]
+    // If a section is selected, show pages from that section
+    if (currentSection && currentBook.sections) {
+      const section = currentBook.sections.find((s) => s.id === currentSection)
+      if (section && section.pages && section.pages.length > 0) {
+        return section.pages[currentPage] || null
       }
       return null
     }
 
-    // If no section is selected but the book has sections, show all pages alphabetically
-    if (!currentSection && selectedBook.sections) {
-      // Collect all pages from all sections
-      const allPages = selectedBook.sections.flatMap((section) => section.pages)
+    // Otherwise, show pages from the main book
+    return currentBook.pages[currentPage] || null
+  }, [currentBook, currentPage, currentSection])
 
-      // Sort pages alphabetically by title
-      const sortedPages = [...allPages].sort((a, b) => {
-        if (a.title && b.title) {
-          return a.title.localeCompare(b.title)
-        }
-        return 0
-      })
+  const getTotalPages = useCallback(() => {
+    if (!currentBook) return 0
 
-      // Return the current page from the sorted list
-      if (sortedPages.length > currentPage) {
-        return sortedPages[currentPage]
-      }
-      return null
+    // If a section is selected, count pages in that section
+    if (currentSection && currentBook.sections) {
+      const section = currentBook.sections.find((s) => s.id === currentSection)
+      return section?.pages?.length || 0
     }
 
-    // For books without sections
-    if (selectedBook.pages && selectedBook.pages.length > currentPage) {
-      return selectedBook.pages[currentPage]
-    }
+    // Otherwise, count pages in the main book
+    return currentBook.pages.length
+  }, [currentBook, currentSection])
 
-    return null
-  }
-
-  const getTotalPages = () => {
-    if (!selectedBook) return 0
-
-    // If a section is selected and the book has sections
-    if (currentSection && selectedBook.sections) {
-      const section = selectedBook.sections.find((s) => s.id === currentSection)
-      return section ? section.pages.length : 0
-    }
-
-    // If no section is selected but the book has sections, count all pages
-    if (!currentSection && selectedBook.sections) {
-      const allPagesCount = selectedBook.sections.reduce((total, section) => total + section.pages.length, 0)
-      return allPagesCount
-    }
-
-    // For books without sections
-    return selectedBook.pages ? selectedBook.pages.length : 0
-  }
+  const BookModalComponent = useCallback(
+    () =>
+      currentBook ? (
+        <BookModal
+          book={currentBook}
+          currentPage={currentPage}
+          currentSection={currentSection}
+          onClose={closeBook}
+          onNextPage={nextPage}
+          onPrevPage={prevPage}
+          onSwitchSection={switchSection}
+          getCurrentContent={getCurrentContent}
+          getTotalPages={getTotalPages}
+        />
+      ) : null,
+    [
+      currentBook,
+      currentPage,
+      currentSection,
+      closeBook,
+      nextPage,
+      prevPage,
+      switchSection,
+      getCurrentContent,
+      getTotalPages,
+    ],
+  )
 
   return {
-    selectedBook,
-    currentPage,
-    currentSection,
+    currentBook,
     openBook,
     closeBook,
-    nextPage,
-    prevPage,
-    switchSection,
-    getCurrentContent,
-    getTotalPages,
-    onSwitchSection: handleSwitchSection,
+    BookModalComponent,
   }
 }

@@ -92,7 +92,7 @@ export function BookModal({
       return imageUrl
     }
 
-    // For different book types, use the appropriate subfolder
+    // For different book types, use the appropriate path
     if (isBotanyBook) {
       return `/images/murder-mystery/books/botany/${imageUrl}`
     } else if (isPuppiesBook) {
@@ -257,7 +257,7 @@ export function BookModal({
               <div className="mb-4 flex flex-col items-center">
                 <div className="relative" style={content.imageStyle || { width: "300px", height: "300px" }}>
                   <Image
-                    src={getImagePath(content.imageUrl) || "/placeholder.svg"}
+                    src={content.imageUrl.startsWith("/") ? content.imageUrl : getImagePath(content.imageUrl)}
                     alt={content.caption || content.title || "Book illustration"}
                     fill
                     className="rounded-md pixelated object-contain"
