@@ -33,6 +33,30 @@ export function BookModal({
   const content = getCurrentContent()
   const totalPages = getTotalPages()
 
+  // Define which sections belong to each category type
+  const geographicalSections = [
+    "east-asia",
+    "europe",
+    "judeo-christian",
+    "middle-east-persia",
+    "oceanic",
+    "slavic-eastern-europe",
+    "south-southeast-asia",
+    "sub-saharan-africa",
+    "the-americas",
+  ]
+
+  const typeSections = [
+    "cannibalistic",
+    "child-predating",
+    "demons",
+    "monstrous",
+    "shape-shifting",
+    "undead-spirits",
+    "vampiric",
+    "witchcraft",
+  ]
+
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 w-full max-w-2xl">
@@ -49,25 +73,47 @@ export function BookModal({
         </div>
 
         {/* Section tabs for books with sections */}
-        <div className="flex mb-4 border-b border-gray-700 overflow-x-auto">
-          {book.sections && (
-            <div className="flex space-x-1 pb-1 overflow-x-auto w-full">
-              {book.sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => onSwitchSection(section.id)}
-                  className={`px-3 py-2 whitespace-nowrap rounded-t-lg transition-colors ${
-                    currentSection === section.id
-                      ? "bg-purple-900/50 text-purple-300 font-pixel text-sm border-b-2 border-purple-300"
-                      : "text-gray-400 font-pixel text-sm hover:text-gray-200 hover:bg-gray-800/30"
-                  }`}
-                >
-                  {section.title}
-                </button>
-              ))}
+        {book.sections && (
+          <div className="mb-4 border-b border-gray-700">
+            {/* Geographical Origin Categories (First Row) */}
+            <div className="flex flex-wrap pb-2 overflow-x-auto w-full">
+              {book.sections
+                .filter((section) => geographicalSections.includes(section.id))
+                .map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => onSwitchSection(section.id)}
+                    className={`px-2 py-1 m-1 whitespace-nowrap rounded-md transition-colors text-xs ${
+                      currentSection === section.id
+                        ? "bg-purple-900/50 text-purple-300 font-pixel border border-purple-300"
+                        : "text-gray-400 font-pixel hover:text-gray-200 hover:bg-gray-800/30"
+                    }`}
+                  >
+                    {section.title}
+                  </button>
+                ))}
             </div>
-          )}
-        </div>
+
+            {/* Type/Nature Categories (Second Row) */}
+            <div className="flex flex-wrap pb-2 overflow-x-auto w-full">
+              {book.sections
+                .filter((section) => typeSections.includes(section.id))
+                .map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => onSwitchSection(section.id)}
+                    className={`px-2 py-1 m-1 whitespace-nowrap rounded-md transition-colors text-xs ${
+                      currentSection === section.id
+                        ? "bg-red-900/50 text-red-300 font-pixel border border-red-300"
+                        : "text-gray-400 font-pixel hover:text-gray-200 hover:bg-gray-800/30"
+                    }`}
+                  >
+                    {section.title}
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
 
         {/* Book content */}
         {content && (

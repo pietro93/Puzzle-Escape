@@ -42,16 +42,6 @@ export const demonologyBook: Book = {
   sections: [
     // CULTURAL/GEOGRAPHICAL ORIGIN CATEGORIES
     {
-      id: "cultural-origin",
-      title: "By Cultural/Geographical Origin",
-      pages: [
-        {
-          title: "Cultural & Geographical Categories",
-          text: `<b>East Asia</b> - Entities from China, Japan, Korea and surrounding regions\n\n<b>Europe</b> - Entities from Western, Northern and Central European traditions\n\n<b>Judeo-Christian</b> - Entities from Jewish and Christian religious texts\n\n<b>Middle East & Persia</b> - Entities from Arabian, Persian, and Mesopotamian lore\n\n<b>Oceanic</b> - Entities from Australia, New Zealand and Pacific Islands\n\n<b>Slavic & Eastern Europe</b> - Entities from Slavic and Eastern European folklore\n\n<b>South & Southeast Asia</b> - Entities from Indian subcontinent and Southeast Asian archipelago\n\n<b>Sub-Saharan Africa</b> - Entities from Central, Eastern, Western and Southern Africa\n\n<b>The Americas</b> - Entities from North, Central, and South American traditions`,
-        },
-      ],
-    },
-    {
       id: "east-asia",
       title: "East Asia",
       pages: [
@@ -213,7 +203,7 @@ export const demonologyBook: Book = {
     },
     {
       id: "slavic-eastern-europe",
-      title: "Slavic & Eastern Europe",
+      title: "Slavic & E. Europe",
       pages: [
         // Baba Yaga - Image
         {
@@ -234,7 +224,7 @@ export const demonologyBook: Book = {
     },
     {
       id: "south-southeast-asia",
-      title: "South & Southeast Asia",
+      title: "South & SE Asia",
       pages: [
         // Churel - Image
         {
@@ -332,16 +322,6 @@ export const demonologyBook: Book = {
     },
 
     // TYPE OR NATURE CATEGORIES
-    {
-      id: "entity-type",
-      title: "By Type or Nature of Entity",
-      pages: [
-        {
-          title: "Entity Type Categories",
-          text: `<b>Cannibalistic</b> - Entities that consume human flesh\n\n<b>Child Predating</b> - Entities that specifically target children and infants\n\n<b>Demons</b> - Malevolent supernatural beings of various origins\n\n<b>Monstrous</b> - Entities with particularly grotesque or bestial forms\n\n<b>Shape-shifting</b> - Entities capable of changing their appearance\n\n<b>Undead & Spirits</b> - Ghosts, revenants, and other post-mortem entities\n\n<b>Vampiric</b> - Blood-drinking entities\n\n<b>Witchcraft</b> - Entities associated with sorcery and dark magic`,
-        },
-      ],
-    },
     {
       id: "cannibalistic",
       title: "Cannibalistic",
