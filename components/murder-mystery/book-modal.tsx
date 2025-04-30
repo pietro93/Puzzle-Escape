@@ -64,6 +64,12 @@ export function BookModal({
     "witchcraft",
   ]
 
+  // Botany book sections
+  const botanyBookSections = ["poisonous-plants", "trees", "mushrooms"]
+
+  // Check if this is the botany book
+  const isBotanyBook = book.title === "Plant Identification Manual"
+
   // Scroll functions for carousels
   const scrollCarousel = (carouselRef: React.RefObject<HTMLDivElement>, direction: "left" | "right") => {
     if (!carouselRef.current) return
@@ -95,99 +101,125 @@ export function BookModal({
         {/* Section tabs for books with sections */}
         {book.sections && (
           <div className="mb-4 space-y-3">
-            {/* Geographical Origin Categories (First Carousel) */}
-            <div className="relative">
-              <div className="flex items-center">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute left-0 z-10 bg-gray-900/80 hover:bg-gray-800"
-                  onClick={() => scrollCarousel(geoCarouselRef, "left")}
-                >
-                  <ChevronLeft className="h-4 w-4 text-purple-300" />
-                </Button>
+            {/* Botany Book Tabs - Simple horizontal tabs */}
+            {isBotanyBook && (
+              <div className="flex space-x-2 overflow-x-auto py-2">
+                {book.sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() =>
+                      currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
+                    }
+                    className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors ${
+                      currentSection === section.id
+                        ? "bg-green-900/50 text-green-300 font-pixel border border-green-300"
+                        : "text-green-200/70 font-pixel hover:text-green-200 hover:bg-green-900/30 border border-green-900/30"
+                    }`}
+                  >
+                    {section.title}
+                  </button>
+                ))}
+              </div>
+            )}
 
-                <div
-                  ref={geoCarouselRef}
-                  className="flex overflow-x-auto scrollbar-hide py-2 px-8 space-x-2 w-full scroll-smooth"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                  {book.sections
-                    .filter((section) => geographicalSections.includes(section.id))
-                    .map((section) => (
-                      <button
-                        key={section.id}
-                        onClick={() =>
-                          currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
-                        }
-                        className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors flex-shrink-0 ${
-                          currentSection === section.id
-                            ? "bg-purple-900/50 text-purple-300 font-pixel border border-purple-300"
-                            : "text-purple-200/70 font-pixel hover:text-purple-200 hover:bg-purple-900/30 border border-purple-900/30"
-                        }`}
-                      >
-                        {section.title}
-                      </button>
-                    ))}
+            {/* Demonology Book Categories - Carousels */}
+            {!isBotanyBook && (
+              <>
+                {/* Geographical Origin Categories (First Carousel) */}
+                <div className="relative">
+                  <div className="flex items-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute left-0 z-10 bg-gray-900/80 hover:bg-gray-800"
+                      onClick={() => scrollCarousel(geoCarouselRef, "left")}
+                    >
+                      <ChevronLeft className="h-4 w-4 text-purple-300" />
+                    </Button>
+
+                    <div
+                      ref={geoCarouselRef}
+                      className="flex overflow-x-auto scrollbar-hide py-2 px-8 space-x-2 w-full scroll-smooth"
+                      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                    >
+                      {book.sections
+                        .filter((section) => geographicalSections.includes(section.id))
+                        .map((section) => (
+                          <button
+                            key={section.id}
+                            onClick={() =>
+                              currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
+                            }
+                            className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors flex-shrink-0 ${
+                              currentSection === section.id
+                                ? "bg-purple-900/50 text-purple-300 font-pixel border border-purple-300"
+                                : "text-purple-200/70 font-pixel hover:text-purple-200 hover:bg-purple-900/30 border border-purple-900/30"
+                            }`}
+                          >
+                            {section.title}
+                          </button>
+                        ))}
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 z-10 bg-gray-900/80 hover:bg-gray-800"
+                      onClick={() => scrollCarousel(geoCarouselRef, "right")}
+                    >
+                      <ChevronRight className="h-4 w-4 text-purple-300" />
+                    </Button>
+                  </div>
                 </div>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 z-10 bg-gray-900/80 hover:bg-gray-800"
-                  onClick={() => scrollCarousel(geoCarouselRef, "right")}
-                >
-                  <ChevronRight className="h-4 w-4 text-purple-300" />
-                </Button>
-              </div>
-            </div>
+                {/* Type/Nature Categories (Second Carousel) */}
+                <div className="relative">
+                  <div className="flex items-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute left-0 z-10 bg-gray-900/80 hover:bg-gray-800"
+                      onClick={() => scrollCarousel(typeCarouselRef, "left")}
+                    >
+                      <ChevronLeft className="h-4 w-4 text-red-300" />
+                    </Button>
 
-            {/* Type/Nature Categories (Second Carousel) */}
-            <div className="relative">
-              <div className="flex items-center">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute left-0 z-10 bg-gray-900/80 hover:bg-gray-800"
-                  onClick={() => scrollCarousel(typeCarouselRef, "left")}
-                >
-                  <ChevronLeft className="h-4 w-4 text-red-300" />
-                </Button>
+                    <div
+                      ref={typeCarouselRef}
+                      className="flex overflow-x-auto scrollbar-hide py-2 px-8 space-x-2 w-full scroll-smooth"
+                      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                    >
+                      {book.sections
+                        .filter((section) => typeSections.includes(section.id))
+                        .map((section) => (
+                          <button
+                            key={section.id}
+                            onClick={() =>
+                              currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
+                            }
+                            className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors flex-shrink-0 ${
+                              currentSection === section.id
+                                ? "bg-red-900/50 text-red-300 font-pixel border border-red-300"
+                                : "text-red-200/70 font-pixel hover:text-red-200 hover:bg-red-900/30 border border-red-900/30"
+                            }`}
+                          >
+                            {section.title}
+                          </button>
+                        ))}
+                    </div>
 
-                <div
-                  ref={typeCarouselRef}
-                  className="flex overflow-x-auto scrollbar-hide py-2 px-8 space-x-2 w-full scroll-smooth"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                  {book.sections
-                    .filter((section) => typeSections.includes(section.id))
-                    .map((section) => (
-                      <button
-                        key={section.id}
-                        onClick={() =>
-                          currentSection === section.id ? onSwitchSection(null) : onSwitchSection(section.id)
-                        }
-                        className={`px-3 py-1.5 whitespace-nowrap rounded-md transition-colors flex-shrink-0 ${
-                          currentSection === section.id
-                            ? "bg-red-900/50 text-red-300 font-pixel border border-red-300"
-                            : "text-red-200/70 font-pixel hover:text-red-200 hover:bg-red-900/30 border border-red-900/30"
-                        }`}
-                      >
-                        {section.title}
-                      </button>
-                    ))}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 z-10 bg-gray-900/80 hover:bg-gray-800"
+                      onClick={() => scrollCarousel(typeCarouselRef, "right")}
+                    >
+                      <ChevronRight className="h-4 w-4 text-red-300" />
+                    </Button>
+                  </div>
                 </div>
-
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-0 z-10 bg-gray-900/80 hover:bg-gray-800"
-                  onClick={() => scrollCarousel(typeCarouselRef, "right")}
-                >
-                  <ChevronRight className="h-4 w-4 text-red-300" />
-                </Button>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         )}
 
