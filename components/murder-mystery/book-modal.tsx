@@ -31,14 +31,13 @@ export function BookModal({
   getCurrentContent,
   getTotalPages,
 }: BookModalProps) {
+  const geoCarouselRef = useRef<HTMLDivElement>(null)
+  const typeCarouselRef = useRef<HTMLDivElement>(null)
+
   if (!book) return null
 
   const content = getCurrentContent()
   const totalPages = getTotalPages()
-
-  // Refs for the carousel scrolling
-  const geoCarouselRef = useRef<HTMLDivElement>(null)
-  const typeCarouselRef = useRef<HTMLDivElement>(null)
 
   // Define which sections belong to each category type
   const geographicalSections = [

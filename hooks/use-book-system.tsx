@@ -1,119 +1,123 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { botanyBook } from "@/data/books/botany"
-import { demonologyBook } from "@/data/books/demonology"
-import { useAudio } from "@/hooks/use-audio"
+import { useState } from "react"
+import type { Book } from "@/components/murder-mystery/types"
 
 export function useBookSystem() {
-  const [currentBook, setCurrentBook] = useState<any>(null)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
-  const { playSound } = useAudio()
 
-  const openBook = useCallback(
-    (bookId: string) => {
-      playSound("button-click")
-      let book
+  const openBook = (book: Book) => {
+    setSelectedBook(book)
+    setCurrentPage(0)
 
-      if (bookId === "botany") {
-        book = botanyBook
-        // For botany book, always select "plants" section by default
-        setCurrentSection("plants")
-      } else if (bookId === "demonology") {
-        book = demonologyBook
-        setCurrentSection(null)
-      } else {
-        return
-      }
+    // For botany book, always select "plants" section by default
+    if (book.title === "Plant Identification Manual") {
+      setCurrentSection("plants")
+    } else {
+      // For other books, start with no section selected
+      setCurrentSection(null)
+    }
+  }
 
-      setCurrentBook(book)
-      setCurrentPage(0)
-    },
-    [playSound],
-  )
-
-  const closeBook = useCallback(() => {
-    playSound("button-click")
-    setCurrentBook(null)
+  const closeBook = () => {
+    setSelectedBook(null)
     setCurrentPage(0)
     setCurrentSection(null)
-  }, [playSound])
+  }
 
-  const nextPage = useCallback(() => {
-    playSound("button-click")
-    if (!currentBook) return
-
-    const totalPages = getTotalPages()
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1)
+  const nextPage = () => {
+    if (selectedBook) {
+      const totalPages = getTotalPages()
+      if (currentPage < totalPages - 1) {
+        setCurrentPage(currentPage + 1)
+      }
     }
-  }, [currentBook, currentPage, playSound])
+  }
 
-  const prevPage = useCallback(() => {
-    playSound("button-click")
+  const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1)
     }
-  }, [currentPage, playSound])
+  }
 
-  const switchSection = useCallback(
-    (sectionId: string | null) => {
-      playSound("button-click")
+  const switchSection = (sectionId: string | null) => {
+    // For botany book, don't allow null section
+    if (selectedBook?.title === "Plant Identification Manual" && sectionId === null) {
+      return
+    }
 
-      // For botany book, don't allow null section
-      if (currentBook === botanyBook && sectionId === null) {
-        return
-      }
+    setCurrentSection(sectionId)
+    setCurrentPage(0)
+  }
 
-      setCurrentSection(sectionId)
-      setCurrentPage(0)
-    },
-    [currentBook, playSound],
-  )
+  const handleSwitchSection = (sectionId: string) => {
+    setCurrentSection(sectionId)
+    setCurrentPage(0)
+  }
 
-  const getCurrentContent = useCallback(() => {
-    if (!currentBook) return null
+  const getCurrentContent = () => {
+    if (!selectedBook) return null
 
-    // If we have a section selected, show content from that section
-    if (currentSection && currentBook.sections) {
-      const section = currentBook.sections.find((s) => s.id === currentSection)
-      if (section && section.pages && section.pages.length > currentPage) {
+    // If a section is selected and the book has sections
+    if (currentSection && selectedBook.sections) {
+      const section = selectedBook.sections.find((s) => s.id === currentSection)
+      if (section && section.pages.length > currentPage) {
         return section.pages[currentPage]
       }
       return null
     }
 
-    // If no section is selected but the book has pages, show those
-    if (currentBook.pages && currentBook.pages.length > currentPage) {
-      return currentBook.pages[currentPage]
+    // If no section is selected but the book has sections, show all pages alphabetically
+    if (!currentSection && selectedBook.sections) {
+      // Collect all pages from all sections
+      const allPages = selectedBook.sections.flatMap((section) => section.pages)
+
+      // Sort pages alphabetically by title
+      const sortedPages = [...allPages].sort((a, b) => {
+        if (a.title && b.title) {
+          return a.title.localeCompare(b.title)
+        }
+        return 0
+      })
+
+      // Return the current page from the sorted list
+      if (sortedPages.length > currentPage) {
+        return sortedPages[currentPage]
+      }
+      return null
+    }
+
+    // For books without sections
+    if (selectedBook.pages && selectedBook.pages.length > currentPage) {
+      return selectedBook.pages[currentPage]
     }
 
     return null
-  }, [currentBook, currentSection, currentPage])
+  }
 
-  const getTotalPages = useCallback(() => {
-    if (!currentBook) return 0
+  const getTotalPages = () => {
+    if (!selectedBook) return 0
 
-    // If we have a section selected, count pages in that section
-    if (currentSection && currentBook.sections) {
-      const section = currentBook.sections.find((s) => s.id === currentSection)
-      if (section && section.pages) {
-        return section.pages.length
-      }
-      return 0
+    // If a section is selected and the book has sections
+    if (currentSection && selectedBook.sections) {
+      const section = selectedBook.sections.find((s) => s.id === currentSection)
+      return section ? section.pages.length : 0
     }
 
-    // If no section is selected but the book has pages, count those
-    if (currentBook.pages) {
-      return currentBook.pages.length
+    // If no section is selected but the book has sections, count all pages
+    if (!currentSection && selectedBook.sections) {
+      const allPagesCount = selectedBook.sections.reduce((total, section) => total + section.pages.length, 0)
+      return allPagesCount
     }
 
-    return 0
-  }, [currentBook, currentSection])
+    // For books without sections
+    return selectedBook.pages ? selectedBook.pages.length : 0
+  }
 
   return {
-    currentBook,
+    selectedBook,
     currentPage,
     currentSection,
     openBook,
@@ -123,5 +127,6 @@ export function useBookSystem() {
     switchSection,
     getCurrentContent,
     getTotalPages,
+    onSwitchSection: handleSwitchSection,
   }
 }
