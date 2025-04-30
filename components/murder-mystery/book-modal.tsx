@@ -226,24 +226,19 @@ export function BookModal({
               </h4>
             )}
 
-            {content.imageUrl && (
-              <div className="mb-4 flex flex-col items-center">
-                <div className="relative" style={content.imageStyle || { width: "300px", height: "300px" }}>
+            {content?.imageUrl && (
+              <div className="flex justify-center mb-4">
+                <div className="relative w-full max-w-xs h-48">
                   <Image
                     src={content.imageUrl || "/placeholder.svg"}
-                    alt={content.caption || content.title || "Book illustration"}
-                    fill
-                    className="rounded-md pixelated object-contain"
+                    alt={content.caption || "Book illustration"}
+                    width={content.imageStyle?.width ? Number.parseInt(content.imageStyle.width) : 200}
+                    height={content.imageStyle?.height ? Number.parseInt(content.imageStyle.height) : 200}
+                    className="w-full h-full object-contain"
+                    priority
                   />
                 </div>
-                {content.caption && (
-                  <p
-                    className="text-gray-700 text-sm mt-2 text-center italic leading-relaxed"
-                    style={{ fontFamily: "Arial, sans-serif" }}
-                  >
-                    {content.caption}
-                  </p>
-                )}
+                {content.caption && <p className="text-center text-sm text-gray-600 mt-2">{content.caption}</p>}
               </div>
             )}
 
