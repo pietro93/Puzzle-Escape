@@ -54,6 +54,19 @@ export function useBookSystem() {
     setCurrentPage(0)
   }
 
+  const goToPage = (pageIndex: number) => {
+    if (selectedBook) {
+      const maxPage =
+        selectedBook.sections && currentSection
+          ? selectedBook.sections.find((s) => s.id === currentSection)?.pages.length || 0
+          : selectedBook.pages.length
+
+      if (pageIndex >= 0 && pageIndex < maxPage) {
+        setCurrentPage(pageIndex)
+      }
+    }
+  }
+
   const getCurrentContent = () => {
     if (!selectedBook) return null
 
@@ -85,6 +98,7 @@ export function useBookSystem() {
     nextPage,
     prevPage,
     switchSection,
+    goToPage,
     getCurrentContent,
     getTotalPages,
   }

@@ -1,4 +1,5 @@
 import type { Book } from "@/components/murder-mystery/types"
+import type { BookCategorySystem } from "@/types/book-types"
 
 // Character Combinations
 const apollyonCombo = "⤟꧂〰⤪"
@@ -31,8 +32,130 @@ const yaramayhawhoCombo = "⤪⟴〰෴"
 const elSilbonCombo = "෴❦⟿"
 const impunduluCombo = "⤪⤟෴❦"
 
+// Define the category systems
+const categorySystems: BookCategorySystem[] = [
+  {
+    id: "origin",
+    name: "Cultural / Geographical Origin",
+    categories: [
+      {
+        id: "east-asia",
+        name: "East Asia",
+        entries: [jorogumoCombo, oniCombo],
+      },
+      {
+        id: "europe",
+        name: "Europe",
+        entries: [draugrCombo, incubusCombo, revenantCombo, succubusCombo],
+      },
+      {
+        id: "judeo-christian",
+        name: "Judeo-Christian",
+        entries: [apollyonCombo, lilithCombo],
+      },
+      {
+        id: "middle-east-persia",
+        name: "Middle East & Persia",
+        entries: [asmodeusCombo, aziDahakaCombo, djinnCombo, lamashtuCombo, pazuzuCombo],
+      },
+      {
+        id: "oceanic",
+        name: "Oceanic",
+        entries: [taniwhaCombo, yaramayhawhoCombo],
+      },
+      {
+        id: "slavic-e-europe",
+        name: "Slavic & E. Europe",
+        entries: [babaYagaCombo, strigoiCombo],
+      },
+      {
+        id: "south-se-asia",
+        name: "South & SE Asia",
+        entries: [churelCombo, pishachaCombo, pontianakCombo, rakshasaCombo],
+      },
+      {
+        id: "sub-saharan-africa",
+        name: "Sub-Saharan Africa",
+        entries: [adzeCombo, impunduluCombo, popobawaCombo],
+      },
+      {
+        id: "americas",
+        name: "The Americas",
+        entries: [duppyCombo, elSilbonCombo, laLloronaCombo, tlahuelpuchiCombo, wendigoCombo],
+      },
+    ],
+  },
+  {
+    id: "nature",
+    name: "Type or Nature of Entity",
+    categories: [
+      {
+        id: "cannibalistic",
+        name: "Cannibalistic",
+        entries: [pishachaCombo, wendigoCombo],
+      },
+      {
+        id: "child-predating",
+        name: "Child Predating",
+        entries: [lamashtuCombo, lilithCombo, pontianakCombo, tlahuelpuchiCombo],
+      },
+      {
+        id: "demons",
+        name: "Demons",
+        entries: [
+          apollyonCombo,
+          asmodeusCombo,
+          djinnCombo,
+          lamashtuCombo,
+          lilithCombo,
+          oniCombo,
+          pazuzuCombo,
+          popobawaCombo,
+          rakshasaCombo,
+        ],
+      },
+      {
+        id: "monstrous",
+        name: "Monstrous",
+        entries: [aziDahakaCombo, impunduluCombo, oniCombo, taniwhaCombo],
+      },
+      {
+        id: "shape-shifting",
+        name: "Shape-shifting",
+        entries: [djinnCombo, jorogumoCombo, popobawaCombo, rakshasaCombo, tlahuelpuchiCombo],
+      },
+      {
+        id: "undead-spirits",
+        name: "Undead & Spirits",
+        entries: [churelCombo, draugrCombo, duppyCombo, elSilbonCombo, laLloronaCombo, revenantCombo],
+      },
+      {
+        id: "vampiric",
+        name: "Vampiric",
+        entries: [
+          adzeCombo,
+          impunduluCombo,
+          incubusCombo,
+          jorogumoCombo,
+          pontianakCombo,
+          strigoiCombo,
+          succubusCombo,
+          tlahuelpuchiCombo,
+          yaramayhawhoCombo,
+        ],
+      },
+      {
+        id: "witchcraft",
+        name: "Witchcraft",
+        entries: [babaYagaCombo, tlahuelpuchiCombo],
+      },
+    ],
+  },
+]
+
 export const demonologyBook: Book = {
   title: `Demonology`,
+  categorySystems: categorySystems,
   pages: [
     // Apollyon - Image
     {
