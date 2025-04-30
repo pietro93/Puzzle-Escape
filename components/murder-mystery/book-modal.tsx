@@ -220,7 +220,11 @@ export function BookModal({
         {/* Book content */}
         {content && (
           <div className="p-4 bg-[#f5f2e8] rounded-lg">
-            {content.title && <h4 className="text-lg font-medium text-red-700 font-pixel mb-4">{content.title}</h4>}
+            {content.title && (
+              <h4 className="text-lg font-medium text-red-700 mb-4" style={{ fontFamily: "Arial, sans-serif" }}>
+                {content.title}
+              </h4>
+            )}
 
             {content.imageUrl && (
               <div className="mb-4 flex flex-col items-center">
@@ -233,7 +237,10 @@ export function BookModal({
                   />
                 </div>
                 {content.caption && (
-                  <p className="text-gray-700 font-pixel text-sm mt-2 text-center italic leading-relaxed">
+                  <p
+                    className="text-gray-700 text-sm mt-2 text-center italic leading-relaxed"
+                    style={{ fontFamily: "Arial, sans-serif" }}
+                  >
                     {content.caption}
                   </p>
                 )}
@@ -242,12 +249,13 @@ export function BookModal({
 
             {content.text && (
               <div
-                className="text-gray-800 font-pixel text-sm leading-relaxed space-y-4"
+                className="text-gray-800 text-sm leading-relaxed space-y-4"
+                style={{ fontFamily: "Arial, sans-serif" }}
                 dangerouslySetInnerHTML={{
                   __html: content.text
-                    .replace(/<b>(.*?):<\/b>/g, '<b class="text-purple-800">$1:</b>')
-                    .replace(/\n\n/g, "</p><p>")
-                    .replace(/^(.+)/, "<p>$1</p>"),
+                    .replace(/<b>(.*?):<\/b>/g, '<b style="color: #553c9a; font-family: Arial, sans-serif;">$1:</b>')
+                    .replace(/\n\n/g, "</p><p style='font-family: Arial, sans-serif;'>")
+                    .replace(/^(.+)/, "<p style='font-family: Arial, sans-serif;'>$1</p>"),
                 }}
               />
             )}

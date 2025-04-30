@@ -39,6 +39,15 @@ body {
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
+/* No text shadow for book content */
+.book-content .font-pixel,
+.book-content h4,
+.book-content p,
+.book-content div {
+  text-shadow: none;
+  font-family: Arial, sans-serif;
+}
+
 .pixelated {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
