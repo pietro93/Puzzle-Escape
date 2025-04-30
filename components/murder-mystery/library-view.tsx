@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Book } from "lucide-react"
 import type { Book as BookType } from "../../types/book-types"
 import { Button } from "@/components/ui/button"
-import Image from "next/image"
 
 interface LibraryViewProps {
   onOpenBook: (book: BookType) => void
@@ -106,16 +105,7 @@ export function LibraryView({ onOpenBook, books }: LibraryViewProps) {
                 <Book className="text-red-400" />
                 <h3 className="font-semibold text-red-300">Demonology</h3>
               </div>
-              <div className="mt-2 h-24 relative">
-                <Image
-                  src="/images/murder-mystery/books/demonology.webp"
-                  alt="Demonology Book"
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <p className="text-sm mt-2">A comprehensive guide to supernatural creatures that feed on humans.</p>
             </div>
 
             <div
@@ -126,16 +116,7 @@ export function LibraryView({ onOpenBook, books }: LibraryViewProps) {
                 <Book className="text-green-400" />
                 <h3 className="font-semibold text-green-300">Botany</h3>
               </div>
-              <div className="mt-2 h-24 relative">
-                <Image
-                  src="/images/murder-mystery/books/botany.webp"
-                  alt="Botany Book"
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <p className="text-sm mt-2">An encyclopedia of plants, including many poisonous varieties.</p>
             </div>
 
             <div
@@ -146,16 +127,7 @@ export function LibraryView({ onOpenBook, books }: LibraryViewProps) {
                 <Book className="text-blue-400" />
                 <h3 className="font-semibold text-blue-300">Hematological Disorders</h3>
               </div>
-              <div className="mt-2 h-24 relative">
-                <Image
-                  src="/images/murder-mystery/books/blood-diseases.webp"
-                  alt="Blood Diseases Book"
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <p className="text-sm mt-2">A medical reference on blood diseases and disorders.</p>
             </div>
 
             <div
@@ -166,16 +138,7 @@ export function LibraryView({ onOpenBook, books }: LibraryViewProps) {
                 <Book className="text-purple-400" />
                 <h3 className="font-semibold text-purple-300">Criminal Psychology</h3>
               </div>
-              <div className="mt-2 h-24 relative">
-                <Image
-                  src="/images/murder-mystery/books/serial-killers.webp"
-                  alt="Serial Killers Book"
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <p className="text-sm mt-2">Case studies of notorious serial killers and their methods.</p>
             </div>
           </div>
 

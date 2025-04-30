@@ -68,14 +68,13 @@ export function PassportModal({ isOpen, onClose }: PassportModalProps) {
           </Button>
         </div>
         <div className="flex items-center">
-          <div className="w-24 h-24 relative mr-4 bg-black">
+          <div className="w-24 h-24 relative mr-4 pixelated-container bg-black p-0">
             <Image
               src="/images/murder-mystery/victim_passport-headshot.webp"
               alt="Victim's Headshot"
               width={96}
               height={96}
-              className="w-full h-full object-contain"
-              priority
+              className="pixelated"
             />
           </div>
           <div className="mt-4 space-y-2 text-sm font-pixel">
@@ -125,64 +124,49 @@ export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
           {/* Show only the current body part */}
           <div className="mb-4">
             {currentBodyPart === "head" && (
-              <div className="w-full h-48 relative">
-                <Image
-                  src={`/images/murder-mystery/victim-head.webp`}
-                  alt="Victim's Head"
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src={`/images/murder-mystery/victim-head.webp`}
+                alt="Victim's Head"
+                width={200}
+                height={200}
+                className="pixelated"
+              />
             )}
             {currentBodyPart === "leftHand" && (
-              <div className="w-full h-48 relative">
-                <Image
-                  src={`/images/murder-mystery/victim-left-hand.webp`}
-                  alt="Victim's Left Hand"
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src={`/images/murder-mystery/victim-left-hand.webp`}
+                alt="Victim's Left Hand"
+                width={200}
+                height={200}
+                className="pixelated"
+              />
             )}
             {currentBodyPart === "rightHand" && (
-              <div className="w-full h-48 relative">
-                <Image
-                  src={`/images/murder-mystery/victim-right-hand.webp`}
-                  alt="Victim's Right Hand"
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src={`/images/murder-mystery/victim-right-hand.webp`}
+                alt="Victim's Right Hand"
+                width={200}
+                height={200}
+                className="pixelated"
+              />
             )}
             {currentBodyPart === "leftLeg" && (
-              <div className="w-full h-48 relative">
-                <Image
-                  src={`/images/murder-mystery/victim-left-leg.webp`}
-                  alt="Victim's Left Leg"
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src={`/images/murder-mystery/victim-left-leg.webp`}
+                alt="Victim's Left Leg"
+                width={200}
+                height={200}
+                className="pixelated"
+              />
             )}
             {currentBodyPart === "rightLeg" && (
-              <div className="w-full h-48 relative">
-                <Image
-                  src={`/images/murder-mystery/victim-right-leg.webp`}
-                  alt="Victim's Right Leg"
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src={`/images/murder-mystery/victim-right-leg.webp`}
+                alt="Victim's Right Leg"
+                width={200}
+                height={200}
+                className="pixelated"
+              />
             )}
           </div>
 

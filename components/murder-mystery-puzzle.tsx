@@ -304,15 +304,14 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
         </CardHeader>
         <CardContent className="bg-black p-0">
           {currentLocation === "crime scene" && (
-            <div className="flex justify-center p-4">
-              <div className="w-full max-w-md h-64 relative bg-black">
+            <div className="flex justify-center">
+              <div className="w-full h-full relative pixelated-container bg-black p-0">
                 <Image
                   src="/images/murder-mystery/crime-scene.webp"
                   alt="Crime Scene"
                   width={400}
-                  height={300}
-                  className="w-full h-full object-contain"
-                  priority
+                  height={400}
+                  className="pixelated w-full h-full object-contain"
                 />
               </div>
             </div>
@@ -340,16 +339,16 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
               />
             )}
 
+          {/* Library View with Librarian */}
           {currentLocation === "library" && !dialogue.showDialogue && (
             <div className="flex flex-col items-center justify-center p-4">
-              <div className="w-full max-w-md h-64 relative bg-black mb-4">
+              <div className="w-full max-w-md h-64 relative pixelated-container bg-black mb-4">
                 <Image
                   src="/images/murder-mystery/librarian.webp"
                   alt="Librarian"
                   width={400}
                   height={300}
-                  className="w-full h-full object-contain"
-                  priority
+                  className="pixelated w-full h-full object-contain"
                 />
               </div>
               <button

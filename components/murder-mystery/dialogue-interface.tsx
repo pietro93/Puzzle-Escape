@@ -28,21 +28,25 @@ export function DialogueInterface({
     <div className="flex flex-col bg-black">
       {/* Character Portrait and Speech Bubble */}
       <div className="flex flex-col items-center mb-2 p-6 pt-0 bg-black">
-        <div className="flex items-start mb-4">
-          <div className="w-16 h-16 relative mr-3 bg-black">
-            <Image
-              src={`/images/murder-mystery/${character?.toLowerCase()}.webp`}
-              alt={character}
-              width={64}
-              height={64}
-              className="w-full h-full object-contain"
-              priority
-            />
-          </div>
-          <div className="flex-1">
-            <p className="font-medium text-yellow-300 mb-1">{character}:</p>
-            <p className="text-gray-200">{typedText}</p>
-          </div>
+        <div className="w-40 h-40 relative pixelated-container bg-black p-0">
+          <Image
+            src={
+              character === "policewoman"
+                ? "/images/murder-mystery/policewoman.webp"
+                : character === "mortician"
+                  ? "/images/murder-mystery/mortician.webp"
+                  : "/images/murder-mystery/librarian.webp"
+            }
+            alt={character || ""}
+            width={160}
+            height={160}
+            className="pixelated"
+          />
+        </div>
+
+        {/* Speech Bubble */}
+        <div className="mt-2 relative bg-gray-900 p-4 rounded-lg border border-gray-600 flex-1 min-h-[80px]">
+          <p className="font-pixel text-gray-200 text-sm">{typedText || "..."}</p>
         </div>
       </div>
 
