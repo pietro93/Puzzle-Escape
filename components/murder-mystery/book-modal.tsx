@@ -230,7 +230,7 @@ export function BookModal({
               <div className="mb-4 flex flex-col items-center">
                 <div className="relative" style={content.imageStyle || { width: "300px", height: "300px" }}>
                   <Image
-                    src={content.imageUrl || "/placeholder.svg"}
+                    src={`/images/murder-mystery/books/${book.id}/${content.imageUrl}`}
                     alt={content.caption || content.title || "Book illustration"}
                     fill
                     className="rounded-md pixelated object-contain"

@@ -21,7 +21,12 @@ export default function LocationImage({ setting, customImage, hintImage, level }
 
     // Special case for level 13 color palette
     if (setting === "mansion" && level === 13) {
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/color_palette-h27yDnavC1s2oWPqy7kE46mSMUcMMN.webp" // Direct URL for color palette
+      return "/images/color-palette/color_palette.webp" // Updated path to use relative path
+    }
+
+    // Special case for murder mystery images
+    if (setting === "murder-mystery") {
+      return "/images/murder-mystery/crime-scene.webp" // Use relative path for murder mystery images
     }
 
     // Otherwise use the default image for the setting
@@ -29,7 +34,7 @@ export default function LocationImage({ setting, customImage, hintImage, level }
       case "prison":
         return "/images/prison-bg.webp"
       case "mansion":
-        return "https://v0.blob.com/mansion-Qd9jgVQwNdCF6yT2PFKtFg0KEhxQ4Q.webp" // Updated mansion interior
+        return "/images/mansion-bg.webp" // Updated to use relative path
       case "forest":
         return "/images/forest-bg.webp"
       case "desert":
