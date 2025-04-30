@@ -48,7 +48,7 @@ export const demonologyBook: Book = {
         // Jorogumo - Image
         {
           title: `${jorogumoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/jorogumo.webp",
+          imageUrl: "/images/demonology/jorogumo.webp",
         },
         // Jorogumo - Text
         {
@@ -58,7 +58,7 @@ export const demonologyBook: Book = {
         // Oni - Image
         {
           title: `${oniCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/oni.webp",
+          imageUrl: "/images/demonology/oni.webp",
         },
         // Oni - Text
         {
@@ -74,7 +74,7 @@ export const demonologyBook: Book = {
         // Draugr - Image
         {
           title: `${draugrCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/draugr.webp",
+          imageUrl: "/images/demonology/draugr.webp",
         },
         // Draugr - Text
         {
@@ -84,7 +84,7 @@ export const demonologyBook: Book = {
         // Incubus - Image
         {
           title: `${incubusCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/incubus.webp",
+          imageUrl: "/images/demonology/incubus.webp",
         },
         // Incubus - Text
         {
@@ -94,7 +94,7 @@ export const demonologyBook: Book = {
         // Revenant - Image
         {
           title: `${revenantCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/revenant.webp",
+          imageUrl: "/images/demonology/revenant.webp",
         },
         // Revenant - Text
         {
@@ -104,7 +104,7 @@ export const demonologyBook: Book = {
         // Strigoi - Image
         {
           title: `${strigoiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/strigoi.webp",
+          imageUrl: "/images/demonology/strigoi.webp",
         },
         // Strigoi - Text
         {
@@ -114,7 +114,7 @@ export const demonologyBook: Book = {
         // Succubus - Image
         {
           title: `${succubusCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/succubus.webp",
+          imageUrl: "/images/demonology/succubus.webp",
         },
         // Succubus - Text
         {
@@ -130,7 +130,7 @@ export const demonologyBook: Book = {
         // Apollyon - Image
         {
           title: `${apollyonCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/apollyon.webp",
+          imageUrl: "/images/demonology/apollyon.webp",
         },
         // Apollyon - Text
         {
@@ -140,7 +140,7 @@ export const demonologyBook: Book = {
         // Lilith - Image
         {
           title: `${lilithCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lilith.webp",
+          imageUrl: "/images/demonology/lilith.webp",
         },
         // Lilith - Text
         {
@@ -156,7 +156,7 @@ export const demonologyBook: Book = {
         // Asmodeus - Image
         {
           title: `${asmodeusCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/asmodeus.webp",
+          imageUrl: "/images/demonology/asmodeus.webp",
         },
         // Asmodeus - Text
         {
@@ -166,7 +166,7 @@ export const demonologyBook: Book = {
         // Azi Dahaka - Image
         {
           title: `${aziDahakaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/azi-dahaka.webp",
+          imageUrl: "/images/demonology/azi-dahaka.webp",
         },
         // Azi Dahaka - Text
         {
@@ -176,7 +176,7 @@ export const demonologyBook: Book = {
         // Djinn - Image
         {
           title: `${djinnCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/djinn.webp",
+          imageUrl: "/images/demonology/djinn.webp",
         },
         // Djinn - Text
         {
@@ -186,7 +186,7 @@ export const demonologyBook: Book = {
         // Lamashtu - Image
         {
           title: `${lamashtuCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lamashtu.webp",
+          imageUrl: "/images/demonology/lamashtu.webp",
         },
         // Lamashtu - Text
         {
@@ -196,7 +196,7 @@ export const demonologyBook: Book = {
         // Pazuzu - Image
         {
           title: `${pazuzuCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pazuzu.webp",
+          imageUrl: "/images/demonology/pazuzu.webp",
         },
         // Pazuzu - Text
         {
@@ -212,7 +212,7 @@ export const demonologyBook: Book = {
         // Taniwha - Image
         {
           title: `${taniwhaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/taniwha.webp",
+          imageUrl: "/images/demonology/taniwha.webp",
         },
         // Taniwha - Text
         {
@@ -222,7 +222,7 @@ export const demonologyBook: Book = {
         // Yara-ma-yha-who - Image (NEW)
         {
           title: `${yaramayhawhoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/yara-ma-yha-who.webp",
+          imageUrl: "/images/demonology/yara-ma-yha-who.webp",
         },
         // Yara-ma-yha-who - Text
         {
@@ -238,7 +238,7 @@ export const demonologyBook: Book = {
         // Baba Yaga - Image
         {
           title: `${babaYagaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/baba-yaga.webp",
+          imageUrl: "/images/demonology/baba-yaga.webp",
         },
         // Baba Yaga - Text
         {
@@ -248,7 +248,7 @@ export const demonologyBook: Book = {
         // Strigoi - Image
         {
           title: `${strigoiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/strigoi.webp",
+          imageUrl: "/images/demonology/strigoi.webp",
         },
         // Strigoi - Text
         {
@@ -264,7 +264,7 @@ export const demonologyBook: Book = {
         // Churel - Image
         {
           title: `${churelCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/churel.webp",
+          imageUrl: "/images/demonology/churel.webp",
         },
         // Churel - Text
         {
@@ -274,7 +274,7 @@ export const demonologyBook: Book = {
         // Pishacha - Image
         {
           title: `${pishachaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pishacha.webp",
+          imageUrl: "/images/demonology/pishacha.webp",
         },
         // Pishacha - Text
         {
@@ -284,7 +284,7 @@ export const demonologyBook: Book = {
         // Pontianak - Image
         {
           title: `${pontianakCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pontianak.webp",
+          imageUrl: "/images/demonology/pontianak.webp",
         },
         // Pontianak - Text
         {
@@ -294,7 +294,7 @@ export const demonologyBook: Book = {
         // Rakshasa - Image
         {
           title: `${rakshasaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/rakshasa.webp",
+          imageUrl: "/images/demonology/rakshasa.webp",
         },
         // Rakshasa - Text
         {
@@ -310,7 +310,7 @@ export const demonologyBook: Book = {
         // Adze - Image
         {
           title: `${adzeCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/adze.webp",
+          imageUrl: "/images/demonology/adze.webp",
         },
         // Adze - Text
         {
@@ -320,7 +320,7 @@ export const demonologyBook: Book = {
         // Impundulu - Image (NEW)
         {
           title: `${impunduluCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/impundulu.webp",
+          imageUrl: "/images/demonology/impundulu.webp",
         },
         // Impundulu - Text
         {
@@ -330,7 +330,7 @@ export const demonologyBook: Book = {
         // Popobawa - Image
         {
           title: `${popobawaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/popobawa.webp",
+          imageUrl: "/images/demonology/popobawa.webp",
         },
         // Popobawa - Text
         {
@@ -346,7 +346,7 @@ export const demonologyBook: Book = {
         // Duppy - Image
         {
           title: `${duppyCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/duppy.webp",
+          imageUrl: "/images/demonology/duppy.webp",
         },
         // Duppy - Text
         {
@@ -356,7 +356,7 @@ export const demonologyBook: Book = {
         // El Silbon - Image (NEW)
         {
           title: `${elSilbonCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/el-silbon.webp",
+          imageUrl: "/images/demonology/el-silbon.webp",
         },
         // El Silbon - Text
         {
@@ -366,7 +366,7 @@ export const demonologyBook: Book = {
         // La Llorona - Image
         {
           title: `${laLloronaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lallorona.webp",
+          imageUrl: "/images/demonology/lallorona.webp",
         },
         // La Llorona - Text
         {
@@ -376,7 +376,7 @@ export const demonologyBook: Book = {
         // Tlahuelpuchi - Image (NEW)
         {
           title: `${tlahuelpuchiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/tlahuelpuchi.webp",
+          imageUrl: "/images/demonology/tlahuelpuchi.webp",
         },
         // Tlahuelpuchi - Text
         {
@@ -386,7 +386,7 @@ export const demonologyBook: Book = {
         // Wendigo - Image (NEW)
         {
           title: `${wendigoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/wendigo.webp",
+          imageUrl: "/images/demonology/wendigo.webp",
         },
         // Wendigo - Text
         {
@@ -404,7 +404,7 @@ export const demonologyBook: Book = {
         // Pishacha - Image
         {
           title: `${pishachaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pishacha.webp",
+          imageUrl: "/images/demonology/pishacha.webp",
         },
         // Pishacha - Text
         {
@@ -414,7 +414,7 @@ export const demonologyBook: Book = {
         // Wendigo - Image
         {
           title: `${wendigoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/wendigo.webp",
+          imageUrl: "/images/demonology/wendigo.webp",
         },
         // Wendigo - Text
         {
@@ -430,7 +430,7 @@ export const demonologyBook: Book = {
         // Lamashtu - Image
         {
           title: `${lamashtuCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lamashtu.webp",
+          imageUrl: "/images/demonology/lamashtu.webp",
         },
         // Lamashtu - Text
         {
@@ -440,7 +440,7 @@ export const demonologyBook: Book = {
         // Lilith - Image
         {
           title: `${lilithCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lilith.webp",
+          imageUrl: "/images/demonology/lilith.webp",
         },
         // Lilith - Text
         {
@@ -450,17 +450,17 @@ export const demonologyBook: Book = {
         // Pontianak - Image
         {
           title: `${pontianakCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pontianak.webp",
+          imageUrl: "/images/demonology/pontianak.webp",
         },
         // Pontianak - Text
         {
           title: `${pontianakCombo}`,
-          text: `<b>Origin:</b> Southeast Asian Folklore.\n\n<b>Appearance:</b> The ghost of a woman who died during childbirth with long black hair,  The ghost of a woman who died during childbirth with long black hair, pale skin, and bloodstained clothes.\n\n<b>Modus Operandi:</b> She lures men and then eviscerates or drains their blood, embodying vengeance for a tragic death.\n\n<b>Habitat:</b> Banana trees, cemeteries,, and dark alleys.`,
+          text: `<b>Origin:</b> Southeast Asian Folklore.\n\n<b>Appearance:</b> The ghost of a woman who died during childbirth with long black hair, pale skin, and bloodstained clothes.\n\n<b>Modus Operandi:</b> She lures men and then eviscerates or drains their blood, embodying vengeance for a tragic death.\n\n<b>Habitat:</b> Banana trees, cemeteries, and dark alleys.`,
         },
         // Tlahuelpuchi - Image
         {
           title: `${tlahuelpuchiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/tlahuelpuchi.webp",
+          imageUrl: "/images/demonology/tlahuelpuchi.webp",
         },
         // Tlahuelpuchi - Text
         {
@@ -476,7 +476,7 @@ export const demonologyBook: Book = {
         // Apollyon - Image
         {
           title: `${apollyonCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/apollyon.webp",
+          imageUrl: "/images/demonology/apollyon.webp",
         },
         // Apollyon - Text
         {
@@ -486,7 +486,7 @@ export const demonologyBook: Book = {
         // Asmodeus - Image
         {
           title: `${asmodeusCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/asmodeus.webp",
+          imageUrl: "/images/demonology/asmodeus.webp",
         },
         // Asmodeus - Text
         {
@@ -496,7 +496,7 @@ export const demonologyBook: Book = {
         // Djinn - Image
         {
           title: `${djinnCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/djinn.webp",
+          imageUrl: "/images/demonology/djinn.webp",
         },
         // Djinn - Text
         {
@@ -506,7 +506,7 @@ export const demonologyBook: Book = {
         // Lamashtu - Image
         {
           title: `${lamashtuCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lamashtu.webp",
+          imageUrl: "/images/demonology/lamashtu.webp",
         },
         // Lamashtu - Text
         {
@@ -516,7 +516,7 @@ export const demonologyBook: Book = {
         // Lilith - Image
         {
           title: `${lilithCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lilith.webp",
+          imageUrl: "/images/demonology/lilith.webp",
         },
         // Lilith - Text
         {
@@ -526,7 +526,7 @@ export const demonologyBook: Book = {
         // Oni - Image
         {
           title: `${oniCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/oni.webp",
+          imageUrl: "/images/demonology/oni.webp",
         },
         // Oni - Text
         {
@@ -536,7 +536,7 @@ export const demonologyBook: Book = {
         // Pazuzu - Image
         {
           title: `${pazuzuCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pazuzu.webp",
+          imageUrl: "/images/demonology/pazuzu.webp",
         },
         // Pazuzu - Text
         {
@@ -546,7 +546,7 @@ export const demonologyBook: Book = {
         // Popobawa - Image
         {
           title: `${popobawaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/popobawa.webp",
+          imageUrl: "/images/demonology/popobawa.webp",
         },
         // Popobawa - Text
         {
@@ -556,7 +556,7 @@ export const demonologyBook: Book = {
         // Rakshasa - Image
         {
           title: `${rakshasaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/rakshasa.webp",
+          imageUrl: "/images/demonology/rakshasa.webp",
         },
         // Rakshasa - Text
         {
@@ -572,7 +572,7 @@ export const demonologyBook: Book = {
         // Azi Dahaka - Image
         {
           title: `${aziDahakaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/azi-dahaka.webp",
+          imageUrl: "/images/demonology/azi-dahaka.webp",
         },
         // Azi Dahaka - Text
         {
@@ -582,7 +582,7 @@ export const demonologyBook: Book = {
         // Impundulu - Image
         {
           title: `${impunduluCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/impundulu.webp",
+          imageUrl: "/images/demonology/impundulu.webp",
         },
         // Impundulu - Text
         {
@@ -592,7 +592,7 @@ export const demonologyBook: Book = {
         // Oni - Image
         {
           title: `${oniCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/oni.webp",
+          imageUrl: "/images/demonology/oni.webp",
         },
         // Oni - Text
         {
@@ -602,7 +602,7 @@ export const demonologyBook: Book = {
         // Taniwha - Image
         {
           title: `${taniwhaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/taniwha.webp",
+          imageUrl: "/images/demonology/taniwha.webp",
         },
         // Taniwha - Text
         {
@@ -618,7 +618,7 @@ export const demonologyBook: Book = {
         // Djinn - Image
         {
           title: `${djinnCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/djinn.webp",
+          imageUrl: "/images/demonology/djinn.webp",
         },
         // Djinn - Text
         {
@@ -628,7 +628,7 @@ export const demonologyBook: Book = {
         // Jorogumo - Image
         {
           title: `${jorogumoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/jorogumo.webp",
+          imageUrl: "/images/demonology/jorogumo.webp",
         },
         // Jorogumo - Text
         {
@@ -638,7 +638,7 @@ export const demonologyBook: Book = {
         // Popobawa - Image
         {
           title: `${popobawaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/popobawa.webp",
+          imageUrl: "/images/demonology/popobawa.webp",
         },
         // Popobawa - Text
         {
@@ -648,7 +648,7 @@ export const demonologyBook: Book = {
         // Rakshasa - Image
         {
           title: `${rakshasaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/rakshasa.webp",
+          imageUrl: "/images/demonology/rakshasa.webp",
         },
         // Rakshasa - Text
         {
@@ -658,7 +658,7 @@ export const demonologyBook: Book = {
         // Tlahuelpuchi - Image
         {
           title: `${tlahuelpuchiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/tlahuelpuchi.webp",
+          imageUrl: "/images/demonology/tlahuelpuchi.webp",
         },
         // Tlahuelpuchi - Text
         {
@@ -674,7 +674,7 @@ export const demonologyBook: Book = {
         // Churel - Image
         {
           title: `${churelCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/churel.webp",
+          imageUrl: "/images/demonology/churel.webp",
         },
         // Churel - Text
         {
@@ -684,7 +684,7 @@ export const demonologyBook: Book = {
         // Draugr - Image
         {
           title: `${draugrCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/draugr.webp",
+          imageUrl: "/images/demonology/draugr.webp",
         },
         // Draugr - Text
         {
@@ -694,7 +694,7 @@ export const demonologyBook: Book = {
         // Duppy - Image
         {
           title: `${duppyCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/duppy.webp",
+          imageUrl: "/images/demonology/duppy.webp",
         },
         // Duppy - Text
         {
@@ -704,7 +704,7 @@ export const demonologyBook: Book = {
         // El Silbon - Image
         {
           title: `${elSilbonCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/el-silbon.webp",
+          imageUrl: "/images/demonology/el-silbon.webp",
         },
         // El Silbon - Text
         {
@@ -714,7 +714,7 @@ export const demonologyBook: Book = {
         // La Llorona - Image
         {
           title: `${laLloronaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/lallorona.webp",
+          imageUrl: "/images/demonology/lallorona.webp",
         },
         // La Llorona - Text
         {
@@ -724,7 +724,7 @@ export const demonologyBook: Book = {
         // Revenant - Image
         {
           title: `${revenantCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/revenant.webp",
+          imageUrl: "/images/demonology/revenant.webp",
         },
         // Revenant - Text
         {
@@ -734,7 +734,7 @@ export const demonologyBook: Book = {
         // Strigoi - Image
         {
           title: `${strigoiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/strigoi.webp",
+          imageUrl: "/images/demonology/strigoi.webp",
         },
         // Strigoi - Text
         {
@@ -750,7 +750,7 @@ export const demonologyBook: Book = {
         // Adze - Image
         {
           title: `${adzeCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/adze.webp",
+          imageUrl: "/images/demonology/adze.webp",
         },
         // Adze - Text
         {
@@ -760,7 +760,7 @@ export const demonologyBook: Book = {
         // Impundulu - Image
         {
           title: `${impunduluCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/impundulu.webp",
+          imageUrl: "/images/demonology/impundulu.webp",
         },
         // Impundulu - Text
         {
@@ -770,7 +770,7 @@ export const demonologyBook: Book = {
         // Incubus - Image
         {
           title: `${incubusCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/incubus.webp",
+          imageUrl: "/images/demonology/incubus.webp",
         },
         // Incubus - Text
         {
@@ -780,7 +780,7 @@ export const demonologyBook: Book = {
         // Jorogumo - Image
         {
           title: `${jorogumoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/jorogumo.webp",
+          imageUrl: "/images/demonology/jorogumo.webp",
         },
         // Jorogumo - Text
         {
@@ -790,7 +790,7 @@ export const demonologyBook: Book = {
         // Pontianak - Image
         {
           title: `${pontianakCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/pontianak.webp",
+          imageUrl: "/images/demonology/pontianak.webp",
         },
         // Pontianak - Text
         {
@@ -800,7 +800,7 @@ export const demonologyBook: Book = {
         // Strigoi - Image
         {
           title: `${strigoiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/strigoi.webp",
+          imageUrl: "/images/demonology/strigoi.webp",
         },
         // Strigoi - Text
         {
@@ -810,7 +810,7 @@ export const demonologyBook: Book = {
         // Succubus - Image
         {
           title: `${succubusCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/succubus.webp",
+          imageUrl: "/images/demonology/succubus.webp",
         },
         // Succubus - Text
         {
@@ -820,7 +820,7 @@ export const demonologyBook: Book = {
         // Tlahuelpuchi - Image
         {
           title: `${tlahuelpuchiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/tlahuelpuchi.webp",
+          imageUrl: "/images/demonology/tlahuelpuchi.webp",
         },
         // Tlahuelpuchi - Text
         {
@@ -830,7 +830,7 @@ export const demonologyBook: Book = {
         // Yara-ma-yha-who - Image
         {
           title: `${yaramayhawhoCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/yara-ma-yha-who.webp",
+          imageUrl: "/images/demonology/yara-ma-yha-who.webp",
         },
         // Yara-ma-yha-who - Text
         {
@@ -846,7 +846,7 @@ export const demonologyBook: Book = {
         // Baba Yaga - Image
         {
           title: `${babaYagaCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/baba-yaga.webp",
+          imageUrl: "/images/demonology/baba-yaga.webp",
         },
         // Baba Yaga - Text
         {
@@ -856,7 +856,7 @@ export const demonologyBook: Book = {
         // Tlahuelpuchi - Image
         {
           title: `${tlahuelpuchiCombo}`,
-          imageUrl: "/images/murder-mystery/books/demonology/tlahuelpuchi.webp",
+          imageUrl: "/images/demonology/tlahuelpuchi.webp",
         },
         // Tlahuelpuchi - Text
         {
