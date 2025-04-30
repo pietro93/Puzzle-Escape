@@ -65,6 +65,8 @@ export function BookModal({
 
   // Check if this is the botany book
   const isBotanyBook = book.title === "Plant Identification Manual"
+  // Check if this is the puppies book
+  const isPuppiesBook = book.title === "Adorable Puppies"
 
   // Scroll functions for carousels
   const scrollCarousel = (carouselRef: React.RefObject<HTMLDivElement>, direction: "left" | "right") => {
@@ -77,6 +79,28 @@ export function BookModal({
       left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
       behavior: "smooth",
     })
+  }
+
+  // Function to get the correct image path based on book type
+  const getImagePath = (imageUrl: string) => {
+    if (!imageUrl) return ""
+
+    // If the image URL already includes the full path, return it as is
+    if (imageUrl.startsWith("/images/")) {
+      return imageUrl
+    }
+
+    // For different book types, use the appropriate subfolder
+    if (isBotanyBook) {
+      return `/images/murder-mystery/books/botany/${imageUrl}`
+    } else if (isPuppiesBook) {
+      return `/images/murder-mystery/books/puppies/${imageUrl}`
+    } else if (book.id === "demonology") {
+      return `/images/murder-mystery/books/demonology/${imageUrl}`
+    } else {
+      // For other books, use a generic path
+      return `/images/murder-mystery/books/${book.id}/${imageUrl}`
+    }
   }
 
   return (
@@ -117,7 +141,7 @@ export function BookModal({
             )}
 
             {/* Demonology Book Categories - Carousels */}
-            {!isBotanyBook && (
+            {!isBotanyBook && !isPuppiesBook && book.sections && (
               <>
                 {/* Geographical Origin Categories (First Carousel) */}
                 <div className="relative">
@@ -230,7 +254,7 @@ export function BookModal({
               <div className="mb-4 flex flex-col items-center">
                 <div className="relative" style={content.imageStyle || { width: "300px", height: "300px" }}>
                   <Image
-                    src={`/images/murder-mystery/books/${book.id}/${content.imageUrl}`}
+                    src={getImagePath(content.imageUrl) || "/placeholder.svg"}
                     alt={content.caption || content.title || "Book illustration"}
                     fill
                     className="rounded-md pixelated object-contain"

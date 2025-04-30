@@ -125,7 +125,7 @@ export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
           <div className="mb-4">
             {currentBodyPart === "head" && (
               <Image
-                src={`/images/murder-mystery/victim-head.webp`}
+                src="/images/murder-mystery/victim-head.webp"
                 alt="Victim's Head"
                 width={200}
                 height={200}
@@ -134,7 +134,7 @@ export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
             )}
             {currentBodyPart === "leftHand" && (
               <Image
-                src={`/images/murder-mystery/victim-left-hand.webp`}
+                src="/images/murder-mystery/victim-left-hand.webp"
                 alt="Victim's Left Hand"
                 width={200}
                 height={200}
@@ -143,7 +143,7 @@ export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
             )}
             {currentBodyPart === "rightHand" && (
               <Image
-                src={`/images/murder-mystery/victim-right-hand.webp`}
+                src="/images/murder-mystery/victim-right-hand.webp"
                 alt="Victim's Right Hand"
                 width={200}
                 height={200}
@@ -152,7 +152,7 @@ export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
             )}
             {currentBodyPart === "leftLeg" && (
               <Image
-                src={`/images/murder-mystery/victim-left-leg.webp`}
+                src="/images/murder-mystery/victim-left-leg.webp"
                 alt="Victim's Left Leg"
                 width={200}
                 height={200}
@@ -161,7 +161,7 @@ export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
             )}
             {currentBodyPart === "rightLeg" && (
               <Image
-                src={`/images/murder-mystery/victim-right-leg.webp`}
+                src="/images/murder-mystery/victim-right-leg.webp"
                 alt="Victim's Right Leg"
                 width={200}
                 height={200}
