@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 
 interface Pedestal {
@@ -26,6 +26,16 @@ const CORRECT_PATH = [
   { from: "mali", to: "center" },
 ]
 
+// Map pedestal IDs to their positions in the layout
+const PEDESTAL_POSITIONS = {
+  egypt: { x: 50, y: 10 }, // Top center
+  sahara: { x: 10, y: 40 }, // Middle left
+  hejaz: { x: 90, y: 40 }, // Middle right
+  mali: { x: 20, y: 80 }, // Bottom left
+  songhai: { x: 80, y: 80 }, // Bottom right
+  center: { x: 50, y: 50 }, // Center
+}
+
 export default function GoldenScarabPuzzle() {
   const [pedestals, setPedestals] = useState<Pedestal[]>([
     {
@@ -34,7 +44,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
       description:
         "A majestic pedestal adorned with a golden lion, symbolizing wealth and power. The base is decorated with intricate patterns reminiscent of West African art.",
-      position: { x: 20, y: 40 },
+      position: PEDESTAL_POSITIONS.mali,
     },
     {
       id: "sahara",
@@ -42,7 +52,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
       description:
         "A pedestal depicting a caravan of camels crossing vast sand dunes. The hieroglyphs tell stories of treacherous journeys across the scorching sands.",
-      position: { x: 70, y: 20 },
+      position: PEDESTAL_POSITIONS.sahara,
     },
     {
       id: "egypt",
@@ -50,7 +60,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
       description:
         "An ornate pedestal with lotus motifs and ancient symbols. The carvings speak of a civilization that revered the sacred beetle as a symbol of rebirth.",
-      position: { x: 80, y: 60 },
+      position: PEDESTAL_POSITIONS.egypt,
     },
     {
       id: "hejaz",
@@ -58,7 +68,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
       description:
         "A sacred black cube rests atop this pedestal. Golden inscriptions in an ancient script encircle its base, speaking of pilgrimages and devotion.",
-      position: { x: 60, y: 80 },
+      position: PEDESTAL_POSITIONS.hejaz,
     },
     {
       id: "songhai",
@@ -66,7 +76,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
       description:
         "A pedestal featuring a trading vessel, symbolizing commerce along great waterways. The intricate patterns suggest a realm of merchants and scholars.",
-      position: { x: 30, y: 70 },
+      position: PEDESTAL_POSITIONS.songhai,
     },
   ])
 
@@ -76,6 +86,17 @@ export default function GoldenScarabPuzzle() {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const [pedestalElements, setPedestalElements] = useState<Record<string, HTMLElement | null>>({})
+
+  // Store references to pedestal DOM elements
+  useEffect(() => {
+    const elements: Record<string, HTMLElement | null> = {}
+    pedestals.forEach((pedestal) => {
+      elements[pedestal.id] = document.getElementById(`pedestal-${pedestal.id}`)
+    })
+    elements["center"] = document.getElementById("scarab-center")
+    setPedestalElements(elements)
+  }, [pedestals])
 
   const handlePedestalClick = (pedestal: Pedestal) => {
     setSelectedPedestal(pedestal)
@@ -126,47 +147,49 @@ export default function GoldenScarabPuzzle() {
     }, 3000)
   }
 
-  const getPositionStyle = (id: string) => {
-    if (id === "center") {
-      return { left: "50%", top: "50%", transform: "translate(-50%, -50%)" }
-    }
-
-    const pedestal = pedestals.find((p) => p.id === id)
-    if (!pedestal) return {}
-
-    return {
-      left: `${pedestal.position.x}%`,
-      top: `${pedestal.position.y}%`,
-      transform: "translate(-50%, -50%)",
-    }
-  }
-
   const renderPaths = () => {
     return paths.map((path, index) => {
-      const fromPos = getPositionStyle(path.from)
-      const toPos = getPositionStyle(path.to)
+      const fromElement = pedestalElements[path.from]
+      const toElement = pedestalElements[path.to]
 
-      // Calculate angle and length for the line
-      const fromX = Number.parseFloat(fromPos.left as string) || 50
-      const fromY = Number.parseFloat(fromPos.top as string) || 50
-      const toX = Number.parseFloat(toPos.left as string) || 50
-      const toY = Number.parseFloat(toPos.top as string) || 50
+      if (!fromElement || !toElement || !containerRef.current) return null
 
+      // Get positions relative to the container
+      const containerRect = containerRef.current.getBoundingClientRect()
+      const fromRect = fromElement.getBoundingClientRect()
+      const toRect = toElement.getBoundingClientRect()
+
+      // Calculate center points
+      const fromX = fromRect.left + fromRect.width / 2 - containerRect.left
+      const fromY = fromRect.top + fromRect.height / 2 - containerRect.top
+      const toX = toRect.left + toRect.width / 2 - containerRect.left
+      const toY = toRect.top + toRect.height / 2 - containerRect.top
+
+      // Calculate angle and length
       const angle = (Math.atan2(toY - fromY, toX - fromX) * 180) / Math.PI
       const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2))
 
       return (
         <div
           key={`path-${index}`}
-          className="absolute h-0.5 bg-yellow-500 origin-left z-10"
+          className="absolute z-10"
           style={{
-            left: `${fromX}%`,
-            top: `${fromY}%`,
-            width: `${length}%`,
+            left: `${fromX}px`,
+            top: `${fromY}px`,
+            width: `${length}px`,
+            height: "2px",
+            transformOrigin: "0 0",
             transform: `rotate(${angle}deg)`,
-            borderTop: "2px dashed gold",
           }}
-        />
+        >
+          {/* Dashed line */}
+          <div className="w-full h-full border-t-2 border-dashed border-yellow-500"></div>
+
+          {/* Arrow */}
+          <div className="absolute right-0 top-1/2 transform translate-y-[-50%] -translate-x-2">
+            <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[8px] border-l-yellow-500 transform rotate-0"></div>
+          </div>
+        </div>
       )
     })
   }
@@ -176,13 +199,17 @@ export default function GoldenScarabPuzzle() {
       className="relative w-full h-[500px] bg-amber-950/30 rounded-lg border border-amber-900/50 overflow-hidden"
       ref={containerRef}
     >
-      {/* Render paths */}
-      {renderPaths()}
-
       {/* Center position for scarab */}
       <div
-        className={`absolute cursor-pointer z-20 ${scarabPosition !== "center" ? "border-2 border-dashed border-yellow-500 rounded-full w-16 h-16" : ""}`}
-        style={getPositionStyle("center")}
+        id="scarab-center"
+        className={`absolute cursor-pointer z-20 ${
+          scarabPosition !== "center" ? "border-2 border-dashed border-yellow-500 rounded-full w-16 h-16" : ""
+        }`}
+        style={{
+          left: `${PEDESTAL_POSITIONS.center.x}%`,
+          top: `${PEDESTAL_POSITIONS.center.y}%`,
+          transform: "translate(-50%, -50%)",
+        }}
         onClick={() => scarabPosition !== "center" && handleScarabMove("center")}
       >
         {scarabPosition === "center" && (
@@ -199,9 +226,14 @@ export default function GoldenScarabPuzzle() {
       {/* Render pedestals */}
       {pedestals.map((pedestal) => (
         <div
+          id={`pedestal-${pedestal.id}`}
           key={pedestal.id}
           className="absolute cursor-pointer z-20"
-          style={getPositionStyle(pedestal.id)}
+          style={{
+            left: `${pedestal.position.x}%`,
+            top: `${pedestal.position.y}%`,
+            transform: "translate(-50%, -50%)",
+          }}
           onClick={() => handlePedestalClick(pedestal)}
         >
           <div className="relative">
@@ -220,6 +252,9 @@ export default function GoldenScarabPuzzle() {
           </div>
         </div>
       ))}
+
+      {/* Render paths after pedestals are rendered */}
+      {renderPaths()}
 
       {/* Pedestal info popup */}
       {selectedPedestal && (
