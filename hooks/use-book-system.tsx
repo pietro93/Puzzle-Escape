@@ -1,16 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import type { Book } from "@/components/murder-mystery/types"
 
 export function useBookSystem() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    if (isOpen && selectedBook && selectedBook.sections && selectedBook.sections.length > 0) {
+      // Set initial section and page
+      const initialSection = selectedBook.sections[0]?.id || ""
+      setCurrentSection(initialSection)
+
+      // Assuming pages also have an id
+      // const initialPage = selectedBook.sections[0]?.pages[0]?.id || '';
+      // setCurrentPage(initialPage);
+      setCurrentPage(0) // Reset to the first page index (0)
+    }
+  }, [isOpen, selectedBook])
 
   const openBook = (book: Book) => {
     setSelectedBook(book)
     setCurrentPage(0)
+    setIsOpen(true)
 
     // For botany book, always select "plants" section by default
     if (book.title === "Plant Identification Manual") {
@@ -25,6 +40,7 @@ export function useBookSystem() {
     setSelectedBook(null)
     setCurrentPage(0)
     setCurrentSection(null)
+    setIsOpen(false)
   }
 
   const nextPage = () => {
