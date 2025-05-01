@@ -1,49 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import type { Book } from "@/components/murder-mystery/types"
 
 export function useBookSystem() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
-  const [sortedPages, setSortedPages] = useState<any[]>([])
-
-  // Effect to handle sorting pages when book or section changes
-  useEffect(() => {
-    if (!selectedBook) return
-
-    // If no section is selected and the book has sections
-    if (!currentSection && selectedBook.sections) {
-      const allDemonEntries: { title: string; pages: any[] }[] = []
-
-      // First, collect all demon entries (pairs of image + text pages)
-      for (const section of selectedBook.sections) {
-        for (let i = 0; i < section.pages.length; i += 2) {
-          if (i + 1 < section.pages.length) {
-            // Check if this is a pair with matching titles
-            if (section.pages[i].title === section.pages[i + 1].title) {
-              allDemonEntries.push({
-                title: section.pages[i].title || "",
-                pages: [section.pages[i], section.pages[i + 1]],
-              })
-            }
-          }
-        }
-      }
-
-      // Sort entries alphabetically by title
-      allDemonEntries.sort((a, b) => a.title.localeCompare(b.title))
-
-      // Flatten the sorted entries into a single array of pages
-      const flattenedPages = allDemonEntries.flatMap((entry) => entry.pages)
-
-      setSortedPages(flattenedPages)
-    } else {
-      // If a section is selected or the book doesn't have sections
-      setSortedPages([])
-    }
-  }, [selectedBook, currentSection])
 
   const openBook = (book: Book) => {
     setSelectedBook(book)
@@ -62,7 +25,6 @@ export function useBookSystem() {
     setSelectedBook(null)
     setCurrentPage(0)
     setCurrentSection(null)
-    setSortedPages([])
   }
 
   const nextPage = () => {
@@ -107,15 +69,7 @@ export function useBookSystem() {
       return null
     }
 
-    // If no section is selected but we have sorted pages
-    if (!currentSection && sortedPages.length > 0) {
-      if (sortedPages.length > currentPage) {
-        return sortedPages[currentPage]
-      }
-      return null
-    }
-
-    // For books without sections
+    // If no section is selected, just show the pages array directly
     if (selectedBook.pages && selectedBook.pages.length > currentPage) {
       return selectedBook.pages[currentPage]
     }
@@ -132,12 +86,7 @@ export function useBookSystem() {
       return section ? section.pages.length : 0
     }
 
-    // If no section is selected but we have sorted pages
-    if (!currentSection && sortedPages.length > 0) {
-      return sortedPages.length
-    }
-
-    // For books without sections
+    // If no section is selected, just count the pages array
     return selectedBook.pages ? selectedBook.pages.length : 0
   }
 
