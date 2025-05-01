@@ -30,6 +30,7 @@ import { useState } from "react"
 import FireMapPuzzle from "./fire-map-puzzle"
 import ColorPalettePuzzle from "./color-palette-puzzle"
 import MurderMysteryPuzzle from "./murder-mystery-puzzle"
+import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -506,6 +507,7 @@ export default function PuzzleContent({
         </div>
       )}
       {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
+      {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle />}
     </div>
   )
 }
