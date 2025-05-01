@@ -50,97 +50,66 @@ export function PoliceReportModal({ isOpen, onClose }: PoliceReportModalProps) {
   )
 }
 
-interface ModalProps {
+interface PassportModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function PassportModal({ isOpen, onClose }: ModalProps) {
+export function PassportModal({ isOpen, onClose }: PassportModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-4 rounded-lg max-w-md w-full">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold">Victim's Passport</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            ✕
-          </button>
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+      <div className="bg-gray-900 p-4 rounded border border-gray-700 w-full max-w-md">
+        <div className="flex justify-between items-center mb-2">
+          <div className="text-center text-gray-400 font-pixel">ID</div>
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white">
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="flex justify-center mb-4">
-          <Image
-            src="/images/murder-mystery/victim_passport-headshot.webp"
-            alt="Passport Photo"
-            width={200}
-            height={200}
-            className="border-2 border-gray-300"
-          />
-        </div>
-        <div className="space-y-2 text-sm">
-          <p>
-            <strong>Name:</strong> Alexei Volkov
-          </p>
-          <p>
-            <strong>Nationality:</strong> Russian
-          </p>
-          <p>
-            <strong>Date of Birth:</strong> 15 March 1985
-          </p>
-          <p>
-            <strong>Place of Birth:</strong> Saint Petersburg, Russia
-          </p>
-          <p>
-            <strong>Issue Date:</strong> 10 January 2020
-          </p>
-          <p>
-            <strong>Expiry Date:</strong> 10 January 2030
-          </p>
-          <p>
-            <strong>Passport Number:</strong> 75392614
-          </p>
+        <div className="flex items-center">
+          <div className="w-24 h-24 relative mr-4 pixelated-container bg-black p-0">
+            <Image
+              src="/images/murder-mystery/victim_passport-headshot.webp"
+              alt="Victim's Headshot"
+              width={96}
+              height={96}
+              className="pixelated"
+            />
+          </div>
+          <div className="mt-4 space-y-2 text-sm font-pixel">
+            <div className="flex justify-between">
+              <span className="text-gray-400">Name:</span>
+              <span className="text-gray-300">Declan Tremblay</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Date of Birth:</span>
+              <span className="text-gray-300">1993/04/21</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Height:</span>
+              <span className="text-gray-300">180 cm</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Place of birth:</span>
+              <span className="text-gray-300">Toronto, ON</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
-  const [selectedPart, setSelectedPart] = useState<string | null>(null)
+interface VictimBodyModalProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function VictimBodyModal({ isOpen, onClose }: VictimBodyModalProps) {
+  const [currentBodyPart, setCurrentBodyPart] = useState("head")
 
   if (!isOpen) return null
-
-  const bodyParts = [
-    {
-      id: "head",
-      name: "Head",
-      image: "/images/murder-mystery/victim-head.webp",
-      notes: "Pale complexion. No visible trauma.",
-    },
-    {
-      id: "left-hand",
-      name: "Left Hand",
-      image: "/images/murder-mystery/victim-left-hand.webp",
-      notes: "Fingernails clean. No defensive wounds.",
-    },
-    {
-      id: "right-hand",
-      name: "Right Hand",
-      image: "/images/murder-mystery/victim-right-hand.webp",
-      notes: "Small puncture wound between thumb and index finger.",
-    },
-    {
-      id: "left-leg",
-      name: "Left Leg",
-      image: "/images/murder-mystery/victim-left-leg.webp",
-      notes: "No visible marks or injuries.",
-    },
-    {
-      id: "right-leg",
-      name: "Right Leg",
-      image: "/images/murder-mystery/victim-right-leg.webp",
-      notes: "No visible marks or injuries.",
-    },
-  ]
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
@@ -154,7 +123,7 @@ export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
         <div className="flex flex-col items-center justify-center">
           {/* Show only the current body part */}
           <div className="mb-4">
-            {selectedPart === "head" && (
+            {currentBodyPart === "head" && (
               <Image
                 src={`/images/murder-mystery/victim-head.webp`}
                 alt="Victim's Head"
@@ -163,7 +132,7 @@ export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
                 className="pixelated"
               />
             )}
-            {selectedPart === "left-hand" && (
+            {currentBodyPart === "leftHand" && (
               <Image
                 src={`/images/murder-mystery/victim-left-hand.webp`}
                 alt="Victim's Left Hand"
@@ -172,7 +141,7 @@ export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
                 className="pixelated"
               />
             )}
-            {selectedPart === "right-hand" && (
+            {currentBodyPart === "rightHand" && (
               <Image
                 src={`/images/murder-mystery/victim-right-hand.webp`}
                 alt="Victim's Right Hand"
@@ -181,7 +150,7 @@ export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
                 className="pixelated"
               />
             )}
-            {selectedPart === "left-leg" && (
+            {currentBodyPart === "leftLeg" && (
               <Image
                 src={`/images/murder-mystery/victim-left-leg.webp`}
                 alt="Victim's Left Leg"
@@ -190,7 +159,7 @@ export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
                 className="pixelated"
               />
             )}
-            {selectedPart === "right-leg" && (
+            {currentBodyPart === "rightLeg" && (
               <Image
                 src={`/images/murder-mystery/victim-right-leg.webp`}
                 alt="Victim's Right Leg"
@@ -203,24 +172,52 @@ export function VictimBodyModal({ isOpen, onClose }: ModalProps) {
 
           {/* Navigation buttons for body parts */}
           <div className="grid grid-cols-2 gap-2">
-            {bodyParts.map((part) => (
+            {currentBodyPart !== "head" && (
+              <Button variant="outline" size="sm" onClick={() => setCurrentBodyPart("head")} className="text-gray-300">
+                Check Head
+              </Button>
+            )}
+            {currentBodyPart !== "leftHand" && (
               <Button
-                key={part.id}
                 variant="outline"
                 size="sm"
-                onClick={() => setSelectedPart(part.id)}
+                onClick={() => setCurrentBodyPart("leftHand")}
                 className="text-gray-300"
-                disabled={selectedPart === part.id}
               >
-                Check {part.name}
+                Check Left Arm
               </Button>
-            ))}
+            )}
+            {currentBodyPart !== "rightHand" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentBodyPart("rightHand")}
+                className="text-gray-300"
+              >
+                Check Right Arm
+              </Button>
+            )}
+            {currentBodyPart !== "leftLeg" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentBodyPart("leftLeg")}
+                className="text-gray-300"
+              >
+                Check Left Leg
+              </Button>
+            )}
+            {currentBodyPart !== "rightLeg" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentBodyPart("rightLeg")}
+                className="text-gray-300"
+              >
+                Check Right Leg
+              </Button>
+            )}
           </div>
-          {selectedPart && (
-            <div className="mt-4 text-sm text-gray-300 font-pixel">
-              <strong>Notes:</strong> {bodyParts.find((part) => part.id === selectedPart)?.notes}
-            </div>
-          )}
         </div>
       </div>
     </div>

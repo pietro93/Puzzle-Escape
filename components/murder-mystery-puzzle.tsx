@@ -344,7 +344,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
             <div className="flex flex-col items-center justify-center p-4">
               <div className="w-full max-w-md h-64 relative pixelated-container bg-black mb-4">
                 <Image
-                  src="/images/murder-mystery/librarian.webp"
+                  src="/images/murder-mystery/librarian-2.webp"
                   alt="Librarian"
                   width={400}
                   height={300}
