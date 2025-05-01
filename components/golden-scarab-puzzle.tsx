@@ -31,7 +31,7 @@ const LOCATION_CODES = {
 }
 
 // The correct path as a string of location codes
-const CORRECT_PATH_CODE = "0123451"
+const CORRECT_PATH_CODE = "01234510"
 
 export default function GoldenScarabPuzzle() {
   const [pedestals, setPedestals] = useState<Pedestal[]>([
@@ -103,7 +103,7 @@ export default function GoldenScarabPuzzle() {
     // Close pedestal info
     setSelectedPedestal(null)
 
-    // Check if path is complete and correct
+    // Check if path is complete and correct when returning to center
     if (destinationId === "center" && newPathCode.length > 1) {
       checkPath(newPathCode)
     }
@@ -180,12 +180,14 @@ export default function GoldenScarabPuzzle() {
                 alt={pedestal.name}
                 className="w-16 h-24 object-contain"
               />
+
+              {/* Scarab on top of pedestal */}
               {scarabPosition === pedestal.id && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/4">
                   <img
                     src="/images/golden-scarab/golden_scarab.webp"
                     alt="Golden Scarab"
-                    className="w-10 h-10 object-contain"
+                    className="w-12 h-12 object-contain"
                   />
                 </div>
               )}
@@ -287,6 +289,9 @@ export default function GoldenScarabPuzzle() {
             <p className="text-amber-200 text-sm">That is not the correct path. Try again following the hints.</p>
           </div>
         )}
+
+        {/* Debug info - remove in production */}
+        <div className="absolute bottom-0 left-0 bg-black/50 text-xs text-white p-1 z-50">Path: {pathCode}</div>
       </div>
     </div>
   )
