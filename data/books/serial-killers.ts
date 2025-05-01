@@ -4,7 +4,7 @@ export const serialKillersBook: Book = {
   title: "Penchant For Murder: Everyone and Their Mother Wants To Kill These Days",
   pages: [
     {
-      imageUrl: "/images/murder-mystery/books/serial-killer-mom-book-cover.webp",
+      imageUrl: "/images/murder-mystery/books/serial-killers-cover.webp",
     },
     {
       title: "Introduction",

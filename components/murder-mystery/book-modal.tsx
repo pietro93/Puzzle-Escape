@@ -67,8 +67,6 @@ export function BookModal({
   const isBotanyBook = book.title === "Plant Identification Manual"
   // Check if this is the puppies book
   const isPuppiesBook = book.title === "Adorable Puppies"
-  // Check if this is the demonology book
-  const isDemonologyBook = book.title === "Demonology: A Comprehensive Guide to Supernatural Entities"
 
   // Scroll functions for carousels
   const scrollCarousel = (carouselRef: React.RefObject<HTMLDivElement>, direction: "left" | "right") => {
@@ -97,12 +95,11 @@ export function BookModal({
       return `/images/murder-mystery/books/botany/${imageUrl}`
     } else if (isPuppiesBook) {
       return `/images/murder-mystery/books/puppies/${imageUrl}`
-    } else if (isDemonologyBook) {
-      // Demonology images are in the root images folder
-      return `/images/demonology/${imageUrl}`
+    } else if (book.id === "demonology") {
+      return `/images/murder-mystery/books/demonology/${imageUrl}`
     } else {
       // For other books, use a generic path
-      return `/images/murder-mystery/books/${imageUrl}`
+      return `/images/murder-mystery/books/${book.id}/${imageUrl}`
     }
   }
 
@@ -257,7 +254,7 @@ export function BookModal({
               <div className="mb-4 flex flex-col items-center">
                 <div className="relative" style={content.imageStyle || { width: "300px", height: "300px" }}>
                   <Image
-                    src={content.imageUrl.startsWith("/") ? content.imageUrl : getImagePath(content.imageUrl)}
+                    src={getImagePath(content.imageUrl) || "/placeholder.svg"}
                     alt={content.caption || content.title || "Book illustration"}
                     fill
                     className="rounded-md pixelated object-contain"
