@@ -72,15 +72,38 @@ export function useBookSystem() {
     // If no section is selected but the book has sections, show all pages alphabetically
     if (!currentSection && selectedBook.sections) {
       // Collect all pages from all sections
-      const allPages = selectedBook.sections.flatMap((section) => section.pages)
+      const allPages = []
 
-      // Sort pages alphabetically by title
-      const sortedPages = [...allPages].sort((a, b) => {
+      // For each section, collect pairs of pages (image + text)
+      for (const section of selectedBook.sections) {
+        for (let i = 0; i < section.pages.length; i += 2) {
+          if (i + 1 < section.pages.length) {
+            // If this is an image page followed by a text page with the same title
+            if (
+              section.pages[i].imageUrl &&
+              section.pages[i + 1].text &&
+              section.pages[i].title === section.pages[i + 1].title
+            ) {
+              // Add both pages as a pair
+              allPages.push({
+                title: section.pages[i].title,
+                pages: [section.pages[i], section.pages[i + 1]],
+              })
+            }
+          }
+        }
+      }
+
+      // Sort pairs alphabetically by title
+      const sortedPairs = [...allPages].sort((a, b) => {
         if (a.title && b.title) {
           return a.title.localeCompare(b.title)
         }
         return 0
       })
+
+      // Flatten the sorted pairs back into a single array
+      const sortedPages = sortedPairs.flatMap((pair) => pair.pages)
 
       // Return the current page from the sorted list
       if (sortedPages.length > currentPage) {
@@ -108,6 +131,7 @@ export function useBookSystem() {
 
     // If no section is selected but the book has sections, count all pages
     if (!currentSection && selectedBook.sections) {
+      // Count all pages from all sections
       const allPagesCount = selectedBook.sections.reduce((total, section) => total + section.pages.length, 0)
       return allPagesCount
     }
