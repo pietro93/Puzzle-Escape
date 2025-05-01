@@ -1,12 +1,49 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import type { Book } from "@/components/murder-mystery/types"
 
 export function useBookSystem() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
+  const [sortedPages, setSortedPages] = useState<any[]>([])
+
+  // Effect to handle sorting pages when book or section changes
+  useEffect(() => {
+    if (!selectedBook) return
+
+    // If no section is selected and the book has sections
+    if (!currentSection && selectedBook.sections) {
+      const allDemonEntries: { title: string; pages: any[] }[] = []
+
+      // First, collect all demon entries (pairs of image + text pages)
+      for (const section of selectedBook.sections) {
+        for (let i = 0; i < section.pages.length; i += 2) {
+          if (i + 1 < section.pages.length) {
+            // Check if this is a pair with matching titles
+            if (section.pages[i].title === section.pages[i + 1].title) {
+              allDemonEntries.push({
+                title: section.pages[i].title || "",
+                pages: [section.pages[i], section.pages[i + 1]],
+              })
+            }
+          }
+        }
+      }
+
+      // Sort entries alphabetically by title
+      allDemonEntries.sort((a, b) => a.title.localeCompare(b.title))
+
+      // Flatten the sorted entries into a single array of pages
+      const flattenedPages = allDemonEntries.flatMap((entry) => entry.pages)
+
+      setSortedPages(flattenedPages)
+    } else {
+      // If a section is selected or the book doesn't have sections
+      setSortedPages([])
+    }
+  }, [selectedBook, currentSection])
 
   const openBook = (book: Book) => {
     setSelectedBook(book)
@@ -25,6 +62,7 @@ export function useBookSystem() {
     setSelectedBook(null)
     setCurrentPage(0)
     setCurrentSection(null)
+    setSortedPages([])
   }
 
   const nextPage = () => {
@@ -69,43 +107,8 @@ export function useBookSystem() {
       return null
     }
 
-    // If no section is selected but the book has sections, show all pages alphabetically
-    if (!currentSection && selectedBook.sections) {
-      // Collect all pages from all sections
-      const allPages = []
-
-      // For each section, collect pairs of pages (image + text)
-      for (const section of selectedBook.sections) {
-        for (let i = 0; i < section.pages.length; i += 2) {
-          if (i + 1 < section.pages.length) {
-            // If this is an image page followed by a text page with the same title
-            if (
-              section.pages[i].imageUrl &&
-              section.pages[i + 1].text &&
-              section.pages[i].title === section.pages[i + 1].title
-            ) {
-              // Add both pages as a pair
-              allPages.push({
-                title: section.pages[i].title,
-                pages: [section.pages[i], section.pages[i + 1]],
-              })
-            }
-          }
-        }
-      }
-
-      // Sort pairs alphabetically by title
-      const sortedPairs = [...allPages].sort((a, b) => {
-        if (a.title && b.title) {
-          return a.title.localeCompare(b.title)
-        }
-        return 0
-      })
-
-      // Flatten the sorted pairs back into a single array
-      const sortedPages = sortedPairs.flatMap((pair) => pair.pages)
-
-      // Return the current page from the sorted list
+    // If no section is selected but we have sorted pages
+    if (!currentSection && sortedPages.length > 0) {
       if (sortedPages.length > currentPage) {
         return sortedPages[currentPage]
       }
@@ -129,11 +132,9 @@ export function useBookSystem() {
       return section ? section.pages.length : 0
     }
 
-    // If no section is selected but the book has sections, count all pages
-    if (!currentSection && selectedBook.sections) {
-      // Count all pages from all sections
-      const allPagesCount = selectedBook.sections.reduce((total, section) => total + section.pages.length, 0)
-      return allPagesCount
+    // If no section is selected but we have sorted pages
+    if (!currentSection && sortedPages.length > 0) {
+      return sortedPages.length
     }
 
     // For books without sections
