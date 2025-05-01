@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import Image from "next/image"
 
 interface Pedestal {
   id: string
@@ -133,6 +134,21 @@ export default function GoldenScarabPuzzle() {
     }, 3000)
   }
 
+  // Define image URLs directly
+  const scarabImageUrl =
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/golden_scarab-NH6d7wE1nFcsIEH98odtXdeaD4jhG8.webp"
+  const pedestalImages = {
+    mali: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansa-musa-mali-pedistal-A00YY1QBC1YTMnazPyWO740sau8kj2.webp",
+    sahara:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansa-musa-sahara-pedistal-8VCsfP8TlrVJrdScY7Vm0VhmQMUuzW.webp",
+    egypt:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansa-musa-egypt-pedistal-9cKNGShc91KRjsOORXpHQLzV09BoK9.webp",
+    hejaz:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansa-musa-hejaz-pedistal-w3qr8bzYuI2JVt8e3MZ1eAOmvRUeYF.webp",
+    songhai:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansa-musa-songhai-pedistal-1iSYWMNrPpVqex4zHuykgmjxVKcHSh.webp",
+  }
+
   return (
     <div
       className="relative w-full h-[500px] bg-amber-950/30 rounded-lg border border-amber-900/50 overflow-hidden flex items-center justify-center"
@@ -153,10 +169,12 @@ export default function GoldenScarabPuzzle() {
         >
           {scarabPosition === "center" && (
             <div className="relative w-16 h-16 flex items-center justify-center">
-              <img
-                src="/images/golden-scarab/golden_scarab.webp"
+              <Image
+                src={scarabImageUrl || "/placeholder.svg"}
                 alt="Golden Scarab"
-                className="w-16 h-16 object-contain"
+                width={64}
+                height={64}
+                className="object-contain"
               />
             </div>
           )}
@@ -175,19 +193,23 @@ export default function GoldenScarabPuzzle() {
             onClick={() => handlePedestalClick(pedestal)}
           >
             <div className="relative w-16 h-24 flex items-center justify-center">
-              <img
-                src={pedestal.image || "/placeholder.svg"}
+              <Image
+                src={pedestalImages[pedestal.id as keyof typeof pedestalImages] || "/placeholder.svg"}
                 alt={pedestal.name}
-                className="w-16 h-24 object-contain"
+                width={64}
+                height={96}
+                className="object-contain"
               />
 
               {/* Scarab on top of pedestal */}
               {scarabPosition === pedestal.id && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/4">
-                  <img
-                    src="/images/golden-scarab/golden_scarab.webp"
+                  <Image
+                    src={scarabImageUrl || "/placeholder.svg"}
                     alt="Golden Scarab"
-                    className="w-12 h-12 object-contain"
+                    width={48}
+                    height={48}
+                    className="object-contain"
                   />
                 </div>
               )}
@@ -244,10 +266,12 @@ export default function GoldenScarabPuzzle() {
               </div>
 
               <div className="flex flex-col items-center mb-4">
-                <img
-                  src={selectedPedestal.image || "/placeholder.svg"}
+                <Image
+                  src={pedestalImages[selectedPedestal.id as keyof typeof pedestalImages] || "/placeholder.svg"}
                   alt={selectedPedestal.name}
-                  className="w-24 h-36 object-contain mb-4"
+                  width={96}
+                  height={144}
+                  className="mb-4 object-contain"
                 />
                 <p className="text-amber-200 text-sm mb-4">{selectedPedestal.description}</p>
               </div>
