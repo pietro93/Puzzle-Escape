@@ -148,9 +148,11 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     const updatedCityPairs = [...cityPairs]
 
     if (matchedCityIndex !== null) {
-      // Valid city name found
+      // Valid city name found - capitalize the first letter
+      const cityName = pair.cities[matchedCityIndex].name
+
       updatedCityPairs[pairIndex].inputs[inputIndex] = {
-        value: inputValue,
+        value: cityName,
         isCorrect: true,
         cityIndex: matchedCityIndex,
       }
@@ -181,14 +183,14 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     const cities = [city1.toLowerCase(), city2.toLowerCase()].sort()
 
     if ((cities.includes("sari") || cities.includes("siri")) && cities.includes("urgench")) {
-      return "/images/hellmap/hellmap_sari-urgench.webp"
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_sari-urgench-qluZPYpZ8QhiDH5u48EsaZIDdfGCvb.webp"
     }
 
     if (
       (cities.includes("turkmenbashi") || cities.includes("turkmenbasy")) &&
       (cities.includes("navoi") || cities.includes("navoiy"))
     ) {
-      return "/images/hellmap/hellmap_turkmenbay-navoi.webp"
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_turkmenbay-navoi-pIB68Ro4JoXe2QG0Py0i3KKcmJr4OP.webp"
     }
 
     return null
@@ -204,19 +206,15 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     <div className="w-full bg-gray-900 rounded-lg overflow-hidden p-4">
       <h3 className="text-lg font-bold mb-4 text-amber-500">Mysterious Map</h3>
 
-      <div className="mb-4 text-gray-300 text-sm">
-        <p>
-          Identify each location on the map by entering the correct city name. When you correctly identify both
-          locations of the same color, a hidden connection will be revealed.
-        </p>
-      </div>
-
       <div className="w-full max-w-4xl mx-auto">
-        <div className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-black">
+        <div
+          className="relative border border-gray-700 rounded-lg overflow-hidden mb-4"
+          style={{ aspectRatio: "16/9" }}
+        >
           <img
-            src="/images/hellmap/hellmap_full.webp"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_full-huqMDULaszlYkQmcS3mgXkvqVc6A0C.webp"
             alt="Map with location pins"
-            className="w-full h-auto object-contain"
+            className="w-full h-full object-contain"
           />
 
           {activeConnections.map((connection, index) => (
@@ -225,6 +223,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
               src={connection || "/placeholder.svg"}
               alt="Connection line"
               className="absolute inset-0 w-full h-full object-contain"
+              style={{ zIndex: 10 }}
             />
           ))}
         </div>
