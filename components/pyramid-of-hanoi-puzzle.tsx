@@ -15,7 +15,6 @@ interface Block {
   color: BlockColor
   hasVisitedP2: boolean
   hasVisitedP3: boolean
-  isMoving?: boolean
 }
 
 interface Peg {
@@ -65,220 +64,108 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   // Track selected block for moving
   const [selectedPegId, setSelectedPegId] = useState<PegId | null>(null)
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
-  const [animatingBlock, setAnimatingBlock] = useState<string | null>(null)
+
+  // Calculate block dimensions for a proper pyramid
+  const getBlockDimensions = (blockId: BlockId) => {
+    // Base width of the largest block (b5)
+    const baseMaxWidth = 120
+
+    // Height of each block (shorter than before)
+    const heightFactor = 0.4
+
+    // Calculate dimensions based on block size
+    switch (blockId) {
+      case "b5": // Bottom block
+        return {
+          bottomWidth: baseMaxWidth,
+          topWidth: baseMaxWidth * 0.8,
+          height: baseMaxWidth * heightFactor,
+        }
+      case "b4":
+        return {
+          bottomWidth: baseMaxWidth * 0.8, // Match top of b5
+          topWidth: baseMaxWidth * 0.6,
+          height: baseMaxWidth * heightFactor * 0.8,
+        }
+      case "b3":
+        return {
+          bottomWidth: baseMaxWidth * 0.6, // Match top of b4
+          topWidth: baseMaxWidth * 0.4,
+          height: baseMaxWidth * heightFactor * 0.6,
+        }
+      case "b2":
+        return {
+          bottomWidth: baseMaxWidth * 0.4, // Match top of b3
+          topWidth: baseMaxWidth * 0.2,
+          height: baseMaxWidth * heightFactor * 0.4,
+        }
+      case "b1": // Top block (triangle)
+        return {
+          bottomWidth: baseMaxWidth * 0.2, // Match top of b2
+          topWidth: 0, // Triangle has 0 width at top
+          height: baseMaxWidth * heightFactor * 0.3,
+        }
+      default:
+        return { bottomWidth: 0, topWidth: 0, height: 0 }
+    }
+  }
 
   // Get block image based on shape, size, and color
   const getBlockImage = (block: Block) => {
-    // Base size calculation - reduced to fit better
+    // Base size calculation for square blocks
     const baseSize = block.size * 12
 
-    // Colors based on block state
-    const isGold = block.color === "gold"
+    // Color based on block state
+    const bgColor = block.color === "gold" ? "#EAB308" : "#78716C"
+    const borderColor = block.color === "gold" ? "#FDE68A" : "#A8A29E"
 
-    // Base colors
-    const baseColor = isGold ? "#F59E0B" : "#78716C"
-    const highlightColor = isGold ? "#FCD34D" : "#A8A29E"
-    const shadowColor = isGold ? "#B45309" : "#44403C"
-
-    // Animation class for transformations
-    const animationClass = animatingBlock === block.id ? "animate-pulse" : ""
-
-    // 3D effect styles
-    const commonStyles = {
-      transition: "all 0.3s ease-in-out",
-      boxShadow: `0 4px 6px rgba(0, 0, 0, 0.3), inset 0 -2px 5px ${shadowColor}, inset 0 2px 5px ${highlightColor}`,
-      transform: "perspective(500px) rotateX(10deg)",
-    }
+    // For carved blocks, get precise dimensions
+    const dimensions = getBlockDimensions(block.id)
 
     // Shape based on block state
     if (block.shape === "triangle") {
-      // 3D Triangle shape (for the top block after carving)
+      // Triangle shape (for the top block after carving)
       return (
-        <div className={`flex justify-center ${animationClass}`}>
+        <div className="flex justify-center">
           <div
             style={{
-              position: "relative",
-              width: `${baseSize * 2}px`,
-              height: `${baseSize * 1.2}px`,
-              transformStyle: "preserve-3d",
-              transform: "perspective(500px) rotateX(10deg)",
+              width: 0,
+              height: 0,
+              borderLeft: `${dimensions.bottomWidth / 2}px solid transparent`,
+              borderRight: `${dimensions.bottomWidth / 2}px solid transparent`,
+              borderBottom: `${dimensions.height}px solid ${bgColor}`,
+              filter: `drop-shadow(0px 1px 1px ${borderColor})`,
             }}
-          >
-            {/* Front face (triangle) */}
-            <div
-              style={{
-                position: "absolute",
-                width: 0,
-                height: 0,
-                borderLeft: `${baseSize}px solid transparent`,
-                borderRight: `${baseSize}px solid transparent`,
-                borderBottom: `${baseSize * 1.2}px solid ${baseColor}`,
-                filter: `drop-shadow(0 4px 3px rgba(0, 0, 0, 0.3))`,
-              }}
-            />
-
-            {/* Light reflection */}
-            <div
-              style={{
-                position: "absolute",
-                width: 0,
-                height: 0,
-                borderLeft: `${baseSize * 0.8}px solid transparent`,
-                borderRight: `${baseSize * 0.8}px solid transparent`,
-                borderBottom: `${baseSize}px solid ${highlightColor}`,
-                opacity: 0.3,
-                transform: "translateX(10%) translateY(10%)",
-                filter: "blur(2px)",
-              }}
-            />
-          </div>
+          />
         </div>
       )
     } else if (block.shape === "trapezoid") {
-      // 3D Trapezoid shape (for blocks after carving)
-      // Calculate the top width as a percentage of the bottom width
-      const topWidthPercent = 70 - block.size * 5
-      const bottomWidth = baseSize * 2
-      const topWidth = bottomWidth * (topWidthPercent / 100)
-      const height = baseSize * 0.8
-
+      // Trapezoid shape with precise dimensions for pyramid effect
       return (
-        <div className={`flex justify-center ${animationClass}`}>
+        <div className="flex justify-center">
           <div
             style={{
               position: "relative",
-              width: `${bottomWidth}px`,
-              height: `${height}px`,
-              transformStyle: "preserve-3d",
-              ...commonStyles,
+              width: `${dimensions.bottomWidth}px`,
+              height: `${dimensions.height}px`,
+              backgroundColor: bgColor,
+              clipPath: `polygon(${(dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth - (dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
+              boxShadow: `0 1px 2px ${borderColor}`,
             }}
-          >
-            {/* Main trapezoid */}
-            <div
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                backgroundColor: baseColor,
-                clipPath: `polygon(${(bottomWidth - topWidth) / 2}px 0, ${
-                  bottomWidth - (bottomWidth - topWidth) / 2
-                }px 0, ${bottomWidth}px ${height}px, 0 ${height}px)`,
-              }}
-            />
-
-            {/* Top highlight */}
-            <div
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "30%",
-                background: `linear-gradient(to bottom, ${highlightColor}, transparent)`,
-                opacity: 0.3,
-                clipPath: `polygon(${(bottomWidth - topWidth) / 2}px 0, ${
-                  bottomWidth - (bottomWidth - topWidth) / 2
-                }px 0, ${bottomWidth - (bottomWidth - topWidth) / 4}px ${height * 0.3}px, ${
-                  (bottomWidth - topWidth) / 4
-                }px ${height * 0.3}px)`,
-              }}
-            />
-
-            {/* Bottom shadow */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                width: "100%",
-                height: "40%",
-                background: `linear-gradient(to top, ${shadowColor}, transparent)`,
-                opacity: 0.3,
-                clipPath: `polygon(${(bottomWidth - topWidth) / 4}px ${height * 0.6}px, ${
-                  bottomWidth - (bottomWidth - topWidth) / 4
-                }px ${height * 0.6}px, ${bottomWidth}px ${height}px, 0 ${height}px)`,
-              }}
-            />
-
-            {/* Left side shadow */}
-            <div
-              style={{
-                position: "absolute",
-                width: "20%",
-                height: "100%",
-                background: `linear-gradient(to right, ${shadowColor}, transparent)`,
-                opacity: 0.3,
-                clipPath: `polygon(0 ${height}px, ${(bottomWidth - topWidth) / 2}px 0, ${
-                  (bottomWidth - topWidth) / 2 + bottomWidth * 0.2
-                }px 0, ${bottomWidth * 0.2}px ${height}px)`,
-              }}
-            />
-          </div>
+          />
         </div>
       )
     } else {
-      // 3D Square shape (for initial blocks)
+      // Square shape (for initial blocks)
       return (
-        <div className={`flex justify-center ${animationClass}`}>
-          <div
-            style={{
-              position: "relative",
-              width: `${baseSize * 1.5}px`,
-              height: `${baseSize * 1.5}px`,
-              backgroundColor: baseColor,
-              ...commonStyles,
-            }}
-          >
-            {/* Top highlight */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "30%",
-                background: `linear-gradient(to bottom, ${highlightColor}, transparent)`,
-                opacity: 0.3,
-              }}
-            />
-
-            {/* Bottom shadow */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                height: "30%",
-                background: `linear-gradient(to top, ${shadowColor}, transparent)`,
-                opacity: 0.3,
-              }}
-            />
-
-            {/* Left side shadow */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "30%",
-                height: "100%",
-                background: `linear-gradient(to right, ${shadowColor}, transparent)`,
-                opacity: 0.2,
-              }}
-            />
-
-            {/* Right side highlight */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                width: "30%",
-                height: "100%",
-                background: `linear-gradient(to left, ${highlightColor}, transparent)`,
-                opacity: 0.1,
-              }}
-            />
-          </div>
-        </div>
+        <div
+          style={{
+            width: `${baseSize * 1.5}px`,
+            height: `${baseSize * 1.5}px`,
+            backgroundColor: bgColor,
+            border: `1px solid ${borderColor}`,
+          }}
+        />
       )
     }
   }
@@ -335,18 +222,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
       // b1 (smallest) becomes triangle, all others become trapezoids
       blockToMove.shape = blockToMove.id === "b1" ? "triangle" : "trapezoid"
       blockToMove.hasVisitedP2 = true
-
-      // Trigger animation for shape change
-      setAnimatingBlock(blockToMove.id)
-      setTimeout(() => setAnimatingBlock(null), 500)
     } else if (toPegId === "p3") {
       // Painting workshop - change color
       blockToMove.color = "gold"
       blockToMove.hasVisitedP3 = true
-
-      // Trigger animation for color change
-      setAnimatingBlock(blockToMove.id)
-      setTimeout(() => setAnimatingBlock(null), 500)
     }
 
     // Remove block from source peg
@@ -388,33 +267,6 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     }
   }
 
-  // Render the completed pyramid with a special effect when solved
-  const renderCompletedPyramid = () => {
-    if (!isPuzzleSolved) return null
-
-    return (
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div
-          className="relative w-64 h-64 animate-pulse"
-          style={{
-            animation: "glow 2s infinite alternate",
-          }}
-        >
-          <style jsx>{`
-            @keyframes glow {
-              from {
-                filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.5));
-              }
-              to {
-                filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.8));
-              }
-            }
-          `}</style>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="w-full max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg">
       {/* Game board */}
@@ -433,22 +285,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             <h3 className="text-lg font-bold text-center mb-4">Quarry</h3>
             <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div
-                className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 rounded-full"
-                style={{
-                  background: "linear-gradient(to bottom, #9CA3AF, #4B5563)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                }}
-              ></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
-              <div
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 rounded-lg"
-                style={{
-                  background: "linear-gradient(to right, #374151, #6B7280, #374151)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.1)",
-                }}
-              ></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
 
               {/* Blocks on this peg - stacked from bottom */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
@@ -472,22 +312,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             <h3 className="text-lg font-bold text-center mb-4">Carving Workshop</h3>
             <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div
-                className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 rounded-full"
-                style={{
-                  background: "linear-gradient(to bottom, #9CA3AF, #4B5563)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                }}
-              ></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
-              <div
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 rounded-lg"
-                style={{
-                  background: "linear-gradient(to right, #374151, #6B7280, #374151)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.1)",
-                }}
-              ></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
 
               {/* Blocks on this peg - stacked from bottom */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
@@ -512,22 +340,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             <h3 className="text-lg font-bold text-center mb-4">Painting Workshop</h3>
             <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div
-                className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 rounded-full"
-                style={{
-                  background: "linear-gradient(to bottom, #9CA3AF, #4B5563)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                }}
-              ></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
-              <div
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 rounded-lg"
-                style={{
-                  background: "linear-gradient(to right, #374151, #6B7280, #374151)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.1)",
-                }}
-              ></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
 
               {/* Blocks on this peg - stacked from bottom */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
@@ -551,22 +367,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             <h3 className="text-lg font-bold text-center mb-4">Construction Site</h3>
             <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div
-                className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 rounded-full"
-                style={{
-                  background: "linear-gradient(to bottom, #9CA3AF, #4B5563)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                }}
-              ></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
-              <div
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 rounded-lg"
-                style={{
-                  background: "linear-gradient(to right, #374151, #6B7280, #374151)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.1)",
-                }}
-              ></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
 
               {/* Blocks on this peg - stacked from bottom */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
@@ -583,21 +387,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
         {/* Success message */}
         {isPuzzleSolved && (
           <div className="mt-4 text-center">
-            <h3
-              className="text-2xl font-bold animate-pulse"
-              style={{
-                color: "#F59E0B",
-                textShadow: "0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.5)",
-              }}
-            >
-              ARCHITECT
-            </h3>
+            <h3 className="text-2xl font-bold text-green-400 animate-pulse">ARCHITECT</h3>
           </div>
         )}
       </div>
-
-      {/* Render the completed pyramid effect when solved */}
-      {renderCompletedPyramid()}
     </div>
   )
 }
