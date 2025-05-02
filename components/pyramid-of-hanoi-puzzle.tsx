@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 // Types for our blocks and pegs
 type BlockShape = "square" | "triangle" | "trapezoid"
@@ -41,7 +41,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   const [pegs, setPegs] = useState<Peg[]>([
     {
       id: "p1",
-      name: "Quarry\u00A0", // Added non-breaking space to simulate two lines
+      name: "Quarry",
       blocks: [...initialBlocks].reverse(), // Reverse to have smallest on top
     },
     {
@@ -64,6 +64,14 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   // Track selected block for moving
   const [selectedPegId, setSelectedPegId] = useState<PegId | null>(null)
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
+  const [shineEffect, setShineEffect] = useState(false)
+
+  // Add shine effect after puzzle is solved
+  useEffect(() => {
+    if (isPuzzleSolved) {
+      setShineEffect(true)
+    }
+  }, [isPuzzleSolved])
 
   // Calculate perfect pyramid dimensions with straight diagonal sides
   const getPyramidDimensions = () => {
@@ -116,27 +124,43 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   }
 
   // Get block dimensions based on ID
-  const getBlockDimensions = (blockId: BlockId) => {
+  const getBlockDimensions = (blockId: BlockId, isCarved: boolean) => {
     const dimensions = getPyramidDimensions()
+    let result;
 
     switch (blockId) {
       case "b1":
-        return dimensions[0]
+        result = dimensions[0]
+        break
       case "b2":
-        return dimensions[1]
+        result = dimensions[1]
+        break
       case "b3":
-        return dimensions[2]
+        result = dimensions[2]
+        break
       case "b4":
-        return dimensions[3]
+        result = dimensions[3]
+        break
       case "b5":
-        return dimensions[4]
+        result = dimensions[4]
+        break
       default:
         return { bottomWidth: 0, topWidth: 0, height: 0 }
     }
+
+    // If the block is carved, halve its height
+    if (isCarved) {
+      return {
+        ...result,
+        height: result.height * 0.5
+      }
+    }
+
+    return result
   }
 
   // Get block image based on shape, size, and color
-  const getBlockImage = (block: Block) => {
+  const getBlockImage = (block: Block, pegId: PegId) => {
     // Base size calculation for square blocks - made smaller
     const baseSize = block.size * 10
 
@@ -146,7 +170,32 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     const shadowColor = block.color === "gold" ? "rgba(250, 204, 21, 0.6)" : "rgba(87, 83, 78, 0.6)"
 
     // For carved blocks, get precise dimensions
-    const dimensions = getBlockDimensions(block.id)
+    const isCarved = block.shape === "trapezoid" || block.shape === "triangle"
+    const dimensions = getBlockDimensions(block.id, isCarved)
+
+    // Add shine effect animation if puzzle is solved and on construction site
+    const shineAnimation = shineEffect && pegId === "p4" && block.color === "gold"
+      ? {
+          position: "relative",
+          overflow: "hidden",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: "-50%",
+            left: "-60%",
+            width: "20%",
+            height: "200%",
+            opacity: "0.7",
+            transform: "rotate(30deg)",
+            background: "linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 100%)",
+            animation: "shine 3s infinite",
+          },
+          "@keyframes shine": {
+            "0%": { left: "-60%" },
+            "100%": { left: "160%" }
+          }
+        }
+      : {}
 
     // Shape based on block state
     if (block.shape === "triangle") {
@@ -161,8 +210,31 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               borderRight: `${dimensions.bottomWidth / 2}px solid transparent`,
               borderBottom: `${dimensions.height}px solid ${bgColor}`,
               filter: `drop-shadow(0 4px 3px ${shadowColor})`, // Shadow only at bottom
+              position: "relative",
+              ...(shineAnimation as any)
             }}
-          />
+            className={shineAnimation ? "shine-effect" : ""}
+          >
+            {shineAnimation && (
+              <style jsx>{`
+                @keyframes shine {
+                  0% { left: -60%; }
+                  100% { left: 160%; }
+                }
+                .shine-effect::after {
+                  content: "";
+                  position: absolute;
+                  top: 0;
+                  left: -60%;
+                  width: 20%;
+                  height: 100%;
+                  background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 100%);
+                  transform: skewX(-25deg);
+                  animation: shine 3s infinite;
+                }
+              `}</style>
+            )}
+          </div>
         </div>
       )
     } else if (block.shape === "trapezoid") {
@@ -180,7 +252,28 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
                 : `polygon(${dimensions.bottomWidth / 2}px 0, ${dimensions.bottomWidth / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
               boxShadow: `0 4px 3px ${shadowColor}`, // Shadow only at bottom
             }}
-          />
+            className={shineAnimation ? "shine-effect" : ""}
+          >
+            {shineAnimation && (
+              <style jsx>{`
+                @keyframes shine {
+                  0% { left: -60%; }
+                  100% { left: 160%; }
+                }
+                .shine-effect::after {
+                  content: "";
+                  position: absolute;
+                  top: 0;
+                  left: -60%;
+                  width: 20%;
+                  height: 100%;
+                  background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 100%);
+                  transform: skewX(-25deg);
+                  animation: shine 3s infinite;
+                }
+              `}</style>
+            )}
+          </div>
         </div>
       )
     } else {
@@ -193,8 +286,30 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             backgroundColor: bgColor,
             border: `1px solid ${borderColor}`,
             boxShadow: `0 4px 3px ${shadowColor}`, // Shadow only at bottom
+            position: "relative",
           }}
-        />
+          className={shineAnimation ? "shine-effect" : ""}
+        >
+          {shineAnimation && (
+            <style jsx>{`
+              @keyframes shine {
+                0% { left: -60%; }
+                100% { left: 160%; }
+              }
+              .shine-effect::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -60%;
+                width: 20%;
+                height: 100%;
+                background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 100%);
+                transform: skewX(-25deg);
+                animation: shine 3s infinite;
+              }
+            `}</style>
+          )}
+        </div>
       )
     }
   }
@@ -296,17 +411,54 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     }
   }
 
+  // Get peg colors based on ID
+  const getPegColors = (pegId: PegId) => {
+    switch (pegId) {
+      case "p1": // Quarry - Grey
+        return {
+          rod: "#6B7280", // gray-500
+          base: "#4B5563"  // gray-600
+        }
+      case "p2": // Carving Workshop - Purple
+        return {
+          rod: "#8B5CF6", // violet-500
+          base: "#7C3AED"  // violet-600
+        }
+      case "p3": // Painting Workshop - Dark Blue
+        return {
+          rod: "#3B82F6", // blue-500
+          base: "#2563EB"  // blue-600
+        }
+      case "p4": // Construction Site - Dark rod with golden base
+        return {
+          rod: "#1F2937", // Very dark gray (almost black)
+          base: "#EAB308"  // Golden yellow (same as gold blocks)
+        }
+      default:
+        return {
+          rod: "#6B7280",
+          base: "#4B5563"
+        }
+    }
+  }
+
   // Render a single peg with consistent styling
   const renderPeg = (pegId: PegId) => {
     const peg = pegs.find((p) => p.id === pegId)
     if (!peg) return null
 
+    const pegColors = getPegColors(pegId)
+    const bgColor = pegId === "p4" ? "bg-blue-900" : 
+                    pegId === "p3" ? "bg-blue-800" : 
+                    pegId === "p2" ? "bg-violet-900" : 
+                    "bg-gray-800"
+
     return (
       <div
         className={`flex flex-col items-center p-4 rounded-lg transition-all ${
           selectedPegId === pegId
-            ? "bg-blue-900/50 border border-blue-500"
-            : "bg-gray-800/50 hover:bg-gray-700/50 cursor-pointer"
+            ? `${bgColor}/70 border border-blue-500`
+            : `${bgColor}/50 hover:${bgColor}/70 cursor-pointer`
         }`}
         onClick={() => handlePegClick(pegId)}
       >
@@ -322,17 +474,23 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
           )}
         </h3>
         <div className="relative w-full h-64">
-          {/* Peg rod - consistent height and position */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full bottom-4"></div>
+          {/* Peg rod - consistent height and position with custom color */}
+          <div 
+            className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 rounded-full bottom-4"
+            style={{ backgroundColor: pegColors.rod }}
+          ></div>
 
-          {/* Peg base - consistent position */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
+          {/* Peg base - consistent position with custom color */}
+          <div 
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 rounded-lg"
+            style={{ backgroundColor: pegColors.base }}
+          ></div>
 
           {/* Blocks on this peg - stacked from bottom */}
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
             {peg.blocks.map((block) => (
               <div key={block.id} className="mb-1">
-                {getBlockImage(block)}
+                {getBlockImage(block, pegId)}
               </div>
             ))}
           </div>
@@ -359,7 +517,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
         {/* Success message */}
         {isPuzzleSolved && (
           <div className="mt-4 text-center">
-            <h3 className="text-2xl font-bold text-green-400 animate-pulse">
+            <h3 className="text-2xl font-bold animate-pulse" style={{ color: "#EAB308" }}>
               The Pharaoh Who Rests in the Smallest of the Three Pyramids Holds The Key
             </h3>
           </div>
