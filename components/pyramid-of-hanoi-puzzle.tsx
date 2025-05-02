@@ -41,7 +41,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   const [pegs, setPegs] = useState<Peg[]>([
     {
       id: "p1",
-      name: "Quarry",
+      name: "Quarry\u00A0", // Added non-breaking space to simulate two lines
       blocks: [...initialBlocks].reverse(), // Reverse to have smallest on top
     },
     {
@@ -65,46 +65,49 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   const [selectedPegId, setSelectedPegId] = useState<PegId | null>(null)
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
 
-  // Calculate perfect pyramid dimensions
+  // Calculate perfect pyramid dimensions with straight diagonal sides
   const getPyramidDimensions = () => {
     // Base width of the largest block (b5)
     const baseWidth = 120
 
     // Total height of the pyramid (slightly more than base width)
+    // Making the total height just slightly more than the base width
     const totalHeight = baseWidth * 1.1
 
-    // Height of each block with specific ratios as requested
+    // Height of each block with specific ratios
     const heightRatios = [0.1, 0.15, 0.2, 0.25, 0.3] // Sum = 1.0
 
-    // Calculate the width at each level to form straight diagonal sides
+    // For a perfect pyramid with straight diagonal sides:
+    // If the base is 100% width, then each layer's width decreases linearly
+    // For 5 layers, the widths would be: 100%, 80%, 60%, 40%, 20%
     const blockDimensions = [
       {
         // b1 (top) - 10% of total height
-        bottomWidth: baseWidth * 0.2,
+        bottomWidth: baseWidth * 0.2, // 20% of base width
         height: totalHeight * heightRatios[0],
       },
       {
         // b2 - 15% of total height
-        bottomWidth: baseWidth * 0.4,
-        topWidth: baseWidth * 0.2,
+        topWidth: baseWidth * 0.2, // 20% of base width
+        bottomWidth: baseWidth * 0.4, // 40% of base width
         height: totalHeight * heightRatios[1],
       },
       {
         // b3 - 20% of total height
-        bottomWidth: baseWidth * 0.6,
-        topWidth: baseWidth * 0.4,
+        topWidth: baseWidth * 0.4, // 40% of base width
+        bottomWidth: baseWidth * 0.6, // 60% of base width
         height: totalHeight * heightRatios[2],
       },
       {
         // b4 - 25% of total height
-        bottomWidth: baseWidth * 0.8,
-        topWidth: baseWidth * 0.6,
+        topWidth: baseWidth * 0.6, // 60% of base width
+        bottomWidth: baseWidth * 0.8, // 80% of base width
         height: totalHeight * heightRatios[3],
       },
       {
         // b5 (bottom) - 30% of total height
-        bottomWidth: baseWidth,
-        topWidth: baseWidth * 0.8,
+        topWidth: baseWidth * 0.8, // 80% of base width
+        bottomWidth: baseWidth, // 100% of base width
         height: totalHeight * heightRatios[4],
       },
     ]
@@ -163,7 +166,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
         </div>
       )
     } else if (block.shape === "trapezoid") {
-      // Trapezoid shape with precise dimensions for pyramid effect
+      // Trapezoid shape with precise dimensions for perfect pyramid effect
       return (
         <div className="flex justify-center">
           <div
@@ -172,7 +175,9 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               width: `${dimensions.bottomWidth}px`,
               height: `${dimensions.height}px`,
               backgroundColor: bgColor,
-              clipPath: `polygon(${(dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth - (dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
+              clipPath: dimensions.topWidth
+                ? `polygon(${(dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth - (dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`
+                : `polygon(${dimensions.bottomWidth / 2}px 0, ${dimensions.bottomWidth / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
               boxShadow: `0 4px 3px ${shadowColor}`, // Shadow only at bottom
             }}
           />
@@ -305,7 +310,17 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
         }`}
         onClick={() => handlePegClick(pegId)}
       >
-        <h3 className="text-base font-medium text-center mb-4">{peg.name}</h3>
+        <h3 className="text-base font-medium text-center mb-4">
+          {peg.id === "p1" ? (
+            <>
+              Quarry
+              <br />
+              <span className="opacity-0">_</span>
+            </>
+          ) : (
+            peg.name
+          )}
+        </h3>
         <div className="relative w-full h-64">
           {/* Peg rod - consistent height and position */}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full bottom-4"></div>
