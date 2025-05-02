@@ -4,14 +4,19 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 
+type City = {
+  name: string
+  acceptableAnswers: string[]
+}
+
 type CityPair = {
   color: string
   colorName: string
-  cities: {
-    name: string
-    acceptableAnswers: string[]
-    answered: boolean
-    userInput: string
+  cities: City[]
+  inputs: {
+    value: string
+    isCorrect: boolean
+    cityIndex: number | null
   }[]
 }
 
@@ -24,15 +29,15 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         {
           name: "Zhanaozen",
           acceptableAnswers: ["zhanaozen", "жаңаөзен"],
-          answered: false,
-          userInput: "",
         },
         {
           name: "Mary",
           acceptableAnswers: ["mary"],
-          answered: false,
-          userInput: "",
         },
+      ],
+      inputs: [
+        { value: "", isCorrect: false, cityIndex: null },
+        { value: "", isCorrect: false, cityIndex: null },
       ],
     },
     {
@@ -42,15 +47,15 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         {
           name: "Kungrad",
           acceptableAnswers: ["qonirat", "qońirat", "kungrad", "кунград"],
-          answered: false,
-          userInput: "",
         },
         {
           name: "Ashgabat",
           acceptableAnswers: ["ashgabat"],
-          answered: false,
-          userInput: "",
         },
+      ],
+      inputs: [
+        { value: "", isCorrect: false, cityIndex: null },
+        { value: "", isCorrect: false, cityIndex: null },
       ],
     },
     {
@@ -60,15 +65,15 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         {
           name: "Urgench",
           acceptableAnswers: ["urgench", "урганч"],
-          answered: false,
-          userInput: "",
         },
         {
           name: "Sari",
           acceptableAnswers: ["siri", "sari", "سارى"],
-          answered: false,
-          userInput: "",
         },
+      ],
+      inputs: [
+        { value: "", isCorrect: false, cityIndex: null },
+        { value: "", isCorrect: false, cityIndex: null },
       ],
     },
     {
@@ -78,15 +83,15 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         {
           name: "Navoi",
           acceptableAnswers: ["navoi", "navoiy", "навоий"],
-          answered: false,
-          userInput: "",
         },
         {
           name: "Turkmenbashi",
           acceptableAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
-          answered: false,
-          userInput: "",
         },
+      ],
+      inputs: [
+        { value: "", isCorrect: false, cityIndex: null },
+        { value: "", isCorrect: false, cityIndex: null },
       ],
     },
   ])
@@ -95,39 +100,81 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   const [solved, setSolved] = useState(false)
 
   useEffect(() => {
-    const allAnswered = cityPairs.every((pair) => pair.cities.every((city) => city.answered))
-    if (allAnswered && !solved) {
+    const allCorrect = cityPairs.every((pair) => pair.inputs.every((input) => input.isCorrect))
+
+    if (allCorrect && !solved) {
       setSolved(true)
       if (onSolve) onSolve()
     }
   }, [cityPairs, solved, onSolve])
 
-  const handleInputChange = (pairIndex: number, cityIndex: number, value: string) => {
+  const handleInputChange = (pairIndex: number, inputIndex: number, value: string) => {
     const updatedCityPairs = [...cityPairs]
-    updatedCityPairs[pairIndex].cities[cityIndex].userInput = value
+    updatedCityPairs[pairIndex].inputs[inputIndex].value = value
     setCityPairs(updatedCityPairs)
   }
 
-  const checkAnswer = (pairIndex: number, cityIndex: number) => {
-    const city = cityPairs[pairIndex].cities[cityIndex]
-    const isCorrect = city.acceptableAnswers.some(
-      (answer) => answer.toLowerCase() === city.userInput.trim().toLowerCase(),
-    )
+  const checkAnswer = (pairIndex: number, inputIndex: number) => {
+    const pair = cityPairs[pairIndex]
+    const inputValue = pair.inputs[inputIndex].value.trim().toLowerCase()
 
-    const updatedCityPairs = [...cityPairs]
-    updatedCityPairs[pairIndex].cities[cityIndex] = {
-      ...city,
-      answered: isCorrect,
-    }
-    setCityPairs(updatedCityPairs)
+    if (!inputValue) return
 
-    const pair = updatedCityPairs[pairIndex]
-    if (pair.cities.every((c) => c.answered)) {
-      const connectionName = getConnectionName(pair.cities[0].name, pair.cities[1].name)
-      if (connectionName && !activeConnections.includes(connectionName)) {
-        setActiveConnections([...activeConnections, connectionName])
+    // Check which city this input matches
+    let matchedCityIndex: number | null = null
+
+    // First check if the other input already has a correct city assigned
+    const otherInputIndex = inputIndex === 0 ? 1 : 0
+    const otherInput = pair.inputs[otherInputIndex]
+
+    if (otherInput.isCorrect && otherInput.cityIndex !== null) {
+      // The other input is already correct, so this must be the remaining city
+      const remainingCityIndex = otherInput.cityIndex === 0 ? 1 : 0
+      const remainingCity = pair.cities[remainingCityIndex]
+
+      if (remainingCity.acceptableAnswers.some((answer) => answer.toLowerCase() === inputValue)) {
+        matchedCityIndex = remainingCityIndex
+      }
+    } else {
+      // Check against both cities
+      for (let i = 0; i < pair.cities.length; i++) {
+        if (pair.cities[i].acceptableAnswers.some((answer) => answer.toLowerCase() === inputValue)) {
+          matchedCityIndex = i
+          break
+        }
       }
     }
+
+    const updatedCityPairs = [...cityPairs]
+
+    if (matchedCityIndex !== null) {
+      // Valid city name found
+      updatedCityPairs[pairIndex].inputs[inputIndex] = {
+        value: inputValue,
+        isCorrect: true,
+        cityIndex: matchedCityIndex,
+      }
+
+      // Check if both inputs are now correct
+      const updatedPair = updatedCityPairs[pairIndex]
+      if (updatedPair.inputs.every((input) => input.isCorrect)) {
+        // Add connection
+        const connectionName = getConnectionName(updatedPair.cities[0].name, updatedPair.cities[1].name)
+
+        if (connectionName && !activeConnections.includes(connectionName)) {
+          setActiveConnections([...activeConnections, connectionName])
+        }
+      }
+    } else {
+      // Invalid city name
+      updatedCityPairs[pairIndex].inputs[inputIndex] = {
+        value: inputValue,
+        isCorrect: false,
+        cityIndex: null,
+      }
+    }
+
+    setCityPairs(updatedCityPairs)
   }
 
   const getConnectionName = (city1: string, city2: string): string | null => {
@@ -147,9 +194,9 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     return null
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent, pairIndex: number, cityIndex: number) => {
+  const handleKeyPress = (e: React.KeyboardEvent, pairIndex: number, inputIndex: number) => {
     if (e.key === "Enter") {
-      checkAnswer(pairIndex, cityIndex)
+      checkAnswer(pairIndex, inputIndex)
     }
   }
 
@@ -165,14 +212,11 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
       </div>
 
       <div className="w-full max-w-4xl mx-auto">
-        <div
-          className="relative border border-gray-700 rounded-lg overflow-hidden mb-4"
-          style={{ aspectRatio: "16/9" }}
-        >
+        <div className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-black">
           <img
             src="/images/hellmap/hellmap_full.webp"
             alt="Map with location pins"
-            className="w-full h-full object-cover"
+            className="w-full h-auto object-contain"
           />
 
           {activeConnections.map((connection, index) => (
@@ -180,8 +224,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
               key={index}
               src={connection || "/placeholder.svg"}
               alt="Connection line"
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ zIndex: 10 }}
+              className="absolute inset-0 w-full h-full object-contain"
             />
           ))}
         </div>
@@ -191,24 +234,25 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
             <div key={pairIndex} className={`p-3 rounded-lg border border-${pair.color}`}>
               <div className={`text-${pair.color} font-medium mb-2`}>{pair.colorName} Locations</div>
               <div className="grid grid-cols-2 gap-2">
-                {pair.cities.map((city, cityIndex) => (
-                  <div key={cityIndex} className="flex flex-col">
+                {pair.inputs.map((input, inputIndex) => (
+                  <div key={inputIndex} className="flex flex-col">
                     <input
                       type="text"
-                      value={city.userInput}
-                      onChange={(e) => handleInputChange(pairIndex, cityIndex, e.target.value)}
-                      onBlur={() => checkAnswer(pairIndex, cityIndex)}
-                      onKeyDown={(e) => handleKeyPress(e, pairIndex, cityIndex)}
+                      value={input.value}
+                      onChange={(e) => handleInputChange(pairIndex, inputIndex, e.target.value)}
+                      onBlur={() => checkAnswer(pairIndex, inputIndex)}
+                      onKeyDown={(e) => handleKeyPress(e, pairIndex, inputIndex)}
+                      disabled={input.isCorrect}
                       className={`px-2 py-1 text-sm rounded border ${
-                        city.userInput
-                          ? city.answered
+                        input.value
+                          ? input.isCorrect
                             ? "border-green-500 bg-green-900/30"
                             : "border-red-500 bg-red-900/30"
                           : "border-gray-600 bg-gray-800"
-                      } text-white`}
+                      } text-white ${input.isCorrect ? "opacity-75" : ""}`}
                       placeholder="City name"
                     />
-                    {city.answered && <span className="text-green-500 text-xs mt-1">Correct!</span>}
+                    {input.isCorrect && <span className="text-green-500 text-xs mt-1">Correct!</span>}
                   </div>
                 ))}
               </div>
