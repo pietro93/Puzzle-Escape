@@ -80,17 +80,15 @@ export const puzzlesSet4: Puzzle[] = [
   {
     level: 36,
     question: "The Sphinx presents you with a challenge of construction.",
-    description:
-      "Build a golden pyramid by moving the blocks through the workshops. Each block must be carved and painted before being placed at the construction site.",
+    description: "Build a pyramid by moving blocks through the workshops.",
     imageUrl: "",
     isPyramidOfHanoiPuzzle: true,
     solution: "architect",
     category: "logic",
     hints: [
-      "Follow the Tower of Hanoi rules - you can only place smaller blocks on top of larger ones.",
-      "Each block must visit both the carving workshop (P2) and the painting workshop (P3) before reaching the construction site (P4).",
+      "You can only place smaller blocks on top of larger ones.",
+      "Each block must visit both the Carving Workshop and the Painting Workshop before reaching the Construction Site.",
       "Start by moving the smallest block to make room for larger blocks.",
-      "Plan your moves carefully to avoid getting stuck with larger blocks on top.",
       "The final pyramid should have all blocks in order from largest to smallest at the construction site.",
     ],
   },
