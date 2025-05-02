@@ -6,14 +6,14 @@ export const puzzlesSet5: Puzzle[] = [
   // Level 41 - Fire Map Puzzle
   {
     level: 41,
-    question: "The Devil presents you with a map of sacred eternal flames.",
+    question: "The Devil presents you with a mysterious map.",
     description:
-      "The Devil smirks as he hands you an ancient map. 'These are the locations of sacred eternal flames. Label them correctly, and I'll reward you with knowledge.'",
+      "The Devil smirks as he hands you an ancient map. 'Identify these locations correctly, and hidden connections will be revealed.'",
     hints: [
-      "The pins mark locations of sacred eternal flames.",
-      "Try to identify the names of each location.",
-      "The symbols below some pins may provide additional clues.",
-      "When two pins of the same color have the same name, a connection will appear.",
+      "Each pin marks a location in Central Asia.",
+      "Pins of the same color are related somehow.",
+      "When you correctly identify both locations of the same color, a connection will appear.",
+      "The names may be written in different languages or scripts.",
     ],
     solution: "inferno",
     isFireMapPuzzle: true,

@@ -91,7 +91,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   // Define connection pairs
   const connectionPairs: ConnectionPair[] = [
     {
-      pin1Id: "pin8", // Siri
+      pin1Id: "pin8", // Siri/Sari
       pin2Id: "pin3", // Urgench
       overlayImage: "/images/hellmap/hellmap_sari-urgench.webp",
     },
@@ -176,12 +176,12 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
   return (
     <div className="w-full bg-gray-900 rounded-lg overflow-hidden p-4">
-      <h3 className="text-lg font-bold mb-4 text-amber-500">Sacred Fires Map</h3>
+      <h3 className="text-lg font-bold mb-4 text-amber-500">Mysterious Map</h3>
 
       <div className="mb-4 text-gray-300 text-sm">
         <p>
-          An ancient map shows the locations of sacred eternal flames. Click near each pin to label it with the correct
-          name. When pairs of locations are correctly identified, hidden connections will be revealed.
+          Identify each location on the map by entering the correct city name. When you correctly identify both
+          locations of the same color, a hidden connection will be revealed.
         </p>
       </div>
 
@@ -233,7 +233,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
                         ? pin.correctAnswers.some((a) => a.toLowerCase() === pin.userAnswer.toLowerCase())
                           ? "bg-green-600 text-white"
                           : "bg-red-600 text-white"
-                        : "bg-gray-700 text-gray-200"
+                        : `bg-${pin.color}-600 text-white`
                     }
                   `}
                 >
