@@ -83,13 +83,14 @@ export const puzzlesSet4: Puzzle[] = [
     description: "Build a pyramid by moving blocks through the workshops.",
     imageUrl: "",
     isPyramidOfHanoiPuzzle: true,
-    solution: "architect",
+    solution: "menkaure",
     category: "logic",
     hints: [
       "You can only place smaller blocks on top of larger ones.",
       "Each block must visit both the Carving Workshop and the Painting Workshop before reaching the Construction Site.",
       "Start by moving the smallest block to make room for larger blocks.",
       "The final pyramid should have all blocks in order from largest to smallest at the construction site.",
+      "The answer relates to one of the three main pyramids at Giza.",
     ],
   },
   {

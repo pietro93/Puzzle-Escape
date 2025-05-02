@@ -73,37 +73,36 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     // Total height of the pyramid (slightly more than base width)
     const totalHeight = baseWidth * 1.1
 
-    // Height of each block (proportional to total height)
-    // b5 is tallest, b1 is shortest
+    // Height of each block with specific ratios as requested
     const heightRatios = [0.1, 0.15, 0.2, 0.25, 0.3] // Sum = 1.0
 
     // Calculate the width at each level to form straight diagonal sides
     const blockDimensions = [
       {
-        // b1 (top)
+        // b1 (top) - 10% of total height
         bottomWidth: baseWidth * 0.2,
         height: totalHeight * heightRatios[0],
       },
       {
-        // b2
+        // b2 - 15% of total height
         bottomWidth: baseWidth * 0.4,
         topWidth: baseWidth * 0.2,
         height: totalHeight * heightRatios[1],
       },
       {
-        // b3
+        // b3 - 20% of total height
         bottomWidth: baseWidth * 0.6,
         topWidth: baseWidth * 0.4,
         height: totalHeight * heightRatios[2],
       },
       {
-        // b4
+        // b4 - 25% of total height
         bottomWidth: baseWidth * 0.8,
         topWidth: baseWidth * 0.6,
         height: totalHeight * heightRatios[3],
       },
       {
-        // b5 (bottom)
+        // b5 (bottom) - 30% of total height
         bottomWidth: baseWidth,
         topWidth: baseWidth * 0.8,
         height: totalHeight * heightRatios[4],
@@ -141,6 +140,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     // Color based on block state
     const bgColor = block.color === "gold" ? "#EAB308" : "#78716C"
     const borderColor = block.color === "gold" ? "#FDE68A" : "#A8A29E"
+    const shadowColor = block.color === "gold" ? "rgba(250, 204, 21, 0.6)" : "rgba(87, 83, 78, 0.6)"
 
     // For carved blocks, get precise dimensions
     const dimensions = getBlockDimensions(block.id)
@@ -157,7 +157,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               borderLeft: `${dimensions.bottomWidth / 2}px solid transparent`,
               borderRight: `${dimensions.bottomWidth / 2}px solid transparent`,
               borderBottom: `${dimensions.height}px solid ${bgColor}`,
-              filter: `drop-shadow(0px 1px 1px ${borderColor})`,
+              filter: `drop-shadow(0 4px 3px ${shadowColor})`, // Shadow only at bottom
             }}
           />
         </div>
@@ -173,7 +173,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               height: `${dimensions.height}px`,
               backgroundColor: bgColor,
               clipPath: `polygon(${(dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth - (dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
-              boxShadow: `0 1px 2px ${borderColor}`,
+              boxShadow: `0 4px 3px ${shadowColor}`, // Shadow only at bottom
             }}
           />
         </div>
@@ -187,6 +187,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             height: `${baseSize * 1.3}px`,
             backgroundColor: bgColor,
             border: `1px solid ${borderColor}`,
+            boxShadow: `0 4px 3px ${shadowColor}`, // Shadow only at bottom
           }}
         />
       )
@@ -343,7 +344,9 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
         {/* Success message */}
         {isPuzzleSolved && (
           <div className="mt-4 text-center">
-            <h3 className="text-2xl font-bold text-green-400 animate-pulse">ARCHITECT</h3>
+            <h3 className="text-2xl font-bold text-green-400 animate-pulse">
+              The Pharaoh Who Rests in the Smallest of the Three Pyramids Holds The Key
+            </h3>
           </div>
         )}
       </div>
