@@ -42,7 +42,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     {
       id: "p1",
       name: "Quarry",
-      blocks: [...initialBlocks], // Largest at bottom
+      blocks: [...initialBlocks].reverse(), // Reverse to have smallest on top
     },
     {
       id: "p2",
