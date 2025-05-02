@@ -6,10 +6,10 @@ import { useState, useEffect } from "react"
 
 type CityPair = {
   color: string
+  colorName: string
   cities: {
     name: string
     acceptableAnswers: string[]
-    position: { x: number; y: number }
     answered: boolean
     userInput: string
   }[]
@@ -18,76 +18,72 @@ type CityPair = {
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   const [cityPairs, setCityPairs] = useState<CityPair[]>([
     {
-      color: "gray",
+      color: "gray-600",
+      colorName: "Gray",
       cities: [
         {
           name: "Zhanaozen",
           acceptableAnswers: ["zhanaozen", "жаңаөзен"],
-          position: { x: 15, y: 15 },
           answered: false,
           userInput: "",
         },
         {
           name: "Mary",
           acceptableAnswers: ["mary"],
-          position: { x: 65, y: 65 },
           answered: false,
           userInput: "",
         },
       ],
     },
     {
-      color: "blue",
+      color: "blue-600",
+      colorName: "Blue",
       cities: [
         {
           name: "Kungrad",
           acceptableAnswers: ["qonirat", "qońirat", "kungrad", "кунград"],
-          position: { x: 45, y: 20 },
           answered: false,
           userInput: "",
         },
         {
           name: "Ashgabat",
           acceptableAnswers: ["ashgabat"],
-          position: { x: 45, y: 65 },
           answered: false,
           userInput: "",
         },
       ],
     },
     {
-      color: "green",
+      color: "green-600",
+      colorName: "Green",
       cities: [
         {
           name: "Urgench",
           acceptableAnswers: ["urgench", "урганч"],
-          position: { x: 60, y: 30 },
           answered: false,
           userInput: "",
         },
         {
           name: "Sari",
           acceptableAnswers: ["siri", "sari", "سارى"],
-          position: { x: 15, y: 80 },
           answered: false,
           userInput: "",
         },
       ],
     },
     {
-      color: "purple",
+      color: "purple-600",
+      colorName: "Purple",
       cities: [
         {
           name: "Navoi",
           acceptableAnswers: ["navoi", "navoiy", "навоий"],
-          position: { x: 85, y: 45 },
           answered: false,
           userInput: "",
         },
         {
           name: "Turkmenbashi",
           acceptableAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
-          position: { x: 15, y: 45 },
           answered: false,
           userInput: "",
         },
@@ -96,11 +92,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   ])
 
   const [activeConnections, setActiveConnections] = useState<string[]>([])
-  const [selectedCity, setSelectedCity] = useState<{ pairIndex: number; cityIndex: number } | null>(null)
-  const [inputValue, setInputValue] = useState("")
   const [solved, setSolved] = useState(false)
 
-  // Check if all cities are answered correctly
   useEffect(() => {
     const allAnswered = cityPairs.every((pair) => pair.cities.every((city) => city.answered))
     if (allAnswered && !solved) {
@@ -109,50 +102,34 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     }
   }, [cityPairs, solved, onSolve])
 
-  // Handle input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
+  const handleInputChange = (pairIndex: number, cityIndex: number, value: string) => {
+    const updatedCityPairs = [...cityPairs]
+    updatedCityPairs[pairIndex].cities[cityIndex].userInput = value
+    setCityPairs(updatedCityPairs)
   }
 
-  // Handle city selection
-  const handleCityClick = (pairIndex: number, cityIndex: number) => {
-    setSelectedCity({ pairIndex, cityIndex })
-    setInputValue(cityPairs[pairIndex].cities[cityIndex].userInput)
-  }
-
-  // Check answer
-  const checkAnswer = () => {
-    if (!selectedCity) return
-
-    const { pairIndex, cityIndex } = selectedCity
+  const checkAnswer = (pairIndex: number, cityIndex: number) => {
     const city = cityPairs[pairIndex].cities[cityIndex]
-    const isCorrect = city.acceptableAnswers.some((answer) => answer.toLowerCase() === inputValue.trim().toLowerCase())
+    const isCorrect = city.acceptableAnswers.some(
+      (answer) => answer.toLowerCase() === city.userInput.trim().toLowerCase(),
+    )
 
-    // Update city state
     const updatedCityPairs = [...cityPairs]
     updatedCityPairs[pairIndex].cities[cityIndex] = {
       ...city,
       answered: isCorrect,
-      userInput: inputValue.trim(),
     }
     setCityPairs(updatedCityPairs)
 
-    // Check if both cities in the pair are answered correctly
     const pair = updatedCityPairs[pairIndex]
     if (pair.cities.every((c) => c.answered)) {
-      // Add connection
       const connectionName = getConnectionName(pair.cities[0].name, pair.cities[1].name)
       if (connectionName && !activeConnections.includes(connectionName)) {
         setActiveConnections([...activeConnections, connectionName])
       }
     }
-
-    // Clear selection
-    setSelectedCity(null)
-    setInputValue("")
   }
 
-  // Get connection image name based on city names
   const getConnectionName = (city1: string, city2: string): string | null => {
     const cities = [city1.toLowerCase(), city2.toLowerCase()].sort()
 
@@ -170,13 +147,9 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     return null
   }
 
-  // Handle keyboard events
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent, pairIndex: number, cityIndex: number) => {
     if (e.key === "Enter") {
-      checkAnswer()
-    } else if (e.key === "Escape") {
-      setSelectedCity(null)
-      setInputValue("")
+      checkAnswer(pairIndex, cityIndex)
     }
   }
 
@@ -191,87 +164,62 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         </p>
       </div>
 
-      <div className="relative w-full max-w-4xl mx-auto">
-        {/* Map container */}
-        <div className="relative border border-gray-700 rounded-lg overflow-hidden" style={{ aspectRatio: "16/9" }}>
-          {/* Base map image */}
+      <div className="w-full max-w-4xl mx-auto">
+        <div
+          className="relative border border-gray-700 rounded-lg overflow-hidden mb-4"
+          style={{ aspectRatio: "16/9" }}
+        >
           <img
             src="/images/hellmap/hellmap_full.webp"
             alt="Map with location pins"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-full h-full object-cover"
           />
 
-          {/* Connection overlays */}
           {activeConnections.map((connection, index) => (
             <img
               key={index}
               src={connection || "/placeholder.svg"}
               alt="Connection line"
-              className="absolute inset-0 w-full h-full object-cover z-10"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ zIndex: 10 }}
             />
           ))}
+        </div>
 
-          {/* City markers */}
-          {cityPairs.map((pair, pairIndex) =>
-            pair.cities.map((city, cityIndex) => (
-              <div
-                key={`${pairIndex}-${cityIndex}`}
-                className="absolute z-20"
-                style={{
-                  left: `${city.position.x}%`,
-                  top: `${city.position.y}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                {/* Pin marker */}
-                <div
-                  className={`w-6 h-6 rounded-full cursor-pointer mb-1 flex items-center justify-center
-                    ${city.answered ? "bg-green-600" : pair.color === "gray" ? "bg-gray-600" : `bg-${pair.color}-600`}`}
-                  onClick={() => handleCityClick(pairIndex, cityIndex)}
-                >
-                  <div className="w-3 h-3 bg-amber-300 rounded-full"></div>
-                </div>
-
-                {/* City name input/display */}
-                <div className="relative">
-                  {selectedCity && selectedCity.pairIndex === pairIndex && selectedCity.cityIndex === cityIndex ? (
+        <div className="grid grid-cols-2 gap-4">
+          {cityPairs.map((pair, pairIndex) => (
+            <div key={pairIndex} className={`p-3 rounded-lg border border-${pair.color}`}>
+              <div className={`text-${pair.color} font-medium mb-2`}>{pair.colorName} Locations</div>
+              <div className="grid grid-cols-2 gap-2">
+                {pair.cities.map((city, cityIndex) => (
+                  <div key={cityIndex} className="flex flex-col">
                     <input
                       type="text"
-                      value={inputValue}
-                      onChange={handleInputChange}
-                      onBlur={checkAnswer}
-                      onKeyDown={handleKeyPress}
-                      className="px-2 py-1 text-xs rounded border border-gray-400 w-20 bg-gray-800 text-white"
-                      autoFocus
+                      value={city.userInput}
+                      onChange={(e) => handleInputChange(pairIndex, cityIndex, e.target.value)}
+                      onBlur={() => checkAnswer(pairIndex, cityIndex)}
+                      onKeyDown={(e) => handleKeyPress(e, pairIndex, cityIndex)}
+                      className={`px-2 py-1 text-sm rounded border ${
+                        city.userInput
+                          ? city.answered
+                            ? "border-green-500 bg-green-900/30"
+                            : "border-red-500 bg-red-900/30"
+                          : "border-gray-600 bg-gray-800"
+                      } text-white`}
+                      placeholder="City name"
                     />
-                  ) : (
-                    <div
-                      onClick={() => handleCityClick(pairIndex, cityIndex)}
-                      className={`
-                        px-2 py-1 text-xs rounded cursor-pointer text-center w-20
-                        ${
-                          city.userInput
-                            ? city.answered
-                              ? "bg-green-600 text-white"
-                              : "bg-red-600 text-white"
-                            : "bg-gray-800 text-gray-300"
-                        }
-                      `}
-                    >
-                      {city.userInput || "?"}
-                    </div>
-                  )}
-                </div>
+                    {city.answered && <span className="text-green-500 text-xs mt-1">Correct!</span>}
+                  </div>
+                ))}
               </div>
-            )),
-          )}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Success message */}
       {solved && (
         <div className="mt-4 p-2 bg-green-800 text-green-100 rounded-lg text-center">
-          All locations correctly identified! The connections reveal the word "INFERNO".
+          All locations correctly identified!
         </div>
       )}
     </div>
