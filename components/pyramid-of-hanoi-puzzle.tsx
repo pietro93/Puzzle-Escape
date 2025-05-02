@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 // Types for our blocks and pegs
 type BlockShape = "square" | "triangle" | "trapezoid"
 type BlockColor = "stone" | "gold"
-type BlockId = string // Changed to string to support dynamic block IDs
+type BlockId = "b1" | "b2" | "b3" | "b4" | "b5"
 type PegId = "p1" | "p2" | "p3" | "p4"
 
 interface Block {
@@ -28,27 +28,21 @@ interface PyramidOfHanoiPuzzleProps {
 }
 
 export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzleProps) {
-  // State for number of blocks
-  const [blockCount, setBlockCount] = useState<number>(5)
+  // Initialize blocks - all start as squares
+  const initialBlocks: Block[] = [
+    { id: "b1", size: 1, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
+    { id: "b2", size: 2, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
+    { id: "b3", size: 3, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
+    { id: "b4", size: 4, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
+    { id: "b5", size: 5, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
+  ]
 
-  // Generate blocks based on count
-  const generateBlocks = (count: number): Block[] => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: `b${i + 1}`,
-      size: i + 1,
-      shape: "square",
-      color: "stone",
-      hasVisitedP2: false,
-      hasVisitedP3: false,
-    })).reverse() // Reverse to have smallest on top
-  }
-
-  // Initialize pegs with dynamic block count
+  // Initialize pegs
   const [pegs, setPegs] = useState<Peg[]>([
     {
       id: "p1",
       name: "Quarry",
-      blocks: generateBlocks(blockCount),
+      blocks: [...initialBlocks].reverse(), // Reverse to have smallest on top
     },
     {
       id: "p2",
@@ -72,35 +66,6 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
   const [shineEffect, setShineEffect] = useState(false)
 
-  // Reset the game when block count changes
-  useEffect(() => {
-    setPegs([
-      {
-        id: "p1",
-        name: "Quarry",
-        blocks: generateBlocks(blockCount),
-      },
-      {
-        id: "p2",
-        name: "Carving Workshop",
-        blocks: [],
-      },
-      {
-        id: "p3",
-        name: "Painting Workshop",
-        blocks: [],
-      },
-      {
-        id: "p4",
-        name: "Construction Site",
-        blocks: [],
-      },
-    ])
-    setSelectedPegId(null)
-    setIsPuzzleSolved(false)
-    setShineEffect(false)
-  }, [blockCount])
-
   // Add shine effect after puzzle is solved
   useEffect(() => {
     if (isPuzzleSolved) {
@@ -110,64 +75,84 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
 
   // Calculate perfect pyramid dimensions with straight diagonal sides
   const getPyramidDimensions = () => {
-    // Base width of the largest block
-    const baseWidth = 120 - (blockCount > 5 ? (blockCount - 5) * 10 : 0) // Reduce base width for more blocks
+    // Base width of the largest block (b5)
+    const baseWidth = 120
 
     // Total height of the pyramid (slightly more than base width)
+    // Making the total height just slightly more than the base width
     const totalHeight = baseWidth * 1.1
 
-    // Calculate height ratios based on block count
-    const heightRatios = Array.from({ length: blockCount }, (_, i) => {
-      // Distribute height proportionally, with larger blocks getting more height
-      return (i + 1) / ((blockCount * (blockCount + 1)) / 2)
-    }).reverse() // Reverse to have smallest blocks with smallest ratios
+    // Height of each block with specific ratios
+    const heightRatios = [0.1, 0.15, 0.2, 0.25, 0.3] // Sum = 1.0
 
-    // Calculate block dimensions
-    const blockDimensions = Array.from({ length: blockCount }, (_, i) => {
-      const index = blockCount - i - 1 // Reverse index (largest block = 0)
-      const widthRatio = (index + 1) / blockCount // Linear decrease in width
-
-      if (i === 0) {
-        // Top block (smallest)
-        return {
-          bottomWidth: baseWidth * widthRatio,
-          height: totalHeight * heightRatios[i],
-        }
-      } else {
-        return {
-          topWidth: baseWidth * ((index + 2) / blockCount), // Width of block above
-          bottomWidth: baseWidth * widthRatio,
-          height: totalHeight * heightRatios[i],
-        }
-      }
-    })
+    // For a perfect pyramid with straight diagonal sides:
+    // If the base is 100% width, then each layer's width decreases linearly
+    // For 5 layers, the widths would be: 100%, 80%, 60%, 40%, 20%
+    const blockDimensions = [
+      {
+        // b1 (top) - 10% of total height
+        bottomWidth: baseWidth * 0.2, // 20% of base width
+        height: totalHeight * heightRatios[0],
+      },
+      {
+        // b2 - 15% of total height
+        topWidth: baseWidth * 0.2, // 20% of base width
+        bottomWidth: baseWidth * 0.4, // 40% of base width
+        height: totalHeight * heightRatios[1],
+      },
+      {
+        // b3 - 20% of total height
+        topWidth: baseWidth * 0.4, // 40% of base width
+        bottomWidth: baseWidth * 0.6, // 60% of base width
+        height: totalHeight * heightRatios[2],
+      },
+      {
+        // b4 - 25% of total height
+        topWidth: baseWidth * 0.6, // 60% of base width
+        bottomWidth: baseWidth * 0.8, // 80% of base width
+        height: totalHeight * heightRatios[3],
+      },
+      {
+        // b5 (bottom) - 30% of total height
+        topWidth: baseWidth * 0.8, // 80% of base width
+        bottomWidth: baseWidth, // 100% of base width
+        height: totalHeight * heightRatios[4],
+      },
+    ]
 
     return blockDimensions
   }
 
   // Get block dimensions based on ID
   const getBlockDimensions = (blockId: BlockId, isCarved: boolean) => {
-    // Extract the number from the block ID (e.g., "b3" -> 3)
-    const blockNumber = Number.parseInt(blockId.substring(1))
-
-    // Get the index in the dimensions array (blockNumber - 1)
-    const index = blockNumber - 1
-
-    // Get dimensions
     const dimensions = getPyramidDimensions()
+    let result;
 
-    // Check if index is valid
-    if (index < 0 || index >= dimensions.length) {
-      return { bottomWidth: 0, topWidth: 0, height: 0 }
+    switch (blockId) {
+      case "b1":
+        result = dimensions[0]
+        break
+      case "b2":
+        result = dimensions[1]
+        break
+      case "b3":
+        result = dimensions[2]
+        break
+      case "b4":
+        result = dimensions[3]
+        break
+      case "b5":
+        result = dimensions[4]
+        break
+      default:
+        return { bottomWidth: 0, topWidth: 0, height: 0 }
     }
-
-    const result = dimensions[index]
 
     // If the block is carved, halve its height
     if (isCarved) {
       return {
         ...result,
-        height: result.height * 0.5,
+        height: result.height * 0.5
       }
     }
 
@@ -176,11 +161,8 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
 
   // Get block image based on shape, size, and color
   const getBlockImage = (block: Block, pegId: PegId) => {
-    // Extract the block number for sizing
-    const blockNumber = Number.parseInt(block.id.substring(1))
-
     // Base size calculation for square blocks - made smaller
-    const baseSize = blockNumber * (10 - (blockCount > 5 ? blockCount - 5 : 0))
+    const baseSize = block.size * 10
 
     // Color based on block state
     const bgColor = block.color === "gold" ? "#EAB308" : "#78716C"
@@ -192,30 +174,28 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     const dimensions = getBlockDimensions(block.id, isCarved)
 
     // Add shine effect animation if puzzle is solved and on construction site
-    const shineAnimation =
-      shineEffect && pegId === "p4" && block.color === "gold"
-        ? {
-            position: "relative",
-            overflow: "hidden",
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              top: "-50%",
-              left: "-60%",
-              width: "20%",
-              height: "200%",
-              opacity: "0.7",
-              transform: "rotate(30deg)",
-              background:
-                "linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 100%)",
-              animation: "shine 3s infinite",
-            },
-            "@keyframes shine": {
-              "0%": { left: "-60%" },
-              "100%": { left: "160%" },
-            },
+    const shineAnimation = shineEffect && pegId === "p4" && block.color === "gold"
+      ? {
+          position: "relative",
+          overflow: "hidden",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: "-50%",
+            left: "-60%",
+            width: "20%",
+            height: "200%",
+            opacity: "0.7",
+            transform: "rotate(30deg)",
+            background: "linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.8) 50%,rgba(255,255,255,0) 100%)",
+            animation: "shine 3s infinite",
+          },
+          "@keyframes shine": {
+            "0%": { left: "-60%" },
+            "100%": { left: "160%" }
           }
-        : {}
+        }
+      : {}
 
     // Shape based on block state
     if (block.shape === "triangle") {
@@ -231,7 +211,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               borderBottom: `${dimensions.height}px solid ${bgColor}`,
               filter: `drop-shadow(0 4px 3px ${shadowColor})`, // Shadow only at bottom
               position: "relative",
-              ...(shineAnimation as any),
+              ...(shineAnimation as any)
             }}
             className={shineAnimation ? "shine-effect" : ""}
           >
@@ -298,12 +278,11 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
       )
     } else {
       // Square shape (for initial blocks) - made smaller
-      const width = baseSize * (1.3 - (blockCount > 5 ? (blockCount - 5) * 0.05 : 0))
       return (
         <div
           style={{
-            width: `${width}px`,
-            height: `${width * 0.8}px`, // Make height slightly less than width
+            width: `${baseSize * 1.3}px`,
+            height: `${baseSize * 1.3}px`,
             backgroundColor: bgColor,
             border: `1px solid ${borderColor}`,
             boxShadow: `0 4px 3px ${shadowColor}`, // Shadow only at bottom
@@ -413,7 +392,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     if (!constructionSite) return
 
     // Check if all blocks are at the construction site
-    if (constructionSite.blocks.length !== blockCount) return
+    if (constructionSite.blocks.length !== 5) return
 
     // Check if all blocks have been processed (visited P2 and P3)
     const allProcessed = constructionSite.blocks.every((block) => block.hasVisitedP2 && block.hasVisitedP3)
@@ -438,27 +417,27 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
       case "p1": // Quarry - Grey
         return {
           rod: "#6B7280", // gray-500
-          base: "#4B5563", // gray-600
+          base: "#4B5563"  // gray-600
         }
       case "p2": // Carving Workshop - Purple
         return {
           rod: "#8B5CF6", // violet-500
-          base: "#7C3AED", // violet-600
+          base: "#7C3AED"  // violet-600
         }
       case "p3": // Painting Workshop - Dark Blue
         return {
           rod: "#3B82F6", // blue-500
-          base: "#2563EB", // blue-600
+          base: "#2563EB"  // blue-600
         }
       case "p4": // Construction Site - Dark rod with golden base
         return {
           rod: "#1F2937", // Very dark gray (almost black)
-          base: "#EAB308", // Golden yellow (same as gold blocks)
+          base: "#EAB308"  // Golden yellow (same as gold blocks)
         }
       default:
         return {
           rod: "#6B7280",
-          base: "#4B5563",
+          base: "#4B5563"
         }
     }
   }
@@ -469,11 +448,10 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     if (!peg) return null
 
     const pegColors = getPegColors(pegId)
-    const bgColor =
-      pegId === "p4" ? "bg-blue-900" : pegId === "p3" ? "bg-blue-800" : pegId === "p2" ? "bg-violet-900" : "bg-gray-800"
-
-    // Calculate peg height based on block count
-    const pegHeight = 16 + blockCount * 2 // Increase height for more blocks
+    const bgColor = pegId === "p4" ? "bg-blue-900" : 
+                    pegId === "p3" ? "bg-blue-800" : 
+                    pegId === "p2" ? "bg-violet-900" : 
+                    "bg-gray-800"
 
     return (
       <div
@@ -495,18 +473,15 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             peg.name
           )}
         </h3>
-        <div className={`relative w-full h-${pegHeight}`} style={{ height: `${pegHeight * 0.25}rem` }}>
-          {/* Peg rod - dynamic height based on block count */}
-          <div
-            className="absolute left-1/2 transform -translate-x-1/2 w-2 rounded-full bottom-4"
-            style={{
-              backgroundColor: pegColors.rod,
-              height: `${(pegHeight - 4) * 0.25}rem`,
-            }}
+        <div className="relative w-full h-64">
+          {/* Peg rod - consistent height and position with custom color */}
+          <div 
+            className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 rounded-full bottom-4"
+            style={{ backgroundColor: pegColors.rod }}
           ></div>
 
           {/* Peg base - consistent position with custom color */}
-          <div
+          <div 
             className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 rounded-lg"
             style={{ backgroundColor: pegColors.base }}
           ></div>
@@ -524,34 +499,8 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     )
   }
 
-  // Block count selector
-  const renderBlockCountSelector = () => {
-    return (
-      <div className="flex justify-center mb-6">
-        <div className="bg-gray-800 p-2 rounded-lg flex space-x-2">
-          <span className="text-gray-300 mr-2 self-center">Blocks:</span>
-          {[5, 6, 7, 8].map((count) => (
-            <button
-              key={count}
-              className={`px-3 py-1 rounded ${
-                blockCount === count ? "bg-blue-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-              }`}
-              onClick={() => setBlockCount(count)}
-              disabled={isPuzzleSolved}
-            >
-              {count}
-            </button>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="w-full max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg">
-      {/* Block count selector */}
-      {renderBlockCountSelector()}
-
       {/* Game board */}
       <div className="flex flex-col space-y-8">
         {/* Pegs in 2x2 grid */}
