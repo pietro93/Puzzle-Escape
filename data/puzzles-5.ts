@@ -7,8 +7,7 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 41,
     question: "The Devil presents you with a mysterious map.",
-    description:
-      "The Devil smirks as he hands you an ancient map. 'Identify these locations correctly, and hidden connections will be revealed.'",
+    description: "",
     hints: [
       "Each pin marks a location in Central Asia.",
       "Pins of the same color are related somehow.",
