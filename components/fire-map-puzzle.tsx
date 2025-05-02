@@ -208,13 +208,13 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
       <div className="w-full max-w-4xl mx-auto">
         <div
-          className="relative border border-gray-700 rounded-lg overflow-hidden mb-4"
-          style={{ aspectRatio: "16/9" }}
+          className="relative border border-gray-700 rounded-lg overflow-hidden mb-6"
+          style={{ aspectRatio: "16/9", backgroundColor: "#f5f0e1" }}
         >
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_full-huqMDULaszlYkQmcS3mgXkvqVc6A0C.webp"
             alt="Map with location pins"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
           />
 
           {activeConnections.map((connection, index) => (
@@ -222,7 +222,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
               key={index}
               src={connection || "/placeholder.svg"}
               alt="Connection line"
-              className="absolute inset-0 w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-cover"
               style={{ zIndex: 10 }}
             />
           ))}
@@ -234,7 +234,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
               <div className={`text-${pair.color} font-medium mb-2`}>{pair.colorName} Locations</div>
               <div className="grid grid-cols-2 gap-2">
                 {pair.inputs.map((input, inputIndex) => (
-                  <div key={inputIndex} className="flex flex-col">
+                  <div key={inputIndex}>
                     <input
                       type="text"
                       value={input.value}
@@ -242,7 +242,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
                       onBlur={() => checkAnswer(pairIndex, inputIndex)}
                       onKeyDown={(e) => handleKeyPress(e, pairIndex, inputIndex)}
                       disabled={input.isCorrect}
-                      className={`px-2 py-1 text-sm rounded border ${
+                      className={`px-2 py-1 text-sm rounded border w-full ${
                         input.value
                           ? input.isCorrect
                             ? "border-green-500 bg-green-900/30"
@@ -251,7 +251,6 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
                       } text-white ${input.isCorrect ? "opacity-75" : ""}`}
                       placeholder="City name"
                     />
-                    {input.isCorrect && <span className="text-green-500 text-xs mt-1">Correct!</span>}
                   </div>
                 ))}
               </div>
