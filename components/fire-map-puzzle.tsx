@@ -209,7 +209,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
       <div className="w-full max-w-4xl mx-auto">
         <div
           className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-amber-50/90"
-          style={{ aspectRatio: "16/9" }}
+          style={{ height: "60vh", minHeight: "400px" }}
         >
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_full-huqMDULaszlYkQmcS3mgXkvqVc6A0C.webp"
