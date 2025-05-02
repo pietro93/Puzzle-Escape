@@ -135,8 +135,8 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
 
   // Get block image based on shape, size, and color
   const getBlockImage = (block: Block) => {
-    // Base size calculation for square blocks
-    const baseSize = block.size * 12
+    // Base size calculation for square blocks - made smaller
+    const baseSize = block.size * 10
 
     // Color based on block state
     const bgColor = block.color === "gold" ? "#EAB308" : "#78716C"
@@ -172,19 +172,19 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               width: `${dimensions.bottomWidth}px`,
               height: `${dimensions.height}px`,
               backgroundColor: bgColor,
-              clipPath: `polygon(0 0, ${dimensions.bottomWidth}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
+              clipPath: `polygon(${(dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth - (dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
               boxShadow: `0 1px 2px ${borderColor}`,
             }}
           />
         </div>
       )
     } else {
-      // Square shape (for initial blocks)
+      // Square shape (for initial blocks) - made smaller
       return (
         <div
           style={{
-            width: `${baseSize * 1.5}px`,
-            height: `${baseSize * 1.5}px`,
+            width: `${baseSize * 1.3}px`,
+            height: `${baseSize * 1.3}px`,
             backgroundColor: bgColor,
             border: `1px solid ${borderColor}`,
           }}
@@ -290,47 +290,37 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     }
   }
 
-  // Render the pyramid blocks at the construction site
-  const renderPyramidBlocks = (pegId: PegId) => {
+  // Render a single peg with consistent styling
+  const renderPeg = (pegId: PegId) => {
     const peg = pegs.find((p) => p.id === pegId)
     if (!peg) return null
 
-    // For the construction site, we want to render blocks in a special way
-    // to create a perfect pyramid with straight diagonal sides
-    if (pegId === "p4" && peg.blocks.length > 0) {
-      // Check if all blocks are carved and painted
-      const allProcessed = peg.blocks.every(
-        (block) =>
-          block.hasVisitedP2 && block.hasVisitedP3 && (block.shape === "triangle" || block.shape === "trapezoid"),
-      )
-
-      // If all blocks are processed and in correct order, render as a perfect pyramid
-      if (allProcessed && peg.blocks.length === 5) {
-        const sortedBlocks = [...peg.blocks].sort((a, b) => b.size - a.size)
-        const isCorrectOrder = sortedBlocks.every((block, i) => i === 0 || block.size < sortedBlocks[i - 1].size)
-
-        if (isCorrectOrder) {
-          return (
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
-              {peg.blocks.map((block) => (
-                <div key={block.id} className="mb-0">
-                  {getBlockImage(block)}
-                </div>
-              ))}
-            </div>
-          )
-        }
-      }
-    }
-
-    // Default rendering for other pegs or incomplete construction
     return (
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
-        {peg.blocks.map((block) => (
-          <div key={block.id} className="mb-1">
-            {getBlockImage(block)}
+      <div
+        className={`flex flex-col items-center p-4 rounded-lg transition-all ${
+          selectedPegId === pegId
+            ? "bg-blue-900/50 border border-blue-500"
+            : "bg-gray-800/50 hover:bg-gray-700/50 cursor-pointer"
+        }`}
+        onClick={() => handlePegClick(pegId)}
+      >
+        <h3 className="text-base font-medium text-center mb-4">{peg.name}</h3>
+        <div className="relative w-full h-64">
+          {/* Peg rod - consistent height and position */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full bottom-4"></div>
+
+          {/* Peg base - consistent position */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
+
+          {/* Blocks on this peg - stacked from bottom */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
+            {peg.blocks.map((block) => (
+              <div key={block.id} className="mb-1">
+                {getBlockImage(block)}
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     )
   }
@@ -342,108 +332,12 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
         {/* Pegs in 2x2 grid */}
         <div className="grid grid-cols-2 gap-8">
           {/* Top row */}
-          <div
-            className={`flex flex-col items-center p-4 rounded-lg transition-all ${
-              selectedPegId === "p1"
-                ? "bg-blue-900/50 border border-blue-500"
-                : "bg-gray-800/50 hover:bg-gray-700/50 cursor-pointer"
-            }`}
-            onClick={() => handlePegClick("p1")}
-          >
-            <h3 className="text-lg font-bold text-center mb-4">Quarry</h3>
-            <div className="relative w-full h-64">
-              {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
-
-              {/* Peg base */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
-
-              {/* Blocks on this peg - stacked from bottom */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
-                {pegs[0].blocks.map((block) => (
-                  <div key={block.id} className="mb-1">
-                    {getBlockImage(block)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={`flex flex-col items-center p-4 rounded-lg transition-all ${
-              selectedPegId === "p2"
-                ? "bg-blue-900/50 border border-blue-500"
-                : "bg-gray-800/50 hover:bg-gray-700/50 cursor-pointer"
-            }`}
-            onClick={() => handlePegClick("p2")}
-          >
-            <h3 className="text-lg font-bold text-center mb-4">Carving Workshop</h3>
-            <div className="relative w-full h-64">
-              {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
-
-              {/* Peg base */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
-
-              {/* Blocks on this peg - stacked from bottom */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
-                {pegs[1].blocks.map((block) => (
-                  <div key={block.id} className="mb-1">
-                    {getBlockImage(block)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          {renderPeg("p1")}
+          {renderPeg("p2")}
 
           {/* Bottom row */}
-          <div
-            className={`flex flex-col items-center p-4 rounded-lg transition-all ${
-              selectedPegId === "p3"
-                ? "bg-blue-900/50 border border-blue-500"
-                : "bg-gray-800/50 hover:bg-gray-700/50 cursor-pointer"
-            }`}
-            onClick={() => handlePegClick("p3")}
-          >
-            <h3 className="text-lg font-bold text-center mb-4">Painting Workshop</h3>
-            <div className="relative w-full h-64">
-              {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
-
-              {/* Peg base */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
-
-              {/* Blocks on this peg - stacked from bottom */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
-                {pegs[2].blocks.map((block) => (
-                  <div key={block.id} className="mb-1">
-                    {getBlockImage(block)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={`flex flex-col items-center p-4 rounded-lg transition-all ${
-              selectedPegId === "p4"
-                ? "bg-blue-900/50 border border-blue-500"
-                : "bg-gray-800/50 hover:bg-gray-700/50 cursor-pointer"
-            }`}
-            onClick={() => handlePegClick("p4")}
-          >
-            <h3 className="text-lg font-bold text-center mb-4">Construction Site</h3>
-            <div className="relative w-full h-64">
-              {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
-
-              {/* Peg base */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
-
-              {/* Blocks on this peg - stacked from bottom */}
-              {renderPyramidBlocks("p4")}
-            </div>
-          </div>
+          {renderPeg("p3")}
+          {renderPeg("p4")}
         </div>
 
         {/* Success message */}
