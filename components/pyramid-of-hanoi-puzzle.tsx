@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 // Types for our blocks and pegs
-type BlockShape = "square" | "triangle" | "rectangle"
+type BlockShape = "square" | "triangle" | "trapezoid"
 type BlockColor = "stone" | "gold"
 type BlockId = "b1" | "b2" | "b3" | "b4" | "b5"
 type PegId = "p1" | "p2" | "p3" | "p4"
@@ -67,12 +67,12 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
 
   // Get block image based on shape, size, and color
   const getBlockImage = (block: Block) => {
-    // Base size calculation
-    const baseSize = block.size * 20
+    // Base size calculation - reduced to fit better
+    const baseSize = block.size * 12
 
     // Color based on block state
-    const bgColor = block.color === "gold" ? "bg-yellow-500" : "bg-stone-500"
-    const borderColor = block.color === "gold" ? "border-yellow-300" : "border-stone-400"
+    const bgColor = block.color === "gold" ? "#EAB308" : "#78716C"
+    const borderColor = block.color === "gold" ? "#FDE68A" : "#A8A29E"
 
     // Shape based on block state
     if (block.shape === "triangle") {
@@ -80,36 +80,49 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
       return (
         <div className="flex justify-center">
           <div
-            className="relative"
             style={{
               width: 0,
               height: 0,
               borderLeft: `${baseSize}px solid transparent`,
               borderRight: `${baseSize}px solid transparent`,
-              borderBottom: `${baseSize}px solid ${block.color === "gold" ? "#EAB308" : "#78716C"}`,
+              borderBottom: `${baseSize}px solid ${bgColor}`,
+              filter: `drop-shadow(0px 1px 1px ${borderColor})`,
             }}
           />
         </div>
       )
-    } else if (block.shape === "rectangle") {
-      // Rectangle shape (for blocks after carving)
+    } else if (block.shape === "trapezoid") {
+      // Trapezoid shape (for blocks after carving)
+      // Calculate the top width as a percentage of the bottom width
+      // The larger the block, the less pronounced the taper
+      const topWidthPercent = 70 - block.size * 5
+      const bottomWidth = baseSize * 2
+      const topWidth = bottomWidth * (topWidthPercent / 100)
+      const height = baseSize * 0.8
+
       return (
-        <div
-          className={`${bgColor} ${borderColor} border mx-auto rounded-sm`}
-          style={{
-            width: baseSize * 2,
-            height: baseSize * 0.8,
-          }}
-        />
+        <div className="flex justify-center">
+          <div
+            style={{
+              position: "relative",
+              width: `${bottomWidth}px`,
+              height: `${height}px`,
+              backgroundColor: bgColor,
+              clipPath: `polygon(${(bottomWidth - topWidth) / 2}px 0, ${bottomWidth - (bottomWidth - topWidth) / 2}px 0, ${bottomWidth}px ${height}px, 0 ${height}px)`,
+              boxShadow: `0 1px 2px ${borderColor}`,
+            }}
+          />
+        </div>
       )
     } else {
       // Square shape (for initial blocks)
       return (
         <div
-          className={`${bgColor} ${borderColor} border mx-auto`}
           style={{
-            width: baseSize * 1.5,
-            height: baseSize * 1.5,
+            width: `${baseSize * 1.5}px`,
+            height: `${baseSize * 1.5}px`,
+            backgroundColor: bgColor,
+            border: `1px solid ${borderColor}`,
           }}
         />
       )
@@ -165,8 +178,8 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     // Process the block based on which peg it's moving to
     if (toPegId === "p2") {
       // Carving workshop - change shape
-      // b1 (smallest) becomes triangle, all others become rectangles
-      blockToMove.shape = blockToMove.id === "b1" ? "triangle" : "rectangle"
+      // b1 (smallest) becomes triangle, all others become trapezoids
+      blockToMove.shape = blockToMove.id === "b1" ? "triangle" : "trapezoid"
       blockToMove.hasVisitedP2 = true
     } else if (toPegId === "p3") {
       // Painting workshop - change color
@@ -229,9 +242,9 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             onClick={() => handlePegClick("p1")}
           >
             <h3 className="text-lg font-bold text-center mb-4">Quarry</h3>
-            <div className="relative w-full h-48">
+            <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-40 bg-gray-600 rounded-full"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
@@ -256,9 +269,9 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             onClick={() => handlePegClick("p2")}
           >
             <h3 className="text-lg font-bold text-center mb-4">Carving Workshop</h3>
-            <div className="relative w-full h-48">
+            <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-40 bg-gray-600 rounded-full"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
@@ -284,9 +297,9 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             onClick={() => handlePegClick("p3")}
           >
             <h3 className="text-lg font-bold text-center mb-4">Painting Workshop</h3>
-            <div className="relative w-full h-48">
+            <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-40 bg-gray-600 rounded-full"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
@@ -311,9 +324,9 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
             onClick={() => handlePegClick("p4")}
           >
             <h3 className="text-lg font-bold text-center mb-4">Construction Site</h3>
-            <div className="relative w-full h-48">
+            <div className="relative w-full h-64">
               {/* Peg rod */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-40 bg-gray-600 rounded-full"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-48 bg-gray-600 rounded-full"></div>
 
               {/* Peg base */}
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
