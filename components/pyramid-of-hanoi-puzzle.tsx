@@ -65,46 +65,69 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   const [selectedPegId, setSelectedPegId] = useState<PegId | null>(null)
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
 
-  // Calculate block dimensions for a proper pyramid
-  const getBlockDimensions = (blockId: BlockId) => {
+  // Calculate perfect pyramid dimensions
+  const getPyramidDimensions = () => {
     // Base width of the largest block (b5)
-    const baseMaxWidth = 120
+    const baseWidth = 120
 
-    // Height of each block (shorter than before)
-    const heightFactor = 0.4
+    // Total height of the pyramid (slightly more than base width)
+    const totalHeight = baseWidth * 1.1
 
-    // Calculate dimensions based on block size
+    // Height of each block (proportional to total height)
+    // b5 is tallest, b1 is shortest
+    const heightRatios = [0.1, 0.15, 0.2, 0.25, 0.3] // Sum = 1.0
+
+    // Calculate the width at each level to form straight diagonal sides
+    const blockDimensions = [
+      {
+        // b1 (top)
+        bottomWidth: baseWidth * 0.2,
+        height: totalHeight * heightRatios[0],
+      },
+      {
+        // b2
+        bottomWidth: baseWidth * 0.4,
+        topWidth: baseWidth * 0.2,
+        height: totalHeight * heightRatios[1],
+      },
+      {
+        // b3
+        bottomWidth: baseWidth * 0.6,
+        topWidth: baseWidth * 0.4,
+        height: totalHeight * heightRatios[2],
+      },
+      {
+        // b4
+        bottomWidth: baseWidth * 0.8,
+        topWidth: baseWidth * 0.6,
+        height: totalHeight * heightRatios[3],
+      },
+      {
+        // b5 (bottom)
+        bottomWidth: baseWidth,
+        topWidth: baseWidth * 0.8,
+        height: totalHeight * heightRatios[4],
+      },
+    ]
+
+    return blockDimensions
+  }
+
+  // Get block dimensions based on ID
+  const getBlockDimensions = (blockId: BlockId) => {
+    const dimensions = getPyramidDimensions()
+
     switch (blockId) {
-      case "b5": // Bottom block
-        return {
-          bottomWidth: baseMaxWidth,
-          topWidth: baseMaxWidth * 0.8,
-          height: baseMaxWidth * heightFactor,
-        }
-      case "b4":
-        return {
-          bottomWidth: baseMaxWidth * 0.8, // Match top of b5
-          topWidth: baseMaxWidth * 0.6,
-          height: baseMaxWidth * heightFactor * 0.8,
-        }
-      case "b3":
-        return {
-          bottomWidth: baseMaxWidth * 0.6, // Match top of b4
-          topWidth: baseMaxWidth * 0.4,
-          height: baseMaxWidth * heightFactor * 0.6,
-        }
+      case "b1":
+        return dimensions[0]
       case "b2":
-        return {
-          bottomWidth: baseMaxWidth * 0.4, // Match top of b3
-          topWidth: baseMaxWidth * 0.2,
-          height: baseMaxWidth * heightFactor * 0.4,
-        }
-      case "b1": // Top block (triangle)
-        return {
-          bottomWidth: baseMaxWidth * 0.2, // Match top of b2
-          topWidth: 0, // Triangle has 0 width at top
-          height: baseMaxWidth * heightFactor * 0.3,
-        }
+        return dimensions[1]
+      case "b3":
+        return dimensions[2]
+      case "b4":
+        return dimensions[3]
+      case "b5":
+        return dimensions[4]
       default:
         return { bottomWidth: 0, topWidth: 0, height: 0 }
     }
@@ -149,7 +172,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               width: `${dimensions.bottomWidth}px`,
               height: `${dimensions.height}px`,
               backgroundColor: bgColor,
-              clipPath: `polygon(${(dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth - (dimensions.bottomWidth - dimensions.topWidth) / 2}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
+              clipPath: `polygon(0 0, ${dimensions.bottomWidth}px 0, ${dimensions.bottomWidth}px ${dimensions.height}px, 0 ${dimensions.height}px)`,
               boxShadow: `0 1px 2px ${borderColor}`,
             }}
           />
@@ -267,6 +290,51 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     }
   }
 
+  // Render the pyramid blocks at the construction site
+  const renderPyramidBlocks = (pegId: PegId) => {
+    const peg = pegs.find((p) => p.id === pegId)
+    if (!peg) return null
+
+    // For the construction site, we want to render blocks in a special way
+    // to create a perfect pyramid with straight diagonal sides
+    if (pegId === "p4" && peg.blocks.length > 0) {
+      // Check if all blocks are carved and painted
+      const allProcessed = peg.blocks.every(
+        (block) =>
+          block.hasVisitedP2 && block.hasVisitedP3 && (block.shape === "triangle" || block.shape === "trapezoid"),
+      )
+
+      // If all blocks are processed and in correct order, render as a perfect pyramid
+      if (allProcessed && peg.blocks.length === 5) {
+        const sortedBlocks = [...peg.blocks].sort((a, b) => b.size - a.size)
+        const isCorrectOrder = sortedBlocks.every((block, i) => i === 0 || block.size < sortedBlocks[i - 1].size)
+
+        if (isCorrectOrder) {
+          return (
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
+              {peg.blocks.map((block) => (
+                <div key={block.id} className="mb-0">
+                  {getBlockImage(block)}
+                </div>
+              ))}
+            </div>
+          )
+        }
+      }
+    }
+
+    // Default rendering for other pegs or incomplete construction
+    return (
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
+        {peg.blocks.map((block) => (
+          <div key={block.id} className="mb-1">
+            {getBlockImage(block)}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg">
       {/* Game board */}
@@ -373,13 +441,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-gray-700 rounded-lg"></div>
 
               {/* Blocks on this peg - stacked from bottom */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col-reverse items-center">
-                {pegs[3].blocks.map((block) => (
-                  <div key={block.id} className="mb-1">
-                    {getBlockImage(block)}
-                  </div>
-                ))}
-              </div>
+              {renderPyramidBlocks("p4")}
             </div>
           </div>
         </div>
