@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 
 interface Pedestal {
@@ -11,8 +11,8 @@ interface Pedestal {
   position: { x: number; y: number }
 }
 
-// Map pedestal IDs to their positions in the layout
-const PEDESTAL_POSITIONS = {
+// Original pedestal positions
+const ORIGINAL_PEDESTAL_POSITIONS = {
   egypt: { x: 50, y: 10 }, // Top center
   sahara: { x: 10, y: 40 }, // Middle left
   hejaz: { x: 90, y: 40 }, // Middle right
@@ -35,6 +35,41 @@ const LOCATION_CODES = {
 const CORRECT_PATH_CODE = "01234510"
 
 export default function GoldenScarabPuzzle() {
+  // Create a state for pedestal positions that will be randomized
+  const [pedestalPositions, setPedestalPositions] = useState({ ...ORIGINAL_PEDESTAL_POSITIONS })
+
+  // Function to shuffle pedestal positions
+  const shufflePedestalPositions = () => {
+    // Get all position keys except 'center'
+    const positionKeys = Object.keys(ORIGINAL_PEDESTAL_POSITIONS).filter((key) => key !== "center")
+
+    // Get all position values except 'center'
+    const positionValues = positionKeys.map(
+      (key) => ORIGINAL_PEDESTAL_POSITIONS[key as keyof typeof ORIGINAL_PEDESTAL_POSITIONS],
+    )
+
+    // Shuffle the position values
+    for (let i = positionValues.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[positionValues[i], positionValues[j]] = [positionValues[j], positionValues[i]]
+    }
+
+    // Create new positions object
+    const newPositions = { ...ORIGINAL_PEDESTAL_POSITIONS }
+
+    // Assign shuffled positions to keys
+    positionKeys.forEach((key, index) => {
+      newPositions[key as keyof typeof ORIGINAL_PEDESTAL_POSITIONS] = positionValues[index]
+    })
+
+    return newPositions
+  }
+
+  // Initialize with shuffled positions
+  useEffect(() => {
+    setPedestalPositions(shufflePedestalPositions())
+  }, [])
+
   const [pedestals, setPedestals] = useState<Pedestal[]>([
     {
       id: "mali",
@@ -42,7 +77,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
       description:
         "A majestic pedestal adorned with a golden lion, symbolizing wealth and power. The base is decorated with intricate patterns reminiscent of West African art.",
-      position: PEDESTAL_POSITIONS.mali,
+      position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
       id: "sahara",
@@ -50,7 +85,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
       description:
         "A pedestal depicting a caravan of camels crossing vast sand dunes. The hieroglyphs tell stories of treacherous journeys across the scorching sands.",
-      position: PEDESTAL_POSITIONS.sahara,
+      position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
       id: "egypt",
@@ -58,7 +93,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
       description:
         "An ornate pedestal with lotus motifs and ancient symbols. The carvings speak of a civilization that revered the sacred beetle as a symbol of rebirth.",
-      position: PEDESTAL_POSITIONS.egypt,
+      position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
       id: "hejaz",
@@ -66,7 +101,7 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
       description:
         "A sacred black cube rests atop this pedestal. Golden inscriptions in an ancient script encircle its base, speaking of pilgrimages and devotion.",
-      position: PEDESTAL_POSITIONS.hejaz,
+      position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
       id: "songhai",
@@ -74,9 +109,19 @@ export default function GoldenScarabPuzzle() {
       image: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
       description:
         "A pedestal featuring a trading vessel, symbolizing commerce along great waterways. The intricate patterns suggest a realm of merchants and scholars.",
-      position: PEDESTAL_POSITIONS.songhai,
+      position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
   ])
+
+  // Update pedestal positions when pedestalPositions changes
+  useEffect(() => {
+    setPedestals((prev) =>
+      prev.map((pedestal) => ({
+        ...pedestal,
+        position: pedestalPositions[pedestal.id as keyof typeof pedestalPositions],
+      })),
+    )
+  }, [pedestalPositions])
 
   const [scarabPosition, setScarabPosition] = useState<string>("center")
   const [selectedPedestal, setSelectedPedestal] = useState<Pedestal | null>(null)
@@ -161,8 +206,8 @@ export default function GoldenScarabPuzzle() {
             scarabPosition !== "center" ? "border-2 border-dashed border-yellow-500 rounded-full w-16 h-16" : ""
           }`}
           style={{
-            left: `${PEDESTAL_POSITIONS.center.x}%`,
-            top: `${PEDESTAL_POSITIONS.center.y}%`,
+            left: `${pedestalPositions.center.x}%`,
+            top: `${pedestalPositions.center.y}%`,
             transform: "translate(-50%, -50%)",
           }}
           onClick={() => scarabPosition !== "center" && handleScarabMove("center")}
@@ -203,12 +248,12 @@ export default function GoldenScarabPuzzle() {
 
               {/* Scarab on top of pedestal */}
               {scarabPosition === pedestal.id && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/4">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <Image
                     src={scarabImageUrl || "/placeholder.svg"}
                     alt="Golden Scarab"
-                    width={48}
-                    height={48}
+                    width={64}
+                    height={64}
                     className="object-contain"
                   />
                 </div>
@@ -219,8 +264,8 @@ export default function GoldenScarabPuzzle() {
 
         {/* Render path lines */}
         {pathSegments.map((segment, index) => {
-          const fromPos = PEDESTAL_POSITIONS[segment.from as keyof typeof PEDESTAL_POSITIONS]
-          const toPos = PEDESTAL_POSITIONS[segment.to as keyof typeof PEDESTAL_POSITIONS]
+          const fromPos = pedestalPositions[segment.from as keyof typeof pedestalPositions]
+          const toPos = pedestalPositions[segment.to as keyof typeof pedestalPositions]
 
           // Calculate angle and length
           const dx = toPos.x - fromPos.x
@@ -288,21 +333,18 @@ export default function GoldenScarabPuzzle() {
           </div>
         )}
 
-        {/* Success message */}
+        {/* Success message - just the glowing text */}
         {showSuccess && (
-          <div className="absolute inset-0 bg-black/80 z-40 flex items-center justify-center">
-            <div className="bg-amber-950 border-2 border-yellow-600 rounded-lg p-6 max-w-md text-center">
-              <h3 className="text-yellow-400 text-2xl font-pixel mb-4">Path Completed!</h3>
-              <p className="text-amber-200 mb-6">
-                You have successfully traced the journey of the golden pilgrim. The words "SUBLIME SPLENDOR" appear in
-                glowing hieroglyphs.
-              </p>
-              <button
-                onClick={() => setShowSuccess(false)}
-                className="bg-yellow-700 hover:bg-yellow-600 text-yellow-100 font-pixel py-2 px-4 rounded"
-              >
-                Continue
-              </button>
+          <div className="absolute bottom-4 left-0 right-0 z-40 flex justify-center">
+            <div
+              className="text-3xl font-pixel text-center animate-pulse"
+              style={{
+                color: "#FFD700",
+                textShadow: "0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700",
+                animation: "glow 2s ease-in-out infinite alternate",
+              }}
+            >
+              SUBLIME SPLENDOR
             </div>
           </div>
         )}
@@ -313,9 +355,6 @@ export default function GoldenScarabPuzzle() {
             <p className="text-amber-200 text-sm">That is not the correct path. Try again following the hints.</p>
           </div>
         )}
-
-        {/* Debug info - remove in production */}
-        <div className="absolute bottom-0 left-0 bg-black/50 text-xs text-white p-1 z-50">Path: {pathCode}</div>
       </div>
     </div>
   )
