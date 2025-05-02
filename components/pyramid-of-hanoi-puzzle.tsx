@@ -28,7 +28,7 @@ interface PyramidOfHanoiPuzzleProps {
 }
 
 export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzleProps) {
-  // Initialize blocks
+  // Initialize blocks - all start as squares
   const initialBlocks: Block[] = [
     { id: "b1", size: 1, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
     { id: "b2", size: 2, shape: "square", color: "stone", hasVisitedP2: false, hasVisitedP3: false },
@@ -65,34 +65,54 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
   const [selectedPegId, setSelectedPegId] = useState<PegId | null>(null)
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
 
-  // Placeholder images for now
+  // Get block image based on shape, size, and color
   const getBlockImage = (block: Block) => {
+    // Base size calculation
     const baseSize = block.size * 20
-    const width = baseSize + 20
-    const height = block.shape === "triangle" ? baseSize / 2 : baseSize / 3
 
     // Color based on block state
     const bgColor = block.color === "gold" ? "bg-yellow-500" : "bg-stone-500"
+    const borderColor = block.color === "gold" ? "border-yellow-300" : "border-stone-400"
 
     // Shape based on block state
     if (block.shape === "triangle") {
+      // Triangle shape (for the top block after carving)
+      return (
+        <div className="flex justify-center">
+          <div
+            className="relative"
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: `${baseSize}px solid transparent`,
+              borderRight: `${baseSize}px solid transparent`,
+              borderBottom: `${baseSize}px solid ${block.color === "gold" ? "#EAB308" : "#78716C"}`,
+            }}
+          />
+        </div>
+      )
+    } else if (block.shape === "rectangle") {
+      // Rectangle shape (for blocks after carving)
       return (
         <div
-          className={`relative ${bgColor} mx-auto`}
+          className={`${bgColor} ${borderColor} border mx-auto rounded-sm`}
           style={{
-            width: 0,
-            height: 0,
-            borderLeft: `${width / 2}px solid transparent`,
-            borderRight: `${width / 2}px solid transparent`,
-            borderBottom: `${height}px solid ${block.color === "gold" ? "#EAB308" : "#78716C"}`,
+            width: baseSize * 2,
+            height: baseSize * 0.8,
           }}
         />
       )
-    } else if (block.shape === "rectangle") {
-      return <div className={`${bgColor} mx-auto rounded-sm`} style={{ width: width, height: height }} />
     } else {
-      // Square shape
-      return <div className={`${bgColor} mx-auto`} style={{ width: width, height: height }} />
+      // Square shape (for initial blocks)
+      return (
+        <div
+          className={`${bgColor} ${borderColor} border mx-auto`}
+          style={{
+            width: baseSize * 1.5,
+            height: baseSize * 1.5,
+          }}
+        />
+      )
     }
   }
 
@@ -145,6 +165,7 @@ export default function PyramidOfHanoiPuzzle({ onSolve }: PyramidOfHanoiPuzzlePr
     // Process the block based on which peg it's moving to
     if (toPegId === "p2") {
       // Carving workshop - change shape
+      // b1 (smallest) becomes triangle, all others become rectangles
       blockToMove.shape = blockToMove.id === "b1" ? "triangle" : "rectangle"
       blockToMove.hasVisitedP2 = true
     } else if (toPegId === "p3") {
