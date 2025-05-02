@@ -31,6 +31,7 @@ import FireMapPuzzle from "./fire-map-puzzle"
 import ColorPalettePuzzle from "./color-palette-puzzle"
 import MurderMysteryPuzzle from "./murder-mystery-puzzle"
 import GoldenScarabPuzzle from "./golden-scarab-puzzle"
+import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -143,6 +144,9 @@ export default function PuzzleContent({
 
   // Check if this is a binary switch puzzle
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
+
+  // Check if this is a pyramid of hanoi puzzle
+  const isPyramidOfHanoiPuzzle = puzzle.isPyramidOfHanoiPuzzle
 
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
@@ -497,6 +501,18 @@ export default function PuzzleContent({
               // Don't automatically solve, let the player type the answer
             }}
             onCorrectCombinationsChange={setBinaryCorrectCombinations}
+          />
+        </div>
+      ) : null}
+      {isPyramidOfHanoiPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <PyramidOfHanoiPuzzle
+            onSolve={() => {
+              // Don't automatically solve, let the player type the answer
+            }}
           />
         </div>
       ) : null}
