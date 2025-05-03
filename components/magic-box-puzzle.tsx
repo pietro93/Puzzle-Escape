@@ -188,7 +188,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         <div className="absolute left-0 top-0 h-full flex flex-col justify-around -translate-x-10">
           {sums.rows.map((sum, index) => (
             <div key={`row-left-${index}`} className="flex items-center">
-              <div className="font-pixel text-gray-400 text-xl">{sum}—</div>
+              <div className="font-pixel text-gray-400 text-xl">{sum}</div>
             </div>
           ))}
         </div>
@@ -197,7 +197,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         <div className="absolute right-0 top-0 h-full flex flex-col justify-around translate-x-10">
           {sums.rows.map((sum, index) => (
             <div key={`row-right-${index}`} className="flex items-center">
-              <div className="font-pixel text-gray-400 text-xl">—{sum}</div>
+              <div className="font-pixel text-gray-400 text-xl">{sum}</div>
             </div>
           ))}
         </div>
