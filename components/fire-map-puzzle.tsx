@@ -39,7 +39,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap/hellmap_zhanaozen-mary.webp",
+      connectionImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_zhanaozen-mary-veJaDHrUxQAEsQIvPQMkvesf7QDApG.webp", // hellmap_zhanaozen-mary
     },
     {
       color: "blue-600",
@@ -77,7 +78,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap/hellmap_sari-urgench.webp",
+      connectionImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_sari-urgench-0iEmAQWEwxGXmdrtNBrHVtuWSPpZnM.webp", // hellmap_sari-urgench
     },
     {
       color: "purple-600",
@@ -96,7 +98,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap/hellmap_navoi-turkmenbashi.webp",
+      connectionImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_navoi-turkmenbashi-R5d9ym9t3FrNcSKL3lu2dkpbid1FzU.webp", // hellmap_navoi-turkmenbashi
     },
   ])
 
@@ -194,7 +197,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         >
           {/* Base layer - City names map */}
           <img
-            src="/images/hellmap/hellmap_cities.webp"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_cities-emL12jHZ4AuxFCMkhGkM3uPbg22iX3.webp" // hellmap_cities
             alt="Map with city names"
             className="absolute inset-0 w-full h-full object-contain"
             style={{ zIndex: 1 }}
@@ -213,7 +216,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
           {/* Top layer - Pins */}
           <img
-            src="/images/hellmap/hellmap_pins.webp"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pins-V4ix4N7fC20JFfMMrzh4Fw3r4hDOsF.webp" // hellmap_pins
             alt="Location pins"
             className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
               allCitiesGuessed ? "opacity-50 grayscale" : ""
@@ -224,7 +227,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
           {/* Central pin - only appears when all cities are guessed */}
           {allCitiesGuessed && (
             <img
-              src="/images/hellmap/hellmap_central-pin.webp"
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_central-pin-oDy8nOxCTK6nQzT1bVEAOQfwcy2Huj.webp" // hellmap_central-pin
               alt="Central location pin"
               className="absolute inset-0 w-full h-full object-contain"
               style={{ zIndex: 4 }}
