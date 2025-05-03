@@ -158,17 +158,20 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   const sums = calculateSums()
 
   return (
-    <div
-      className="flex flex-col items-center justify-center p-4 relative"
-      onDragOver={handleDragOver}
-      onDrop={handleDropOutside}
-    >
+    <div className="flex flex-col items-center justify-center p-4 relative">
+      <h2 className="text-2xl font-pixel text-purple-300 mb-4">Balance the Magic Box</h2>
+
+      <p className="text-gray-300 mb-6 text-center max-w-md">
+        Arrange the numbers in the grid so that all rows, columns, and diagonals sum to the same value. Drag and drop
+        the numbers onto the grid.
+      </p>
+
       {/* Available numbers */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
+      <div className="flex flex-wrap justify-center gap-4 mb-10">
         {remainingNumbers.map(({ id, value }) => (
           <motion.div
             key={id}
-            className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-xl cursor-grab"
+            className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
             draggable={!isSolved}
             onDragStart={(e) => handleDragStart(e, id, value, false)}
             initial={{ scale: 0 }}
@@ -180,20 +183,29 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         ))}
       </div>
 
-      {/* Grid and sums */}
-      <div className="relative">
+      {/* Grid container with sums */}
+      <div className="relative" onDragOver={handleDragOver} onDrop={handleDropOutside}>
+        {/* Row sums - positioned to the left of the grid */}
+        <div className="absolute left-0 top-0 h-full flex flex-col justify-around -translate-x-10">
+          {sums.rows.map((sum, index) => (
+            <div key={`row-${index}`} className="flex items-center">
+              <div className="font-pixel text-gray-400 text-xl">{sum}—</div>
+            </div>
+          ))}
+        </div>
+
         {/* Grid */}
         <div ref={gridRef} className="grid grid-cols-3 gap-2">
           {grid.map((value, index) => (
             <div
               key={index}
-              className={`w-20 h-20 bg-amber-50 border-2 ${isSolved ? "border-green-500" : "border-gray-700"} flex items-center justify-center relative`}
+              className={`w-24 h-24 bg-amber-50 border-2 ${isSolved ? "border-green-500" : "border-gray-700"} flex items-center justify-center`}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
             >
               {value !== null && (
                 <motion.div
-                  className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-xl cursor-grab"
+                  className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
                   draggable={!isSolved}
                   onDragStart={(e) => handleDragStart(e, Date.now(), value, true, index)}
                   initial={{ scale: 0 }}
@@ -207,45 +219,28 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
           ))}
         </div>
 
-        {/* Row sums */}
-        <div className="absolute left-0 top-0 h-full flex flex-col justify-around">
-          {sums.rows.map((sum, index) => (
-            <div key={`row-${index}`} className="flex items-center">
-              <div className="w-8 text-right mr-2 font-pixel text-gray-400">{sum}—</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Column sums */}
-        <div className="absolute bottom-0 left-0 w-full flex justify-around">
+        {/* Column sums - positioned below the grid */}
+        <div className="absolute bottom-0 left-0 w-full flex justify-around translate-y-10">
           {sums.columns.map((sum, index) => (
             <div key={`col-${index}`} className="flex flex-col items-center">
-              <div className="h-8 mt-2 font-pixel text-gray-400">{sum}</div>
+              <div className="font-pixel text-gray-400 text-xl">{sum}</div>
             </div>
           ))}
         </div>
 
-        {/* Diagonal sums */}
-        <div className="absolute bottom-0 left-0">
-          <div className="relative w-full h-full">
-            <div className="absolute bottom-0 left-0 transform -translate-x-8 translate-y-8 font-pixel text-gray-400">
-              {sums.diagonals[1]}
-            </div>
-          </div>
+        {/* Diagonal sums - positioned at the corners */}
+        <div className="absolute bottom-0 left-0 -translate-x-10 translate-y-10">
+          <div className="font-pixel text-gray-400 text-xl">{sums.diagonals[1]}</div>
         </div>
 
-        <div className="absolute bottom-0 right-0">
-          <div className="relative w-full h-full">
-            <div className="absolute bottom-0 right-0 transform translate-x-8 translate-y-8 font-pixel text-gray-400">
-              {sums.diagonals[0]}
-            </div>
-          </div>
+        <div className="absolute bottom-0 right-0 translate-x-10 translate-y-10">
+          <div className="font-pixel text-gray-400 text-xl">{sums.diagonals[0]}</div>
         </div>
       </div>
 
       {/* Success message */}
       {isSolved && (
-        <div className="mt-6 text-green-400 font-pixel text-center">Perfect! The magic box is balanced.</div>
+        <div className="mt-16 text-green-400 font-pixel text-center text-xl">Perfect! The magic box is balanced.</div>
       )}
     </div>
   )
