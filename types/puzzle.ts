@@ -1,39 +1,44 @@
 export interface Puzzle {
+  id: number
   level: number
-  question: string
+  title: string
   description: string
-  imageUrl?: string
-  locationImage?: string
-  characterImage?: string
-  solution: string
-  category: string
-  hints?: string[]
-  isLibraryPuzzle?: boolean
+  hint: string
+  answer: string
+  character: string
+  location: string
+  background: string
   isInmatePuzzle?: boolean
+  isLibraryPuzzle?: boolean
   isTarotPuzzle?: boolean
+  isAnimatedGifPuzzle?: boolean
+  isZodiacPuzzle?: boolean
   isParrotPuzzle?: boolean
   isCoffeeGroundsPuzzle?: boolean
   isQuestionnairePuzzle?: boolean
   isCrystalJigsawPuzzle?: boolean
   isCrocodileJigsawPuzzle?: boolean
-  isJigsawPuzzle?: boolean
-  isZodiacPuzzle?: boolean
-  isCrystalSequencePuzzle?: boolean
   isHellJigsawPuzzle?: boolean
   isFamiliarFacesPuzzle?: boolean
-  isAnimatedGifPuzzle?: boolean
-  isEgyptianMathPuzzle?: boolean
-  isEgyptianPillarsPuzzle?: boolean
-  isPyramidPuzzle?: boolean
-  isDarkRoomPuzzle?: boolean
-  isBinarySwitchPuzzle?: boolean
-  isInfernalCasinoPuzzle?: boolean
-  isElevatorPuzzle?: boolean
+  isJigsawPuzzle?: boolean
+  isCrystalSequencePuzzle?: boolean
+  isDevilDialogue?: boolean
+  isElevatorPanel?: boolean
   isFinalJigsawPuzzle?: boolean
   isLightSwitchPuzzle?: boolean
   isFinalLevelPuzzle?: boolean
-  isDevilDialogue?: boolean
+  isInfernalCasinoPuzzle?: boolean
+  isEgyptianPillarsPuzzle?: boolean
+  isPyramidPuzzle?: boolean
   isMouthOfTruthPuzzle?: boolean
+  isBinarySwitchPuzzle?: boolean
+  isEgyptianMathPuzzle?: boolean
+  isDarkRoomPuzzle?: boolean
+  isColorPalettePuzzle?: boolean
+  isMurderMysteryPuzzle?: boolean
+  isGoldenScarabPuzzle?: boolean
+  isPyramidOfHanoiPuzzle?: boolean
   isFireMapPuzzle?: boolean
   isMagicBoxPuzzle?: boolean
+  isAnswerInput?: boolean
 }
