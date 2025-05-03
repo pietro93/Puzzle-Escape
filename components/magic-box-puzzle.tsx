@@ -159,6 +159,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
   return (
     <div className="flex flex-col items-center justify-center p-4 relative">
+      {/* Title only - no description text */}
       <h2 className="text-2xl font-pixel text-purple-300 mb-6">Balance the Magic Box</h2>
 
       {/* Numbers storage area */}
