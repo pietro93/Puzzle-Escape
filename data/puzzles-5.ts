@@ -14,7 +14,7 @@ export const puzzlesSet5: Puzzle[] = [
       "When you correctly identify both locations of the same color, a connection will appear.",
       "The names may be written in different languages or scripts.",
     ],
-    solution: "inferno",
+    solution: "gates of hell|the gates of hell",
     isFireMapPuzzle: true,
     category: "pattern",
   },

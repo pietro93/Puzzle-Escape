@@ -59,7 +59,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      // This pair doesn't have a connection line in the provided images
+      connectionImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_kungrad-ashgabat-fz1LayFBjPHIaKwt24eBWnfvFjt5e2.webp", // New kungrad-ashgabat connection
     },
     {
       color: "green-600",
@@ -99,7 +100,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
       ],
       connectionImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_navoi-turkmenbashi-R5d9ym9t3FrNcSKL3lu2dkpbid1FzU.webp", // hellmap_navoi-turkmenbashi
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_turkmenbasy-navoi-5jq3S8SucwT5wGH63XiBPn1ZZIq4Xk.webp", // Updated turkmenbasy-navoi connection
     },
   ])
 
