@@ -17,7 +17,7 @@ type CityPair = {
     isCorrect: boolean
     cityIndex: number | null
   }[]
-  connectionImage: string
+  connectionImage?: string
 }
 
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
@@ -39,7 +39,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap_zhanaozen-mary.webp",
+      connectionImage: "/images/hellmap/hellmap_zhanaozen-mary.webp",
     },
     {
       color: "blue-600",
@@ -58,7 +58,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap_kungrad-ashgabat.webp",
+      // This pair doesn't have a connection line in the provided images
     },
     {
       color: "green-600",
@@ -77,7 +77,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap_sari-urgench.webp",
+      connectionImage: "/images/hellmap/hellmap_sari-urgench.webp",
     },
     {
       color: "purple-600",
@@ -96,22 +96,17 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
-      connectionImage: "/images/hellmap_turkmenbay-navoi.webp",
+      connectionImage: "/images/hellmap/hellmap_navoi-turkmenbashi.webp",
     },
   ])
 
   const [activeConnections, setActiveConnections] = useState<string[]>([])
-  const [allPairsCorrect, setAllPairsCorrect] = useState(false)
+  const [allCitiesGuessed, setAllCitiesGuessed] = useState(false)
 
   useEffect(() => {
     const allCorrect = cityPairs.every((pair) => pair.inputs.every((input) => input.isCorrect))
-
-    setAllPairsCorrect(allCorrect)
-
-    if (allCorrect && onSolve) {
-      onSolve()
-    }
-  }, [cityPairs, onSolve])
+    setAllCitiesGuessed(allCorrect)
+  }, [cityPairs])
 
   const handleInputChange = (pairIndex: number, inputIndex: number, value: string) => {
     const updatedCityPairs = [...cityPairs]
@@ -164,10 +159,10 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
       // Check if both inputs are now correct
       const updatedPair = updatedCityPairs[pairIndex]
-      if (updatedPair.inputs.every((input) => input.isCorrect)) {
-        // Add connection
-        if (!activeConnections.includes(pair.connectionImage)) {
-          setActiveConnections([...activeConnections, pair.connectionImage])
+      if (updatedPair.inputs.every((input) => input.isCorrect) && updatedPair.connectionImage) {
+        // Add connection if it's not already active
+        if (!activeConnections.includes(updatedPair.connectionImage)) {
+          setActiveConnections([...activeConnections, updatedPair.connectionImage])
         }
       }
     } else {
@@ -197,9 +192,9 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
           className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-amber-50/90"
           style={{ height: "60vh", minHeight: "400px" }}
         >
-          {/* Base layer - City names */}
+          {/* Base layer - City names map */}
           <img
-            src="/images/hellmap_cities.webp"
+            src="/images/hellmap/hellmap_cities.webp"
             alt="Map with city names"
             className="absolute inset-0 w-full h-full object-contain"
             style={{ zIndex: 1 }}
@@ -218,18 +213,18 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
           {/* Top layer - Pins */}
           <img
-            src="/images/hellmap_pins.webp"
+            src="/images/hellmap/hellmap_pins.webp"
             alt="Location pins"
             className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
-              allPairsCorrect ? "opacity-30 grayscale" : ""
+              allCitiesGuessed ? "opacity-50 grayscale" : ""
             }`}
             style={{ zIndex: 3 }}
           />
 
-          {/* Final layer - Central pin (only shown when all pairs are correct) */}
-          {allPairsCorrect && (
+          {/* Central pin - only appears when all cities are guessed */}
+          {allCitiesGuessed && (
             <img
-              src="/images/hellmap_central-pin.webp"
+              src="/images/hellmap/hellmap_central-pin.webp"
               alt="Central location pin"
               className="absolute inset-0 w-full h-full object-contain"
               style={{ zIndex: 4 }}
