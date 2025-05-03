@@ -2,204 +2,251 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { useAudio } from "@/hooks/use-audio"
+import { useState, useEffect, useRef } from "react"
+import { motion } from "framer-motion"
 
 interface MagicBoxPuzzleProps {
-  onSolve?: () => void
-}
-
-interface GridCell {
-  value: number | null
-  id: string | null
-}
-
-interface DraggableNumber {
-  id: string
-  value: number
-  isPlaced: boolean
+  onSolve: () => void
 }
 
 export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
-  const { playSound } = useAudio()
-  const [grid, setGrid] = useState<GridCell[][]>(
-    Array(3)
-      .fill(null)
-      .map(() =>
-        Array(3)
-          .fill(null)
-          .map(() => ({ value: null, id: null })),
-      ),
-  )
+  // Available numbers to place on the grid
+  const availableNumbers = [1, 2, 2, 3, 3, 3, 4, 4, 5]
 
-  const [numbers, setNumbers] = useState<DraggableNumber[]>([
-    { id: "num-1", value: 1, isPlaced: false },
-    { id: "num-2", value: 2, isPlaced: false },
-    { id: "num-3", value: 2, isPlaced: false },
-    { id: "num-4", value: 3, isPlaced: false },
-    { id: "num-5", value: 3, isPlaced: false },
-    { id: "num-6", value: 3, isPlaced: false },
-    { id: "num-7", value: 4, isPlaced: false },
-    { id: "num-8", value: 4, isPlaced: false },
-    { id: "num-9", value: 5, isPlaced: false },
-  ])
+  // State for tracking which numbers are placed on the grid
+  const [grid, setGrid] = useState<Array<number | null>>([null, null, null, null, null, null, null, null, null])
 
+  // State for tracking which numbers are still available (not placed on grid)
+  const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number }>>([])
+
+  // State for tracking if the puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
-  const [rowSums, setRowSums] = useState<number[]>([0, 0, 0])
-  const [colSums, setColSums] = useState<number[]>([0, 0, 0])
-  const [diagSums, setDiagSums] = useState<number[]>([0, 0])
 
-  // Shuffle the numbers initially
+  // Ref for the grid element
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  // Initialize the remaining numbers with unique IDs
   useEffect(() => {
-    const shuffled = [...numbers].sort(() => Math.random() - 0.5)
-    setNumbers(shuffled)
+    const shuffled = [...availableNumbers].sort(() => Math.random() - 0.5).map((value, index) => ({ id: index, value }))
+    setRemainingNumbers(shuffled)
   }, [])
 
-  // Calculate sums whenever the grid changes
-  useEffect(() => {
-    calculateSums()
-    checkSolution()
-  }, [grid])
-
+  // Calculate sums for rows, columns, and diagonals
   const calculateSums = () => {
-    // Calculate row sums
-    const newRowSums = grid.map((row) => row.reduce((sum, cell) => sum + (cell.value || 0), 0))
+    const sums = {
+      rows: [
+        [0, 1, 2], // First row
+        [3, 4, 5], // Second row
+        [6, 7, 8], // Third row
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
 
-    // Calculate column sums
-    const newColSums = [0, 1, 2].map((colIndex) => grid.reduce((sum, row) => sum + (row[colIndex].value || 0), 0))
+      columns: [
+        [0, 3, 6], // First column
+        [1, 4, 7], // Second column
+        [2, 5, 8], // Third column
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
 
-    // Calculate diagonal sums - FIXED CALCULATION
-    // Main diagonal (top-left to bottom-right): A + E + I
-    const mainDiag = (grid[0][0].value || 0) + (grid[1][1].value || 0) + (grid[2][2].value || 0)
+      diagonals: [
+        [0, 4, 8], // Top-left to bottom-right
+        [2, 4, 6], // Top-right to bottom-left
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+    }
 
-    // Anti-diagonal (top-right to bottom-left): C + E + G
-    const antiDiag = (grid[0][2].value || 0) + (grid[1][1].value || 0) + (grid[2][0].value || 0)
-
-    setRowSums(newRowSums)
-    setColSums(newColSums)
-    setDiagSums([mainDiag, antiDiag])
+    return sums
   }
 
+  // Check if the puzzle is solved (all sums are equal and not zero)
   const checkSolution = () => {
-    // Check if all cells are filled
-    const allFilled = grid.every((row) => row.every((cell) => cell.value !== null))
-    if (!allFilled) return
+    const { rows, columns, diagonals } = calculateSums()
+    const allSums = [...rows, ...columns, ...diagonals]
+    const firstNonZeroSum = allSums.find((sum) => sum !== 0)
 
-    // Get all sums (rows, columns, diagonals)
-    const allSums = [...rowSums, ...colSums, ...diagSums]
+    if (!firstNonZeroSum) return false
 
-    // Check if all sums are equal and not zero
-    const firstSum = allSums[0]
-    const allEqual = allSums.every((sum) => sum === firstSum && sum !== 0)
+    const isSolved = allSums.every((sum) => sum === firstNonZeroSum || sum === 0)
+    const isGridFull = grid.every((cell) => cell !== null)
 
-    if (allEqual) {
-      setIsSolved(true)
-      playSound("correct")
-      if (onSolve) onSolve()
+    return isSolved && isGridFull
+  }
+
+  // Handle drag start for a number
+  const handleDragStart = (e: React.DragEvent, id: number, value: number, fromGrid: boolean, gridIndex?: number) => {
+    e.dataTransfer.setData("id", id.toString())
+    e.dataTransfer.setData("value", value.toString())
+    e.dataTransfer.setData("fromGrid", fromGrid.toString())
+    if (gridIndex !== undefined) {
+      e.dataTransfer.setData("gridIndex", gridIndex.toString())
     }
   }
 
-  const handleDragStart = (e: React.DragEvent, id: string, value: number) => {
-    if (isSolved) return
-    e.dataTransfer.setData("id", id)
-    e.dataTransfer.setData("value", value.toString())
-  }
-
+  // Handle drag over for a grid cell
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
 
-  const handleDrop = (e: React.DragEvent, rowIndex: number, colIndex: number) => {
+  // Handle drop for a grid cell
+  const handleDrop = (e: React.DragEvent, index: number) => {
     e.preventDefault()
+
     if (isSolved) return
 
-    const id = e.dataTransfer.getData("id")
+    const id = Number.parseInt(e.dataTransfer.getData("id"))
     const value = Number.parseInt(e.dataTransfer.getData("value"))
+    const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
+    const oldGridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
 
-    // Create a copy of the grid
-    const newGrid = [...grid.map((row) => [...row])]
-
-    // If there's already a number in this cell, return it to available numbers
-    if (newGrid[rowIndex][colIndex].id) {
-      const existingId = newGrid[rowIndex][colIndex].id
-      setNumbers((prev) => prev.map((num) => (num.id === existingId ? { ...num, isPlaced: false } : num)))
-    }
-
-    // Check if the number is already in the grid and remove it
-    for (let r = 0; r < 3; r++) {
-      for (let c = 0; c < 3; c++) {
-        if (newGrid[r][c].id === id) {
-          newGrid[r][c] = { value: null, id: null }
-        }
-      }
-    }
-
-    // Place the new number in the cell
-    newGrid[rowIndex][colIndex] = { value, id }
+    // If the cell already has a number, don't allow the drop
+    if (grid[index] !== null && !fromGrid) return
 
     // Update the grid
+    const newGrid = [...grid]
+
+    // If the number is coming from another grid cell, clear that cell
+    if (fromGrid) {
+      newGrid[oldGridIndex] = null
+    }
+
+    // Place the number in the new cell
+    newGrid[index] = value
+
+    // Update the remaining numbers
+    let newRemainingNumbers = [...remainingNumbers]
+
+    if (fromGrid) {
+      // If moving within the grid, no need to update remaining numbers
+    } else {
+      // Remove the number from remaining numbers
+      newRemainingNumbers = newRemainingNumbers.filter((num) => num.id !== id)
+    }
+
     setGrid(newGrid)
+    setRemainingNumbers(newRemainingNumbers)
 
-    // Update the number's placed status
-    setNumbers((prev) => prev.map((num) => (num.id === id ? { ...num, isPlaced: true } : num)))
-
-    playSound("button-click")
+    // Check if the puzzle is solved
+    setTimeout(() => {
+      const solved = checkSolution()
+      if (solved) {
+        setIsSolved(true)
+        onSolve()
+      }
+    }, 100)
   }
 
+  // Handle drop outside the grid (return to available numbers)
+  const handleDropOutside = (e: React.DragEvent) => {
+    e.preventDefault()
+
+    if (isSolved) return
+
+    const id = Number.parseInt(e.dataTransfer.getData("id"))
+    const value = Number.parseInt(e.dataTransfer.getData("value"))
+    const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
+    const gridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
+
+    if (fromGrid) {
+      // Remove the number from the grid
+      const newGrid = [...grid]
+      newGrid[gridIndex] = null
+      setGrid(newGrid)
+
+      // Add the number back to remaining numbers
+      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value }])
+    }
+  }
+
+  // Calculate the sums
+  const sums = calculateSums()
+
   return (
-    <div className="flex flex-col items-center justify-center p-4">
+    <div
+      className="flex flex-col items-center justify-center p-4 relative"
+      onDragOver={handleDragOver}
+      onDrop={handleDropOutside}
+    >
       {/* Available numbers */}
-      <div className="flex flex-wrap justify-center gap-3 mb-6">
-        {numbers.map(
-          (num) =>
-            !num.isPlaced && (
-              <div
-                key={num.id}
-                className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-black text-xl font-bold cursor-grab shadow-md"
-                draggable={!isSolved}
-                onDragStart={(e) => handleDragStart(e, num.id, num.value)}
-              >
-                {num.value}
-              </div>
-            ),
-        )}
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
+        {remainingNumbers.map(({ id, value }) => (
+          <motion.div
+            key={id}
+            className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-xl cursor-grab"
+            draggable={!isSolved}
+            onDragStart={(e) => handleDragStart(e, id, value, false)}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            {value}
+          </motion.div>
+        ))}
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        {grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
+      {/* Grid and sums */}
+      <div className="relative">
+        {/* Grid */}
+        <div ref={gridRef} className="grid grid-cols-3 gap-2">
+          {grid.map((value, index) => (
             <div
-              key={`cell-${rowIndex}-${colIndex}`}
-              className="w-16 h-16 flex items-center justify-center bg-amber-50 border border-gray-400"
+              key={index}
+              className={`w-20 h-20 bg-amber-50 border-2 ${isSolved ? "border-green-500" : "border-gray-700"} flex items-center justify-center relative`}
               onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
+              onDrop={(e) => handleDrop(e, index)}
             >
-              {cell.value !== null && (
-                <div
-                  className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-black text-xl font-bold cursor-grab shadow-md"
+              {value !== null && (
+                <motion.div
+                  className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-xl cursor-grab"
                   draggable={!isSolved}
-                  onDragStart={(e) => handleDragStart(e, cell.id!, cell.value!)}
+                  onDragStart={(e) => handleDragStart(e, Date.now(), value, true, index)}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  {cell.value}
-                </div>
+                  {value}
+                </motion.div>
               )}
             </div>
-          )),
-        )}
+          ))}
+        </div>
+
+        {/* Row sums */}
+        <div className="absolute left-0 top-0 h-full flex flex-col justify-around">
+          {sums.rows.map((sum, index) => (
+            <div key={`row-${index}`} className="flex items-center">
+              <div className="w-8 text-right mr-2 font-pixel text-gray-400">{sum}—</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Column sums */}
+        <div className="absolute bottom-0 left-0 w-full flex justify-around">
+          {sums.columns.map((sum, index) => (
+            <div key={`col-${index}`} className="flex flex-col items-center">
+              <div className="h-8 mt-2 font-pixel text-gray-400">{sum}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Diagonal sums */}
+        <div className="absolute bottom-0 left-0">
+          <div className="relative w-full h-full">
+            <div className="absolute bottom-0 left-0 transform -translate-x-8 translate-y-8 font-pixel text-gray-400">
+              {sums.diagonals[1]}
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-0 right-0">
+          <div className="relative w-full h-full">
+            <div className="absolute bottom-0 right-0 transform translate-x-8 translate-y-8 font-pixel text-gray-400">
+              {sums.diagonals[0]}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Sums display */}
-      <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="text-lg font-pixel text-amber-200">{rowSums[0]}</div>
-        <div className="text-lg font-pixel text-amber-200">{rowSums[1]}</div>
-        <div className="text-lg font-pixel text-amber-200">{rowSums[2]}</div>
-        <div className="text-lg font-pixel text-amber-200">{colSums[0]}</div>
-        <div className="text-lg font-pixel text-amber-200">{colSums[1]}</div>
-        <div className="text-lg font-pixel text-amber-200">{colSums[2]}</div>
-        <div className="text-lg font-pixel text-amber-200">{diagSums[0]}</div>
-        <div className="col-start-3 text-lg font-pixel text-amber-200">{diagSums[1]}</div>
-      </div>
+      {/* Success message */}
+      {isSolved && (
+        <div className="mt-6 text-green-400 font-pixel text-center">Perfect! The magic box is balanced.</div>
+      )}
     </div>
   )
 }

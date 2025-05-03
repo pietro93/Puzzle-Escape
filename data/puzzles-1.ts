@@ -56,20 +56,18 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 5,
-    question: "Arrange the numbers to create a magic square.",
+    question: "Balance the Magic Box",
     description:
-      "Drag and drop the numbers into the grid. Make all rows, columns, and diagonals sum to the same value.",
-    solution: "magic square",
+      "Arrange the numbers in the grid so that all rows, columns, and diagonals sum to the same value. Drag and drop the numbers onto the grid.",
+    solution: "magic|box",
     category: "logic",
     hints: [
-      "A magic square is a grid where all rows, columns, and diagonals sum to the same number.",
-      "Try placing the largest number (5) in a corner or the center.",
-      "The middle number in a 3x3 magic square is often the average of all numbers used.",
-      "The sum of each row, column, and diagonal should be the same.",
+      "Each row, column, and diagonal must sum to the same number.",
+      "Try to find what the target sum should be based on the available numbers.",
+      "The numbers 1, 2, 2, 3, 3, 3, 4, 4, 5 must all be used exactly once.",
+      "The magic sum for this puzzle is 9.",
     ],
     isMagicBoxPuzzle: true,
-    locationImage: "/images/prison-cell.webp",
-    characterImage: "/images/skeleton.webp",
   },
   {
     level: 6,
