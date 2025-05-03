@@ -96,9 +96,12 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     // Calculate column sums
     const newColSums = [0, 1, 2].map((colIndex) => grid.reduce((sum, row) => sum + (row[colIndex].value || 0), 0))
 
-    // Calculate diagonal sums
-    const mainDiag = grid.reduce((sum, row, i) => sum + (grid[i][i].value || 0), 0)
-    const antiDiag = grid.reduce((sum, row, i) => sum + (grid[i][2 - i].value || 0), 0)
+    // Calculate diagonal sums - FIXED CALCULATION
+    // Main diagonal (top-left to bottom-right)
+    const mainDiag = grid[0][0].value || 0 + (grid[1][1].value || 0) + (grid[2][2].value || 0)
+
+    // Anti-diagonal (top-right to bottom-left)
+    const antiDiag = (grid[0][2].value || 0) + (grid[1][1].value || 0) + (grid[2][0].value || 0)
 
     setRowSums(newRowSums)
     setColSums(newColSums)
