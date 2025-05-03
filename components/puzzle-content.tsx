@@ -32,6 +32,7 @@ import ColorPalettePuzzle from "./color-palette-puzzle"
 import MurderMysteryPuzzle from "./murder-mystery-puzzle"
 import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
+import MagicBoxPuzzle from "./magic-box-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -195,13 +196,26 @@ export default function PuzzleContent({
     //setBrainDialogue(dialogue);
   }
 
+  const isMagicBoxPuzzle = puzzle.isMagicBoxPuzzle
+
   return (
     <div className="bg-gray-900/80 p-5 rounded-lg mb-4 border border-gray-800 shadow-inner flex-1 backdrop-blur-sm">
       <div className="flex justify-between items-center mb-3">
         {level !== 17 && <p className="font-pixel text-lg text-purple-300 leading-relaxed">{puzzle.question}</p>}
       </div>
 
-      {isInfernalCasinoPuzzle ? (
+      {isMagicBoxPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <MagicBoxPuzzle
+            onSolve={() => {
+              // Don't automatically solve, just lock the grid
+            }}
+          />
+        </div>
+      ) : isInfernalCasinoPuzzle ? (
         <div className="my-4">
           <InfernalCasinoPuzzle
             onSolve={() => {

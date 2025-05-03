@@ -35,4 +35,5 @@ export interface Puzzle {
   isDevilDialogue?: boolean
   isMouthOfTruthPuzzle?: boolean
   isFireMapPuzzle?: boolean
+  isMagicBoxPuzzle?: boolean
 }
