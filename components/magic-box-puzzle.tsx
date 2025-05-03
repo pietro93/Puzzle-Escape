@@ -161,20 +161,28 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 p-4 bg-gray-900/80 rounded-lg">
+    <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto">
+      <h2 className="text-xl font-pixel text-purple-300 mb-2 text-center">
+        Arrange the numbers to create a magic square.
+      </h2>
+
+      <p className="text-sm font-pixel text-gray-400 mb-6 text-center">
+        Drag and drop the numbers into the grid. Make all rows, columns, and diagonals sum to the same value.
+      </p>
+
       {/* Available numbers */}
-      <div className="flex flex-wrap justify-center gap-2 mb-4">
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
         {numbers.map(
           (num) =>
             !num.isPlaced && (
               <motion.div
                 key={num.id}
-                className="w-12 h-12 rounded-full bg-cream-100 flex items-center justify-center text-black text-xl font-bold cursor-grab"
+                className="text-2xl font-pixel text-white cursor-grab"
                 draggable
                 onDragStart={(e) => handleDragStart(e, num.id, num.value)}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
               >
                 {num.value}
               </motion.div>
@@ -183,63 +191,73 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-3 gap-2">
-        {grid.map((row, rowIndex) => (
-          <div key={`row-${rowIndex}`} className="flex flex-col">
-            {row.map((cell, colIndex) => (
-              <div
-                key={`cell-${rowIndex}-${colIndex}`}
-                className={`w-20 h-20 flex items-center justify-center bg-cream-100/90 border-2 ${
-                  isSolved ? "border-green-500" : "border-gray-400"
-                }`}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
-              >
-                {cell.value !== null && (
-                  <motion.div
-                    className="w-12 h-12 rounded-full bg-cream-100 flex items-center justify-center text-black text-xl font-bold cursor-grab"
-                    draggable={!isSolved}
-                    onDragStart={(e) => {
-                      if (isSolved) return
-                      handleDragStart(e, cell.id!, cell.value!)
-                      handleRemoveFromGrid(e, rowIndex, colIndex)
-                    }}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  >
-                    {cell.value}
-                  </motion.div>
-                )}
-              </div>
-            ))}
-            {/* Row sum */}
-            <div className="flex items-center h-20 pl-2">
-              <span className="text-xl font-pixel text-gray-400">{rowSums[rowIndex]}</span>
-              <span className="text-xl font-pixel text-gray-600 ml-1">—</span>
+      <div className="relative">
+        <div className="grid grid-cols-3 gap-1">
+          {grid.map((row, rowIndex) => (
+            <div key={`row-${rowIndex}`} className="flex flex-col">
+              {row.map((cell, colIndex) => (
+                <div
+                  key={`cell-${rowIndex}-${colIndex}`}
+                  className={`w-24 h-24 flex items-center justify-center border border-gray-400 ${
+                    isSolved ? "border-green-500" : ""
+                  }`}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
+                >
+                  {cell.value !== null && (
+                    <motion.div
+                      className="text-2xl font-pixel text-white cursor-grab"
+                      draggable={!isSolved}
+                      onDragStart={(e) => {
+                        if (isSolved) return
+                        handleDragStart(e, cell.id!, cell.value!)
+                        handleRemoveFromGrid(e, rowIndex, colIndex)
+                      }}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    >
+                      {cell.value}
+                    </motion.div>
+                  )}
+                </div>
+              ))}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Row sums */}
+        <div className="absolute left-0 top-0 h-full flex flex-col justify-around">
+          {rowSums.map((sum, index) => (
+            <div key={`row-sum-${index}`} className="h-24 flex items-center -ml-8">
+              <span className="text-lg font-pixel text-gray-400">{sum}</span>
+              <span className="text-lg font-pixel text-gray-600 ml-1">—</span>
+            </div>
+          ))}
+        </div>
 
         {/* Column sums */}
-        <div className="absolute mt-[380px] flex">
+        <div className="absolute bottom-0 left-0 w-full flex justify-around">
           {colSums.map((sum, index) => (
-            <div key={`col-sum-${index}`} className="w-20 flex justify-center items-center">
-              <span className="text-xl font-pixel text-gray-400">{sum}</span>
+            <div key={`col-sum-${index}`} className="flex flex-col items-center -mb-8">
+              <span className="text-lg font-pixel text-gray-600">|</span>
+              <span className="text-lg font-pixel text-gray-400">{sum}</span>
             </div>
           ))}
         </div>
 
         {/* Diagonal sums */}
-        <div className="absolute mt-[380px] ml-[-20px]">
-          <span className="text-xl font-pixel text-gray-400">{diagSums[0]}</span>
+        <div className="absolute -bottom-8 -left-8">
+          <span className="text-lg font-pixel text-gray-400">{diagSums[0]}</span>
         </div>
-        <div className="absolute mt-[380px] ml-[280px]">
-          <span className="text-xl font-pixel text-gray-400">{diagSums[1]}</span>
+        <div className="absolute -bottom-8 -right-8">
+          <span className="text-lg font-pixel text-gray-400">{diagSums[1]}</span>
         </div>
       </div>
 
-      {isSolved && <div className="mt-4 text-green-400 font-pixel text-lg animate-pulse">Magic square completed!</div>}
+      <div className="mt-12 text-sm font-pixel text-gray-400 text-center max-w-xs">
+        Drag and drop the numbers into the grid. Make all rows, columns, and diagonals sum to the same value.
+      </div>
     </div>
   )
 }
