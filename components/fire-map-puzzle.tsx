@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 
 type City = {
@@ -18,6 +17,7 @@ type CityPair = {
     isCorrect: boolean
     cityIndex: number | null
   }[]
+  connectionImage: string
 }
 
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
@@ -39,6 +39,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
+      connectionImage: "/images/hellmap_zhanaozen-mary.webp",
     },
     {
       color: "blue-600",
@@ -57,6 +58,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
+      connectionImage: "/images/hellmap_kungrad-ashgabat.webp",
     },
     {
       color: "green-600",
@@ -75,6 +77,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
+      connectionImage: "/images/hellmap_sari-urgench.webp",
     },
     {
       color: "purple-600",
@@ -93,20 +96,22 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         { value: "", isCorrect: false, cityIndex: null },
         { value: "", isCorrect: false, cityIndex: null },
       ],
+      connectionImage: "/images/hellmap_turkmenbay-navoi.webp",
     },
   ])
 
   const [activeConnections, setActiveConnections] = useState<string[]>([])
-  const [solved, setSolved] = useState(false)
+  const [allPairsCorrect, setAllPairsCorrect] = useState(false)
 
   useEffect(() => {
     const allCorrect = cityPairs.every((pair) => pair.inputs.every((input) => input.isCorrect))
 
-    if (allCorrect && !solved) {
-      setSolved(true)
-      if (onSolve) onSolve()
+    setAllPairsCorrect(allCorrect)
+
+    if (allCorrect && onSolve) {
+      onSolve()
     }
-  }, [cityPairs, solved, onSolve])
+  }, [cityPairs, onSolve])
 
   const handleInputChange = (pairIndex: number, inputIndex: number, value: string) => {
     const updatedCityPairs = [...cityPairs]
@@ -161,10 +166,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
       const updatedPair = updatedCityPairs[pairIndex]
       if (updatedPair.inputs.every((input) => input.isCorrect)) {
         // Add connection
-        const connectionName = getConnectionName(updatedPair.cities[0].name, updatedPair.cities[1].name)
-
-        if (connectionName && !activeConnections.includes(connectionName)) {
-          setActiveConnections([...activeConnections, connectionName])
+        if (!activeConnections.includes(pair.connectionImage)) {
+          setActiveConnections([...activeConnections, pair.connectionImage])
         }
       }
     } else {
@@ -177,23 +180,6 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     }
 
     setCityPairs(updatedCityPairs)
-  }
-
-  const getConnectionName = (city1: string, city2: string): string | null => {
-    const cities = [city1.toLowerCase(), city2.toLowerCase()].sort()
-
-    if ((cities.includes("sari") || cities.includes("siri")) && cities.includes("urgench")) {
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_sari-urgench-qluZPYpZ8QhiDH5u48EsaZIDdfGCvb.webp"
-    }
-
-    if (
-      (cities.includes("turkmenbashi") || cities.includes("turkmenbasy")) &&
-      (cities.includes("navoi") || cities.includes("navoiy"))
-    ) {
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_turkmenbay-navoi-pIB68Ro4JoXe2QG0Py0i3KKcmJr4OP.webp"
-    }
-
-    return null
   }
 
   const handleKeyPress = (e: React.KeyboardEvent, pairIndex: number, inputIndex: number) => {
@@ -211,21 +197,44 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
           className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-amber-50/90"
           style={{ height: "60vh", minHeight: "400px" }}
         >
+          {/* Base layer - City names */}
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_full-huqMDULaszlYkQmcS3mgXkvqVc6A0C.webp"
-            alt="Map with location pins"
-            className="w-full h-full object-contain"
+            src="/images/hellmap_cities.webp"
+            alt="Map with city names"
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{ zIndex: 1 }}
           />
 
+          {/* Middle layer - Connection lines */}
           {activeConnections.map((connection, index) => (
             <img
               key={index}
               src={connection || "/placeholder.svg"}
               alt="Connection line"
               className="absolute inset-0 w-full h-full object-contain"
-              style={{ zIndex: 10 }}
+              style={{ zIndex: 2 }}
             />
           ))}
+
+          {/* Top layer - Pins */}
+          <img
+            src="/images/hellmap_pins.webp"
+            alt="Location pins"
+            className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
+              allPairsCorrect ? "opacity-30 grayscale" : ""
+            }`}
+            style={{ zIndex: 3 }}
+          />
+
+          {/* Final layer - Central pin (only shown when all pairs are correct) */}
+          {allPairsCorrect && (
+            <img
+              src="/images/hellmap_central-pin.webp"
+              alt="Central location pin"
+              className="absolute inset-0 w-full h-full object-contain"
+              style={{ zIndex: 4 }}
+            />
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -258,12 +267,6 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
           ))}
         </div>
       </div>
-
-      {solved && (
-        <div className="mt-4 p-2 bg-green-800 text-green-100 rounded-lg text-center">
-          All locations correctly identified!
-        </div>
-      )}
     </div>
   )
 }
