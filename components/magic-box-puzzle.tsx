@@ -10,15 +10,35 @@ interface MagicBoxPuzzleProps {
   onSolve: () => void
 }
 
+// Define a mapping between numbers and their image paths
+interface NumberImageMap {
+  [key: number]: {
+    path: string
+    alt: string
+    count: number
+  }
+}
+
 export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // Available numbers to place on the grid
   const availableNumbers = [1, 2, 2, 3, 3, 3, 4, 4, 5]
+
+  // Mapping between numbers and their image paths
+  const numberImageMap: NumberImageMap = {
+    1: { path: "/images/magicbox-1.webp", alt: "Number 1", count: 0 },
+    2: { path: "/images/magicbox-2.webp", alt: "Number 2", count: 0 },
+    "2-2": { path: "/images/magicbox-2-2.webp", alt: "Number 2 (alternate)", count: 0 },
+    3: { path: "/images/magicbox-3.webp", alt: "Number 3", count: 0 },
+    4: { path: "/images/magicbox-4.webp", alt: "Number 4", count: 0 },
+    "4-2": { path: "/images/magicbox-4-2.webp", alt: "Number 4 (alternate)", count: 0 },
+    5: { path: "/images/magicbox-5.webp", alt: "Number 5", count: 0 },
+  }
 
   // State for tracking which numbers are placed on the grid
   const [grid, setGrid] = useState<Array<number | null>>([null, null, null, null, null, null, null, null, null])
 
   // State for tracking which numbers are still available (not placed on grid)
-  const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number }>>([])
+  const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number; variant?: string }>>([])
 
   // State for tracking if the puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
@@ -29,9 +49,36 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // Ref for the grid element
   const gridRef = useRef<HTMLDivElement>(null)
 
-  // Initialize the remaining numbers with unique IDs
+  // Initialize the remaining numbers with unique IDs and variants
   useEffect(() => {
-    const shuffled = [...availableNumbers].sort(() => Math.random() - 0.5).map((value, index) => ({ id: index, value }))
+    const initialNumbers = []
+
+    // Add each number with appropriate variant
+    for (const num of availableNumbers) {
+      if (num === 2) {
+        // For the two 2s, use different variants
+        if (numberImageMap[2].count === 0) {
+          initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "2" })
+          numberImageMap[2].count++
+        } else {
+          initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "2-2" })
+        }
+      } else if (num === 4) {
+        // For the two 4s, use different variants
+        if (numberImageMap[4].count === 0) {
+          initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "4" })
+          numberImageMap[4].count++
+        } else {
+          initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "4-2" })
+        }
+      } else {
+        // For other numbers, use the standard variant
+        initialNumbers.push({ id: Date.now() + Math.random(), value: num })
+      }
+    }
+
+    // Shuffle the numbers
+    const shuffled = initialNumbers.sort(() => Math.random() - 0.5)
     setRemainingNumbers(shuffled)
   }, [])
 
@@ -60,9 +107,17 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   }
 
   // Handle drag start for a number
-  const handleDragStart = (e: React.DragEvent, id: number, value: number, fromGrid: boolean, gridIndex?: number) => {
+  const handleDragStart = (
+    e: React.DragEvent,
+    id: number,
+    value: number,
+    variant: string | undefined,
+    fromGrid: boolean,
+    gridIndex?: number,
+  ) => {
     e.dataTransfer.setData("id", id.toString())
     e.dataTransfer.setData("value", value.toString())
+    e.dataTransfer.setData("variant", variant || value.toString())
     e.dataTransfer.setData("fromGrid", fromGrid.toString())
     if (gridIndex !== undefined) {
       e.dataTransfer.setData("gridIndex", gridIndex.toString())
@@ -82,6 +137,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
     const id = Number.parseInt(e.dataTransfer.getData("id"))
     const value = Number.parseInt(e.dataTransfer.getData("value"))
+    const variant = e.dataTransfer.getData("variant")
     const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
     const oldGridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
 
@@ -122,7 +178,9 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
 
     if (fromGrid) {
+      const id = Number.parseInt(e.dataTransfer.getData("id"))
       const value = Number.parseInt(e.dataTransfer.getData("value"))
+      const variant = e.dataTransfer.getData("variant")
       const gridIndex = Number.parseInt(e.dataTransfer.getData("gridIndex"))
 
       // Remove the number from the grid
@@ -131,8 +189,16 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
       setGrid(newGrid)
 
       // Add the number back to remaining numbers
-      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value }])
+      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value, variant }])
     }
+  }
+
+  // Get the image path for a number
+  const getImagePath = (value: number, variant?: string) => {
+    if (variant && numberImageMap[variant]) {
+      return numberImageMap[variant].path
+    }
+    return numberImageMap[value]?.path || ""
   }
 
   // Get the image for a flipped cell
@@ -224,17 +290,23 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         onDragOver={handleDragOver}
         onDrop={handleDropOutside}
       >
-        {remainingNumbers.map(({ id, value }) => (
+        {remainingNumbers.map(({ id, value, variant }) => (
           <motion.div
             key={id}
-            className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
+            className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold cursor-grab overflow-hidden"
             draggable={!isSolved}
-            onDragStart={(e) => handleDragStart(e, id, value, false)}
+            onDragStart={(e) => handleDragStart(e, id, value, variant, false)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            {value}
+            <Image
+              src={getImagePath(value, variant) || "/placeholder.svg"}
+              alt={`Number ${value}`}
+              width={40}
+              height={40}
+              className="object-contain"
+            />
           </motion.div>
         ))}
       </div>
@@ -295,39 +367,54 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
         {/* Grid */}
         <div ref={gridRef} className="grid grid-cols-3 gap-2">
-          {grid.map((value, index) => (
-            <div
-              key={index}
-              className={`w-24 h-24 bg-amber-50 border-2 ${
-                isSolved ? "border-green-500" : "border-gray-700"
-              } flex items-center justify-center relative overflow-hidden`}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, index)}
-            >
-              {flippedCells.includes(index) ? (
-                <div className="w-full h-full flex items-center justify-center bg-white">
-                  <Image
-                    src={getImageForPosition(index) || "/placeholder.svg"}
-                    alt=""
-                    width={100}
-                    height={100}
-                    className="object-contain"
-                    priority
-                  />
-                </div>
-              ) : (
-                value !== null && (
-                  <div
-                    className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
-                    draggable={!isSolved && value !== null}
-                    onDragStart={(e) => value !== null && handleDragStart(e, Date.now(), value, true, index)}
-                  >
-                    {value}
+          {grid.map((value, index) => {
+            // Find the corresponding item in remainingNumbers to get the variant
+            const gridItem = remainingNumbers.find(
+              (item) => item.value === value && !grid.some((v, i) => i !== index && v === value),
+            )
+
+            return (
+              <div
+                key={index}
+                className={`w-24 h-24 bg-amber-50 border-2 ${
+                  isSolved ? "border-green-500" : "border-gray-700"
+                } flex items-center justify-center relative overflow-hidden`}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, index)}
+              >
+                {flippedCells.includes(index) ? (
+                  <div className="w-full h-full flex items-center justify-center bg-white">
+                    <Image
+                      src={getImageForPosition(index) || "/placeholder.svg"}
+                      alt=""
+                      width={100}
+                      height={100}
+                      className="object-contain"
+                      priority
+                    />
                   </div>
-                )
-              )}
-            </div>
-          ))}
+                ) : (
+                  value !== null && (
+                    <div
+                      className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
+                      draggable={!isSolved && value !== null}
+                      onDragStart={(e) =>
+                        value !== null && handleDragStart(e, Date.now(), value, gridItem?.variant, true, index)
+                      }
+                    >
+                      <Image
+                        src={getImagePath(value, gridItem?.variant) || "/placeholder.svg"}
+                        alt={`Number ${value}`}
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
