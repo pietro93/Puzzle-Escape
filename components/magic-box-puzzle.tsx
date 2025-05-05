@@ -23,11 +23,8 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // State for tracking if the puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
 
-  // State for tracking which cells contain the three 3s
-  const [threePositions, setThreePositions] = useState<number[]>([])
-
-  // State for tracking if the cells have been flipped
-  const [flippedCells, setFlippedCells] = useState<boolean[]>(Array(9).fill(false))
+  // State for tracking which cells have been flipped
+  const [flippedCells, setFlippedCells] = useState<number[]>([])
 
   // Ref for the grid element
   const gridRef = useRef<HTMLDivElement>(null)
@@ -60,46 +57,6 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
 
     return sums
-  }
-
-  // Check if the puzzle is solved (all sums are equal to 9)
-  const checkSolution = () => {
-    // Check if the grid is full
-    if (grid.some((cell) => cell === null)) return false
-
-    const { rows, columns, diagonals } = calculateSums()
-
-    // Check if all rows, columns, and diagonals sum to 9
-    const allSums = [...rows, ...columns, ...diagonals]
-    return allSums.every((sum) => sum === 0 || sum === 9)
-  }
-
-  // Find the positions of the three 3s
-  const findThreePositions = () => {
-    // Check rows
-    for (let i = 0; i < 3; i++) {
-      const rowStart = i * 3
-      if (grid[rowStart] === 3 && grid[rowStart + 1] === 3 && grid[rowStart + 2] === 3) {
-        return [rowStart, rowStart + 1, rowStart + 2]
-      }
-    }
-
-    // Check columns
-    for (let i = 0; i < 3; i++) {
-      if (grid[i] === 3 && grid[i + 3] === 3 && grid[i + 6] === 3) {
-        return [i, i + 3, i + 6]
-      }
-    }
-
-    // Check diagonals
-    if (grid[0] === 3 && grid[4] === 3 && grid[8] === 3) {
-      return [0, 4, 8]
-    }
-    if (grid[2] === 3 && grid[4] === 3 && grid[6] === 3) {
-      return [2, 4, 6]
-    }
-
-    return []
   }
 
   // Handle drag start for a number
@@ -154,45 +111,6 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
     setGrid(newGrid)
     setRemainingNumbers(newRemainingNumbers)
-
-    // Check if the puzzle is solved after the grid update
-    setTimeout(() => {
-      const solved = checkSolution()
-      if (solved) {
-        setIsSolved(true)
-        onSolve()
-
-        // Find positions of three 3s
-        const positions = findThreePositions()
-        console.log("Three 3s positions:", positions)
-
-        if (positions.length === 3) {
-          setThreePositions(positions)
-
-          // Flip cells one by one
-          setTimeout(() => {
-            const newFlipped = Array(9).fill(false)
-            newFlipped[positions[0]] = true
-            setFlippedCells(newFlipped)
-
-            setTimeout(() => {
-              const newFlipped = Array(9).fill(false)
-              newFlipped[positions[0]] = true
-              newFlipped[positions[1]] = true
-              setFlippedCells(newFlipped)
-
-              setTimeout(() => {
-                const newFlipped = Array(9).fill(false)
-                newFlipped[positions[0]] = true
-                newFlipped[positions[1]] = true
-                newFlipped[positions[2]] = true
-                setFlippedCells(newFlipped)
-              }, 500)
-            }, 500)
-          }, 500)
-        }
-      }
-    }, 100)
   }
 
   // Handle drop outside the grid (return to available numbers)
@@ -218,25 +136,83 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   }
 
   // Get the image for a flipped cell
-  const getImageForPosition = (position: number) => {
-    const index = threePositions.indexOf(position)
-    if (index === 0) return "/images/magicbox-blood.webp"
-    if (index === 1) return "/images/magicbox-shot.webp"
-    if (index === 2) return "/images/magicbox-ice.webp"
+  const getImageForPosition = (index: number) => {
+    const position = flippedCells.indexOf(index)
+    if (position === 0) return "/images/magicbox-blood.webp"
+    if (position === 1) return "/images/magicbox-shot.webp"
+    if (position === 2) return "/images/magicbox-ice.webp"
     return ""
   }
 
   // Calculate the sums
   const sums = calculateSums()
 
-  // Debug: Log when the grid changes to help diagnose issues
+  // Check for solution and three 3s whenever the grid changes
   useEffect(() => {
-    if (grid.every((cell) => cell !== null)) {
-      console.log("Grid is full:", grid)
-      console.log("Is solved:", checkSolution())
-      console.log("Three 3s positions:", findThreePositions())
+    // Only check if all cells are filled
+    if (grid.some((cell) => cell === null)) return
+
+    // Check if all rows, columns, and diagonals sum to 9
+    const { rows, columns, diagonals } = calculateSums()
+    const allSums = [...rows, ...columns, ...diagonals]
+    const isMagicSquare = allSums.every((sum) => sum === 0 || sum === 9)
+
+    if (!isMagicSquare) return
+
+    // Check for three 3s in a row, column, or diagonal
+    const lines = [
+      [0, 1, 2], // First row
+      [3, 4, 5], // Second row
+      [6, 7, 8], // Third row
+      [0, 3, 6], // First column
+      [1, 4, 7], // Second column
+      [2, 5, 8], // Third column
+      [0, 4, 8], // Top-left to bottom-right diagonal
+      [2, 4, 6], // Top-right to bottom-left diagonal
+    ]
+
+    for (const line of lines) {
+      if (line.every((index) => grid[index] === 3)) {
+        // Found three 3s in a line
+        setIsSolved(true)
+        onSolve()
+
+        // Flip cells one by one
+        setTimeout(() => {
+          setFlippedCells([line[0]])
+
+          setTimeout(() => {
+            setFlippedCells([line[0], line[1]])
+
+            setTimeout(() => {
+              setFlippedCells([line[0], line[1], line[2]])
+            }, 500)
+          }, 500)
+        }, 500)
+
+        return
+      }
     }
-  }, [grid])
+
+    // Special case: check for middle row specifically (indices 3, 4, 5)
+    if (grid[3] === 3 && grid[4] === 3 && grid[5] === 3) {
+      setIsSolved(true)
+      onSolve()
+
+      // Flip cells one by one
+      setTimeout(() => {
+        setFlippedCells([3])
+
+        setTimeout(() => {
+          setFlippedCells([3, 4])
+
+          setTimeout(() => {
+            setFlippedCells([3, 4, 5])
+          }, 500)
+        }, 500)
+      }, 500)
+    }
+  }, [grid, onSolve])
 
   return (
     <div className="flex flex-col items-center justify-center p-4 relative">
@@ -328,7 +304,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
             >
-              {flippedCells[index] ? (
+              {flippedCells.includes(index) ? (
                 <div className="w-full h-full flex items-center justify-center">
                   <Image
                     src={getImageForPosition(index) || "/placeholder.svg"}
