@@ -58,7 +58,7 @@ export const puzzlesSet1: Puzzle[] = [
     level: 5,
     question: "Balance the Magic Box",
     description:
-      "Arrange the numbers in the grid so that all rows, columns, and diagonals sum to the same value. Drag and drop the numbers onto the grid.",
+      "",
     solution: "magic|box",
     category: "logic",
     hints: [
