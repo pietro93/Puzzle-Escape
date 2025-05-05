@@ -56,10 +56,10 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 5,
-    question: "Balance the Magic Box",
+    question: "You think these puzzles are easy? Ha! I present you: the magic box.",
     description:
       "",
-    solution: "magic|box",
+    solution: "bloodshoot eyes",
     category: "logic",
     hints: [
       "Each row, column, and diagonal must sum to the same number.",
