@@ -62,42 +62,44 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     return sums
   }
 
+  // Check if the puzzle is solved (all sums are equal to 9)
+  const checkSolution = () => {
+    // Check if the grid is full
+    if (grid.some((cell) => cell === null)) return false
+
+    const { rows, columns, diagonals } = calculateSums()
+
+    // Check if all rows, columns, and diagonals sum to 9
+    const allSums = [...rows, ...columns, ...diagonals]
+    return allSums.every((sum) => sum === 0 || sum === 9)
+  }
+
   // Find the positions of the three 3s
   const findThreePositions = () => {
-    // Define all possible lines (rows, columns, diagonals)
-    const lines = [
-      [0, 1, 2], // First row
-      [3, 4, 5], // Second row
-      [6, 7, 8], // Third row
-      [0, 3, 6], // First column
-      [1, 4, 7], // Second column
-      [2, 5, 8], // Third column
-      [0, 4, 8], // Top-left to bottom-right diagonal
-      [2, 4, 6], // Top-right to bottom-left diagonal
-    ]
-
-    // Check each line for three 3s
-    for (const line of lines) {
-      if (line.every((index) => grid[index] === 3)) {
-        return line
+    // Check rows
+    for (let i = 0; i < 3; i++) {
+      const rowStart = i * 3
+      if (grid[rowStart] === 3 && grid[rowStart + 1] === 3 && grid[rowStart + 2] === 3) {
+        return [rowStart, rowStart + 1, rowStart + 2]
       }
     }
 
+    // Check columns
+    for (let i = 0; i < 3; i++) {
+      if (grid[i] === 3 && grid[i + 3] === 3 && grid[i + 6] === 3) {
+        return [i, i + 3, i + 6]
+      }
+    }
+
+    // Check diagonals
+    if (grid[0] === 3 && grid[4] === 3 && grid[8] === 3) {
+      return [0, 4, 8]
+    }
+    if (grid[2] === 3 && grid[4] === 3 && grid[6] === 3) {
+      return [2, 4, 6]
+    }
+
     return []
-  }
-
-  // Check if the puzzle is solved (all sums are equal and not zero)
-  const checkSolution = () => {
-    const { rows, columns, diagonals } = calculateSums()
-    const allSums = [...rows, ...columns, ...diagonals]
-    const firstNonZeroSum = allSums.find((sum) => sum !== 0)
-
-    if (!firstNonZeroSum) return false
-
-    const isSolved = allSums.every((sum) => sum === firstNonZeroSum || sum === 0)
-    const isGridFull = grid.every((cell) => cell !== null)
-
-    return isSolved && isGridFull
   }
 
   // Handle drag start for a number
@@ -153,40 +155,38 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     setGrid(newGrid)
     setRemainingNumbers(newRemainingNumbers)
 
-    // Check if the puzzle is solved
+    // Check if the puzzle is solved after the grid update
     setTimeout(() => {
       const solved = checkSolution()
       if (solved) {
         setIsSolved(true)
         onSolve()
 
-        // Find the positions of the three 3s
+        // Find positions of three 3s
         const positions = findThreePositions()
+        console.log("Three 3s positions:", positions)
 
         if (positions.length === 3) {
           setThreePositions(positions)
 
-          // Flip the cells one by one with a delay
+          // Flip cells one by one
           setTimeout(() => {
-            setFlippedCells((prev) => {
-              const newState = [...prev]
-              newState[positions[0]] = true
-              return newState
-            })
+            const newFlipped = Array(9).fill(false)
+            newFlipped[positions[0]] = true
+            setFlippedCells(newFlipped)
 
             setTimeout(() => {
-              setFlippedCells((prev) => {
-                const newState = [...prev]
-                newState[positions[1]] = true
-                return newState
-              })
+              const newFlipped = Array(9).fill(false)
+              newFlipped[positions[0]] = true
+              newFlipped[positions[1]] = true
+              setFlippedCells(newFlipped)
 
               setTimeout(() => {
-                setFlippedCells((prev) => {
-                  const newState = [...prev]
-                  newState[positions[2]] = true
-                  return newState
-                })
+                const newFlipped = Array(9).fill(false)
+                newFlipped[positions[0]] = true
+                newFlipped[positions[1]] = true
+                newFlipped[positions[2]] = true
+                setFlippedCells(newFlipped)
               }, 500)
             }, 500)
           }, 500)
@@ -228,6 +228,15 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
   // Calculate the sums
   const sums = calculateSums()
+
+  // Debug: Log when the grid changes to help diagnose issues
+  useEffect(() => {
+    if (grid.every((cell) => cell !== null)) {
+      console.log("Grid is full:", grid)
+      console.log("Is solved:", checkSolution())
+      console.log("Three 3s positions:", findThreePositions())
+    }
+  }, [grid])
 
   return (
     <div className="flex flex-col items-center justify-center p-4 relative">
@@ -320,12 +329,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
               onDrop={(e) => handleDrop(e, index)}
             >
               {flippedCells[index] ? (
-                <motion.div
-                  className="w-full h-full flex items-center justify-center"
-                  initial={{ rotateY: 90 }}
-                  animate={{ rotateY: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
+                <div className="w-full h-full flex items-center justify-center">
                   <Image
                     src={getImageForPosition(index) || "/placeholder.svg"}
                     alt=""
@@ -333,16 +337,16 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
                     height={80}
                     className="object-contain"
                   />
-                </motion.div>
+                </div>
               ) : (
                 value !== null && (
-                  <motion.div
+                  <div
                     className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
                     draggable={!isSolved && value !== null}
                     onDragStart={(e) => value !== null && handleDragStart(e, Date.now(), value, true, index)}
                   >
                     {value}
-                  </motion.div>
+                  </div>
                 )
               )}
             </div>
