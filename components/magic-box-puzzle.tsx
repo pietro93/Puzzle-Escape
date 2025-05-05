@@ -18,7 +18,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   const [grid, setGrid] = useState<Array<number | null>>([null, null, null, null, null, null, null, null, null])
 
   // State for tracking which numbers are still available (not placed on grid)
-  const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number; imageIndex: number }>>([])
+  const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number }>>([])
 
   // State for tracking if the puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
@@ -29,29 +29,9 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // Ref for the grid element
   const gridRef = useRef<HTMLDivElement>(null)
 
-  // Initialize the remaining numbers with unique IDs and image indices
+  // Initialize the remaining numbers with unique IDs
   useEffect(() => {
-    // Create a mapping for the two 2s and two 4s to have different image indices
-    const imageIndices: Record<string, number> = {}
-    let twoCount = 0
-    let fourCount = 0
-
-    const shuffled = [...availableNumbers]
-      .sort(() => Math.random() - 0.5)
-      .map((value, index) => {
-        let imageIndex = 0
-
-        if (value === 2) {
-          imageIndex = twoCount === 0 ? 0 : 1 // 0 for first 2, 1 for second 2
-          twoCount++
-        } else if (value === 4) {
-          imageIndex = fourCount === 0 ? 0 : 1 // 0 for first 4, 1 for second 4
-          fourCount++
-        }
-
-        return { id: index, value, imageIndex }
-      })
-
+    const shuffled = [...availableNumbers].sort(() => Math.random() - 0.5).map((value, index) => ({ id: index, value }))
     setRemainingNumbers(shuffled)
   }, [])
 
@@ -79,28 +59,10 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     return sums
   }
 
-  // Get the image path for a number value and image index
-  const getImagePath = (value: number, imageIndex = 0) => {
-    if (value === 1) return "/images/magicbox-1.webp"
-    if (value === 2) return imageIndex === 0 ? "/images/magicbox-2.webp" : "/images/magicbox-2-2.webp"
-    if (value === 3) return "/images/magicbox-3.webp"
-    if (value === 4) return imageIndex === 0 ? "/images/magicbox-4.webp" : "/images/magicbox-4-2.webp"
-    if (value === 5) return "/images/magicbox-5.webp"
-    return ""
-  }
-
   // Handle drag start for a number
-  const handleDragStart = (
-    e: React.DragEvent,
-    id: number,
-    value: number,
-    imageIndex: number,
-    fromGrid: boolean,
-    gridIndex?: number,
-  ) => {
+  const handleDragStart = (e: React.DragEvent, id: number, value: number, fromGrid: boolean, gridIndex?: number) => {
     e.dataTransfer.setData("id", id.toString())
     e.dataTransfer.setData("value", value.toString())
-    e.dataTransfer.setData("imageIndex", imageIndex.toString())
     e.dataTransfer.setData("fromGrid", fromGrid.toString())
     if (gridIndex !== undefined) {
       e.dataTransfer.setData("gridIndex", gridIndex.toString())
@@ -120,7 +82,6 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
     const id = Number.parseInt(e.dataTransfer.getData("id"))
     const value = Number.parseInt(e.dataTransfer.getData("value"))
-    const imageIndex = Number.parseInt(e.dataTransfer.getData("imageIndex"))
     const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
     const oldGridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
 
@@ -162,7 +123,6 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
     if (fromGrid) {
       const value = Number.parseInt(e.dataTransfer.getData("value"))
-      const imageIndex = Number.parseInt(e.dataTransfer.getData("imageIndex"))
       const gridIndex = Number.parseInt(e.dataTransfer.getData("gridIndex"))
 
       // Remove the number from the grid
@@ -171,7 +131,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
       setGrid(newGrid)
 
       // Add the number back to remaining numbers
-      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value, imageIndex }])
+      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value }])
     }
   }
 
@@ -254,30 +214,6 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
   }, [grid, onSolve])
 
-  // Find the image index for a grid position
-  const findImageIndexForGridPosition = (index: number) => {
-    const value = grid[index]
-    if (value === null) return 0
-
-    // For values 1, 3, and 5, there's only one image
-    if (value === 1 || value === 3 || value === 5) return 0
-
-    // For values 2 and 4, we need to determine which instance it is
-    if (value === 2) {
-      // Count how many 2s are before this position
-      const twosBefore = grid.slice(0, index).filter((v) => v === 2).length
-      return twosBefore === 0 ? 0 : 1
-    }
-
-    if (value === 4) {
-      // Count how many 4s are before this position
-      const foursBefore = grid.slice(0, index).filter((v) => v === 4).length
-      return foursBefore === 0 ? 0 : 1
-    }
-
-    return 0
-  }
-
   return (
     <div className="flex flex-col items-center justify-center p-4 relative">
       <h2 className="text-2xl font-pixel text-purple-300 mb-6">Balance the Magic Box</h2>
@@ -288,24 +224,17 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         onDragOver={handleDragOver}
         onDrop={handleDropOutside}
       >
-        {remainingNumbers.map(({ id, value, imageIndex }) => (
+        {remainingNumbers.map(({ id, value }) => (
           <motion.div
             key={id}
-            className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold cursor-grab overflow-hidden"
+            className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
             draggable={!isSolved}
-            onDragStart={(e) => handleDragStart(e, id, value, imageIndex, false)}
+            onDragStart={(e) => handleDragStart(e, id, value, false)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <Image
-              src={getImagePath(value, imageIndex) || "/placeholder.svg"}
-              alt={`${value}`}
-              width={40}
-              height={40}
-              className="object-contain"
-              priority
-            />
+            {value}
           </motion.div>
         ))}
       </div>
@@ -389,21 +318,11 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
               ) : (
                 value !== null && (
                   <div
-                    className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
+                    className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
                     draggable={!isSolved && value !== null}
-                    onDragStart={(e) => {
-                      const imageIndex = findImageIndexForGridPosition(index)
-                      value !== null && handleDragStart(e, Date.now(), value, imageIndex, true, index)
-                    }}
+                    onDragStart={(e) => value !== null && handleDragStart(e, Date.now(), value, true, index)}
                   >
-                    <Image
-                      src={getImagePath(value, findImageIndexForGridPosition(index)) || "/placeholder.svg"}
-                      alt={`${value}`}
-                      width={40}
-                      height={40}
-                      className="object-contain"
-                      priority
-                    />
+                    {value}
                   </div>
                 )
               )}
