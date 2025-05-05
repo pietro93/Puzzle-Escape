@@ -305,13 +305,14 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
               onDrop={(e) => handleDrop(e, index)}
             >
               {flippedCells.includes(index) ? (
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center bg-white">
                   <Image
                     src={getImageForPosition(index) || "/placeholder.svg"}
                     alt=""
-                    width={80}
-                    height={80}
+                    width={100}
+                    height={100}
                     className="object-contain"
+                    priority
                   />
                 </div>
               ) : (
