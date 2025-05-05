@@ -3,7 +3,8 @@
 import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 interface MagicBoxPuzzleProps {
   onSolve: () => void
@@ -21,6 +22,22 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
   // State for tracking if the puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
+
+  // State for tracking which cells contain the three 3s
+  const [threePositions, setThreePositions] = useState<number[]>([])
+
+  // State for tracking if the cells have been flipped
+  const [flippedCells, setFlippedCells] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ])
 
   // Ref for the grid element
   const gridRef = useRef<HTMLDivElement>(null)
@@ -53,6 +70,44 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
 
     return sums
+  }
+
+  // Find the positions of the three 3s
+  const findThreePositions = () => {
+    const positions: number[] = []
+
+    // Check rows
+    const rows = [
+      [0, 1, 2], // First row
+      [3, 4, 5], // Second row
+      [6, 7, 8], // Third row
+    ]
+
+    // Check columns
+    const columns = [
+      [0, 3, 6], // First column
+      [1, 4, 7], // Second column
+      [2, 5, 8], // Third column
+    ]
+
+    // Check diagonals
+    const diagonals = [
+      [0, 4, 8], // Top-left to bottom-right
+      [2, 4, 6], // Top-right to bottom-left
+    ]
+
+    // Check all possible lines
+    const allLines = [...rows, ...columns, ...diagonals]
+
+    for (const line of allLines) {
+      const values = line.map((index) => grid[index])
+      if (values.filter((val) => val === 3).length === 3) {
+        // Found a line with three 3s
+        return line
+      }
+    }
+
+    return positions
   }
 
   // Check if the puzzle is solved (all sums are equal and not zero)
@@ -128,6 +183,31 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
       if (solved) {
         setIsSolved(true)
         onSolve()
+
+        // Find the positions of the three 3s
+        const positions = findThreePositions()
+        setThreePositions(positions)
+
+        // Flip the cells one by one with a delay
+        if (positions.length === 3) {
+          setTimeout(() => {
+            const newFlippedCells = [...flippedCells]
+            newFlippedCells[positions[0]] = true
+            setFlippedCells(newFlippedCells)
+
+            setTimeout(() => {
+              const newFlippedCells = [...flippedCells]
+              newFlippedCells[positions[1]] = true
+              setFlippedCells(newFlippedCells)
+
+              setTimeout(() => {
+                const newFlippedCells = [...flippedCells]
+                newFlippedCells[positions[2]] = true
+                setFlippedCells(newFlippedCells)
+              }, 500)
+            }, 500)
+          }, 500)
+        }
       }
     }, 100)
   }
@@ -154,12 +234,20 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
   }
 
+  // Get the image for a flipped cell
+  const getImageForPosition = (position: number) => {
+    const index = threePositions.indexOf(position)
+    if (index === 0) return "/images/magicbox-blood.webp"
+    if (index === 1) return "/images/magicbox-shot.webp"
+    if (index === 2) return "/images/magicbox-ice.webp"
+    return ""
+  }
+
   // Calculate the sums
   const sums = calculateSums()
 
   return (
     <div className="flex flex-col items-center justify-center p-4 relative">
-     
       {/* Numbers storage area */}
       <div
         className="flex flex-wrap justify-center gap-4 mb-10 p-4 bg-gray-800 bg-opacity-40 rounded-lg min-h-[80px] w-[350px]"
@@ -240,31 +328,45 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
           {grid.map((value, index) => (
             <div
               key={index}
-              className={`w-24 h-24 bg-amber-50 border-2 ${isSolved ? "border-green-500" : "border-gray-700"} flex items-center justify-center`}
+              className={`w-24 h-24 bg-amber-50 border-2 ${isSolved ? "border-green-500" : "border-gray-700"} flex items-center justify-center relative overflow-hidden`}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
             >
-              {value !== null && (
-                <motion.div
-                  className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
-                  draggable={!isSolved}
-                  onDragStart={(e) => handleDragStart(e, Date.now(), value, true, index)}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
-                  {value}
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {flippedCells[index] ? (
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    initial={{ rotateY: 90 }}
+                    animate={{ rotateY: 0 }}
+                    exit={{ rotateY: 90 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Image
+                      src={getImageForPosition(index) || "/placeholder.svg"}
+                      alt=""
+                      width={60}
+                      height={60}
+                      className="object-contain"
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-black font-bold text-2xl cursor-grab"
+                    draggable={!isSolved && value !== null}
+                    onDragStart={(e) => value !== null && handleDragStart(e, Date.now(), value, true, index)}
+                    initial={{ rotateY: flippedCells[index] ? 90 : 0 }}
+                    animate={{ rotateY: 0 }}
+                    exit={{ rotateY: 90 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {value}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Success message */}
-      {isSolved && (
-        <div className="mt-16 text-green-400 font-pixel text-center text-xl">Perfect! The magic box is balanced.</div>
-      )}
     </div>
   )
 }
