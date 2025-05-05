@@ -10,15 +10,32 @@ interface MagicBoxPuzzleProps {
   onSolve: () => void
 }
 
+// Define a type for bone items with image path and value
+interface BoneItem {
+  id: number
+  value: number
+  imagePath: string
+}
+
 export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
-  // Available numbers to place on the grid
-  const availableNumbers = [1, 2, 2, 3, 3, 3, 4, 4, 5]
+  // Available bone images with their corresponding values
+  const availableBones: BoneItem[] = [
+    { id: 1, value: 1, imagePath: "/images/magicbox-1.webp" },
+    { id: 2, value: 2, imagePath: "/images/magicbox-2.webp" },
+    { id: 3, value: 2, imagePath: "/images/magicbox-2-2.webp" },
+    { id: 4, value: 3, imagePath: "/images/magicbox-3.webp" },
+    { id: 5, value: 3, imagePath: "/images/magicbox-3.webp" },
+    { id: 6, value: 3, imagePath: "/images/magicbox-3.webp" },
+    { id: 7, value: 4, imagePath: "/images/magicbox-4.webp" },
+    { id: 8, value: 4, imagePath: "/images/magicbox-4-2.webp" },
+    { id: 9, value: 5, imagePath: "/images/magicbox-5.webp" },
+  ]
 
-  // State for tracking which numbers are placed on the grid
-  const [grid, setGrid] = useState<Array<number | null>>([null, null, null, null, null, null, null, null, null])
+  // State for tracking which bones are placed on the grid
+  const [grid, setGrid] = useState<Array<BoneItem | null>>([null, null, null, null, null, null, null, null, null])
 
-  // State for tracking which numbers are still available (not placed on grid)
-  const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number; imageIndex: number }>>([])
+  // State for tracking which bones are still available (not placed on grid)
+  const [remainingBones, setRemainingBones] = useState<BoneItem[]>([])
 
   // State for tracking if the puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
@@ -29,29 +46,10 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // Ref for the grid element
   const gridRef = useRef<HTMLDivElement>(null)
 
-  // Initialize the remaining numbers with unique IDs and image indices
+  // Initialize the remaining bones with unique IDs
   useEffect(() => {
-    // Create a mapping for the two 2s and two 4s to have different image indices
-    let twoCount = 0
-    let fourCount = 0
-
-    const shuffled = [...availableNumbers]
-      .sort(() => Math.random() - 0.5)
-      .map((value, index) => {
-        let imageIndex = 0
-
-        if (value === 2) {
-          imageIndex = twoCount === 0 ? 0 : 1 // 0 for first 2, 1 for second 2
-          twoCount++
-        } else if (value === 4) {
-          imageIndex = fourCount === 0 ? 0 : 1 // 0 for first 4, 1 for second 4
-          fourCount++
-        }
-
-        return { id: index, value, imageIndex }
-      })
-
-    setRemainingNumbers(shuffled)
+    const shuffled = [...availableBones].sort(() => Math.random() - 0.5)
+    setRemainingBones(shuffled)
   }, [])
 
   // Calculate sums for rows, columns, and diagonals
@@ -61,45 +59,28 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         [0, 1, 2], // First row
         [3, 4, 5], // Second row
         [6, 7, 8], // Third row
-      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index]?.value || 0), 0)),
 
       columns: [
         [0, 3, 6], // First column
         [1, 4, 7], // Second column
         [2, 5, 8], // Third column
-      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index]?.value || 0), 0)),
 
       diagonals: [
         [0, 4, 8], // Top-left to bottom-right
         [2, 4, 6], // Top-right to bottom-left
-      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index]?.value || 0), 0)),
     }
 
     return sums
   }
 
-  // Get the image path for a number value and image index
-  const getImagePath = (value: number, imageIndex = 0) => {
-    if (value === 1) return "/images/magicbox-1.webp"
-    if (value === 2) return imageIndex === 0 ? "/images/magicbox-2.webp" : "/images/magicbox-2-2.webp"
-    if (value === 3) return "/images/magicbox-3.webp"
-    if (value === 4) return imageIndex === 0 ? "/images/magicbox-4.webp" : "/images/magicbox-4-2.webp"
-    if (value === 5) return "/images/magicbox-5.webp"
-    return ""
-  }
-
-  // Handle drag start for a number
-  const handleDragStart = (
-    e: React.DragEvent,
-    id: number,
-    value: number,
-    imageIndex: number,
-    fromGrid: boolean,
-    gridIndex?: number,
-  ) => {
-    e.dataTransfer.setData("id", id.toString())
-    e.dataTransfer.setData("value", value.toString())
-    e.dataTransfer.setData("imageIndex", imageIndex.toString())
+  // Handle drag start for a bone
+  const handleDragStart = (e: React.DragEvent, bone: BoneItem, fromGrid: boolean, gridIndex?: number) => {
+    e.dataTransfer.setData("id", bone.id.toString())
+    e.dataTransfer.setData("value", bone.value.toString())
+    e.dataTransfer.setData("imagePath", bone.imagePath)
     e.dataTransfer.setData("fromGrid", fromGrid.toString())
     if (gridIndex !== undefined) {
       e.dataTransfer.setData("gridIndex", gridIndex.toString())
@@ -119,39 +100,39 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
     const id = Number.parseInt(e.dataTransfer.getData("id"))
     const value = Number.parseInt(e.dataTransfer.getData("value"))
-    const imageIndex = Number.parseInt(e.dataTransfer.getData("imageIndex"))
+    const imagePath = e.dataTransfer.getData("imagePath")
     const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
     const oldGridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
 
-    // If the cell already has a number, don't allow the drop
+    // If the cell already has a bone, don't allow the drop
     if (grid[index] !== null) return
 
     // Update the grid
     const newGrid = [...grid]
 
-    // If the number is coming from another grid cell, clear that cell
+    // If the bone is coming from another grid cell, clear that cell
     if (fromGrid) {
       newGrid[oldGridIndex] = null
     }
 
-    // Place the number in the new cell
-    newGrid[index] = value
+    // Place the bone in the new cell
+    newGrid[index] = { id, value, imagePath }
 
-    // Update the remaining numbers
-    let newRemainingNumbers = [...remainingNumbers]
+    // Update the remaining bones
+    let newRemainingBones = [...remainingBones]
 
     if (fromGrid) {
-      // If moving within the grid, no need to update remaining numbers
+      // If moving within the grid, no need to update remaining bones
     } else {
-      // Remove the number from remaining numbers
-      newRemainingNumbers = newRemainingNumbers.filter((num) => num.id !== id)
+      // Remove the bone from remaining bones
+      newRemainingBones = newRemainingBones.filter((bone) => bone.id !== id)
     }
 
     setGrid(newGrid)
-    setRemainingNumbers(newRemainingNumbers)
+    setRemainingBones(newRemainingBones)
   }
 
-  // Handle drop outside the grid (return to available numbers)
+  // Handle drop outside the grid (return to available bones)
   const handleDropOutside = (e: React.DragEvent) => {
     e.preventDefault()
 
@@ -160,17 +141,18 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
 
     if (fromGrid) {
+      const id = Number.parseInt(e.dataTransfer.getData("id"))
       const value = Number.parseInt(e.dataTransfer.getData("value"))
-      const imageIndex = Number.parseInt(e.dataTransfer.getData("imageIndex"))
+      const imagePath = e.dataTransfer.getData("imagePath")
       const gridIndex = Number.parseInt(e.dataTransfer.getData("gridIndex"))
 
-      // Remove the number from the grid
+      // Remove the bone from the grid
       const newGrid = [...grid]
       newGrid[gridIndex] = null
       setGrid(newGrid)
 
-      // Add the number back to remaining numbers
-      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value, imageIndex }])
+      // Add the bone back to remaining bones
+      setRemainingBones([...remainingBones, { id, value, imagePath }])
     }
   }
 
@@ -185,30 +167,6 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
   // Calculate the sums
   const sums = calculateSums()
-
-  // Find the image index for a grid position
-  const findImageIndexForGridPosition = (index: number) => {
-    const value = grid[index]
-    if (value === null) return 0
-
-    // For values 1, 3, and 5, there's only one image
-    if (value === 1 || value === 3 || value === 5) return 0
-
-    // For values 2 and 4, we need to determine which instance it is
-    if (value === 2) {
-      // Count how many 2s are before this position
-      const twosBefore = grid.slice(0, index).filter((v) => v === 2).length
-      return twosBefore === 0 ? 0 : 1
-    }
-
-    if (value === 4) {
-      // Count how many 4s are before this position
-      const foursBefore = grid.slice(0, index).filter((v) => v === 4).length
-      return foursBefore === 0 ? 0 : 1
-    }
-
-    return 0
-  }
 
   // Check for solution and three 3s whenever the grid changes
   useEffect(() => {
@@ -235,7 +193,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     ]
 
     for (const line of lines) {
-      if (line.every((index) => grid[index] === 3)) {
+      if (line.every((index) => grid[index]?.value === 3)) {
         // Found three 3s in a line
         setIsSolved(true)
         onSolve()
@@ -258,7 +216,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
 
     // Special case: check for middle row specifically (indices 3, 4, 5)
-    if (grid[3] === 3 && grid[4] === 3 && grid[5] === 3) {
+    if (grid[3]?.value === 3 && grid[4]?.value === 3 && grid[5]?.value === 3) {
       setIsSolved(true)
       onSolve()
 
@@ -281,29 +239,28 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     <div className="flex flex-col items-center justify-center p-4 relative">
       <h2 className="text-2xl font-pixel text-purple-300 mb-6">Balance the Magic Box</h2>
 
-      {/* Numbers storage area */}
+      {/* Bones storage area */}
       <div
         className="flex flex-wrap justify-center gap-4 mb-10 p-4 bg-gray-800 bg-opacity-40 rounded-lg min-h-[80px] w-[350px]"
         onDragOver={handleDragOver}
         onDrop={handleDropOutside}
       >
-        {remainingNumbers.map(({ id, value, imageIndex }) => (
+        {remainingBones.map((bone) => (
           <motion.div
-            key={id}
+            key={bone.id}
             className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
             draggable={!isSolved}
-            onDragStart={(e) => handleDragStart(e, id, value, imageIndex, false)}
+            onDragStart={(e) => handleDragStart(e, bone, false)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
             <Image
-              src={getImagePath(value, imageIndex) || "/placeholder.svg"}
-              alt={`${value}`}
-              width={40}
-              height={40}
+              src={bone.imagePath || "/placeholder.svg"}
+              alt={`Bone value ${bone.value}`}
+              width={56}
+              height={56}
               className="object-contain"
-              priority
             />
           </motion.div>
         ))}
@@ -365,7 +322,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
         {/* Grid */}
         <div ref={gridRef} className="grid grid-cols-3 gap-2">
-          {grid.map((value, index) => (
+          {grid.map((bone, index) => (
             <div
               key={index}
               className={`w-24 h-24 bg-amber-50 border-2 ${
@@ -386,22 +343,18 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
                   />
                 </div>
               ) : (
-                value !== null && (
+                bone !== null && (
                   <div
                     className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
-                    draggable={!isSolved && value !== null}
-                    onDragStart={(e) => {
-                      const imageIndex = findImageIndexForGridPosition(index)
-                      value !== null && handleDragStart(e, Date.now(), value, imageIndex, true, index)
-                    }}
+                    draggable={!isSolved && bone !== null}
+                    onDragStart={(e) => bone !== null && handleDragStart(e, bone, true, index)}
                   >
                     <Image
-                      src={getImagePath(value, findImageIndexForGridPosition(index)) || "/placeholder.svg"}
-                      alt={`${value}`}
-                      width={40}
-                      height={40}
+                      src={bone.imagePath || "/placeholder.svg"}
+                      alt={`Bone value ${bone.value}`}
+                      width={56}
+                      height={56}
                       className="object-contain"
-                      priority
                     />
                   </div>
                 )
