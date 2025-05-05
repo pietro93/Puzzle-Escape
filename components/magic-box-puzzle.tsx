@@ -12,7 +12,7 @@ interface MagicBoxPuzzleProps {
 
 // Define a mapping between numbers and their image paths
 interface NumberImageMap {
-  [key: number]: {
+  [key: string]: {
     path: string
     alt: string
     count: number
@@ -25,17 +25,27 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
   // Mapping between numbers and their image paths
   const numberImageMap: NumberImageMap = {
-    1: { path: "/images/magicbox-1.webp", alt: "Number 1", count: 0 },
-    2: { path: "/images/magicbox-2.webp", alt: "Number 2", count: 0 },
+    "1": { path: "/images/magicbox-1.webp", alt: "Number 1", count: 0 },
+    "2": { path: "/images/magicbox-2.webp", alt: "Number 2", count: 0 },
     "2-2": { path: "/images/magicbox-2-2.webp", alt: "Number 2 (alternate)", count: 0 },
-    3: { path: "/images/magicbox-3.webp", alt: "Number 3", count: 0 },
-    4: { path: "/images/magicbox-4.webp", alt: "Number 4", count: 0 },
+    "3": { path: "/images/magicbox-3.webp", alt: "Number 3", count: 0 },
+    "4": { path: "/images/magicbox-4.webp", alt: "Number 4", count: 0 },
     "4-2": { path: "/images/magicbox-4-2.webp", alt: "Number 4 (alternate)", count: 0 },
-    5: { path: "/images/magicbox-5.webp", alt: "Number 5", count: 0 },
+    "5": { path: "/images/magicbox-5.webp", alt: "Number 5", count: 0 },
   }
 
   // State for tracking which numbers are placed on the grid
-  const [grid, setGrid] = useState<Array<number | null>>([null, null, null, null, null, null, null, null, null])
+  const [grid, setGrid] = useState<Array<{ value: number; id: number; variant?: string } | null>>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ])
 
   // State for tracking which numbers are still available (not placed on grid)
   const [remainingNumbers, setRemainingNumbers] = useState<Array<{ id: number; value: number; variant?: string }>>([])
@@ -57,17 +67,17 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     for (const num of availableNumbers) {
       if (num === 2) {
         // For the two 2s, use different variants
-        if (numberImageMap[2].count === 0) {
+        if (numberImageMap["2"].count === 0) {
           initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "2" })
-          numberImageMap[2].count++
+          numberImageMap["2"].count++
         } else {
           initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "2-2" })
         }
       } else if (num === 4) {
         // For the two 4s, use different variants
-        if (numberImageMap[4].count === 0) {
+        if (numberImageMap["4"].count === 0) {
           initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "4" })
-          numberImageMap[4].count++
+          numberImageMap["4"].count++
         } else {
           initialNumbers.push({ id: Date.now() + Math.random(), value: num, variant: "4-2" })
         }
@@ -89,18 +99,18 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         [0, 1, 2], // First row
         [3, 4, 5], // Second row
         [6, 7, 8], // Third row
-      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index]?.value || 0), 0)),
 
       columns: [
         [0, 3, 6], // First column
         [1, 4, 7], // Second column
         [2, 5, 8], // Third column
-      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index]?.value || 0), 0)),
 
       diagonals: [
         [0, 4, 8], // Top-left to bottom-right
         [2, 4, 6], // Top-right to bottom-left
-      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index] || 0), 0)),
+      ].map((indices) => indices.reduce((sum, index) => sum + (grid[index]?.value || 0), 0)),
     }
 
     return sums
@@ -153,15 +163,15 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
 
     // Place the number in the new cell
-    newGrid[index] = value
+    newGrid[index] = { value, id, variant }
 
     // Update the remaining numbers
     let newRemainingNumbers = [...remainingNumbers]
 
     if (fromGrid) {
-      // Moving within grid - no need to change remainingNumbers
+      // If moving within the grid, no need to update remaining numbers
     } else {
-      // Remove the number from remaining numbers by ID to ensure exactly this instance is removed
+      // Remove the number from remaining numbers
       newRemainingNumbers = newRemainingNumbers.filter((num) => num.id !== id)
     }
 
@@ -189,7 +199,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
       setGrid(newGrid)
 
       // Add the number back to remaining numbers
-      setRemainingNumbers([...remainingNumbers, { id: Date.now(), value, variant }])
+      setRemainingNumbers([...remainingNumbers, { id, value, variant }])
     }
   }
 
@@ -198,7 +208,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     if (variant && numberImageMap[variant]) {
       return numberImageMap[variant].path
     }
-    return numberImageMap[value]?.path || ""
+    return numberImageMap[value.toString()]?.path || ""
   }
 
   // Get the image for a flipped cell
@@ -238,7 +248,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     ]
 
     for (const line of lines) {
-      if (line.every((index) => grid[index] === 3)) {
+      if (line.every((index) => grid[index]?.value === 3)) {
         // Found three 3s in a line
         setIsSolved(true)
         onSolve()
@@ -261,7 +271,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     }
 
     // Special case: check for middle row specifically (indices 3, 4, 5)
-    if (grid[3] === 3 && grid[4] === 3 && grid[5] === 3) {
+    if (grid[3]?.value === 3 && grid[4]?.value === 3 && grid[5]?.value === 3) {
       setIsSolved(true)
       onSolve()
 
@@ -367,54 +377,47 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
 
         {/* Grid */}
         <div ref={gridRef} className="grid grid-cols-3 gap-2">
-          {grid.map((value, index) => {
-            // Find the corresponding item in remainingNumbers to get the variant
-            const gridItem = remainingNumbers.find(
-              (item) => item.value === value && !grid.some((v, i) => i !== index && v === value),
-            )
-
-            return (
-              <div
-                key={index}
-                className={`w-24 h-24 bg-amber-50 border-2 ${
-                  isSolved ? "border-green-500" : "border-gray-700"
-                } flex items-center justify-center relative overflow-hidden`}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, index)}
-              >
-                {flippedCells.includes(index) ? (
-                  <div className="w-full h-full flex items-center justify-center bg-white">
+          {grid.map((cell, index) => (
+            <div
+              key={index}
+              className={`w-24 h-24 bg-amber-50 border-2 ${
+                isSolved ? "border-green-500" : "border-gray-700"
+              } flex items-center justify-center relative overflow-hidden`}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, index)}
+            >
+              {flippedCells.includes(index) ? (
+                <div className="w-full h-full flex items-center justify-center bg-white">
+                  <Image
+                    src={getImageForPosition(index) || "/placeholder.svg"}
+                    alt=""
+                    width={100}
+                    height={100}
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              ) : (
+                cell !== null && (
+                  <div
+                    className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
+                    draggable={!isSolved && cell !== null}
+                    onDragStart={(e) =>
+                      cell !== null && handleDragStart(e, cell.id, cell.value, cell.variant, true, index)
+                    }
+                  >
                     <Image
-                      src={getImageForPosition(index) || "/placeholder.svg"}
-                      alt=""
-                      width={100}
-                      height={100}
+                      src={getImagePath(cell.value, cell.variant) || "/placeholder.svg"}
+                      alt={`Number ${cell.value}`}
+                      width={40}
+                      height={40}
                       className="object-contain"
-                      priority
                     />
                   </div>
-                ) : (
-                  value !== null && (
-                    <div
-                      className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
-                      draggable={!isSolved && value !== null}
-                      onDragStart={(e) =>
-                        value !== null && handleDragStart(e, Date.now(), value, gridItem?.variant, true, index)
-                      }
-                    >
-                      <Image
-                        src={getImagePath(value, gridItem?.variant) || "/placeholder.svg"}
-                        alt={`Number ${value}`}
-                        width={40}
-                        height={40}
-                        className="object-contain"
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            )
-          })}
+                )
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
