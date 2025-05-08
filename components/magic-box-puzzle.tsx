@@ -20,15 +20,60 @@ interface BoneItem {
 export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // Available bone images with their corresponding values
   const availableBones: BoneItem[] = [
-    { id: 1, value: 1, imagePath: "/images/magicbox-1.webp" },
-    { id: 2, value: 2, imagePath: "/images/magicbox-2.webp" },
-    { id: 3, value: 2, imagePath: "/images/magicbox-2-2.webp" },
-    { id: 4, value: 3, imagePath: "/images/magicbox-3.webp" },
-    { id: 5, value: 3, imagePath: "/images/magicbox-3.webp" },
-    { id: 6, value: 3, imagePath: "/images/magicbox-3.webp" },
-    { id: 7, value: 4, imagePath: "/images/magicbox-4.webp" },
-    { id: 8, value: 4, imagePath: "/images/magicbox-4-2.webp" },
-    { id: 9, value: 5, imagePath: "/images/magicbox-5.webp" },
+    {
+      id: 1,
+      value: 1,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-1-FFNSjxKUKDdcwSV9i481pzaWusPRmz.webp",
+    },
+    {
+      id: 2,
+      value: 2,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-2-37qA48eH6bFEG8CM5yU8DGALHftwLZ.webp",
+    },
+    {
+      id: 3,
+      value: 2,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-2-2-SeuBeYE5RuSXxpigsJxFBjvPMx50Mj.webp",
+    },
+    {
+      id: 4,
+      value: 3,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp",
+    },
+    {
+      id: 5,
+      value: 3,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp",
+    },
+    {
+      id: 6,
+      value: 3,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp",
+    },
+    {
+      id: 7,
+      value: 4,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-4-cwOUlxNvomZPV4Of21uutUd7SpfjDE.webp",
+    },
+    {
+      id: 8,
+      value: 4,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-4-2-cUnYt0IN8klOreHWDRcHFqAoVgRpjl.webp",
+    },
+    {
+      id: 9,
+      value: 5,
+      imagePath:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-5-2WND6ruWesJglRuseszC8kyI33RnAU.webp",
+    },
   ]
 
   // State for tracking which bones are placed on the grid
@@ -159,9 +204,12 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   // Get the image for a flipped cell
   const getImageForPosition = (index: number) => {
     const position = flippedCells.indexOf(index)
-    if (position === 0) return "/images/magicbox-blood.webp"
-    if (position === 1) return "/images/magicbox-shot.webp"
-    if (position === 2) return "/images/magicbox-ice.webp"
+    if (position === 0)
+      return "https://images.microcms-assets.io/assets/ba9f0269756d49548949445a0bb99401/c3f1525f438943b7a1f40191500ff809/magicbox-blood.webp"
+    if (position === 1)
+      return "https://images.microcms-assets.io/assets/ba9f0269756d49548949445a0bb99401/c3f1525f438943b7a1f40191500ff809/magicbox-shot.webp"
+    if (position === 2)
+      return "https://images.microcms-assets.io/assets/ba9f0269756d49548949445a0bb99401/c3f1525f438943b7a1f40191500ff809/magicbox-ice.webp"
     return ""
   }
 
@@ -261,6 +309,11 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
               width={56}
               height={56}
               className="object-contain"
+              unoptimized
+              onError={(e) => {
+                console.error("Failed to load image:", bone.imagePath)
+                ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+              }}
             />
           </motion.div>
         ))}
@@ -340,6 +393,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
                     height={100}
                     className="object-contain"
                     priority
+                    unoptimized
                   />
                 </div>
               ) : (
@@ -355,6 +409,11 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
                       width={56}
                       height={56}
                       className="object-contain"
+                      unoptimized
+                      onError={(e) => {
+                        console.error("Failed to load image:", bone.imagePath)
+                        ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+                      }}
                     />
                   </div>
                 )
