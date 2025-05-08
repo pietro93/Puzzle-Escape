@@ -205,11 +205,11 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   const getImageForPosition = (index: number) => {
     const position = flippedCells.indexOf(index)
     if (position === 0)
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-1-FFNSjxKUKDdcwSV9i481pzaWusPRmz.webp" // Using magicbox-1.webp as blood for now
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-blood-tulR8tSVNOBVR4aAU3oOxlymQ8DGmp.webp" // Blood
     if (position === 1)
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-2-37qA48eH6bFEG8CM5yU8DGALHftwLZ.webp" // Using magicbox-2.webp as shot for now
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-shot-6JKmzjGfEG8FuuGEYA7bNoc8ucJOQy.webp" // Shot
     if (position === 2)
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp" // Using magicbox-3.webp as ice for now
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-ice-U1CMGC7u1qxCSOtIQMB2XGqwukCwZc.webp" // Ice
     return ""
   }
 
