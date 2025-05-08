@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 interface LocationImageProps {
   setting: string
   customImage?: string
@@ -21,12 +19,12 @@ export default function LocationImage({ setting, customImage, hintImage, level }
 
     // Special case for level 13 color palette
     if (setting === "mansion" && level === 13) {
-      return "/images/color-palette/color_palette.webp" // Updated path to use relative path
+      return "/images/color-palette/color_palette.webp"
     }
 
     // Special case for murder mystery images
     if (setting === "murder-mystery") {
-      return "/images/murder-mystery/crime-scene.webp" // Use relative path for murder mystery images
+      return "/images/murder-mystery/crime-scene.webp"
     }
 
     // Otherwise use the default image for the setting
@@ -34,7 +32,7 @@ export default function LocationImage({ setting, customImage, hintImage, level }
       case "prison":
         return "/images/prison-bg.webp"
       case "mansion":
-        return "/images/mansion-bg.webp" // Updated to use relative path
+        return "/images/mansion-bg.webp"
       case "forest":
         return "/images/forest-bg.webp"
       case "desert":
@@ -55,23 +53,17 @@ export default function LocationImage({ setting, customImage, hintImage, level }
   return (
     <div className="w-40 h-40 relative pixelated-container">
       <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
-      {isGif ? (
+      <div className={`relative w-full h-full flex items-center justify-center ${isColorPalette ? "p-2" : ""}`}>
         <img
           src={imageUrl || "/placeholder.svg"}
           alt={`${setting} location`}
-          className="pixelated z-10 relative w-full h-full object-contain"
+          className={`pixelated z-10 relative object-contain w-full h-full`}
+          onError={(e) => {
+            console.error("Failed to load image:", imageUrl)
+            ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+          }}
         />
-      ) : (
-        <div className={`relative w-full h-full flex items-center justify-center ${isColorPalette ? "p-2" : ""}`}>
-          <Image
-            src={imageUrl || "/placeholder.svg"}
-            alt={`${setting} location`}
-            width={160}
-            height={160}
-            className={`pixelated z-10 relative object-contain`}
-          />
-        </div>
-      )}
+      </div>
       <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
       <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
     </div>
