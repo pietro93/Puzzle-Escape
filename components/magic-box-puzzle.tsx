@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 
 interface MagicBoxPuzzleProps {
   onSolve: () => void
@@ -303,13 +302,10 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <Image
+            <img
               src={bone.imagePath || "/placeholder.svg"}
               alt={`Bone value ${bone.value}`}
-              width={56}
-              height={56}
-              className="object-contain"
-              unoptimized
+              className="w-full h-full object-contain"
               onError={(e) => {
                 console.error("Failed to load image:", bone.imagePath)
                 ;(e.target as HTMLImageElement).src = "/placeholder.svg"
@@ -386,14 +382,14 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
             >
               {flippedCells.includes(index) ? (
                 <div className="w-full h-full flex items-center justify-center bg-white">
-                  <Image
+                  <img
                     src={getImageForPosition(index) || "/placeholder.svg"}
                     alt=""
-                    width={100}
-                    height={100}
-                    className="object-contain"
-                    priority
-                    unoptimized
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      console.error("Failed to load image:", getImageForPosition(index))
+                      ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+                    }}
                   />
                 </div>
               ) : (
@@ -403,13 +399,10 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
                     draggable={!isSolved && bone !== null}
                     onDragStart={(e) => bone !== null && handleDragStart(e, bone, true, index)}
                   >
-                    <Image
+                    <img
                       src={bone.imagePath || "/placeholder.svg"}
                       alt={`Bone value ${bone.value}`}
-                      width={56}
-                      height={56}
-                      className="object-contain"
-                      unoptimized
+                      className="w-full h-full object-contain"
                       onError={(e) => {
                         console.error("Failed to load image:", bone.imagePath)
                         ;(e.target as HTMLImageElement).src = "/placeholder.svg"
