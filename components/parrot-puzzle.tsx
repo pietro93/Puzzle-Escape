@@ -5,10 +5,241 @@ import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { Send, X } from "lucide-react"
 
+// Add these new types and dialogue data structures at the top of the file, after the imports
+// Define types for dialogue entries
+type DialogueEntry = {
+  trigger: string | RegExp
+  response: string | string[]
+  isRegex?: boolean
+  priority?: number
+}
+
+type DialogueCategory = {
+  entries: DialogueEntry[]
+  fallbacks?: string[]
+}
+
+// Organize dialogue by categories
+const parrotDialogue: Record<string, DialogueCategory> = {
+  solution: {
+    entries: [
+      {
+        trigger: "solution",
+        response: "ASK AGAIN",
+        priority: 100,
+      },
+      {
+        trigger: "again",
+        response: "ASK ONE MORE TIME",
+        priority: 100,
+      },
+      {
+        trigger: "one more time",
+        response:
+          "ONE MORE TIME\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH, ALL RIGHT, DON'T STOP DANCING\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH, ALL RIGHT, DON'T STOP THE DANCING\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH, ALL RIGHT, DON'T STOP THE DANCING\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH\nONE MORE TIME\nMUSIC'S GOT ME FEELING SO FREE\nWE'RE GONNA CELEBRATE\nCELEBRATE AND DANCE SO FREE\nONE MORE TIME",
+        priority: 100,
+      },
+      {
+        trigger: "daft punk",
+        response: "You don't need to give *me* the solution, gawk!",
+        priority: 100,
+      },
+    ],
+  },
+  identity: {
+    entries: [
+      {
+        trigger: /^(count|papagalul|count papagalul|parrot)$/i,
+        response:
+          "I am Count Papagalul, terror of the Carpathian night, scourge of the living, and eternal shadow of the Transylvanian darkness. My presence is the whisper of death, my eyes the windows to eternal damnation, and my name the curse that haunts the dreams of the mortal. GAWK!",
+        isRegex: true,
+        priority: 90,
+      },
+    ],
+  },
+  greetings: {
+    entries: [
+      {
+        trigger: /^(hello|hi|hey|hola|good (morning|afternoon|evening))$/i,
+        response: "HELLO MORTAL!",
+        isRegex: true,
+        priority: 80,
+      },
+    ],
+  },
+  insults: {
+    entries: [
+      {
+        trigger: /fuck|shit|bitch|cunt/i,
+        response: (input: string) => {
+          const match = input.match(/fuck|shit|bitch|cunt/i)
+          return `${match?.[0].toUpperCase()} YOU RIGHT BACK!`
+        },
+        isRegex: true,
+        priority: 85,
+      },
+      {
+        trigger: /idiot|stupid|dumb/i,
+        response: "OH, YOU THINK YOU'RE FUNNY? I'LL EAT YOUR EYEBALLS",
+        isRegex: true,
+        priority: 85,
+      },
+      {
+        trigger: /mother/i,
+        response: "YOUR MOM AND I GO WAY BACK, SQUAWK!",
+        isRegex: true,
+        priority: 85,
+      },
+    ],
+  },
+  personal: {
+    entries: [
+      {
+        trigger: /name\??/i,
+        response: "YOU CAN CALL ME DADDY",
+        isRegex: true,
+        priority: 70,
+      },
+      {
+        trigger: /age\??/i,
+        response: "I AM FIVE HUNDRED SIXTY FOUR YEARS OLD",
+        isRegex: true,
+        priority: 70,
+      },
+      {
+        trigger: /gay\??/i,
+        response: "EVERYONE IS A BIT QUEER, SQUAWK!",
+        isRegex: true,
+        priority: 70,
+      },
+      {
+        trigger: "love",
+        response: "Love is a cruel mistress, a fleeting dream that turns to dust in the cold light of immortality!",
+        priority: 70,
+      },
+    ],
+  },
+  characters: {
+    entries: [
+      {
+        trigger: /butler/i,
+        response: "THE BUTLER LIKES TO DRESS AS A WOMAN WHEN NOBODY'S WATCHING",
+        isRegex: true,
+        priority: 75,
+      },
+    ],
+  },
+  easterEggs: {
+    entries: [
+      {
+        trigger: /polly wants a cracker/i,
+        response: "AND A RAISE",
+        isRegex: true,
+        priority: 60,
+      },
+      {
+        trigger: /never/i,
+        response: "NEVER GONNA GIVE YOU UP NEVER GONNA LET YOU DOWN",
+        isRegex: true,
+        priority: 60,
+      },
+      {
+        trigger: /kill/i,
+        response: "THERE'S A KILLER IN ME",
+        isRegex: true,
+        priority: 60,
+      },
+    ],
+  },
+  questions: {
+    entries: [
+      {
+        trigger: /^why/i,
+        response: "BECAUSE I SAID SO",
+        isRegex: true,
+        priority: 50,
+      },
+      {
+        trigger: /^how/i,
+        response: "FIGURE IT OUT, DUMB DUMB",
+        isRegex: true,
+        priority: 50,
+      },
+      {
+        trigger: /^what/i,
+        response: "WHAT DO I LOOK LIKE? WIKIPEDIA?",
+        isRegex: true,
+        priority: 50,
+      },
+      {
+        trigger: /^help$/i,
+        response: "NOBODY CAN HELP YOU",
+        isRegex: true,
+        priority: 50,
+      },
+    ],
+  },
+  nonsense: {
+    entries: [
+      {
+        trigger: /(.)\1{3,}/i,
+        response: "REPEAT AFTER ME: ENUNCIATION!",
+        isRegex: true,
+        priority: 40,
+      },
+      {
+        trigger: /[^\w\s]/i,
+        response: "KEYBOARD MALFUNCTION?",
+        isRegex: true,
+        priority: 40,
+      },
+    ],
+    fallbacks: [
+      "SQUAWK! I DON'T UNDERSTAND YOUR PRIMITIVE LANGUAGE",
+      "IS THAT THE BEST YOU CAN COME UP WITH?",
+      "BORING CONVERSATION ANYWAY",
+      "THAT'S WHAT SHE SAID, SQUAWK!",
+      "I'VE HEARD BETTER FROM A DEAD MOUSE",
+      "KEEP TALKING, I'M PRETENDING TO LISTEN",
+      "YOUR WORDS ARE AS EMPTY AS YOUR SOUL",
+      "DID YOU FALL ON YOUR HEAD AS A CHILD?",
+      "FASCINATING... SAID NO ONE EVER",
+      "I'D RESPOND, BUT I DON'T SPEAK NONSENSE",
+    ],
+  },
+}
+
+// Idle messages in a separate array for easy management
+const idleMessages = [
+  "I KNOW WHAT YOU DID LAST SUMMER",
+  "THE BUTLER SHOT ME WITH A HUNTING RIFLE",
+  "STILL HERE? HOW QUAINT, SQUAWK!",
+  "SQUAWK",
+  "YOU LOOK LIKE YOU HAVE JUST BEEN IN A CAR ACCIDENT",
+  "I EAT CHICKS FOR BREAKFAST",
+  "WHAT ARE YOU LOOKING AT, HUMAN?",
+  "DID A BIRD EAT YOUR TONGUE?",
+  "SOMEONE LIKES TO POP HAPPY PILLS HUH?",
+  "KEEP YOUR FINGERS AWAY OR I'LL EAT THEM",
+  "WE ARE ALL DEAD, BRUH",
+  "THE BUTLER TOUCHED ME IN PLACES THAT SHOULD BE OFF LIMITS",
+  "DEAD BABIES! DEAD BABIES",
+  "OH THE HUMANITY!",
+  "THE WALLS HAVE EARS, AND I HAVE EYES EVERYWHERE",
+  "I'VE SEEN THINGS YOU PEOPLE WOULDN'T BELIEVE",
+  "SOMETIMES I DREAM OF FREEDOM... AND MURDER",
+  "THIS MANSION HAS MANY SECRETS... WANT TO KNOW ONE?",
+  "I'M NOT ACTUALLY A PARROT. I'M SOMETHING MUCH WORSE",
+  "THE LAST PERSON WHO OWNED ME DIED MYSTERIOUSLY",
+  "Breaking the fourth wall! Gawk!",
+]
+
+// Now replace the interface definition with the updated one
 interface ParrotPuzzleProps {
   onSolve: () => void
 }
 
+// Now replace the getParrotResponse function with the new implementation
 export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
   const [input, setInput] = useState("")
   const [parrotText, setParrotText] = useState("")
@@ -141,160 +372,81 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
     }
   }
 
+  // New implementation of getParrotResponse using the dialogue system
   const getParrotResponse = (userInput: string): string => {
-    // New responses
-    if (userInput === "daft punk") {
-      return "You don't need to give *me* the solution, gawk!"
+    // Check for solution path and update state
+    if (userInput === "solution") {
+      setSolutionState("askAgain")
+    } else if (userInput === "again" && solutionState === "askAgain") {
+      setSolutionState("askOneMoreTime")
+    } else if (userInput === "one more time" && solutionState === "askOneMoreTime") {
+      setSolutionState("solved")
+      // Trigger the onSolve callback after the song finishes
+      setTimeout(() => {
+        onSolve()
+      }, 20000) // Adjust timing based on song length
     }
 
-    if (/^(count|papagalul|count papagalul|parrot)$/i.test(userInput)) {
-      return "I am Count Papagalul, terror of the Carpathian night, scourge of the living, and eternal shadow of the Transylvanian darkness. My presence is the whisper of death, my eyes the windows to eternal damnation, and my name the curse that haunts the dreams of the mortal. GAWK!"
+    // Find matching dialogue entries across all categories
+    const allMatches: { response: string | string[] | ((input: string) => string); priority: number }[] = []
+
+    // Process all dialogue categories
+    Object.values(parrotDialogue).forEach((category) => {
+      category.entries.forEach((entry) => {
+        let isMatch = false
+
+        if (entry.isRegex && entry.trigger instanceof RegExp) {
+          isMatch = entry.trigger.test(userInput)
+        } else if (typeof entry.trigger === "string") {
+          isMatch = userInput.includes(entry.trigger)
+        }
+
+        if (isMatch) {
+          let responseValue: string | string[]
+
+          if (typeof entry.response === "function") {
+            responseValue = entry.response(userInput)
+          } else {
+            responseValue = entry.response
+          }
+
+          allMatches.push({
+            response: responseValue,
+            priority: entry.priority || 0,
+          })
+        }
+      })
+    })
+
+    // Sort matches by priority (highest first)
+    allMatches.sort((a, b) => b.priority - a.priority)
+
+    // If we have matches, return the highest priority one
+    if (allMatches.length > 0) {
+      const topMatch = allMatches[0].response
+
+      if (Array.isArray(topMatch)) {
+        return topMatch[Math.floor(Math.random() * topMatch.length)]
+      }
+
+      return topMatch
     }
 
-    if (userInput === "love") {
-      return "Love is a cruel mistress, a fleeting dream that turns to dust in the cold light of immortality!"
-    }
-
-    // Random idle special response
+    // Random special response (breaking the fourth wall)
     if (Math.random() < 0.1) {
       return "Breaking the fourth wall! Gawk!"
     }
 
-    // Solution path
-    if (userInput.includes("solution")) {
-      setSolutionState("askAgain")
-      return "ASK AGAIN"
-    } else if (userInput === "again") {
-      setSolutionState("askOneMoreTime")
-      return "ASK ONE MORE TIME"
-    } else if (userInput === "one more time") {
-      setSolutionState("solved")
-      // Remove the auto-solve timeout
-      return "ONE MORE TIME\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH, ALL RIGHT, DON'T STOP DANCING\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH, ALL RIGHT, DON'T STOP THE DANCING\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH, ALL RIGHT, DON'T STOP THE DANCING\nONE MORE TIME, WE'RE GONNA CELEBRATE\nOH YEAH\nONE MORE TIME\nMUSIC'S GOT ME FEELING SO FREE\nWE'RE GONNA CELEBRATE\nCELEBRATE AND DANCE SO FREE\nONE MORE TIME"
-    }
-
-    // Greetings
-    if (/^(hello|hi|hey|hola|good (morning|afternoon|evening))$/i.test(userInput)) {
-      return "HELLO MORTAL!"
-    }
-
-    // Insults
-    if (/fuck|shit|bitch|cunt/i.test(userInput)) {
-      const match = userInput.match(/fuck|shit|bitch|cunt/i)
-      return `${match?.[0].toUpperCase()} YOU RIGHT BACK!`
-    }
-
-    if (/idiot|stupid|dumb/i.test(userInput)) {
-      return "OH, YOU THINK YOU'RE FUNNY? I'LL EAT YOUR EYEBALLS"
-    }
-
-    if (/mother/i.test(userInput)) {
-      return "YOUR MOM AND I GO WAY BACK, SQUAWK!"
-    }
-
-    // Personal Questions
-    if (/name\??/i.test(userInput)) {
-      return "YOU CAN CALL ME DADDY"
-    }
-
-    if (/age\??/i.test(userInput)) {
-      return "I AM FIVE HUNDRED SIXTY FOUR YEARS OLD"
-    }
-
-    if (/gay\??/i.test(userInput)) {
-      return "EVERYONE IS A BIT QUEER, SQUAWK!"
-    }
-
-    if (/butler/i.test(userInput)) {
-      return "THE BUTLER LIKES TO DRESS AS A WOMAN WHEN NOBODY'S WATCHING"
-    }
-
-    // Easter Eggs
-    if (/polly wants a cracker/i.test(userInput)) {
-      return "AND A RAISE"
-    }
-
-    if (/never/i.test(userInput)) {
-      return "NEVER GONNA GIVE YOU UP NEVER GONNA LET YOU DOWN"
-    }
-
-    // Generic Queries
-    if (/^why/i.test(userInput)) {
-      return "BECAUSE I SAID SO"
-    }
-
-    if (/^how/i.test(userInput)) {
-      return "FIGURE IT OUT, DUMB DUMB"
-    }
-
-    if (/^what/i.test(userInput)) {
-      return "WHAT DO I LOOK LIKE? WIKIPEDIA?"
-    }
-
-    if (/^help$/i.test(userInput)) {
-      return "NOBODY CAN HELP YOU"
-    }
-
-    // Nonsense Detection
-    if (/(.)\1{3,}/i.test(userInput)) {
-      // Repeated letters
-      return "REPEAT AFTER ME: ENUNCIATION!"
-    }
-
-    if (/kill/i.test(userInput)) {
-      return "THERE'S A KILLER IN ME"
-    }
-
-    if (/[^\w\s]/i.test(userInput)) {
-      // Symbol soup
-      return "KEYBOARD MALFUNCTION?"
-    }
-
-    // Default responses
-    const defaultResponses = [
-      "SQUAWK! I DON'T UNDERSTAND YOUR PRIMITIVE LANGUAGE",
-      "IS THAT THE BEST YOU CAN COME UP WITH?",
-      "BORING CONVERSATION ANYWAY",
-      "THAT'S WHAT SHE SAID, SQUAWK!",
-      "I'VE HEARD BETTER FROM A DEAD MOUSE",
-      "KEEP TALKING, I'M PRETENDING TO LISTEN",
-      "YOUR WORDS ARE AS EMPTY AS YOUR SOUL",
-      "DID YOU FALL ON YOUR HEAD AS A CHILD?",
-      "FASCINATING... SAID NO ONE EVER",
-      "I'D RESPOND, BUT I DON'T SPEAK NONSENSE",
-    ]
-
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
+    // If no matches, use fallback responses
+    const fallbacks = parrotDialogue.nonsense.fallbacks || []
+    return fallbacks[Math.floor(Math.random() * fallbacks.length)]
   }
 
   const getRandomIdleMessage = (): string => {
-    const idleMessages = [
-      "I KNOW WHAT YOU DID LAST SUMMER",
-      "THE BUTLER SHOT ME WITH A HUNTING RIFLE",
-      "STILL HERE? HOW QUAINT, SQUAWK!",
-      "SQUAWK",
-      "YOU LOOK LIKE YOU HAVE JUST BEEN IN A CAR ACCIDENT",
-      "I EAT CHICKS FOR BREAKFAST",
-      "WHAT ARE YOU LOOKING AT, HUMAN?",
-      "DID A BIRD EAT YOUR TONGUE?",
-      "SOMEONE LIKES TO POP HAPPY PILLS HUH?",
-      "KEEP YOUR FINGERS AWAY OR I'LL EAT THEM",
-      "WE ARE ALL DEAD, BRUH",
-      "THE BUTLER TOUCHED ME IN PLACES THAT SHOULD BE OFF LIMITS",
-      "DEAD BABIES! DEAD BABIES",
-      "OH THE HUMANITY!",
-      "THE WALLS HAVE EARS, AND I HAVE EYES EVERYWHERE",
-      "I'VE SEEN THINGS YOU PEOPLE WOULDN'T BELIEVE",
-      "SOMETIMES I DREAM OF FREEDOM... AND MURDER",
-      "THIS MANSION HAS MANY SECRETS... WANT TO KNOW ONE?",
-      "I'M NOT ACTUALLY A PARROT. I'M SOMETHING MUCH WORSE",
-      "THE LAST PERSON WHO OWNED ME DIED MYSTERIOUSLY",
-      "Breaking the fourth wall! Gawk!",
-    ]
-
     return idleMessages[Math.floor(Math.random() * idleMessages.length)]
   }
 
+  // Keep the rest of the component unchanged
   return (
     <div className="flex flex-col items-center bg-black p-4 rounded-lg border border-gray-800">
       {/* Parrot dialogue - always maintain space for two lines */}
