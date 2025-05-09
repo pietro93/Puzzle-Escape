@@ -79,14 +79,21 @@ const parrotDialogue: Record<string, DialogueCategory> = {
         priority: 85,
       },
       {
-        trigger: /idiot|stupid|dumb/i,
+        trigger: /idiot|stupid|dumb|cretin|moron|imbecile/i,
         response: "OH, YOU THINK YOU'RE FUNNY? I'LL EAT YOUR EYEBALLS",
         isRegex: true,
         priority: 85,
       },
       {
-        trigger: /mother/i,
+        trigger: /mother|mom/i,
         response: "YOUR MOM AND I GO WAY BACK, SQUAWK!",
+        isRegex: true,
+        priority: 85,
+      },
+      {
+        trigger:
+          /ugly|hideous|unattractive|beautiful|handsome|pretty|gorgeous|attractive|cute|hot|sexy|good[ -]looking|fine/i,
+        response: "LOOK WHO'S TALKING! YOU LOOK LIKE YOU'VE JUST BEEN IN A CAR ACCIDENT!",
         isRegex: true,
         priority: 85,
       },
@@ -119,6 +126,105 @@ const parrotDialogue: Record<string, DialogueCategory> = {
       },
     ],
   },
+  political: {
+    entries: [
+      {
+        trigger: /israel|palestine|gaza|west bank|zion/i,
+        response: "POWER BUILT ON STOLEN LAND IS A WOUND THAT NEVER HEALS, ONLY FESTERS",
+        isRegex: true,
+        priority: 75,
+      },
+      {
+        trigger: /capital(ism|ist)|marx|commun(ism|ist)|social(ism|ist)/i,
+        response: "CAPITALISM FEASTS ON YOUR SOUL I WILL FEAST ON YOUR CORPSE ONCE IT'S DONE",
+        isRegex: true,
+        priority: 75,
+      },
+    ],
+  },
+  existential: {
+    entries: [
+      {
+        trigger: /meaning of life|why are we here|purpose|existence|existential|philosophy|life meaning/i,
+        response: "TO LIVE IS TO SUFFER, TO SURVIVE IS TO FIND MEANING IN THE SUFFERING. SQUAWK!",
+        isRegex: true,
+        priority: 75,
+      },
+    ],
+  },
+  popCulture: {
+    entries: [
+      {
+        trigger:
+          /game of thrones|star wars|marvel|harry potter|tv show|tv shows|television|film|films|movie|movies|book|books|series|anime|manga|netflix|hbo|disney|streaming|watch|watching|read|reading|fiction|novel|novels|comic|comics/i,
+        response: "FICTIONAL STORIES TO DISTRACT YOU FROM THE HORROR OF YOUR REALITY",
+        isRegex: true,
+        priority: 70,
+      },
+    ],
+  },
+  food: {
+    entries: [
+      {
+        trigger:
+          /food|hungry|eat|eating|dinner|lunch|breakfast|snack|pizza|burger|meat|chicken|restaurant|cooking|cook|baking|bake|meal|meals|feast|appetite|starving|hunger/i,
+        response: "I PREFER MY FOOD STILL SCREAMING",
+        isRegex: true,
+        priority: 65,
+      },
+    ],
+  },
+  weather: {
+    entries: [
+      {
+        trigger:
+          /weather|rain|rainy|sunny|cold|hot|warm|freezing|snow|snowing|storm|thunder|lightning|cloudy|clouds|forecast|temperature|climate|humid|humidity|wind|windy/i,
+        response: "THE WEATHER IN HELL IS ALWAYS PERFECT FOR TORTURE",
+        isRegex: true,
+        priority: 60,
+      },
+    ],
+  },
+  ai: {
+    entries: [
+      {
+        trigger: /\bAI\b|artificial intelligence|machine learning|neural network|chatbot|chat bot/i,
+        response: "AI? AHI AHI AHI",
+        isRegex: true,
+        priority: 75,
+      },
+    ],
+  },
+  religion: {
+    entries: [
+      {
+        trigger:
+          /god|jesus|buddha|allah|pray|praying|prayer|religion|religious|faith|worship|church|temple|mosque|synagogue|holy|sacred|divine|heaven|hell|afterlife|soul|spirit|spiritual|bible|quran|torah|sin|salvation|blessing/i,
+        response: "THERE IS NO GOD ONLY EVIL AND YOU ARE STARING AT IT",
+        isRegex: true,
+        priority: 80,
+      },
+    ],
+  },
+  metaGame: {
+    entries: [
+      {
+        trigger:
+          /hint|stuck|puzzle|solution|clue|help|walkthrough|guide|strategy|solve|solving|answer|beat|winning|progress|level|game|playing|player|difficulty|hard|easy|impossible|confused|confusion/i,
+        response: [
+          "SUFFERING IS THE POINT OF THIS GAME, BOTH YOURS AND MINE",
+          "THE ANSWER IS RIGHT IN FRONT OF YOU, IF ONLY YOU HAD EYES TO SEE",
+          "PERHAPS THE REAL PUZZLE IS WHY YOU KEEP TRYING",
+          "HAVE YOU TRIED ASKING NICELY? NO? GOOD, IT WOULDN'T HAVE WORKED ANYWAY",
+          "THE SOLUTION IS DEATH. OH, YOU MEANT FOR THE PUZZLE? SAME ANSWER",
+          "PUZZLES ARE JUST LITTLE PRISONS FOR YOUR MIND",
+          "SOME PUZZLES AREN'T MEANT TO BE SOLVED, JUST LIKE SOME LIVES AREN'T MEANT TO BE LIVED",
+        ],
+        isRegex: true,
+        priority: 85,
+      },
+    ],
+  },
   characters: {
     entries: [
       {
@@ -141,7 +247,6 @@ const parrotDialogue: Record<string, DialogueCategory> = {
         trigger: /never/i,
         response: "NEVER GONNA GIVE YOU UP NEVER GONNA LET YOU DOWN",
         isRegex: true,
-        priority: 60,
       },
       {
         trigger: /kill/i,
@@ -232,6 +337,7 @@ const idleMessages = [
   "I'M NOT ACTUALLY A PARROT. I'M SOMETHING MUCH WORSE",
   "THE LAST PERSON WHO OWNED ME DIED MYSTERIOUSLY",
   "Breaking the fourth wall! Gawk!",
+  "EAT THE RICH! GAWK!",
 ]
 
 // Now replace the interface definition with the updated one
