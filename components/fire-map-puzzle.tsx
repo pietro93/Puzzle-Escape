@@ -10,7 +10,7 @@ type City = {
 
 type CityPair = {
   color: string
-  colorName: string
+  pinImage: string
   cities: City[]
   inputs: {
     value: string
@@ -23,8 +23,8 @@ type CityPair = {
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   const [cityPairs, setCityPairs] = useState<CityPair[]>([
     {
-      color: "gray-600",
-      colorName: "Gray",
+      color: "black",
+      pinImage: "/images/hellmap/hellmap_pin_black.webp",
       cities: [
         {
           name: "Zhanaozen",
@@ -43,8 +43,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_zhanaozen-mary-veJaDHrUxQAEsQIvPQMkvesf7QDApG.webp", // hellmap_zhanaozen-mary
     },
     {
-      color: "blue-600",
-      colorName: "Blue",
+      color: "blue",
+      pinImage: "/images/hellmap/hellmap_pin_blue.webp",
       cities: [
         {
           name: "Kungrad",
@@ -63,8 +63,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_kungrad-ashgabat-fz1LayFBjPHIaKwt24eBWnfvFjt5e2.webp", // New kungrad-ashgabat connection
     },
     {
-      color: "green-600",
-      colorName: "Green",
+      color: "green",
+      pinImage: "/images/hellmap/hellmap_pin_green.webp",
       cities: [
         {
           name: "Urgench",
@@ -83,8 +83,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_sari-urgench-0iEmAQWEwxGXmdrtNBrHVtuWSPpZnM.webp", // hellmap_sari-urgench
     },
     {
-      color: "purple-600",
-      colorName: "Purple",
+      color: "purple",
+      pinImage: "/images/hellmap/hellmap_pin_purple.webp",
       cities: [
         {
           name: "Navoi",
@@ -194,7 +194,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
       <div className="w-full max-w-4xl mx-auto">
         <div
           className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-amber-50/90"
-          style={{ height: "60vh", minHeight: "400px" }}
+          style={{ aspectRatio: "1.5/1", maxHeight: "50vh" }}
         >
           {/* Base layer - City names map */}
           <img
@@ -217,7 +217,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
           {/* Top layer - Pins */}
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pins-V4ix4N7fC20JFfMMrzh4Fw3r4hDOsF.webp" // hellmap_pins
+            src="/images/hellmap/hellmap_pins.webp"
             alt="Location pins"
             className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
               allCitiesGuessed ? "opacity-50 grayscale" : ""
@@ -238,11 +238,27 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
         <div className="grid grid-cols-2 gap-4">
           {cityPairs.map((pair, pairIndex) => (
-            <div key={pairIndex} className={`p-3 rounded-lg border border-${pair.color}`}>
-              <div className={`text-${pair.color} font-medium mb-2`}>{pair.colorName} Locations</div>
+            <div key={pairIndex} className={`p-3 rounded-lg border border-${pair.color}-600`}>
+              <div className="flex items-center gap-2 mb-2">
+                <img
+                  src={pair.pinImage || "/placeholder.svg"}
+                  alt={`${pair.color} pin`}
+                  className="w-6 h-6 object-contain"
+                />
+                <img
+                  src={pair.pinImage || "/placeholder.svg"}
+                  alt={`${pair.color} pin`}
+                  className="w-6 h-6 object-contain"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 {pair.inputs.map((input, inputIndex) => (
-                  <div key={inputIndex} className="flex flex-col">
+                  <div key={inputIndex} className="flex items-center gap-2">
+                    <img
+                      src={pair.pinImage || "/placeholder.svg"}
+                      alt={`${pair.color} pin`}
+                      className="w-6 h-6 object-contain"
+                    />
                     <input
                       type="text"
                       value={input.value}
@@ -250,7 +266,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
                       onBlur={() => checkAnswer(pairIndex, inputIndex)}
                       onKeyDown={(e) => handleKeyPress(e, pairIndex, inputIndex)}
                       disabled={input.isCorrect}
-                      className={`px-2 py-1 text-sm rounded border ${
+                      className={`px-2 py-1 text-sm rounded border w-full ${
                         input.value
                           ? input.isCorrect
                             ? "border-green-500 bg-green-900/30"
