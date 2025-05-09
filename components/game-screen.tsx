@@ -42,16 +42,6 @@ const dialogueOptions = [
   "No more... switches...",
 ]
 
-// Define sphinx dialogue lines for level 38
-const sphinxDialogLines = [
-  "I am the guardian of this temple. To pass, you must answer my riddle.",
-  "What has a head, a tail, is brown, and has no legs?",
-  "Incorrect. Try again. What has a head, a tail, is brown, and has no legs?",
-  "Think carefully. What has a head, a tail, is brown, and has no legs?",
-  "Perhaps you need a hint? It's something small that you might find in your pocket.",
-  "It's a form of currency. What has a head, a tail, is brown, and has no legs?",
-]
-
 // Define getBrainLampImage here
 const getBrainLampImage = (correctCombinations: number) => {
   switch (correctCombinations) {
@@ -104,9 +94,7 @@ export default function GameScreen({
   const [showPuzzleDetails, setShowPuzzleDetails] = useState(true)
   const [isAnimating, setIsAnimating] = useState(false)
   const [guardDialogIndex, setGuardDialogIndex] = useState(0)
-  const [sphinxDialogIndex, setSphinxDialogIndex] = useState(0)
   const [showGuardPopup, setShowGuardPopup] = useState(false)
-  const [showSphinxPopup, setShowSphinxPopup] = useState(false)
   const [jigsawComplete, setJigsawComplete] = useState(false)
   const [lightsOn, setLightsOn] = useState(false)
   const [solved, setSolved] = useState(false)
@@ -299,17 +287,15 @@ export default function GameScreen({
 
   // Update the handleGuardClick function to properly handle sphinx click for level 38
   const handleGuardClick = () => {
-    // Special case for level 38 (sphinx riddle)
+    // Special handling for level 38 (sphinx riddle)
     if (level === 38) {
-      // Rotate through sphinx dialog lines
-      const nextIndex = (sphinxDialogIndex + 1) % sphinxDialogLines.length
-      setSphinxDialogIndex(nextIndex)
-      setShowSphinxPopup(true)
-      return
+      // For level 38, we use the guardDialogLines which contain the sphinx's riddle
+      const nextIndex = (guardDialogIndex + 1) % guardDialogLines.length
+      setGuardDialogIndex(nextIndex)
+      setShowGuardPopup(true)
     }
-
-    // Special case for level 10 (guard dialogue)
-    if (level === 10) {
+    // Special handling for level 10 (guard puzzle)
+    else if (level === 10) {
       // Rotate through guard dialog lines
       const nextIndex = (guardDialogIndex + 1) % guardDialogLines.length
       setGuardDialogIndex(nextIndex)
@@ -321,12 +307,11 @@ export default function GameScreen({
 
       // Show the guard popup
       setShowGuardPopup(true)
-      return
+    } else {
+      // For all other levels, show a random character dialogue
+      setCharacterDialogue(getRandomDialogue(character, level))
+      setShowCharacterDialogue(true)
     }
-
-    // For all other levels, show a random character dialogue
-    setCharacterDialogue(getRandomDialogue(character, level))
-    setShowCharacterDialogue(true)
   }
 
   // Add a function to close the character dialogue popup
@@ -334,7 +319,6 @@ export default function GameScreen({
     setShowCharacterDialogue(false)
     setShowGuardPopup(false) // Also close guard popup if open
     setShowBrainDialogue(false) // Also close brain dialogue if open
-    setShowSphinxPopup(false) // Also close sphinx popup if open
   }
 
   const handleJigsawComplete = () => {
@@ -500,11 +484,6 @@ export default function GameScreen({
     setShowGuardPopup(false)
   }
 
-  // Function to close the sphinx popup
-  const handleCloseSphinxPopup = () => {
-    setShowSphinxPopup(false)
-  }
-
   return (
     <div
       className={`w-full max-w-md mx-auto p-4 ${getSettingBackground()} transition-colors duration-1000 min-h-[100vh] flex flex-col ${isAnimating ? "animate-fadeIn" : ""}`}
@@ -665,26 +644,14 @@ export default function GameScreen({
         />
       )}
 
-      {/* Guard Dialog popup for level 10 */}
-      {showGuardPopup && level === 10 && (
+      {/* Guard Dialog popup for level 10 and Sphinx Dialog popup for level 38 */}
+      {showGuardPopup && (
         <CharacterDialoguePopup
-          character="skeleton"
+          character={level === 38 ? "sphinx" : "skeleton"}
           dialogue={guardDialogLines[guardDialogIndex]}
           onClose={handleCloseGuardPopup}
           isGuardPopup={true}
           guardDialogIndex={guardDialogIndex}
-          level={level}
-        />
-      )}
-
-      {/* Sphinx Dialog popup for level 38 */}
-      {showSphinxPopup && level === 38 && (
-        <CharacterDialoguePopup
-          character="sphinx"
-          dialogue={sphinxDialogLines[sphinxDialogIndex]}
-          onClose={handleCloseSphinxPopup}
-          isGuardPopup={true}
-          guardDialogIndex={sphinxDialogIndex}
           level={level}
         />
       )}
