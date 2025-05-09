@@ -45,17 +45,17 @@ export default function CharacterLocationDisplay({
       case 0:
         return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-WFdoE18rmyknvtBRPsfJ9IhWxiF6UF.webp" // 0 correct
       case 1:
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp1a-jtarQ6DvWLbkdtCw85rPutJZjTRo7m.webp" // 1 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa1.webp-yDKmVbfSchE1g4rMoeOejEt9r5zuR6.jpeg" // 1 correct - new image
       case 2:
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp2a.webp-UzQCOHqf2namH8byDVbukpZaSsa4hh.jpeg" // 2 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa2.webp-b2REfOp8TR0GcKS1WPCMbDCBQ1Cwhi.jpeg" // 2 correct - new image
       case 3:
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp3a.webp-qAtXl3omCCUIuJTEfDrOR67BrSbG1Q.jpeg" // 3 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa3.webp-kxrxi8ZXb9V56uMJjWJu7uZ8Eiq833.jpeg" // 3 correct - new image
       case 4:
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp4a-Xrk7CsmuuYZ9jE2TiSiO704I0Hz7GG.webp" // 4 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa4.webp-eRImr2KOu3WrV2AiVM4PsSvb2RLm8r.jpeg" // 4 correct - new image
       case 5:
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp5a.webp-Zlp6vJ310VRTduwCjeLLFI19WZmY3t.jpeg" // 5 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa5.webp-EidMSK92ZJ81ltNVm4VMTpy5GlQiqK.jpeg" // 5 correct - new image
       case 6:
-        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp6a.webp-tFVEX3bXENwvQR5P0V3jv2zOyTb7u4.jpeg" // 6 correct (all)
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa6.webp-f0SdXKeGnpv5pGB2CiLHlUhHNK4TiQ.jpeg" // 6 correct - new image (with red glow)
       default:
         return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-WFdoE18rmyknvtBRPsfJ9IhWxiF6UF.webp" // Default
     }

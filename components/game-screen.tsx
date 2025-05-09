@@ -398,7 +398,7 @@ export default function GameScreen({
           "No more... please...",
           "STOP THE PAIN!",
         ]
-        dialogue = middleDialogues[Math.floor(Math.random() * dialogueOptions.length)]
+        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
       } else {
         // Late stage - extreme agony, barely coherent
         const lateDialogues = [
@@ -413,8 +413,8 @@ export default function GameScreen({
     }
 
     // Show the dialogue popup with the brain character
-    //setShowBrainDialogue(true);
-    //setBrainDialogue(dialogue);
+    setShowBrainDialogue(true)
+    setBrainDialogue(dialogue)
   }
 
   // Add this handler for the location image click
