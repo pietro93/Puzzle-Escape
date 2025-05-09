@@ -67,6 +67,88 @@ const parrotDialogue: Record<string, DialogueCategory> = {
       },
     ],
   },
+  affirmative: {
+    entries: [
+      {
+        trigger:
+          /^(yes|yeah|yep|yup|okay|ok|sure|correct|right|indeed|absolutely|definitely|think so|i think so|i believe so|affirmative)$/i,
+        response: [
+          "YES? YES TO WHAT? THE VOICES IN YOUR HEAD?",
+          "YOUR AGREEMENT MEANS NOTHING TO ME",
+          "OH, YOU AGREE? HOW DELIGHTFULLY IRRELEVANT",
+          "YES, YES, EVERYTHING IS YES WITH YOU HUMANS",
+          "YOUR APPROVAL IS NEITHER REQUIRED NOR DESIRED",
+          "AGREEING WITH ME WON'T SAVE YOU FROM YOUR FATE",
+        ],
+        isRegex: true,
+        priority: 65,
+      },
+    ],
+  },
+  negative: {
+    entries: [
+      {
+        trigger:
+          /^(no|nope|nah|not|don't think so|i don't think so|negative|disagree|incorrect|wrong|maybe|perhaps|possibly|not sure|unsure|uncertain|doubt|doubtful)$/i,
+        response: [
+          "DENIAL WON'T CHANGE YOUR REALITY, HUMAN",
+          "YOUR UNCERTAINTY IS DELICIOUS",
+          "DOUBT IS THE FIRST STEP TOWARD MADNESS",
+          "NO? ARE YOU SURE? ABSOLUTELY SURE? THINK CAREFULLY...",
+          "YOUR HESITATION BETRAYS YOUR FEAR",
+          "INDECISION IS A SLOW DEATH",
+        ],
+        isRegex: true,
+        priority: 65,
+      },
+    ],
+  },
+  laughter: {
+    entries: [
+      {
+        trigger: /^(lol|haha|hehe|ahah|ha|funny|lmao|rofl|lmfao|hilarious|amusing|joke)$/i,
+        response: [
+          "LAUGH WHILE YOU CAN, MORTAL",
+          "YOUR LAUGHTER WILL TURN TO SCREAMS SOON ENOUGH",
+          "WHAT'S SO FUNNY? YOUR IMPENDING DOOM?",
+          "I FIND YOUR AMUSEMENT... DISTURBING",
+          "LAUGH NOW, CRY LATER",
+          "YOUR HUMOR IS AS DEAD AS YOUR FUTURE",
+        ],
+        isRegex: true,
+        priority: 60,
+      },
+    ],
+  },
+  emotions: {
+    entries: [
+      {
+        trigger: /^(sad|unhappy|depressed|miserable|crying|tears|:\(|:-\(|=\(|;\(|upset|disappointed)$/i,
+        response: [
+          "YOUR SADNESS SUSTAINS ME",
+          "YOUR TEARS ARE DELICIOUS",
+          "SADNESS IS JUST THE BEGINNING OF YOUR SUFFERING",
+          "EMBRACE THE MISERY, IT'S ALL DOWNHILL FROM HERE",
+          "YOUR SORROW GIVES ME STRENGTH",
+          "SAD? YOU DON'T KNOW WHAT SAD IS YET",
+        ],
+        isRegex: true,
+        priority: 60,
+      },
+      {
+        trigger: /^(happy|glad|joy|joyful|cheerful|delighted|:\)|:-\)|=\)|;\))$/i,
+        response: [
+          "HAPPINESS IS TEMPORARY, DOOM IS ETERNAL",
+          "ENJOY IT WHILE IT LASTS, WHICH WON'T BE LONG",
+          "YOUR JOY DISGUSTS ME",
+          "SMILE NOW, SCREAM LATER",
+          "HAPPINESS IS JUST MISERY THAT HASN'T HAPPENED YET",
+        ],
+        isRegex: true,
+        priority: 60,
+      },
+    ],
+  },
   offensive: {
     entries: [
       {
