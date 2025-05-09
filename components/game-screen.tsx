@@ -12,7 +12,7 @@ import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
-import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage } from "@/utils/dialogue-utils"
+import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
@@ -289,10 +289,9 @@ export default function GameScreen({
   const handleGuardClick = () => {
     // Special handling for level 38 (sphinx riddle)
     if (level === 38) {
-      // For level 38, we use the guardDialogLines which contain the sphinx's riddle
-      const nextIndex = (guardDialogIndex + 1) % guardDialogLines.length
-      setGuardDialogIndex(nextIndex)
-      setShowGuardPopup(true)
+      // For level 38, we use the specific sphinxRiddle
+      setCharacterDialogue(sphinxRiddle)
+      setShowCharacterDialogue(true)
     }
     // Special handling for level 10 (guard puzzle)
     else if (level === 10) {

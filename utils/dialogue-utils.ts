@@ -1,4 +1,4 @@
-// Define guard dialog lines for level 10
+// Define guard dialog lines for level 10 only
 export const guardDialogLines = [
   "An inmate has been murdered, and one of these four inmates did it. Who is the killer?",
   "I've been guarding this prison for centuries. Nobody escapes on my watch.",
@@ -9,8 +9,10 @@ export const guardDialogLines = [
   "The answer is right in front of you. Can't you see it?",
   "Look beyond what they say. Look at what they don't say.",
   "The truth is often hidden in plain sight.",
-  "What has a bed, a mouth, banks, and a crystal clear body?", // This is the sphinx riddle for level 38
 ]
+
+// Add a specific sphinx riddle for level 38
+export const sphinxRiddle = "What has a bed, a mouth, banks, and a crystal clear body?"
 
 // Define random elevator messages
 export const getRandomElevatorMessage = (): string => {
