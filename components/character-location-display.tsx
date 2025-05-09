@@ -18,7 +18,7 @@ interface CharacterLocationDisplayProps {
   showElevator?: boolean
   jigsawComplete?: boolean
   onGuardClick?: () => void
-  onLocationClick?: () => () => void
+  onLocationClick?: () => void
   onPyramidLocationImageClick?: () => void
 }
 
@@ -27,33 +27,27 @@ export default function CharacterLocationDisplay({
   setting,
   character,
   puzzle,
-  lightsOn,
-  solved,
-  binaryCorrectCombinations,
-  currentPyramidRoom,
-  hasPyramidTorch,
-  hasUsedElevator,
-  showElevator,
-  jigsawComplete,
+  lightsOn = false,
+  solved = false,
+  binaryCorrectCombinations = 0,
+  currentPyramidRoom = "entrance",
+  hasPyramidTorch = false,
+  hasUsedElevator = false,
+  showElevator = true,
+  jigsawComplete = false,
   onGuardClick,
   onLocationClick,
   onPyramidLocationImageClick,
 }: CharacterLocationDisplayProps) {
-  // Get custom location image based on level
+  // Get custom location image for specific levels
   const getCustomLocationImage = () => {
-    // Special case for level 47 (brain lamp puzzle)
+    // Special case for level 47 (brain lamp)
     if (level === 47) {
-      if (binaryCorrectCombinations === 0) return "/images/brainlamp.webp"
-      if (binaryCorrectCombinations === 1) return "/images/brainlamp1animated.gif"
-      if (binaryCorrectCombinations === 2) return "/images/brainlamp2animated.gif"
-      if (binaryCorrectCombinations === 3) return "/images/brainlamp3animated.gif"
-      if (binaryCorrectCombinations === 4) return "/images/brainlamp4animated.gif"
-      if (binaryCorrectCombinations === 5) return "/images/brainlamp5animated.gif"
-      if (binaryCorrectCombinations === 6) return "/images/brainlamp6animated.gif"
+      return getBrainLampImage(binaryCorrectCombinations)
     }
 
-    // Special case for level 40 (pyramid puzzle)
-    if (level === 40 && currentPyramidRoom) {
+    // Special case for level 40 (pyramid rooms)
+    if (level === 40) {
       switch (currentPyramidRoom) {
         case "entrance":
           return "/images/desert-temple.webp"
@@ -73,62 +67,89 @@ export default function CharacterLocationDisplay({
       if (hasUsedElevator && showElevator) {
         return "/images/elevator.webp"
       }
-      if (jigsawComplete) {
-        return "/images/hell-throne.webp"
-      }
+      return jigsawComplete ? null : "/images/hell-throne.webp"
     }
 
-    // Special case for level 10 (guard puzzle)
+    // Special case for level 34 (jigsaw puzzle)
+    if (level === 34 && jigsawComplete) {
+      return "/images/yama_jigsaw_full-9.webp"
+    }
+
+    // Special case for level 44 (hell jigsaw puzzle)
+    if (level === 44 && jigsawComplete) {
+      return "/images/hell-jigsaw-full.webp"
+    }
+
+    // Special case for level 10 (prison exit)
     if (level === 10) {
-      return "/images/the-guard.webp"
+      return "/images/prison-exit.webp"
     }
 
-    // Special case for level 38 (sphinx puzzle)
-    if (level === 38) {
-      return "/images/sphinx.webp"
+    // Special case for level 20 (mansion library)
+    if (level === 20) {
+      return "/images/mansion-library.webp"
     }
 
-    // Special case for level 25 (dark room puzzle)
-    if (level === 25) {
-      return lightsOn ? "/images/mansion-library.webp" : "/images/pitch-darkness.webp"
-    }
-
-    // Special case for level 30 (parrot puzzle)
+    // Special case for level 30 (forest clearing)
     if (level === 30) {
-      return "/images/parrot.webp"
+      return "/images/forest-clearing.webp"
     }
 
-    // Default location images based on setting
-    switch (setting) {
-      case "prison":
-        return level === 5 ? "/images/prison-exit.webp" : "/images/prison-cell.webp"
-      case "mansion":
-        return level === 15 ? "/images/mansion-library.webp" : null
-      case "forest":
-        return level === 25 ? "/images/forest-clearing.webp" : null
-      case "desert":
-        return level === 35 ? "/images/desert-temple.webp" : null
-      case "hell":
-        return level === 45 ? "/images/hell-throne.webp" : null
+    // Special case for level 38 (desert temple)
+    if (level === 38) {
+      return "/images/desert-temple.webp"
+    }
+
+    // Special case for dark room puzzle
+    if (puzzle.isDarkRoomPuzzle) {
+      return lightsOn
+        ? solved
+          ? "/images/pitch-darkness.webp"
+          : "/images/prison-cell.webp"
+        : "/images/pitch-darkness.webp"
+    }
+
+    return null
+  }
+
+  // Get brain lamp image based on correct combinations
+  const getBrainLampImage = (correctCombinations: number) => {
+    switch (correctCombinations) {
+      case 0:
+        return "/images/brainlamp.webp" // 0 correct
+      case 1:
+        return "/images/brainlamp1animated.gif" // 1 correct
+      case 2:
+        return "/images/brainlamp2animated.gif" // 2 correct
+      case 3:
+        return "/images/brainlamp3animated.gif" // 3 correct
+      case 4:
+        return "/images/brainlamp4animated.gif" // 4 correct
+      case 5:
+        return "/images/brainlamp5animated.gif" // 5 correct
+      case 6:
+        return "/images/brainlamp6animated.gif" // 6 correct (all)
       default:
-        return null
+        return "/images/brainlamp.webp" // Default
     }
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-4 items-center justify-center">
-      {/* Character image */}
-      <div className="cursor-pointer" onClick={onGuardClick} aria-label={`${character} character`}>
-        <CharacterImage character={character} />
+    <div className="flex flex-col md:flex-row gap-4 mb-6">
+      {/* Character section */}
+      <div className="flex-1 flex flex-col items-center">
+        <h2 className="text-xs text-gray-400 mb-2 font-pixel">Character</h2>
+        <div onClick={onGuardClick} className="cursor-pointer">
+          <CharacterImage character={character} />
+        </div>
       </div>
 
-      {/* Location image */}
-      <div
-        className="cursor-pointer"
-        onClick={level === 40 ? onPyramidLocationImageClick : onLocationClick}
-        aria-label={`${setting} location`}
-      >
-        <LocationImage setting={setting} customImage={getCustomLocationImage()} level={level} />
+      {/* Location section */}
+      <div className="flex-1 flex flex-col items-center">
+        <h2 className="text-xs text-gray-400 mb-2 font-pixel">Location</h2>
+        <div onClick={level === 40 ? onPyramidLocationImageClick : onLocationClick} className="cursor-pointer">
+          <LocationImage setting={setting} customImage={getCustomLocationImage()} level={level} />
+        </div>
       </div>
     </div>
   )
