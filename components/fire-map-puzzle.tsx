@@ -194,7 +194,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
       <div className="w-full max-w-4xl mx-auto">
         <div
           className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-amber-50/90"
-          style={{ aspectRatio: "1.5/1", maxHeight: "50vh" }}
+          style={{ height: "400px" }}
         >
           {/* Base layer - City names map */}
           <img
@@ -239,25 +239,13 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
         <div className="grid grid-cols-2 gap-4">
           {cityPairs.map((pair, pairIndex) => (
             <div key={pairIndex} className={`p-3 rounded-lg border border-${pair.color}-600`}>
-              <div className="flex items-center gap-2 mb-2">
-                <img
-                  src={pair.pinImage || "/placeholder.svg"}
-                  alt={`${pair.color} pin`}
-                  className="w-6 h-6 object-contain"
-                />
-                <img
-                  src={pair.pinImage || "/placeholder.svg"}
-                  alt={`${pair.color} pin`}
-                  className="w-6 h-6 object-contain"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-3">
                 {pair.inputs.map((input, inputIndex) => (
                   <div key={inputIndex} className="flex items-center gap-2">
                     <img
                       src={pair.pinImage || "/placeholder.svg"}
                       alt={`${pair.color} pin`}
-                      className="w-6 h-6 object-contain"
+                      className="w-8 h-8 object-contain"
                     />
                     <input
                       type="text"
