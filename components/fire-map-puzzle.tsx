@@ -265,7 +265,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
                             : "border-red-500 bg-red-900/30"
                           : "border-gray-600 bg-gray-800"
                       } text-white ${input.isCorrect ? "opacity-75" : ""}`}
-                      placeholder="City name"
+                      placeholder=""
                     />
                   </div>
                 ))}
