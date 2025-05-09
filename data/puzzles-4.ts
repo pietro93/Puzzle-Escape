@@ -40,7 +40,7 @@ export const puzzlesSet4: Puzzle[] = [
     description: "",
     imageUrl: "",
     isDarkRoomPuzzle: true,
-    solution: "broken heart",
+    solution: "broken heart|heartbroken|heart broken",
     category: "pattern",
     hints: [
       "Light the torches to reveal what's hidden in the darkness.",

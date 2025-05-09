@@ -1,6 +1,6 @@
 interface LocationImageProps {
   setting: string
-  customImage?: string
+  customImage?: string | null
   hintImage?: string
   level?: number
 }
@@ -45,7 +45,7 @@ export default function LocationImage({ setting, customImage, hintImage, level }
   }
 
   const imageUrl = getLocationImage()
-  const isGif = imageUrl.endsWith(".gif")
+  const isGif = imageUrl?.endsWith(".gif")
 
   // Special styling for the color palette image
   const isColorPalette = setting === "mansion" && level === 13
