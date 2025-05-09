@@ -32,31 +32,46 @@ export default function CharacterDialoguePopup({
       >
         {/* Character Image */}
         <div className="flex justify-center mb-4">
-          <div className="w-32 h-32 relative pixelated-container">
-            <Image
-              src={
-                isGuardPopup
-                  ? level === 10
-                    ? "/images/skeleton.webp"
-                    : "/images/sphinx.webp"
-                  : character === "brain"
-                    ? brainImage || "/images/brainlamp.webp"
-                    : `/images/${character}.webp`
-              }
-              alt={
-                isGuardPopup
-                  ? level === 10
-                    ? "Guard"
-                    : "Sphinx"
-                  : character === "brain"
-                    ? "Suffering Head"
-                    : character
-              }
-              width={128}
-              height={128}
-              className="pixelated"
-            />
-          </div>
+          {character === "brain" && brainImage && (
+            <div className="w-24 h-24 relative pixelated-container mb-2">
+              <Image
+                src={brainImage || "/placeholder.svg"}
+                alt="Brain"
+                width={96}
+                height={96}
+                className="pixelated"
+                unoptimized={true} // Ensure animations work
+                priority={true} // Load image with higher priority
+              />
+            </div>
+          )}
+          {!brainImage && (
+            <div className="w-32 h-32 relative pixelated-container">
+              <Image
+                src={
+                  isGuardPopup
+                    ? level === 10
+                      ? "/images/skeleton.webp"
+                      : "/images/sphinx.webp"
+                    : character === "brain"
+                      ? "/images/brainlamp.webp"
+                      : `/images/${character}.webp`
+                }
+                alt={
+                  isGuardPopup
+                    ? level === 10
+                      ? "Guard"
+                      : "Sphinx"
+                    : character === "brain"
+                      ? "Suffering Head"
+                      : character
+                }
+                width={128}
+                height={128}
+                className="pixelated"
+              />
+            </div>
+          )}
         </div>
 
         {/* Dialogue Text */}
