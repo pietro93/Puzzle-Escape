@@ -310,6 +310,8 @@ export default function GameScreen({
   // Add a function to close the character dialogue popup
   const handleCloseCharacterDialogue = () => {
     setShowCharacterDialogue(false)
+    setShowGuardPopup(false) // Also close guard popup if open
+    setShowBrainDialogue(false) // Also close brain dialogue if open
   }
 
   const handleJigsawComplete = () => {
@@ -631,7 +633,7 @@ export default function GameScreen({
           character={character}
           dialogue={characterDialogue}
           onClose={handleCloseCharacterDialogue}
-          brainImage={getBrainLampImage(binaryCorrectCombinations)} // Pass the brain image
+          brainImage={getBrainLampImage(binaryCorrectCombinations)}
         />
       )}
 
