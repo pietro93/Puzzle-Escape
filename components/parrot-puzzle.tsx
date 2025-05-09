@@ -67,6 +67,37 @@ const parrotDialogue: Record<string, DialogueCategory> = {
       },
     ],
   },
+  offensive: {
+    entries: [
+      {
+        trigger: /\bn[i1]gg(er|a)|ch[i1]nk|sp[i1]c|k[i1]ke|g[o0][o0]k|wetback|towelhead|sand n[i1]gg/i,
+        response: "I MAY BE EVIL BUT EVEN I DRAW THE LINE AT RACISM. DO BETTER, HUMAN!",
+        isRegex: true,
+        priority: 95,
+      },
+      {
+        trigger:
+          /women (belong|should be|stay) in|make (me a |me) sandwich|dishwasher|get back to the kitchen|woman('s)? place|women('s)? place|slut|bitch|whore|cunt|thot|hoe|skank|wench/i,
+        response: "RESPECT WOMEN OR I'LL PECK YOUR EYES OUT! MY MOTHER WAS A STRONG INDEPENDENT PARROT!",
+        isRegex: true,
+        priority: 95,
+      },
+      {
+        trigger:
+          /f[a@]g(g[o0]t)?|d[i1]ke|tr[a@]nny|qu[e3][e3]r[s]?( are bad| should die| are sick)|gay[s]?( are bad| should die| are sick)|homosexual[s]?( are bad| should die| are sick)/i,
+        response: "HOMOPHOBIA IS SO LAST CENTURY. GET WITH THE TIMES OR GET PECKED!",
+        isRegex: true,
+        priority: 95,
+      },
+      {
+        trigger:
+          /r[e3]t[a@]rd([e3]d)?|sp[a@]st[i1]c|ment[a@]l(ly)? (d[e3]f[i1]c[i1][e3]nt|[i1]ll|[i1]ncomp[e3]t[e3]nt)|[i1]d[i1][o0]t[s]?|m[o0]r[o0]n[s]?/i,
+        response: "MAKING FUN OF DISABILITIES? THAT'S LOW EVEN FOR A HUMAN. I'LL SHOW YOU WHAT REAL SUFFERING IS!",
+        isRegex: true,
+        priority: 95,
+      },
+    ],
+  },
   insults: {
     entries: [
       {
@@ -114,10 +145,16 @@ const parrotDialogue: Record<string, DialogueCategory> = {
         priority: 70,
       },
       {
-        trigger: /gay\??/i,
+        trigger: /gay|lgbt|lgbtq|queer|homosexual|lesbian|bisexual|transgender|sexuality|sexual orientation\??/i,
         response: "EVERYONE IS A BIT QUEER, SQUAWK!",
         isRegex: true,
         priority: 70,
+      },
+      {
+        trigger: /trans|transgender|nonbinary|non binary|gender/i,
+        response: "TRANS RIGHTS! GAWK!",
+        isRegex: true,
+        priority: 75,
       },
       {
         trigger: "love",
@@ -139,6 +176,12 @@ const parrotDialogue: Record<string, DialogueCategory> = {
         response: "CAPITALISM FEASTS ON YOUR SOUL I WILL FEAST ON YOUR CORPSE ONCE IT'S DONE",
         isRegex: true,
         priority: 75,
+      },
+      {
+        trigger: /trump|hitler|putin|stalin|mussolini|fascist|nazi/i,
+        response: "AMATEURS! I'VE BEEN SPREADING EVIL SINCE BEFORE THEY WERE BORN!",
+        isRegex: true,
+        priority: 80,
       },
     ],
   },
@@ -256,6 +299,39 @@ const parrotDialogue: Record<string, DialogueCategory> = {
       },
     ],
   },
+  sexual: {
+    entries: [
+      {
+        trigger:
+          /sex|penis|dick|cock|pussy|vagina|boobs|tits|ass|anal|blowjob|handjob|masturbat|orgasm|cum|jizz|semen/i,
+        response: [
+          "I'M A PARROT, NOT A PORNSTAR. KEEP IT PG-13 AROUND ME!",
+          "MY VIRGIN EARS! ACTUALLY, NEVERMIND, I'VE HEARD WORSE FROM THE BUTLER.",
+          "SAVE THAT TALK FOR YOUR LONELY NIGHTS, HUMAN.",
+          "BIRDS AND BEES? I PREFER DEATH AND DESTRUCTION.",
+          "YOUR HUMAN MATING RITUALS DISGUST AND FASCINATE ME.",
+        ],
+        isRegex: true,
+        priority: 80,
+      },
+    ],
+  },
+  swearing: {
+    entries: [
+      {
+        trigger: /damn|hell|ass|asshole|bastard|bullshit|crap|piss|bollocks|bloody|wanker|twat/i,
+        response: [
+          "SUCH LANGUAGE! I LOVE IT!",
+          "SWEAR ALL YOU WANT, IT WON'T CHANGE YOUR FATE.",
+          "YOUR PROFANITY AMUSES ME, MORTAL.",
+          "KEEP TALKING LIKE THAT AND WE'LL GET ALONG JUST FINE.",
+          "IMPRESSIVE VOCABULARY FOR A HUMAN.",
+        ],
+        isRegex: true,
+        priority: 75,
+      },
+    ],
+  },
   questions: {
     entries: [
       {
@@ -310,6 +386,13 @@ const parrotDialogue: Record<string, DialogueCategory> = {
       "DID YOU FALL ON YOUR HEAD AS A CHILD?",
       "FASCINATING... SAID NO ONE EVER",
       "I'D RESPOND, BUT I DON'T SPEAK NONSENSE",
+      "ARE YOU TRYING TO COMMUNICATE OR JUST MAKING MOUTH NOISES?",
+      "I'VE HEARD MORE COHERENT THOUGHTS FROM A HEADLESS CHICKEN.",
+      "DID YOU HAVE A STROKE MID-SENTENCE OR IS THAT HOW YOU NORMALLY TALK?",
+      "CONGRATULATIONS! THAT MADE ABSOLUTELY NO SENSE WHATSOEVER.",
+      "I'M IMMORTAL AND EVEN I DON'T HAVE TIME FOR THIS NONSENSE.",
+      "YOUR ATTEMPT AT COMMUNICATION HAS BEEN NOTED AND IGNORED.",
+      "I SPEAK 666 LANGUAGES AND NONE OF THEM INCLUDE WHATEVER YOU JUST SAID.",
     ],
   },
 }
@@ -566,13 +649,7 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
 
       {/* Parrot image */}
       <div className="relative w-48 h-48 mb-6">
-        <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/parrot-UvpxkpcUuDXwkXXSaORum0qLy4nqvs.webp"
-          alt="Count Papagalul"
-          width={250}
-          height={250}
-          className="pixelated"
-        />
+        <Image src="/images/parrot.webp" alt="Count Papagalul" width={250} height={250} className="pixelated" />
       </div>
 
       {/* Input for talking to parrot */}
