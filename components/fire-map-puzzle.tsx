@@ -24,7 +24,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   const [cityPairs, setCityPairs] = useState<CityPair[]>([
     {
       color: "black",
-      pinImage: "/images/hellmap/hellmap_pin_black.webp",
+      pinImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_black-oOCVCTkBuzSeRxciw7sK8DJda1Qf0H.webp", // hellmap_pin_black
       cities: [
         {
           name: "Zhanaozen",
@@ -44,7 +45,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     },
     {
       color: "blue",
-      pinImage: "/images/hellmap/hellmap_pin_blue.webp",
+      pinImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_blue-jR9KYSVMFAZDCYp6opZ2AZGcrNbsPz.webp", // hellmap_pin_blue
       cities: [
         {
           name: "Kungrad",
@@ -64,7 +66,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     },
     {
       color: "green",
-      pinImage: "/images/hellmap/hellmap_pin_green.webp",
+      pinImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_green-BB9LM9RnlIttE2M3MKbs1tdlgSSQZH.webp", // hellmap_pin_green
       cities: [
         {
           name: "Urgench",
@@ -84,7 +87,8 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
     },
     {
       color: "purple",
-      pinImage: "/images/hellmap/hellmap_pin_purple.webp",
+      pinImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_purple-7lFLoVeYNbE3GZFlcqaKzQDJBMMqmK.webp", // hellmap_pin_purple
       cities: [
         {
           name: "Navoi",
@@ -217,7 +221,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
           {/* Top layer - Pins */}
           <img
-            src="/images/hellmap/hellmap_pins.webp"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pins-x-LNkPuafsJLYCXm1OFBpJvmS5w2jj6p.webp" // hellmap_pins-x
             alt="Location pins"
             className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
               allCitiesGuessed ? "opacity-50 grayscale" : ""
