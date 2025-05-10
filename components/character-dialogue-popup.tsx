@@ -34,14 +34,13 @@ export default function CharacterDialoguePopup({
         <div className="flex justify-center mb-4">
           {character === "brain" && brainImage && (
             <div className="w-24 h-24 relative pixelated-container mb-2">
-              <Image
+              <img
                 src={brainImage || "/placeholder.svg"}
                 alt="Brain"
                 width={96}
                 height={96}
                 className="pixelated"
-                unoptimized={true} // Ensure animations work
-                priority={true} // Load image with higher priority
+                style={{ imageRendering: "pixelated" }}
               />
             </div>
           )}

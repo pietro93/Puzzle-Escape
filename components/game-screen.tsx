@@ -46,21 +46,21 @@ const dialogueOptions = [
 const getBrainLampImage = (correctCombinations: number) => {
   switch (correctCombinations) {
     case 0:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-WFdoE18rmyknvtBRPsfJ9IhWxiF6UF.webp" // 0 correct
+      return "/images/brainlamp.webp" // 0 correct - static image
     case 1:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa1.webp-yDKmVbfSchE1g4rMoeOejEt9r5zuR6.jpeg" // 1 correct
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa1.webp" // 1 correct
     case 2:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa2.webp-b2REfOp8TR0GcKS1WPCMbDCBQ1Cwhi.jpeg" // 2 correct
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa2.webp" // 2 correct
     case 3:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa3.webp-kxrxi8ZXb9V56uMJjWJu7uZ8Eiq833.jpeg" // 3 correct
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa3.webp" // 3 correct
     case 4:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa4.webp-eRImr2KOu3WrV2AiVM4PsSvb2RLm8r.jpeg" // 4 correct
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa4.webp" // 4 correct
     case 5:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa5.webp-EidMSK92ZJ81ltNVm4VMTpy5GlQiqK.jpeg" // 5 correct
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa5.webp" // 5 correct
     case 6:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa6.webp-f0SdXKeGnpv5pGB2CiLHlUhHNK4TiQ.jpeg" // 6 correct (all)
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa6.webp" // 6 correct (with red glow)
     default:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-WFdoE18rmyknvtBRPsfJ9IhWxiF6UF.webp" // Default
+      return "/images/brainlamp.webp" // Default - static image
   }
 }
 
