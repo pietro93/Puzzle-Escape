@@ -42,23 +42,23 @@ const dialogueOptions = [
   "No more... switches...",
 ]
 
-// Define getBrainLampImage here
+// Update the getBrainLampImage function to use local file paths
 const getBrainLampImage = (correctCombinations: number) => {
   switch (correctCombinations) {
     case 0:
       return "/images/brainlamp.webp" // 0 correct - static image
     case 1:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa1.webp" // 1 correct
+      return "/images/xbrainlampa1.webp" // 1 correct
     case 2:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa2.webp" // 2 correct
+      return "/images/xbrainlampa2.webp" // 2 correct
     case 3:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa3.webp" // 3 correct
+      return "/images/xbrainlampa3.webp" // 3 correct
     case 4:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa4.webp" // 4 correct
+      return "/images/xbrainlampa4.webp" // 4 correct
     case 5:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa5.webp" // 5 correct
+      return "/images/xbrainlampa5.webp" // 5 correct
     case 6:
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/xbrainlampa6.webp" // 6 correct (with red glow)
+      return "/images/xbrainlampa6.webp" // 6 correct (with red glow)
     default:
       return "/images/brainlamp.webp" // Default - static image
   }
