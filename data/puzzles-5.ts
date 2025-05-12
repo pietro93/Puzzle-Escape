@@ -22,14 +22,16 @@ export const puzzlesSet5: Puzzle[] = [
     level: 42,
     question: "The Devil challenges you to a game of infernal chess.",
     description:
-      "The chess pieces are made of bone and ember, and they move of their own accord. 'Find the winning move,' the Devil says with a smirk.",
-    imageUrl: "/images/level42-placeholder.webp",
-    solution: "queen to h7",
+      "The Four Horsemen of the Apocalypse ride as knights on this unholy board. Guide each to their opposite corner, but beware - no knight may move twice in succession.",
+    imageUrl: "",
+    solution: "apocalypse naught",
     category: "logic",
+    isInfernalChessPuzzle: true,
     hints: [
-      "Look for a checkmate in one move.",
-      "The queen is your most powerful piece.",
-      "The black king is vulnerable on the h-file.",
+      "Knights move in L-shapes: two squares in one direction, then one square perpendicular.",
+      "You must alternate which knight you move each turn.",
+      "Each knight must reach the corner diagonally opposite from where it started.",
+      "The background color of each corner indicates which knight belongs there.",
     ],
   },
   {

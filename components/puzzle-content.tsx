@@ -33,6 +33,7 @@ import MurderMysteryPuzzle from "./murder-mystery-puzzle"
 import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
 import MagicBoxPuzzle from "./magic-box-puzzle"
+import InfernalChessPuzzle from "./infernal-chess-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -539,6 +540,7 @@ export default function PuzzleContent({
       )}
       {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
       {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle />}
+      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle onSolve={() => {}} />}
     </div>
   )
 }
