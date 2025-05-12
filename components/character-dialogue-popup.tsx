@@ -1,71 +1,101 @@
 "use client"
-
-import type React from "react"
-import { useState, useEffect } from "react"
-import { useCharacterDialogue, guardDialogLines } from "../utils/dialogue-utils"
+import Image from "next/image"
 
 interface CharacterDialoguePopupProps {
   character: string
-  level: number
+  dialogue: string
   onClose: () => void
-  isVisible: boolean
+  onBack?: () => void
+  hasParentDialogue?: boolean
+  isGuardPopup?: boolean
+  guardDialogIndex?: number
+  level?: number
+  brainImage?: string
 }
 
-const CharacterDialoguePopup: React.FC<CharacterDialoguePopupProps> = ({ character, level, onClose, isVisible }) => {
-  const [dialogueText, setDialogueText] = useState<string>("")
-  const getCharacterDialogue = useCharacterDialogue()
-
-  useEffect(() => {
-    if (isVisible) {
-      // Special case for level 10 guard
-      if (level === 10 && character === "skeleton") {
-        const randomIndex = Math.floor(Math.random() * guardDialogLines.length)
-        setDialogueText(guardDialogLines[randomIndex])
-      } else {
-        setDialogueText(getCharacterDialogue(character, level))
-      }
-    }
-  }, [isVisible, character, level, getCharacterDialogue])
-
-  if (!isVisible) return null
-
-  // Get the character image path for all characters
-  const getCharacterImagePath = () => {
-    switch (character) {
-      case "skeleton":
-        return "/images/skeleton.webp"
-      case "butler":
-        return "/images/butler.webp"
-      case "gypsy":
-        return "/images/gypsy.webp"
-      case "sphinx":
-        return "/images/sphinx.webp"
-      case "devil":
-        return "/images/devil.webp"
-      case "brain":
-        return "/images/brainlamp.webp"
-      default:
-        return null
-    }
-  }
-
-  const characterImage = getCharacterImagePath()
-
+export default function CharacterDialoguePopup({
+  character,
+  dialogue,
+  onClose,
+  onBack,
+  hasParentDialogue,
+  isGuardPopup = false,
+  guardDialogIndex = 0,
+  level = 0,
+  brainImage,
+}: CharacterDialoguePopupProps) {
   return (
-    <div className="dialogue-popup">
-      <div className="dialogue-content">
-        {characterImage && (
-          <div className="character-portrait">
-            <img src={characterImage || "/placeholder.svg"} alt={character} />
-          </div>
-        )}
-        <div className="dialogue-text">{dialogueText}</div>
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div
+        className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Character Image */}
+        <div className="flex justify-center mb-4">
+          {character === "brain" && brainImage && (
+            <div className="w-24 h-24 relative pixelated-container mb-2">
+              <img
+                src={brainImage || "/placeholder.svg"}
+                alt="Brain"
+                width={96}
+                height={96}
+                className="pixelated"
+                style={{ imageRendering: "pixelated" }}
+              />
+            </div>
+          )}
+          {!brainImage && (
+            <div className="w-32 h-32 relative pixelated-container">
+              <Image
+                src={
+                  isGuardPopup
+                    ? level === 10
+                      ? "/images/skeleton.webp"
+                      : "/images/sphinx.webp"
+                    : character === "brain"
+                      ? "/images/brainlamp.webp"
+                      : `/images/${character}.webp`
+                }
+                alt={
+                  isGuardPopup
+                    ? level === 10
+                      ? "Guard"
+                      : "Sphinx"
+                    : character === "brain"
+                      ? "Suffering Head"
+                      : character
+                }
+                width={128}
+                height={128}
+                className="pixelated"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Dialogue Text */}
+        <div className="p-4 min-h-[100px] bg-gray-900 border-b border-gray-700">
+          <p className="text-gray-200 text-sm whitespace-pre-line font-pixel">{dialogue}</p>
+        </div>
+
+        {/* Close Button */}
+        <div className="mt-4 text-center">
+          <button
+            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+            onClick={onClose}
+          >
+            Close
+          </button>
+          {hasParentDialogue && onBack && (
+            <button
+              className="ml-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+              onClick={onBack}
+            >
+              Back
+            </button>
+          )}
+        </div>
       </div>
-      <button className="close-button" onClick={onClose}>
-        Close
-      </button>
     </div>
   )
 }
-
-export default CharacterDialoguePopup

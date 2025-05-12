@@ -639,7 +639,6 @@ export default function GameScreen({
           character={character}
           dialogue={characterDialogue}
           onClose={handleCloseCharacterDialogue}
-          level={level}
           brainImage={getBrainLampImage(binaryCorrectCombinations)}
         />
       )}
