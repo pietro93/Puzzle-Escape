@@ -551,29 +551,44 @@ export default function GameScreen({
       )}
 
       {/* Puzzle content */}
-      <PuzzleContent
-        level={level}
-        puzzle={puzzle}
-        guardDialogIndex={guardDialogIndex}
-        handleGuardClick={handleGuardClick}
-        handleJigsawComplete={handleJigsawComplete}
-        handleParrotSolve={handleParrotSolve}
-        handleQuestionnaireRestart={handleQuestionnaireRestart}
-        handleLightSwitchUpdate={handleLightSwitchUpdate}
-        handleZodiacSolve={handleZodiacSolve}
-        handlePyramidRoomChange={handlePyramidRoomChange}
-        handlePyramidTorchAcquired={handlePyramidTorchAcquired}
-        currentPyramidRoom={currentPyramidRoom}
-        hasPyramidTorch={hasPyramidTorch}
-        handleAllPiecesRemoved={handleAllPiecesRemoved}
-        handleElevatorPanelOpen={handleElevatorPanelOpen}
-        currentElevatorFloor={currentElevatorFloor}
-        setCurrentElevatorFloor={setCurrentElevatorFloor}
-        onSolutionGenerated={(solution) => setDynamicSolution(solution)}
-        setBinaryCorrectCombinations={setBinaryCorrectCombinations}
-        questionnaireRef={questionnaireRef}
-      />
-      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle onSolve={() => setShowSolution(true)} />}
+      {puzzle.isInfernalChessPuzzle ? (
+        <InfernalChessPuzzle
+          onSolve={() => {
+            setFeedback("Correct! Well done.")
+            setIsCorrect(true)
+            setTimeout(() => {
+              setAnswer("")
+              setFeedback("")
+              setIsCorrect(false)
+              setShowHints(false)
+              onCorrect(false)
+            }, 1500)
+          }}
+        />
+      ) : (
+        <PuzzleContent
+          level={level}
+          puzzle={puzzle}
+          guardDialogIndex={guardDialogIndex}
+          handleGuardClick={handleGuardClick}
+          handleJigsawComplete={handleJigsawComplete}
+          handleParrotSolve={handleParrotSolve}
+          handleQuestionnaireRestart={handleQuestionnaireRestart}
+          handleLightSwitchUpdate={handleLightSwitchUpdate}
+          handleZodiacSolve={handleZodiacSolve}
+          handlePyramidRoomChange={handlePyramidRoomChange}
+          handlePyramidTorchAcquired={handlePyramidTorchAcquired}
+          currentPyramidRoom={currentPyramidRoom}
+          hasPyramidTorch={hasPyramidTorch}
+          handleAllPiecesRemoved={handleAllPiecesRemoved}
+          handleElevatorPanelOpen={handleElevatorPanelOpen}
+          currentElevatorFloor={currentElevatorFloor}
+          setCurrentElevatorFloor={setCurrentElevatorFloor}
+          onSolutionGenerated={(solution) => setDynamicSolution(solution)}
+          setBinaryCorrectCombinations={setBinaryCorrectCombinations}
+          questionnaireRef={questionnaireRef}
+        />
+      )}
 
       {/* Answer input section */}
       <div className="space-y-3 mt-auto">

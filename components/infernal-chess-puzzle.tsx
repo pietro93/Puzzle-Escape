@@ -10,7 +10,6 @@ type Knight = {
   col: number
   color: string
   target: { row: number; col: number }
-  emoji: string
   name: string
 }
 
@@ -35,17 +34,7 @@ export default function InfernalChessPuzzle({
       col: 0,
       color: "black",
       target: { row: 4, col: 4 },
-      emoji: "♞",
       name: "Death",
-    },
-    pestilence: {
-      id: "pestilence",
-      row: 4,
-      col: 0,
-      color: "green",
-      target: { row: 0, col: 4 },
-      emoji: "♞",
-      name: "Pestilence",
     },
     war: {
       id: "war",
@@ -53,8 +42,15 @@ export default function InfernalChessPuzzle({
       col: 4,
       color: "red",
       target: { row: 4, col: 0 },
-      emoji: "♞",
       name: "War",
+    },
+    pestilence: {
+      id: "pestilence",
+      row: 4,
+      col: 0,
+      color: "green",
+      target: { row: 0, col: 4 },
+      name: "Pestilence",
     },
     famine: {
       id: "famine",
@@ -62,7 +58,6 @@ export default function InfernalChessPuzzle({
       col: 4,
       color: "purple",
       target: { row: 0, col: 0 },
-      emoji: "♞",
       name: "Famine",
     },
   })
@@ -257,8 +252,8 @@ export default function InfernalChessPuzzle({
   const getTileBackgroundColor = (row: number, col: number): string => {
     // Corner tiles have special colors based on target knight
     if (row === 0 && col === 0) return "bg-purple-800" // D - Famine's color
-    if (row === 4 && col === 0) return "bg-red-800" // P - War's color
-    if (row === 0 && col === 4) return "bg-green-800" // W - Pestilence's color
+    if (row === 4 && col === 0) return "bg-green-800" // P - Pestilence's color
+    if (row === 0 && col === 4) return "bg-red-800" // W - War's color
     if (row === 4 && col === 4) return "bg-black" // F - Death's color
 
     // Other visible tiles alternate between light and dark gray
@@ -299,11 +294,11 @@ export default function InfernalChessPuzzle({
           <div
             key={`${row}-${col}`}
             className={`
-              w-16 h-16 md:w-20 md:h-20 flex items-center justify-center
+              w-16 h-16 flex items-center justify-center
               ${getTileBackgroundColor(row, col)}
-              ${isLegalMove ? "border-4 border-yellow-400 cursor-pointer" : "border border-gray-700"}
-              ${isSelected ? "border-4 border-blue-500" : ""}
-              ${isError ? "animate-pulse border-4 border-red-500" : ""}
+              ${isLegalMove ? "border-2 border-yellow-400 cursor-pointer" : "border border-gray-700"}
+              ${isSelected ? "border-2 border-blue-500" : ""}
+              ${isError ? "animate-pulse border-2 border-red-500" : ""}
               transition-all duration-200 relative
             `}
             onClick={() => handleTileClick(row, col)}
@@ -313,7 +308,7 @@ export default function InfernalChessPuzzle({
                 <div
                   className={`rounded-full ${getKnightBackgroundClass(knight.id)} w-10 h-10 flex items-center justify-center`}
                 >
-                  <span className="text-white text-2xl">{knight.emoji}</span>
+                  <span className="text-white text-xl">♞</span>
                 </div>
                 <span className="text-xs text-white mt-1">{knight.name}</span>
               </div>
