@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAudio } from "@/hooks/use-audio"
 
 // Knight type definition
@@ -82,8 +82,13 @@ export default function InfernalChessPuzzle({
   // Error animation state
   const [errorTile, setErrorTile] = useState<Tile | null>(null)
 
-  // Move history for undo
-  const [moveHistory, setMoveHistory] = useState<{ knightId: string; from: Tile; to: Tile }[]>([])
+  // Messages when horsemen reach their targets
+  const [completionMessages, setCompletionMessages] = useState<Record<string, boolean>>({
+    death: false,
+    pestilence: false,
+    war: false,
+    famine: false,
+  })
 
   // Determine if a tile is invisible
   const isInvisibleTile = (row: number, col: number): boolean => {
@@ -171,10 +176,6 @@ export default function InfernalChessPuzzle({
     const isLegalMove = legalMoves.some((move) => move.row === row && move.col === col)
 
     if (isLegalMove) {
-      // Get the current position of the knight before moving
-      const knight = knights[selectedKnight]
-      const fromTile = { row: knight.row, col: knight.col }
-
       // Move the knight
       setKnights((prev) => ({
         ...prev,
@@ -184,16 +185,6 @@ export default function InfernalChessPuzzle({
           col,
         },
       }))
-
-      // Add to move history
-      setMoveHistory((prev) => [
-        ...prev,
-        {
-          knightId: selectedKnight,
-          from: fromTile,
-          to: { row, col },
-        },
-      ])
 
       // Play move sound
       playSound("/audio/button-click.mp3")
@@ -205,8 +196,9 @@ export default function InfernalChessPuzzle({
       setSelectedKnight(null)
       setLegalMoves([])
 
-      // Check if puzzle is solved after a short delay
+      // Check if knight reached its target
       setTimeout(() => {
+        checkKnightAtTarget(selectedKnight, row, col)
         checkPuzzleSolution()
       }, 300)
     } else {
@@ -217,93 +209,17 @@ export default function InfernalChessPuzzle({
     }
   }
 
-  // Undo the last move
-  const handleUndo = () => {
-    if (moveHistory.length === 0) return
+  // Check if a knight has reached its target
+  const checkKnightAtTarget = (knightId: string, row: number, col: number) => {
+    if (!knightId) return
 
-    // Get the last move
-    const lastMove = moveHistory[moveHistory.length - 1]
-
-    // Revert the knight position
-    setKnights((prev) => ({
-      ...prev,
-      [lastMove.knightId]: {
-        ...prev[lastMove.knightId],
-        row: lastMove.from.row,
-        col: lastMove.from.col,
-      },
-    }))
-
-    // Update last moved knight
-    const previousMoves = moveHistory.slice(0, -1)
-    setLastMovedKnight(previousMoves.length > 0 ? previousMoves[previousMoves.length - 1].knightId : null)
-
-    // Update move history
-    setMoveHistory(previousMoves)
-
-    // Clear selection
-    setSelectedKnight(null)
-    setLegalMoves([])
-
-    // Play undo sound
-    playSound("/audio/button-click.mp3")
-
-    // Reset puzzle solved state
-    setIsPuzzleSolved(false)
-  }
-
-  // Reset the puzzle
-  const handleReset = () => {
-    // Reset knights to initial positions
-    setKnights({
-      death: {
-        id: "death",
-        row: 0,
-        col: 0,
-        color: "black",
-        target: { row: 4, col: 4 },
-        emoji: "♞",
-        name: "Death",
-      },
-      pestilence: {
-        id: "pestilence",
-        row: 4,
-        col: 0,
-        color: "green",
-        target: { row: 0, col: 4 },
-        emoji: "♞",
-        name: "Pestilence",
-      },
-      war: {
-        id: "war",
-        row: 0,
-        col: 4,
-        color: "red",
-        target: { row: 0, col: 4 },
-        emoji: "♞",
-        name: "War",
-      },
-      famine: {
-        id: "famine",
-        row: 4,
-        col: 4,
-        color: "purple",
-        target: { row: 0, col: 0 },
-        emoji: "♞",
-        name: "Famine",
-      },
-    })
-
-    // Reset all other state
-    setLastMovedKnight(null)
-    setSelectedKnight(null)
-    setLegalMoves([])
-    setIsPuzzleSolved(false)
-    setErrorTile(null)
-    setMoveHistory([])
-
-    // Play reset sound
-    playSound("/audio/button-click.mp3")
+    const knight = knights[knightId]
+    if (knight && knight.target.row === row && knight.target.col === col) {
+      setCompletionMessages((prev) => ({
+        ...prev,
+        [knightId]: true,
+      }))
+    }
   }
 
   // Check if all knights have reached their targets
@@ -321,31 +237,47 @@ export default function InfernalChessPuzzle({
     }
   }
 
+  // Get knight background color class
+  const getKnightBackgroundClass = (knightId: string): string => {
+    switch (knightId) {
+      case "death":
+        return "bg-black"
+      case "pestilence":
+        return "bg-green-600"
+      case "war":
+        return "bg-red-600"
+      case "famine":
+        return "bg-purple-600"
+      default:
+        return "bg-gray-900"
+    }
+  }
+
   // Determine tile background color
   const getTileBackgroundColor = (row: number, col: number): string => {
     // Corner tiles have special colors based on target knight
     if (row === 0 && col === 0) return "bg-purple-800" // D - Famine's color
     if (row === 4 && col === 0) return "bg-red-800" // P - War's color
     if (row === 0 && col === 4) return "bg-green-800" // W - Pestilence's color
-    if (row === 4 && col === 4) return "bg-gray-900" // F - Death's color
+    if (row === 4 && col === 4) return "bg-black" // F - Death's color
 
     // Other visible tiles alternate between light and dark gray
     return (row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500"
   }
 
-  // Get knight color class
-  const getKnightColorClass = (knightId: string): string => {
+  // Get completion message for a knight
+  const getCompletionMessage = (knightId: string): string => {
     switch (knightId) {
       case "death":
-        return "text-gray-900"
+        return "Death has arrived. The reaper's scythe gleams in the infernal light."
       case "pestilence":
-        return "text-green-600"
+        return "Pestilence spreads. The air fills with the stench of decay and disease."
       case "war":
-        return "text-red-600"
+        return "War has come. Blood and steel shall reign in this damned realm."
       case "famine":
-        return "text-purple-600"
+        return "Famine consumes all. The land withers as hunger devours hope."
       default:
-        return "text-gray-900"
+        return ""
     }
   }
 
@@ -376,7 +308,16 @@ export default function InfernalChessPuzzle({
             `}
             onClick={() => handleTileClick(row, col)}
           >
-            {knight && <div className={`text-4xl ${getKnightColorClass(knight.id)}`}>{knight.emoji}</div>}
+            {knight && (
+              <div className="flex flex-col items-center">
+                <div
+                  className={`rounded-full ${getKnightBackgroundClass(knight.id)} w-10 h-10 flex items-center justify-center`}
+                >
+                  <span className="text-white text-2xl">{knight.emoji}</span>
+                </div>
+                <span className="text-xs text-white mt-1">{knight.name}</span>
+              </div>
+            )}
 
             {/* Corner labels */}
             {row === 0 && col === 0 && <div className="absolute top-0 left-0 text-xs text-white font-bold p-1">D</div>}
@@ -391,52 +332,39 @@ export default function InfernalChessPuzzle({
     return board
   }
 
+  // Check for knights at their targets on initial render
+  useEffect(() => {
+    Object.entries(knights).forEach(([id, knight]) => {
+      if (knight.row === knight.target.row && knight.col === knight.target.col) {
+        setCompletionMessages((prev) => ({
+          ...prev,
+          [id]: true,
+        }))
+      }
+    })
+  }, [])
+
   return (
     <div className="flex flex-col items-center p-4 bg-gray-800 rounded-lg shadow-lg">
       {/* Instructions */}
       <div className="mb-4 text-center text-white">
         <h3 className="text-lg font-bold mb-2">The Four Horsemen Chess</h3>
-        <p className="text-sm mb-2">Move each knight to its opposite corner. Alternate knights each move.</p>
-        <div className="flex justify-center gap-4 mb-2">
-          <div className="flex items-center">
-            <span className="inline-block w-3 h-3 bg-gray-900 mr-1 rounded-full"></span>
-            <span className="text-xs">Death</span>
-          </div>
-          <div className="flex items-center">
-            <span className="inline-block w-3 h-3 bg-green-600 mr-1 rounded-full"></span>
-            <span className="text-xs">Pestilence</span>
-          </div>
-          <div className="flex items-center">
-            <span className="inline-block w-3 h-3 bg-red-600 mr-1 rounded-full"></span>
-            <span className="text-xs">War</span>
-          </div>
-          <div className="flex items-center">
-            <span className="inline-block w-3 h-3 bg-purple-600 mr-1 rounded-full"></span>
-            <span className="text-xs">Famine</span>
-          </div>
-        </div>
+        <p className="text-sm mb-4">Move each knight to its opposite corner. Alternate knights each move.</p>
       </div>
 
       {/* Chess board */}
       <div className="grid grid-cols-3 gap-1 mb-4">{renderBoard()}</div>
 
-      {/* Controls */}
-      <div className="flex gap-4 mt-2">
-        <button
-          onClick={handleUndo}
-          disabled={moveHistory.length === 0}
-          className={`px-4 py-2 rounded-md text-white font-medium
-            ${moveHistory.length === 0 ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}
-          `}
-        >
-          Undo
-        </button>
-        <button
-          onClick={handleReset}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium"
-        >
-          Reset
-        </button>
+      {/* Completion messages */}
+      <div className="mt-4 w-full space-y-2">
+        {Object.entries(completionMessages).map(
+          ([knightId, isComplete]) =>
+            isComplete && (
+              <div key={knightId} className="p-2 bg-gray-900 text-white rounded text-sm animate-fadeIn">
+                {getCompletionMessage(knightId)}
+              </div>
+            ),
+        )}
       </div>
 
       {/* Completion message */}

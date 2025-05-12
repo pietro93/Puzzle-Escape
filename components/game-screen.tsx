@@ -17,6 +17,7 @@ import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
 import PuzzleContent from "./puzzle-content"
+import InfernalChessPuzzle from "./infernal-chess-puzzle"
 
 interface GameScreenProps {
   level: number
@@ -123,6 +124,7 @@ export default function GameScreen({
   // Add state for brain dialogue
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
+  const [showSolution, setShowSolution] = useState(false)
 
   // Focus input when component mounts
   useEffect(() => {
@@ -571,6 +573,7 @@ export default function GameScreen({
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
       />
+      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle onSolve={() => setShowSolution(true)} />}
 
       {/* Answer input section */}
       <div className="space-y-3 mt-auto">
