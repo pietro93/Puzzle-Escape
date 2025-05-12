@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useAudio } from "@/hooks/use-audio"
+import Image from "next/image"
 
 // Define types
 type Position = {
@@ -15,6 +16,7 @@ type Knight = {
   target: Position
   color: string
   name: string
+  image: string
 }
 
 export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void }) {
@@ -22,10 +24,38 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
 
   // Initialize knights
   const [knights, setKnights] = useState<Knight[]>([
-    { id: "death", position: { row: 0, col: 2 }, target: { row: 4, col: 2 }, color: "black", name: "Death" },
-    { id: "war", position: { row: 2, col: 0 }, target: { row: 2, col: 4 }, color: "red", name: "War" },
-    { id: "pestilence", position: { row: 2, col: 4 }, target: { row: 2, col: 0 }, color: "green", name: "Pestilence" },
-    { id: "famine", position: { row: 4, col: 2 }, target: { row: 0, col: 2 }, color: "purple", name: "Famine" },
+    {
+      id: "death",
+      position: { row: 0, col: 0 },
+      target: { row: 4, col: 4 },
+      color: "black",
+      name: "Death",
+      image: "/images/horseman_death.webp",
+    },
+    {
+      id: "war",
+      position: { row: 1, col: 1 },
+      target: { row: 3, col: 3 },
+      color: "red",
+      name: "War",
+      image: "/images/horseman_war.webp",
+    },
+    {
+      id: "pestilence",
+      position: { row: 2, col: 2 },
+      target: { row: 2, col: 2 },
+      color: "green",
+      name: "Pestilence",
+      image: "/images/horseman_pestilence.webp",
+    },
+    {
+      id: "famine",
+      position: { row: 4, col: 0 },
+      target: { row: 0, col: 4 },
+      color: "purple",
+      name: "Famine",
+      image: "/images/horseman_famine.webp",
+    },
   ])
 
   // Track selected knight and last moved knight
@@ -112,6 +142,9 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
 
   // Handle tile click
   const handleTileClick = (row: number, col: number) => {
+    // If tile is not visible, do nothing
+    if (!isVisibleTile(row, col)) return
+
     // If a knight is at this position, select it
     const knight = getKnightAtPosition(row, col)
     if (knight) {
@@ -219,35 +252,41 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
     const board = []
 
     for (let row = 0; row < 5; row++) {
+      const rowElements = []
       for (let col = 0; col < 5; col++) {
-        // Skip invisible tiles
-        if (!isVisibleTile(row, col)) continue
-
         const knight = getKnightAtPosition(row, col)
         const isLegalMove = legalMoves.some((move) => move.row === row && move.col === col)
         const isSelected =
           selectedKnight &&
           knights.find((k) => k.id === selectedKnight)?.position.row === row &&
           knights.find((k) => k.id === selectedKnight)?.position.col === col
+        const isVisible = isVisibleTile(row, col)
 
-        board.push(
+        rowElements.push(
           <div
             key={`${row}-${col}`}
             className={`
               w-16 h-16 flex items-center justify-center
-              ${(row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500"}
+              ${isVisible ? ((row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500") : "bg-transparent"}
               ${isLegalMove ? "border-2 border-yellow-400 cursor-pointer" : ""}
               ${isSelected ? "border-2 border-blue-500" : ""}
-              transition-all duration-200
+              ${!isVisible ? "opacity-0" : ""}
+              transition-all duration-200 relative
             `}
             onClick={() => handleTileClick(row, col)}
           >
             {knight && (
               <div className="flex flex-col items-center">
                 <div
-                  className={`rounded-full ${getKnightColorClass(knight.id)} w-10 h-10 flex items-center justify-center`}
+                  className={`rounded-full ${getKnightColorClass(knight.id)} w-10 h-10 flex items-center justify-center relative`}
                 >
-                  <span className="text-white text-xl">♞</span>
+                  <Image
+                    src={knight.image || "/placeholder.svg"}
+                    alt={knight.name}
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
                 </div>
                 <span className="text-xs text-white mt-1">{knight.name}</span>
               </div>
@@ -255,6 +294,11 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
           </div>,
         )
       }
+      board.push(
+        <div key={`row-${row}`} className="flex">
+          {rowElements}
+        </div>,
+      )
     }
 
     return board
@@ -269,7 +313,7 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
       </div>
 
       {/* Chess board */}
-      <div className="grid grid-cols-3 gap-1 mb-4">{renderBoard()}</div>
+      <div className="mb-4">{renderBoard()}</div>
 
       {/* Completion messages */}
       <div className="mt-4 w-full space-y-2">
