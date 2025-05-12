@@ -3,115 +3,74 @@
 import { useState, useEffect } from "react"
 import { useAudio } from "@/hooks/use-audio"
 
-// Knight type definition
-type Knight = {
-  id: string
+// Define types
+type Position = {
   row: number
   col: number
+}
+
+type Knight = {
+  id: string
+  position: Position
+  target: Position
   color: string
-  target: { row: number; col: number }
   name: string
 }
 
-// Tile type definition
-type Tile = {
-  row: number
-  col: number
-}
-
-export default function InfernalChessPuzzle({
-  onSolve,
-}: {
-  onSolve?: () => void
-}) {
+export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void }) {
   const { playSound } = useAudio()
 
   // Initialize knights
-  const [knights, setKnights] = useState<Record<string, Knight>>({
-    death: {
-      id: "death",
-      row: 0,
-      col: 0,
-      color: "black",
-      target: { row: 4, col: 4 },
-      name: "Death",
-    },
-    war: {
-      id: "war",
-      row: 0,
-      col: 4,
-      color: "red",
-      target: { row: 4, col: 0 },
-      name: "War",
-    },
-    pestilence: {
-      id: "pestilence",
-      row: 4,
-      col: 0,
-      color: "green",
-      target: { row: 0, col: 4 },
-      name: "Pestilence",
-    },
-    famine: {
-      id: "famine",
-      row: 4,
-      col: 4,
-      color: "purple",
-      target: { row: 0, col: 0 },
-      name: "Famine",
-    },
-  })
+  const [knights, setKnights] = useState<Knight[]>([
+    { id: "death", position: { row: 0, col: 2 }, target: { row: 4, col: 2 }, color: "black", name: "Death" },
+    { id: "war", position: { row: 2, col: 0 }, target: { row: 2, col: 4 }, color: "red", name: "War" },
+    { id: "pestilence", position: { row: 2, col: 4 }, target: { row: 2, col: 0 }, color: "green", name: "Pestilence" },
+    { id: "famine", position: { row: 4, col: 2 }, target: { row: 0, col: 2 }, color: "purple", name: "Famine" },
+  ])
 
-  // Track the last moved knight to enforce alternating moves
+  // Track selected knight and last moved knight
+  const [selectedKnight, setSelectedKnight] = useState<string | null>(null)
   const [lastMovedKnight, setLastMovedKnight] = useState<string | null>(null)
 
-  // Currently selected knight
-  const [selectedKnight, setSelectedKnight] = useState<string | null>(null)
+  // Track legal moves for selected knight
+  const [legalMoves, setLegalMoves] = useState<Position[]>([])
 
-  // Legal moves for the selected knight
-  const [legalMoves, setLegalMoves] = useState<Tile[]>([])
-
-  // Puzzle completion state
-  const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
-
-  // Error animation state
-  const [errorTile, setErrorTile] = useState<Tile | null>(null)
-
-  // Messages when horsemen reach their targets
+  // Track completion messages
   const [completionMessages, setCompletionMessages] = useState<Record<string, boolean>>({
     death: false,
-    pestilence: false,
     war: false,
+    pestilence: false,
     famine: false,
   })
 
-  // Determine if a tile is invisible
-  const isInvisibleTile = (row: number, col: number): boolean => {
-    // All tiles with X in the layout are invisible
-    if (row === 0 && (col === 1 || col === 2 || col === 3)) return true
-    if (row === 4 && (col === 1 || col === 2 || col === 3)) return true
-    if (col === 0 && (row === 1 || row === 2 || row === 3)) return true
-    if (col === 4 && (row === 1 || row === 2 || row === 3)) return true
+  // Track if puzzle is solved
+  const [isSolved, setIsSolved] = useState(false)
+
+  // Check if a tile is visible/legal
+  const isVisibleTile = (row: number, col: number): boolean => {
+    // Center tiles in first/last row/column are visible
+    if (row === 0 && col === 2) return true
+    if (row === 2 && col === 0) return true
+    if (row === 2 && col === 4) return true
+    if (row === 4 && col === 2) return true
+
+    // Middle 3x3 grid is visible
+    if (row >= 1 && row <= 3 && col >= 1 && col <= 3) return true
 
     return false
   }
 
-  // Check if a tile is occupied by a knight
-  const getKnightAtTile = (row: number, col: number): Knight | null => {
-    for (const knight of Object.values(knights)) {
-      if (knight.row === row && knight.col === col) {
-        return knight
-      }
-    }
-    return null
+  // Get knight at position
+  const getKnightAtPosition = (row: number, col: number): Knight | undefined => {
+    return knights.find((knight) => knight.position.row === row && knight.position.col === col)
   }
 
-  // Calculate legal knight moves
-  const calculateLegalMoves = (knightId: string): Tile[] => {
-    const knight = knights[knightId]
+  // Calculate legal moves for a knight
+  const calculateLegalMoves = (knightId: string): Position[] => {
+    const knight = knights.find((k) => k.id === knightId)
     if (!knight) return []
 
-    const { row, col } = knight
+    const { row, col } = knight.position
     const possibleMoves = [
       { row: row + 2, col: col + 1 },
       { row: row + 2, col: col - 1 },
@@ -123,16 +82,16 @@ export default function InfernalChessPuzzle({
       { row: row - 1, col: col - 2 },
     ]
 
-    // Filter out moves that are off the board, on invisible tiles, or occupied
+    // Filter to only visible tiles that aren't occupied
     return possibleMoves.filter((move) => {
       // Check if move is within board boundaries
       if (move.row < 0 || move.row > 4 || move.col < 0 || move.col > 4) return false
 
-      // Check if move is to an invisible tile
-      if (isInvisibleTile(move.row, move.col)) return false
+      // Check if move is to a visible tile
+      if (!isVisibleTile(move.row, move.col)) return false
 
-      // Check if move is to an occupied tile
-      if (getKnightAtTile(move.row, move.col)) return false
+      // Check if move is to an unoccupied tile
+      if (getKnightAtPosition(move.row, move.col)) return false
 
       return true
     })
@@ -140,135 +99,100 @@ export default function InfernalChessPuzzle({
 
   // Handle knight selection
   const handleKnightSelect = (knightId: string) => {
-    // Cannot select the same knight twice in a row
+    // Can't select the same knight twice in a row
     if (knightId === lastMovedKnight) {
-      const knight = knights[knightId]
-      setErrorTile({ row: knight.row, col: knight.col })
       playSound("/audio/wrong.mp3")
-      setTimeout(() => setErrorTile(null), 500)
       return
     }
-
-    // Play selection sound
-    playSound("/audio/button-click.mp3")
 
     setSelectedKnight(knightId)
     setLegalMoves(calculateLegalMoves(knightId))
+    playSound("/audio/button-click.mp3")
   }
 
-  // Handle tile click for movement
+  // Handle tile click
   const handleTileClick = (row: number, col: number) => {
-    // If no knight is selected, check if there's a knight at this tile
-    if (!selectedKnight) {
-      const knight = getKnightAtTile(row, col)
-      if (knight) {
-        handleKnightSelect(knight.id)
-      }
+    // If a knight is at this position, select it
+    const knight = getKnightAtPosition(row, col)
+    if (knight) {
+      handleKnightSelect(knight.id)
       return
     }
 
-    // Check if the clicked tile is a legal move
+    // If no knight is selected, do nothing
+    if (!selectedKnight) return
+
+    // Check if this is a legal move
     const isLegalMove = legalMoves.some((move) => move.row === row && move.col === col)
-
-    if (isLegalMove) {
-      // Move the knight
-      setKnights((prev) => ({
-        ...prev,
-        [selectedKnight]: {
-          ...prev[selectedKnight],
-          row,
-          col,
-        },
-      }))
-
-      // Play move sound
-      playSound("/audio/button-click.mp3")
-
-      // Update last moved knight
-      setLastMovedKnight(selectedKnight)
-
-      // Clear selection
-      setSelectedKnight(null)
-      setLegalMoves([])
-
-      // Check if knight reached its target
-      setTimeout(() => {
-        checkKnightAtTarget(selectedKnight, row, col)
-        checkPuzzleSolution()
-      }, 300)
-    } else {
-      // Illegal move - show error animation
-      setErrorTile({ row, col })
+    if (!isLegalMove) {
       playSound("/audio/wrong.mp3")
-      setTimeout(() => setErrorTile(null), 500)
+      return
     }
-  }
 
-  // Check if a knight has reached its target
-  const checkKnightAtTarget = (knightId: string, row: number, col: number) => {
-    if (!knightId) return
+    // Move the knight
+    setKnights(knights.map((knight) => (knight.id === selectedKnight ? { ...knight, position: { row, col } } : knight)))
 
-    const knight = knights[knightId]
-    if (knight && knight.target.row === row && knight.target.col === col) {
+    // Update last moved knight
+    setLastMovedKnight(selectedKnight)
+
+    // Clear selection
+    setSelectedKnight(null)
+    setLegalMoves([])
+
+    // Play sound
+    playSound("/audio/button-click.mp3")
+
+    // Check if knight reached target
+    const movedKnight = knights.find((k) => k.id === selectedKnight)
+    if (movedKnight && movedKnight.target.row === row && movedKnight.target.col === col) {
       setCompletionMessages((prev) => ({
         ...prev,
-        [knightId]: true,
+        [selectedKnight]: true,
       }))
     }
+
+    // Check if puzzle is solved (after a short delay to allow state updates)
+    setTimeout(checkIfSolved, 100)
   }
 
-  // Check if all knights have reached their targets
-  const checkPuzzleSolution = () => {
-    const allKnightsAtTargets = Object.values(knights).every((knight) => {
-      return knight.row === knight.target.row && knight.col === knight.target.col
-    })
+  // Check if puzzle is solved
+  const checkIfSolved = () => {
+    const allKnightsAtTarget = knights.every(
+      (knight) => knight.position.row === knight.target.row && knight.position.col === knight.target.col,
+    )
 
-    if (allKnightsAtTargets) {
-      setIsPuzzleSolved(true)
+    if (allKnightsAtTarget && !isSolved) {
+      setIsSolved(true)
       playSound("/audio/correct.mp3")
-      if (onSolve) {
-        onSolve()
-      }
+      if (onSolve) onSolve()
     }
   }
 
-  // Get knight background color class
-  const getKnightBackgroundClass = (knightId: string): string => {
+  // Get knight color class
+  const getKnightColorClass = (knightId: string): string => {
     switch (knightId) {
       case "death":
         return "bg-black"
-      case "pestilence":
-        return "bg-green-600"
       case "war":
         return "bg-red-600"
+      case "pestilence":
+        return "bg-green-600"
       case "famine":
         return "bg-purple-600"
       default:
-        return "bg-gray-900"
+        return "bg-gray-800"
     }
   }
 
-  // Determine tile background color
-  const getTileBackgroundColor = (row: number, col: number): string => {
-    // Corner tiles have special colors based on target knight
-    if (row === 0 && col === 0) return "bg-purple-800" // D - Famine's color
-    if (row === 4 && col === 0) return "bg-green-800" // P - Pestilence's color
-    if (row === 0 && col === 4) return "bg-red-800" // W - War's color
-    if (row === 4 && col === 4) return "bg-black" // F - Death's color
-
-    // Other visible tiles alternate between light and dark gray
-    return (row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500"
-  }
-
-  // Get completion message for a knight
+  // Get completion message
   const getCompletionMessage = (knightId: string): string => {
     switch (knightId) {
       case "death":
         return "Death has arrived. The reaper's scythe gleams in the infernal light."
-      case "pestilence":
-        return "Pestilence spreads. The air fills with the stench of decay and disease."
       case "war":
         return "War has come. Blood and steel shall reign in this damned realm."
+      case "pestilence":
+        return "Pestilence spreads. The air fills with the stench of decay and disease."
       case "famine":
         return "Famine consumes all. The land withers as hunger devours hope."
       default:
@@ -276,49 +200,58 @@ export default function InfernalChessPuzzle({
     }
   }
 
-  // Render the chess board
+  // Check for knights at targets on initial render
+  useEffect(() => {
+    knights.forEach((knight) => {
+      if (knight.position.row === knight.target.row && knight.position.col === knight.target.col) {
+        setCompletionMessages((prev) => ({
+          ...prev,
+          [knight.id]: true,
+        }))
+      }
+    })
+
+    checkIfSolved()
+  }, [])
+
+  // Render the board
   const renderBoard = () => {
     const board = []
 
     for (let row = 0; row < 5; row++) {
       for (let col = 0; col < 5; col++) {
         // Skip invisible tiles
-        if (isInvisibleTile(row, col)) continue
+        if (!isVisibleTile(row, col)) continue
 
-        const knight = getKnightAtTile(row, col)
+        const knight = getKnightAtPosition(row, col)
         const isLegalMove = legalMoves.some((move) => move.row === row && move.col === col)
-        const isSelected = selectedKnight && knights[selectedKnight].row === row && knights[selectedKnight].col === col
-        const isError = errorTile && errorTile.row === row && errorTile.col === col
+        const isSelected =
+          selectedKnight &&
+          knights.find((k) => k.id === selectedKnight)?.position.row === row &&
+          knights.find((k) => k.id === selectedKnight)?.position.col === col
 
         board.push(
           <div
             key={`${row}-${col}`}
             className={`
               w-16 h-16 flex items-center justify-center
-              ${getTileBackgroundColor(row, col)}
-              ${isLegalMove ? "border-2 border-yellow-400 cursor-pointer" : "border border-gray-700"}
+              ${(row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500"}
+              ${isLegalMove ? "border-2 border-yellow-400 cursor-pointer" : ""}
               ${isSelected ? "border-2 border-blue-500" : ""}
-              ${isError ? "animate-pulse border-2 border-red-500" : ""}
-              transition-all duration-200 relative
+              transition-all duration-200
             `}
             onClick={() => handleTileClick(row, col)}
           >
             {knight && (
               <div className="flex flex-col items-center">
                 <div
-                  className={`rounded-full ${getKnightBackgroundClass(knight.id)} w-10 h-10 flex items-center justify-center`}
+                  className={`rounded-full ${getKnightColorClass(knight.id)} w-10 h-10 flex items-center justify-center`}
                 >
                   <span className="text-white text-xl">♞</span>
                 </div>
                 <span className="text-xs text-white mt-1">{knight.name}</span>
               </div>
             )}
-
-            {/* Corner labels */}
-            {row === 0 && col === 0 && <div className="absolute top-0 left-0 text-xs text-white font-bold p-1">D</div>}
-            {row === 4 && col === 0 && <div className="absolute top-0 left-0 text-xs text-white font-bold p-1">P</div>}
-            {row === 0 && col === 4 && <div className="absolute top-0 left-0 text-xs text-white font-bold p-1">W</div>}
-            {row === 4 && col === 4 && <div className="absolute top-0 left-0 text-xs text-white font-bold p-1">F</div>}
           </div>,
         )
       }
@@ -327,21 +260,9 @@ export default function InfernalChessPuzzle({
     return board
   }
 
-  // Check for knights at their targets on initial render
-  useEffect(() => {
-    Object.entries(knights).forEach(([id, knight]) => {
-      if (knight.row === knight.target.row && knight.col === knight.target.col) {
-        setCompletionMessages((prev) => ({
-          ...prev,
-          [id]: true,
-        }))
-      }
-    })
-  }, [])
-
   return (
     <div className="flex flex-col items-center p-4 bg-gray-800 rounded-lg shadow-lg">
-      {/* Instructions */}
+      {/* Title and instructions */}
       <div className="mb-4 text-center text-white">
         <h3 className="text-lg font-bold mb-2">The Four Horsemen Chess</h3>
         <p className="text-sm mb-4">Move each knight to its opposite corner. Alternate knights each move.</p>
@@ -355,16 +276,16 @@ export default function InfernalChessPuzzle({
         {Object.entries(completionMessages).map(
           ([knightId, isComplete]) =>
             isComplete && (
-              <div key={knightId} className="p-2 bg-gray-900 text-white rounded text-sm animate-fadeIn">
+              <div key={knightId} className="p-2 bg-gray-900 text-white rounded text-sm">
                 {getCompletionMessage(knightId)}
               </div>
             ),
         )}
       </div>
 
-      {/* Completion message */}
-      {isPuzzleSolved && (
-        <div className="mt-4 p-4 bg-green-800 text-white rounded-lg text-center animate-fadeIn">
+      {/* Solution message */}
+      {isSolved && (
+        <div className="mt-4 p-4 bg-green-800 text-white rounded-lg text-center">
           <p className="font-bold text-lg">The Four Horsemen have completed their eternal cycle.</p>
           <p className="text-yellow-300 font-bold mt-2">APOCALYPSE NAUGHT</p>
           <p className="text-sm mt-2">Type this phrase to proceed.</p>
