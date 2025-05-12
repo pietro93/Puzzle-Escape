@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAudio } from "@/hooks/use-audio"
 
 // Define types
@@ -20,12 +20,12 @@ type Knight = {
 export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void }) {
   const { playSound } = useAudio()
 
-  // Initialize knights at the four corners
+  // Initialize knights
   const [knights, setKnights] = useState<Knight[]>([
-    { id: "death", position: { row: 0, col: 0 }, target: { row: 4, col: 4 }, color: "black", name: "Death" },
-    { id: "war", position: { row: 0, col: 4 }, target: { row: 4, col: 0 }, color: "red", name: "War" },
-    { id: "pestilence", position: { row: 4, col: 0 }, target: { row: 0, col: 4 }, color: "green", name: "Pestilence" },
-    { id: "famine", position: { row: 4, col: 4 }, target: { row: 0, col: 0 }, color: "purple", name: "Famine" },
+    { id: "death", position: { row: 0, col: 2 }, target: { row: 4, col: 2 }, color: "black", name: "Death" },
+    { id: "war", position: { row: 2, col: 0 }, target: { row: 2, col: 4 }, color: "red", name: "War" },
+    { id: "pestilence", position: { row: 2, col: 4 }, target: { row: 2, col: 0 }, color: "green", name: "Pestilence" },
+    { id: "famine", position: { row: 4, col: 2 }, target: { row: 0, col: 2 }, color: "purple", name: "Famine" },
   ])
 
   // Track selected knight and last moved knight
@@ -56,12 +56,6 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
 
     // Middle 3x3 grid is visible
     if (row >= 1 && row <= 3 && col >= 1 && col <= 3) return true
-
-    // Corner tiles are visible (for the knights)
-    if (row === 0 && col === 0) return true
-    if (row === 0 && col === 4) return true
-    if (row === 4 && col === 0) return true
-    if (row === 4 && col === 4) return true
 
     return false
   }
@@ -157,7 +151,7 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
       }))
     }
 
-    // Check if puzzle is solved
+    // Check if puzzle is solved (after a short delay to allow state updates)
     setTimeout(checkIfSolved, 100)
   }
 
@@ -206,6 +200,66 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
     }
   }
 
+  // Check for knights at targets on initial render
+  useEffect(() => {
+    knights.forEach((knight) => {
+      if (knight.position.row === knight.target.row && knight.position.col === knight.target.col) {
+        setCompletionMessages((prev) => ({
+          ...prev,
+          [knight.id]: true,
+        }))
+      }
+    })
+
+    checkIfSolved()
+  }, [])
+
+  // Render the board
+  const renderBoard = () => {
+    const board = []
+
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 5; col++) {
+        // Skip invisible tiles
+        if (!isVisibleTile(row, col)) continue
+
+        const knight = getKnightAtPosition(row, col)
+        const isLegalMove = legalMoves.some((move) => move.row === row && move.col === col)
+        const isSelected =
+          selectedKnight &&
+          knights.find((k) => k.id === selectedKnight)?.position.row === row &&
+          knights.find((k) => k.id === selectedKnight)?.position.col === col
+
+        board.push(
+          <div
+            key={`${row}-${col}`}
+            className={`
+              w-16 h-16 flex items-center justify-center
+              ${(row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500"}
+              ${isLegalMove ? "border-2 border-yellow-400 cursor-pointer" : ""}
+              ${isSelected ? "border-2 border-blue-500" : ""}
+              transition-all duration-200
+            `}
+            onClick={() => handleTileClick(row, col)}
+          >
+            {knight && (
+              <div className="flex flex-col items-center">
+                <div
+                  className={`rounded-full ${getKnightColorClass(knight.id)} w-10 h-10 flex items-center justify-center`}
+                >
+                  <span className="text-white text-xl">♞</span>
+                </div>
+                <span className="text-xs text-white mt-1">{knight.name}</span>
+              </div>
+            )}
+          </div>,
+        )
+      }
+    }
+
+    return board
+  }
+
   return (
     <div className="flex flex-col items-center p-4 bg-gray-800 rounded-lg shadow-lg">
       {/* Title and instructions */}
@@ -214,47 +268,10 @@ export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void 
         <p className="text-sm mb-4">Move each knight to its opposite corner. Alternate knights each move.</p>
       </div>
 
-      {/* Chess board - strict 5x5 grid */}
-      <div className="grid grid-cols-5 gap-0 mb-4">
-        {Array.from({ length: 25 }).map((_, index) => {
-          const row = Math.floor(index / 5)
-          const col = index % 5
-          const knight = getKnightAtPosition(row, col)
-          const isLegalMove = legalMoves.some((move) => move.row === row && move.col === col)
-          const isSelected =
-            selectedKnight &&
-            knights.find((k) => k.id === selectedKnight)?.position.row === row &&
-            knights.find((k) => k.id === selectedKnight)?.position.col === col
-          const isVisible = isVisibleTile(row, col)
+      {/* Chess board */}
+      <div className="grid grid-cols-3 gap-1 mb-4">{renderBoard()}</div>
 
-          return (
-            <div
-              key={index}
-              className={`
-                w-16 h-16 flex items-center justify-center
-                ${isVisible ? ((row + col) % 2 === 0 ? "bg-gray-300" : "bg-gray-500") : "bg-transparent opacity-0"}
-                ${isLegalMove ? "border-2 border-yellow-400 cursor-pointer" : ""}
-                ${isSelected ? "border-2 border-blue-500" : ""}
-                transition-all duration-200
-              `}
-              onClick={() => isVisible && handleTileClick(row, col)}
-            >
-              {knight && (
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`rounded-full ${getKnightColorClass(knight.id)} w-10 h-10 flex items-center justify-center`}
-                  >
-                    <span className="text-white text-xl">♞</span>
-                  </div>
-                  <span className="text-xs text-white mt-1">{knight.name}</span>
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Completion messages - only show for knights that have reached their targets */}
+      {/* Completion messages */}
       <div className="mt-4 w-full space-y-2">
         {Object.entries(completionMessages).map(
           ([knightId, isComplete]) =>
