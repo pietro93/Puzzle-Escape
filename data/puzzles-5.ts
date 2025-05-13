@@ -22,8 +22,7 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 42,
     question: "The Devil challenges you to a game of infernal chess.",
-    description:
-      "",
+    description: "",
     imageUrl: "",
     solution: "apocalypse naught",
     category: "logic",
@@ -37,15 +36,17 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 43,
-    question: "The Devil shows you a series of damned souls, each bearing a number.",
-    description: "Five souls stand in a line, each with a number branded on their forehead: 8, 5, 4, 9, ?",
-    imageUrl: "/images/level43-placeholder.webp",
-    solution: "1",
-    category: "pattern",
+    question: "The Devil shows you an ancient parchment covered in Latin text.",
+    description:
+      "Satan mors Apostolī crux Cerberus, mors Sanctissima Trinitas crux Sacramenta, mors Portae Caeli crux Archangelī, nascita Evangelistae; radice",
+    imageUrl: "",
+    solution: "23",
+    category: "math",
+    isReligiousNumerologyPuzzle: true,
     hints: [
-      "The numbers seem to follow a pattern, but not a mathematical one.",
-      "Try counting something about each number.",
-      "How many letters are in the word form of each number?",
+      "The Latin words represent religious concepts with associated numbers.",
+      "Mathematical operations are hidden within the text.",
+      "Look for patterns in Christian numerology: Satan (666), Apostles (12), Cross (4), etc.",
     ],
   },
   {

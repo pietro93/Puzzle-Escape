@@ -34,6 +34,7 @@ import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
 import MagicBoxPuzzle from "./magic-box-puzzle"
 import InfernalChessPuzzle from "./infernal-chess-puzzle"
+import ReligiousNumerologyPuzzle from "./religious-numerology-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -154,6 +155,9 @@ export default function PuzzleContent({
   // Check if this is a magic box puzzle
   const isMagicBoxPuzzle = puzzle.isMagicBoxPuzzle
 
+  // Check if this is a religious numerology puzzle
+  const isReligiousNumerologyPuzzle = puzzle.isReligiousNumerologyPuzzle
+
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
   // Add a new function to handle brain lamp clicks
@@ -228,6 +232,8 @@ export default function PuzzleContent({
       ) : null}
 
       {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle />}
+
+      {isReligiousNumerologyPuzzle && <ReligiousNumerologyPuzzle />}
 
       {isCrystalJigsawPuzzle ? (
         <div className="my-4">
@@ -393,7 +399,7 @@ export default function PuzzleContent({
             <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
           </div>
         </div>
-      ) : puzzle.description ? (
+      ) : !isReligiousNumerologyPuzzle && puzzle.description ? (
         <div className="text-gray-300 whitespace-pre-line font-mono text-sm bg-gray-950/50 p-4 rounded-lg border border-gray-800 shadow-inner">
           {puzzle.description}
         </div>
