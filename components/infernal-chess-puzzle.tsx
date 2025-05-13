@@ -19,6 +19,7 @@ type Horseman = {
   targetPosition: Position
   color: string
   image: string
+  mayhemText: string
 }
 
 // Define the chess puzzle component
@@ -73,7 +74,7 @@ export default function InfernalChessPuzzle() {
       visible: true,
       startFor: "famine",
       targetFor: "death",
-      background: "bg-gray-900", // Death's color (target)
+      background: "bg-black", // Death's color (target) - changed to black
     }
 
     return board
@@ -87,6 +88,7 @@ export default function InfernalChessPuzzle() {
       targetPosition: { row: 4, col: 4 },
       color: "black",
       image: "/images/horseman_death.webp",
+      mayhemText: "Death brings eternal silence to all living souls.",
     },
     {
       type: "pestilence",
@@ -94,6 +96,7 @@ export default function InfernalChessPuzzle() {
       targetPosition: { row: 0, col: 4 },
       color: "green",
       image: "/images/horseman_pestilence.webp",
+      mayhemText: "Pestilence spreads disease through every corner of the world.",
     },
     {
       type: "war",
@@ -101,6 +104,7 @@ export default function InfernalChessPuzzle() {
       targetPosition: { row: 4, col: 0 },
       color: "red",
       image: "/images/horseman_war.webp",
+      mayhemText: "War ignites conflict and bloodshed across all nations.",
     },
     {
       type: "famine",
@@ -108,6 +112,7 @@ export default function InfernalChessPuzzle() {
       targetPosition: { row: 0, col: 0 },
       color: "purple",
       image: "/images/horseman_famine.webp",
+      mayhemText: "Famine withers crops and starves the masses into desperation.",
     },
   ]
 
@@ -120,6 +125,7 @@ export default function InfernalChessPuzzle() {
   const [isComplete, setIsComplete] = useState(false)
   const [showError, setShowError] = useState<Position | null>(null)
   const [moveCount, setMoveCount] = useState(0)
+  const [mayhemTexts, setMayhemTexts] = useState<string[]>([])
 
   // Check if the puzzle is complete
   useEffect(() => {
@@ -132,6 +138,20 @@ export default function InfernalChessPuzzle() {
       setIsComplete(true)
     }
   }, [horsemen, moveCount])
+
+  // Update mayhem texts when horsemen positions change
+  useEffect(() => {
+    const texts: string[] = []
+
+    horsemen.forEach((horseman) => {
+      const { position, targetPosition, mayhemText } = horseman
+      if (position.row === targetPosition.row && position.col === targetPosition.col) {
+        texts.push(mayhemText)
+      }
+    })
+
+    setMayhemTexts(texts)
+  }, [horsemen])
 
   // Get the horseman at a specific position
   const getHorsemanAt = (row: number, col: number): Horseman | undefined => {
@@ -225,18 +245,6 @@ export default function InfernalChessPuzzle() {
     }
   }
 
-  // Reset the puzzle
-  const resetPuzzle = () => {
-    setBoard(initializeBoard())
-    setHorsemen(initializeHorsemen())
-    setSelectedHorseman(null)
-    setLastMovedHorseman(null)
-    setValidMoves([])
-    setIsComplete(false)
-    setShowError(null)
-    setMoveCount(0)
-  }
-
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto">
       <div className="mb-4 text-center">
@@ -270,20 +278,23 @@ export default function InfernalChessPuzzle() {
                 onClick={() => tile.visible && handleTileClick(rowIndex, colIndex)}
               >
                 {horseman && (
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: isSelected ? 1.1 : 1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Image
-                      src={horseman.image || "/placeholder.svg"}
-                      alt={horseman.type}
-                      width={50}
-                      height={50}
-                      className="pixelated object-contain"
-                    />
-                  </motion.div>
+                  <div className="flex flex-col items-center">
+                    <motion.div
+                      className="flex items-center justify-center"
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: isSelected ? 1.1 : 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Image
+                        src={horseman.image || "/placeholder.svg"}
+                        alt={horseman.type}
+                        width={40}
+                        height={40}
+                        className="pixelated object-contain"
+                      />
+                    </motion.div>
+                    <span className="text-xs text-white font-pixel capitalize mt-1">{horseman.type}</span>
+                  </div>
                 )}
               </div>
             )
@@ -291,60 +302,21 @@ export default function InfernalChessPuzzle() {
         )}
       </div>
 
-      {/* Legend */}
-      <div className="mt-4 grid grid-cols-2 gap-4 w-full">
-        {horsemen.map((horseman) => (
-          <div
-            key={horseman.type}
-            className={`
-              flex items-center p-2 rounded-md
-              ${
-                horseman.type === "death"
-                  ? "bg-gray-800"
-                  : horseman.type === "pestilence"
-                    ? "bg-green-900"
-                    : horseman.type === "war"
-                      ? "bg-red-900"
-                      : "bg-purple-900"
-              }
-              ${horseman.type === selectedHorseman ? "ring-2 ring-yellow-400" : ""}
-              ${horseman.type === lastMovedHorseman ? "opacity-50" : ""}
-            `}
-          >
-            <div className="w-10 h-10 mr-2">
-              <Image
-                src={horseman.image || "/placeholder.svg"}
-                alt={horseman.type}
-                width={40}
-                height={40}
-                className="pixelated object-contain"
-              />
-            </div>
-            <div>
-              <p className="text-xs font-pixel capitalize">{horseman.type}</p>
-              <p className="text-xs font-pixel opacity-70">
-                {horseman.position.row === horseman.targetPosition.row &&
-                horseman.position.col === horseman.targetPosition.col
-                  ? "✓ At target"
-                  : "Not at target"}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Mayhem texts */}
+      {mayhemTexts.length > 0 && (
+        <div className="mt-4 p-3 bg-red-900/50 border border-red-800 rounded-lg text-sm font-pixel text-red-200">
+          {mayhemTexts.map((text, index) => (
+            <p key={index} className="mb-1">
+              {text}
+            </p>
+          ))}
+        </div>
+      )}
 
       {/* Moves counter */}
       <div className="mt-4 text-center">
         <p className="text-sm font-pixel text-gray-300">Moves: {moveCount}</p>
       </div>
-
-      {/* Reset button */}
-      <button
-        onClick={resetPuzzle}
-        className="mt-4 px-4 py-2 bg-purple-900 hover:bg-purple-800 text-white font-pixel rounded-md transition-colors"
-      >
-        Reset Puzzle
-      </button>
 
       {/* Completion message */}
       {isComplete && (
