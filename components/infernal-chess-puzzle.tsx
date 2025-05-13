@@ -191,7 +191,14 @@ export default function InfernalChessPuzzle() {
 
   // Handle horseman selection
   const handleHorsemanSelect = (type: HorsemanType) => {
-    // Cannot select the same horseman twice in a row
+    // If the horseman is already selected, unselect it
+    if (selectedHorseman === type) {
+      setSelectedHorseman(null)
+      setValidMoves([])
+      return
+    }
+
+    // Cannot select the same horseman that was just moved
     if (type === lastMovedHorseman) {
       const horseman = horsemen.find((h) => h.type === type)
       if (horseman) {
@@ -210,6 +217,15 @@ export default function InfernalChessPuzzle() {
 
   // Handle tile click
   const handleTileClick = (row: number, col: number) => {
+    // Check if there's a horseman at the clicked position
+    const horseman = getHorsemanAt(row, col)
+
+    if (horseman) {
+      // If clicking on a horseman, handle selection/deselection
+      handleHorsemanSelect(horseman.type)
+      return
+    }
+
     // If a horseman is selected and the clicked tile is a valid move
     if (selectedHorseman) {
       const isValidMove = validMoves.some((move) => move.row === row && move.col === col)
@@ -235,12 +251,6 @@ export default function InfernalChessPuzzle() {
         // Show error for invalid move
         setShowError({ row, col })
         setTimeout(() => setShowError(null), 500)
-      }
-    } else {
-      // Check if there's a horseman at the clicked position
-      const horseman = getHorsemanAt(row, col)
-      if (horseman) {
-        handleHorsemanSelect(horseman.type)
       }
     }
   }
