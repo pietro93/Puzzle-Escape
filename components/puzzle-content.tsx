@@ -33,6 +33,7 @@ import MurderMysteryPuzzle from "./murder-mystery-puzzle"
 import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
 import MagicBoxPuzzle from "./magic-box-puzzle"
+import InfernalChessPuzzle from "./infernal-chess-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -225,6 +226,8 @@ export default function PuzzleContent({
           />
         </div>
       ) : null}
+
+      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle />}
 
       {isCrystalJigsawPuzzle ? (
         <div className="my-4">

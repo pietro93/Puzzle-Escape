@@ -18,18 +18,21 @@ export const puzzlesSet5: Puzzle[] = [
     isFireMapPuzzle: true,
     category: "pattern",
   },
+  // Level 42 - Infernal Chess Puzzle
   {
     level: 42,
     question: "The Devil challenges you to a game of infernal chess.",
     description:
-      "The chess pieces are made of bone and ember, and they move of their own accord. 'Find the winning move,' the Devil says with a smirk.",
-    imageUrl: "/images/level42-placeholder.webp",
-    solution: "queen to h7",
+      "The Four Horsemen of the Apocalypse stand before you as chess knights. 'Move each to its destined corner,' the Devil instructs. 'But beware - no horseman may move twice in succession.'",
+    imageUrl: "",
+    solution: "apocalypse naught",
     category: "logic",
+    isInfernalChessPuzzle: true,
     hints: [
-      "Look for a checkmate in one move.",
-      "The queen is your most powerful piece.",
-      "The black king is vulnerable on the h-file.",
+      "Each horseman must reach its target corner, indicated by the matching background color.",
+      "Knights move in L-shapes: two squares in one direction, then one square perpendicular.",
+      "You cannot move the same horseman twice in a row.",
+      "Plan your moves carefully - you'll need to coordinate all four horsemen.",
     ],
   },
   {
