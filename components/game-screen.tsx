@@ -17,7 +17,6 @@ import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
 import PuzzleContent from "./puzzle-content"
-import InfernalChessPuzzle from "./infernal-chess-puzzle"
 
 interface GameScreenProps {
   level: number
@@ -124,7 +123,6 @@ export default function GameScreen({
   // Add state for brain dialogue
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
-  const [showSolution, setShowSolution] = useState(false)
 
   // Focus input when component mounts
   useEffect(() => {
@@ -551,44 +549,28 @@ export default function GameScreen({
       )}
 
       {/* Puzzle content */}
-      {puzzle.isInfernalChessPuzzle ? (
-        <InfernalChessPuzzle
-          onSolve={() => {
-            setFeedback("Correct! Well done.")
-            setIsCorrect(true)
-            setTimeout(() => {
-              setAnswer("")
-              setFeedback("")
-              setIsCorrect(false)
-              setShowHints(false)
-              onCorrect(false)
-            }, 1500)
-          }}
-        />
-      ) : (
-        <PuzzleContent
-          level={level}
-          puzzle={puzzle}
-          guardDialogIndex={guardDialogIndex}
-          handleGuardClick={handleGuardClick}
-          handleJigsawComplete={handleJigsawComplete}
-          handleParrotSolve={handleParrotSolve}
-          handleQuestionnaireRestart={handleQuestionnaireRestart}
-          handleLightSwitchUpdate={handleLightSwitchUpdate}
-          handleZodiacSolve={handleZodiacSolve}
-          handlePyramidRoomChange={handlePyramidRoomChange}
-          handlePyramidTorchAcquired={handlePyramidTorchAcquired}
-          currentPyramidRoom={currentPyramidRoom}
-          hasPyramidTorch={hasPyramidTorch}
-          handleAllPiecesRemoved={handleAllPiecesRemoved}
-          handleElevatorPanelOpen={handleElevatorPanelOpen}
-          currentElevatorFloor={currentElevatorFloor}
-          setCurrentElevatorFloor={setCurrentElevatorFloor}
-          onSolutionGenerated={(solution) => setDynamicSolution(solution)}
-          setBinaryCorrectCombinations={setBinaryCorrectCombinations}
-          questionnaireRef={questionnaireRef}
-        />
-      )}
+      <PuzzleContent
+        level={level}
+        puzzle={puzzle}
+        guardDialogIndex={guardDialogIndex}
+        handleGuardClick={handleGuardClick}
+        handleJigsawComplete={handleJigsawComplete}
+        handleParrotSolve={handleParrotSolve}
+        handleQuestionnaireRestart={handleQuestionnaireRestart}
+        handleLightSwitchUpdate={handleLightSwitchUpdate}
+        handleZodiacSolve={handleZodiacSolve}
+        handlePyramidRoomChange={handlePyramidRoomChange}
+        handlePyramidTorchAcquired={handlePyramidTorchAcquired}
+        currentPyramidRoom={currentPyramidRoom}
+        hasPyramidTorch={hasPyramidTorch}
+        handleAllPiecesRemoved={handleAllPiecesRemoved}
+        handleElevatorPanelOpen={handleElevatorPanelOpen}
+        currentElevatorFloor={currentElevatorFloor}
+        setCurrentElevatorFloor={setCurrentElevatorFloor}
+        onSolutionGenerated={(solution) => setDynamicSolution(solution)}
+        setBinaryCorrectCombinations={setBinaryCorrectCombinations}
+        questionnaireRef={questionnaireRef}
+      />
 
       {/* Answer input section */}
       <div className="space-y-3 mt-auto">
