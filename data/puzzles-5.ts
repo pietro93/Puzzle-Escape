@@ -42,11 +42,11 @@ export const puzzlesSet5: Puzzle[] = [
     imageUrl: "",
     solution: "23",
     category: "math",
-    isReligiousNumerologyPuzzle: true,
     hints: [
       "The Latin words represent religious concepts with associated numbers.",
       "Mathematical operations are hidden within the text.",
       "Look for patterns in Christian numerology: Satan (666), Apostles (12), Cross (4), etc.",
+      "Latin words like 'mors' (death) and 'crux' (cross) represent mathematical operations.",
     ],
   },
   {
