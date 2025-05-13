@@ -280,7 +280,8 @@ export default function InfernalChessPuzzle() {
                 {horseman && (
                   <div className="flex flex-col items-center">
                     <motion.div
-                      className="flex items-center justify-center"
+                      className="absolute bottom-0 flex items-end justify-center"
+                      style={{ zIndex: 10 }}
                       initial={{ scale: 0.8 }}
                       animate={{ scale: isSelected ? 1.1 : 1 }}
                       transition={{ duration: 0.2 }}
@@ -288,12 +289,14 @@ export default function InfernalChessPuzzle() {
                       <Image
                         src={horseman.image || "/placeholder.svg"}
                         alt={horseman.type}
-                        width={40}
-                        height={40}
-                        className="pixelated object-contain"
+                        width={56}
+                        height={70}
+                        className="pixelated object-contain transform -translate-y-2"
                       />
+                      <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
+                        {horseman.type}
+                      </span>
                     </motion.div>
-                    <span className="text-xs text-white font-pixel capitalize mt-1">{horseman.type}</span>
                   </div>
                 )}
               </div>
@@ -312,11 +315,6 @@ export default function InfernalChessPuzzle() {
           ))}
         </div>
       )}
-
-      {/* Moves counter */}
-      <div className="mt-4 text-center">
-        <p className="text-sm font-pixel text-gray-300">Moves: {moveCount}</p>
-      </div>
 
       {/* Completion message */}
       {isComplete && (
