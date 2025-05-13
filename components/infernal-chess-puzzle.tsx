@@ -256,7 +256,7 @@ export default function InfernalChessPuzzle() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto">
+    <div className="flex flex-col items-center justify-center w-full mx-auto">
       <div className="mb-4 text-center">
         <h3 className="text-xl font-pixel text-purple-300 mb-2">Infernal Chess</h3>
         <p className="text-sm font-pixel text-gray-300 mb-4">
@@ -265,8 +265,8 @@ export default function InfernalChessPuzzle() {
         </p>
       </div>
 
-      {/* Chess board */}
-      <div className="grid grid-cols-5 gap-1 bg-gray-900 p-2 rounded-lg shadow-lg">
+      {/* Chess board - made larger to fill the width */}
+      <div className="grid grid-cols-5 gap-1 bg-gray-900 p-2 rounded-lg shadow-lg w-full">
         {board.map((row, rowIndex) =>
           row.map((tile, colIndex) => {
             const horseman = getHorsemanAt(rowIndex, colIndex)
@@ -278,7 +278,7 @@ export default function InfernalChessPuzzle() {
               <div
                 key={`${rowIndex}-${colIndex}`}
                 className={`
-                  relative w-14 h-14 flex items-center justify-center
+                  relative aspect-square flex items-center justify-center
                   ${tile.visible ? tile.background : "invisible"}
                   ${isSelected ? "ring-2 ring-yellow-400" : ""}
                   ${isValidMove ? "ring-2 ring-yellow-300 cursor-pointer" : ""}
@@ -296,16 +296,19 @@ export default function InfernalChessPuzzle() {
                       animate={{ scale: isSelected ? 1.1 : 1 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Image
-                        src={horseman.image || "/placeholder.svg"}
-                        alt={horseman.type}
-                        width={56}
-                        height={70}
-                        className="pixelated object-contain transform -translate-y-2"
-                      />
-                      <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
-                        {horseman.type}
-                      </span>
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={horseman.image || "/placeholder.svg"}
+                          alt={horseman.type}
+                          width={112} // Doubled from 56
+                          height={140} // Doubled from 70
+                          className="pixelated object-contain transform -translate-y-4"
+                          priority
+                        />
+                        <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
+                          {horseman.type}
+                        </span>
+                      </div>
                     </motion.div>
                   </div>
                 )}
@@ -317,7 +320,7 @@ export default function InfernalChessPuzzle() {
 
       {/* Mayhem texts */}
       {mayhemTexts.length > 0 && (
-        <div className="mt-4 p-3 bg-red-900/50 border border-red-800 rounded-lg text-sm font-pixel text-red-200">
+        <div className="mt-4 p-3 bg-red-900/50 border border-red-800 rounded-lg text-sm font-pixel text-red-200 w-full">
           {mayhemTexts.map((text, index) => (
             <p key={index} className="mb-1">
               {text}
@@ -328,7 +331,7 @@ export default function InfernalChessPuzzle() {
 
       {/* Completion message */}
       {isComplete && (
-        <div className="mt-6 p-4 bg-green-900/80 border border-green-700 rounded-lg text-center animate-fadeIn">
+        <div className="mt-6 p-4 bg-green-900/80 border border-green-700 rounded-lg text-center animate-fadeIn w-full">
           <h3 className="text-xl font-pixel text-green-300 mb-2">Puzzle Complete!</h3>
           <p className="text-sm font-pixel text-green-200">You've successfully arranged the Four Horsemen.</p>
           <p className="text-md font-pixel text-yellow-300 mt-2">The solution is: APOCALYPSE NAUGHT</p>

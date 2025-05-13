@@ -23,7 +23,7 @@ export const puzzlesSet5: Puzzle[] = [
     level: 42,
     question: "The Devil challenges you to a game of infernal chess.",
     description:
-      "The Four Horsemen of the Apocalypse stand before you as chess knights. 'Move each to its destined corner,' the Devil instructs. 'But beware - no horseman may move twice in succession.'",
+      "",
     imageUrl: "",
     solution: "apocalypse naught",
     category: "logic",
