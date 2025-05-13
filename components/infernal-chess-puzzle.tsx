@@ -80,7 +80,7 @@ export default function InfernalChessPuzzle() {
     return board
   }
 
-  // Initialize the horsemen
+  // Initialize the horsemen with correct image paths
   const initializeHorsemen = (): Horseman[] => [
     {
       type: "death",
@@ -126,6 +126,34 @@ export default function InfernalChessPuzzle() {
   const [showError, setShowError] = useState<Position | null>(null)
   const [moveCount, setMoveCount] = useState(0)
   const [mayhemTexts, setMayhemTexts] = useState<string[]>([])
+  const [imagesLoaded, setImagesLoaded] = useState(false)
+
+  // Preload images
+  useEffect(() => {
+    const imageUrls = [
+      "/images/horseman_death.webp",
+      "/images/horseman_pestilence.webp",
+      "/images/horseman_war.webp",
+      "/images/horseman_famine.webp",
+    ]
+
+    let loadedCount = 0
+    const totalImages = imageUrls.length
+
+    imageUrls.forEach((url) => {
+      const img = new Image()
+      img.onload = () => {
+        loadedCount++
+        if (loadedCount === totalImages) {
+          setImagesLoaded(true)
+        }
+      }
+      img.onerror = (e) => {
+        console.error(`Failed to load image: ${url}`, e)
+      }
+      img.src = url
+    })
+  }, [])
 
   // Check if the puzzle is complete
   useEffect(() => {
@@ -255,6 +283,60 @@ export default function InfernalChessPuzzle() {
     }
   }
 
+  // Helper function to render horseman image
+  const renderHorsemanImage = (horseman: Horseman, isSelected: boolean) => {
+    // Use a colored div as fallback if images aren't loaded
+    const fallbackStyle = {
+      backgroundColor:
+        horseman.type === "death"
+          ? "#000000"
+          : horseman.type === "pestilence"
+            ? "#00ff00"
+            : horseman.type === "war"
+              ? "#ff0000"
+              : "#800080", // famine - purple
+      width: "80px",
+      height: "80px",
+      borderRadius: "50%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      color: "white",
+      fontWeight: "bold",
+      textTransform: "capitalize" as const,
+      fontSize: "12px",
+    }
+
+    return (
+      <div className="relative w-full h-full flex items-center justify-center">
+        {/* Regular img tag for better compatibility */}
+        <img
+          src={horseman.image || "/placeholder.svg"}
+          alt={horseman.type}
+          className={`pixelated object-contain transform -translate-y-4 ${isSelected ? "scale-110" : "scale-100"} transition-transform`}
+          style={{ width: "112px", height: "140px" }}
+          onError={(e) => {
+            // If image fails to load, show colored fallback
+            e.currentTarget.style.display = "none"
+            const fallback = e.currentTarget.parentElement?.querySelector(".fallback")
+            if (fallback) {
+              fallback.classList.remove("hidden")
+            }
+          }}
+        />
+
+        {/* Fallback colored div */}
+        <div className="fallback hidden" style={fallbackStyle}>
+          {horseman.type}
+        </div>
+
+        <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
+          {horseman.type}
+        </span>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto">
       <div className="mb-4 text-center">
@@ -288,27 +370,15 @@ export default function InfernalChessPuzzle() {
                 onClick={() => tile.visible && handleTileClick(rowIndex, colIndex)}
               >
                 {horseman && (
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center w-full h-full">
                     <motion.div
-                      className="absolute bottom-0 flex items-end justify-center"
+                      className="absolute bottom-0 flex items-end justify-center w-full h-full"
                       style={{ zIndex: 10 }}
                       initial={{ scale: 0.8 }}
                       animate={{ scale: isSelected ? 1.1 : 1 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={horseman.image || "/placeholder.svg"}
-                          alt={horseman.type}
-                          width={112} // Doubled from 56
-                          height={140} // Doubled from 70
-                          className="pixelated object-contain transform -translate-y-4"
-                          priority
-                        />
-                        <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
-                          {horseman.type}
-                        </span>
-                      </div>
+                      {renderHorsemanImage(horseman, isSelected)}
                     </motion.div>
                   </div>
                 )}
