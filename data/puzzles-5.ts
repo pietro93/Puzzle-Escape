@@ -37,9 +37,8 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 43,
     question: "The Devil shows you an ancient parchment covered in Latin text.",
-    description:
-      "Satan mors Apostolī crux Cerberus, mors Sanctissima Trinitas crux Sacramenta, mors Portae Caeli crux Archangelī, nascita Evangelistae; radice",
-    imageUrl: "",
+    description: "",
+    imageUrl: "/images/latinmathpuzzle.webp",
     solution: "23",
     category: "math",
     hints: [
