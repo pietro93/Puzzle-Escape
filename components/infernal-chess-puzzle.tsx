@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { motion } from "framer-motion"
 
 // Define the types for our chess pieces and board
@@ -86,7 +87,7 @@ export default function InfernalChessPuzzle() {
       position: { row: 0, col: 0 },
       targetPosition: { row: 4, col: 4 },
       color: "black",
-      image: "/placeholder.svg?height=140&width=112",
+      image: "/images/horseman_death.webp",
       mayhemText: "Death brings eternal silence to all living souls.",
     },
     {
@@ -94,7 +95,7 @@ export default function InfernalChessPuzzle() {
       position: { row: 4, col: 0 },
       targetPosition: { row: 0, col: 4 },
       color: "green",
-      image: "/placeholder.svg?height=140&width=112",
+      image: "/images/horseman_pestilence.webp",
       mayhemText: "Pestilence spreads disease through every corner of the world.",
     },
     {
@@ -102,7 +103,7 @@ export default function InfernalChessPuzzle() {
       position: { row: 0, col: 4 },
       targetPosition: { row: 4, col: 0 },
       color: "red",
-      image: "/placeholder.svg?height=140&width=112",
+      image: "/images/horseman_war.webp",
       mayhemText: "War ignites conflict and bloodshed across all nations.",
     },
     {
@@ -110,7 +111,7 @@ export default function InfernalChessPuzzle() {
       position: { row: 4, col: 4 },
       targetPosition: { row: 0, col: 0 },
       color: "purple",
-      image: "/placeholder.svg?height=140&width=112",
+      image: "/images/horseman_famine.webp",
       mayhemText: "Famine withers crops and starves the masses into desperation.",
     },
   ]
@@ -296,19 +297,14 @@ export default function InfernalChessPuzzle() {
                       transition={{ duration: 0.2 }}
                     >
                       <div className="relative w-full h-full">
-                        <div
-                          className={`w-[112px] h-[140px] flex items-center justify-center text-white font-bold ${
-                            horseman.type === "death"
-                              ? "bg-black"
-                              : horseman.type === "pestilence"
-                                ? "bg-green-800"
-                                : horseman.type === "war"
-                                  ? "bg-red-800"
-                                  : "bg-purple-800"
-                          } rounded-md`}
-                        >
-                          <span className="text-2xl uppercase">{horseman.type.charAt(0)}</span>
-                        </div>
+                        <Image
+                          src={horseman.image || "/placeholder.svg"}
+                          alt={horseman.type}
+                          width={112}
+                          height={140}
+                          className="pixelated object-contain transform -translate-y-4"
+                          priority
+                        />
                         <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
                           {horseman.type}
                         </span>
