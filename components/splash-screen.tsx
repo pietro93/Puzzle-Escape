@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import { Play, HelpCircle, BookOpen, Volume2, VolumeX, Sparkles } from "lucide-react"
 
 interface SplashScreenProps {
@@ -75,7 +74,17 @@ export default function SplashScreen({
           style={{ transform: `scale(${logoScale})`, transition: "transform 1s ease-in-out" }}
         >
           <div className="w-72 h-72 relative mx-auto mb-4">
-            <Image src="/images/logo.webp" alt="Puzzle Escape" width={288} height={288} className="pixelated" />
+            <img
+              src="/images/logo.webp"
+              alt="Puzzle Escape"
+              width={288}
+              height={288}
+              className="pixelated w-full h-full object-contain"
+              onError={(e) => {
+                console.error("Failed to load logo image: /images/logo.webp")
+                ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=288&width=288"
+              }}
+            />
           </div>
         </div>
 

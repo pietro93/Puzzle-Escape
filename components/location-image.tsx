@@ -9,11 +9,13 @@ export default function LocationImage({ setting, customImage, hintImage, level }
   const getLocationImage = () => {
     // If there's a hint image specified, use that
     if (hintImage) {
+      console.log(`Using hint image: ${hintImage}`)
       return hintImage
     }
 
     // If there's a custom image specified, use that
     if (customImage) {
+      console.log(`Using custom image: ${customImage}`)
       return customImage
     }
 
@@ -27,21 +29,15 @@ export default function LocationImage({ setting, customImage, hintImage, level }
       return "/images/murder-mystery/crime-scene.webp"
     }
 
-    // Otherwise use the default image for the setting
-    switch (setting) {
-      case "prison":
-        return "/images/prison-bg.webp"
-      case "mansion":
-        return "/images/mansion-bg.webp"
-      case "forest":
-        return "/images/forest-bg.webp"
-      case "desert":
-        return "/images/desert-bg.webp"
-      case "hell":
-        return "/images/hell-bg.webp"
-      default:
-        return "/images/prison-bg.webp"
+    // Special case for level 43 Latin math puzzle
+    if (level === 43) {
+      return "/images/latinmathpuzzle.webp"
     }
+
+    // Otherwise use the default image for the setting
+    const defaultImage = `/images/${setting}-bg.webp`
+    console.log(`Using default location image: ${defaultImage}`)
+    return defaultImage
   }
 
   const imageUrl = getLocationImage()
@@ -59,8 +55,8 @@ export default function LocationImage({ setting, customImage, hintImage, level }
           alt={`${setting} location`}
           className={`pixelated z-10 relative object-contain w-full h-full`}
           onError={(e) => {
-            console.error("Failed to load image:", imageUrl)
-            ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+            console.error(`Failed to load location image: ${imageUrl}`)
+            ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=140&width=112"
           }}
         />
       </div>

@@ -4,20 +4,9 @@ interface CharacterImageProps {
 
 export default function CharacterImage({ character }: CharacterImageProps) {
   const getCharacterImage = () => {
-    switch (character) {
-      case "skeleton":
-        return "/images/skeleton.webp"
-      case "butler":
-        return "/images/butler.webp"
-      case "gypsy":
-        return "/images/gypsy.webp"
-      case "sphinx":
-        return "/images/sphinx.webp"
-      case "devil":
-        return "/images/devil.webp"
-      default:
-        return "/images/skeleton.webp"
-    }
+    const imagePath = `/images/${character}.webp`
+    console.log(`Loading character image: ${imagePath}`)
+    return imagePath
   }
 
   return (
@@ -28,8 +17,8 @@ export default function CharacterImage({ character }: CharacterImageProps) {
         alt={`${character} character`}
         className="pixelated z-10 relative object-contain w-full h-full"
         onError={(e) => {
-          console.error("Failed to load image:", getCharacterImage())
-          ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+          console.error(`Failed to load character image: ${getCharacterImage()}`)
+          ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=140&width=112"
         }}
       />
       <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>

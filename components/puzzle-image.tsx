@@ -1,27 +1,42 @@
-import type { Puzzle } from "@/types/puzzle"
+"use client"
+
+// Let's examine how puzzle images are rendered
+// This will help us understand how images are being displayed in puzzles
+
+import { useState } from "react"
 
 interface PuzzleImageProps {
-  puzzle: Puzzle
+  src: string
+  alt: string
+  className?: string
+  width?: number
+  height?: number
 }
 
-export default function PuzzleImage({ puzzle }: PuzzleImageProps) {
-  const imageUrl = puzzle.imageUrl
-  const isPixelated = true // Assuming pixelated is always true based on the original code
+export default function PuzzleImage({ src, alt, className = "", width = 300, height = 300 }: PuzzleImageProps) {
+  const [error, setError] = useState(false)
+
+  const handleError = () => {
+    console.error(`Failed to load puzzle image: ${src}`)
+    setError(true)
+  }
+
+  if (error) {
+    return (
+      <div className={`flex items-center justify-center bg-gray-800 ${className}`} style={{ width, height }}>
+        <p className="text-gray-400 text-sm font-pixel">Image not found</p>
+      </div>
+    )
+  }
 
   return (
-    <div className="w-40 h-40 relative pixelated-container">
-      <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
-      <img
-        src={imageUrl || "/placeholder.svg"}
-        alt="Puzzle"
-        className={`${isPixelated ? "pixelated" : ""} max-w-full h-auto object-contain`}
-        onError={(e) => {
-          console.error("Failed to load image:", imageUrl)
-          ;(e.target as HTMLImageElement).src = "/placeholder.svg"
-        }}
-      />
-      <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
-      <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
-    </div>
+    <img
+      src={src || "/placeholder.svg"}
+      alt={alt}
+      width={width}
+      height={height}
+      className={`object-contain ${className}`}
+      onError={handleError}
+    />
   )
 }
