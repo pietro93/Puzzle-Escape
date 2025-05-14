@@ -125,6 +125,7 @@ export default function InfernalChessPuzzle() {
   const [showError, setShowError] = useState<Position | null>(null)
   const [moveCount, setMoveCount] = useState(0)
   const [mayhemTexts, setMayhemTexts] = useState<string[]>([])
+  const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({})
 
   // Check if the puzzle is complete
   useEffect(() => {
@@ -254,6 +255,34 @@ export default function InfernalChessPuzzle() {
     }
   }
 
+  // Handle image load error
+  const handleImageError = (type: HorsemanType) => {
+    setImageLoadErrors((prev) => ({
+      ...prev,
+      [type]: true,
+    }))
+  }
+
+  // Get fallback content for horseman
+  const getFallbackContent = (type: HorsemanType) => {
+    const colorClass =
+      type === "death"
+        ? "bg-black"
+        : type === "pestilence"
+          ? "bg-green-800"
+          : type === "war"
+            ? "bg-red-800"
+            : "bg-purple-800"
+
+    return (
+      <div
+        className={`w-[80px] h-[100px] flex items-center justify-center text-white font-bold ${colorClass} rounded-md`}
+      >
+        <span className="text-2xl uppercase">{type.charAt(0)}</span>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto">
       <div className="mb-4 text-center">
@@ -296,33 +325,18 @@ export default function InfernalChessPuzzle() {
                       transition={{ duration: 0.2 }}
                     >
                       <div className="relative w-full h-full">
-                        <img
-                          src={horseman.image || "/placeholder.svg"}
-                          alt={horseman.type}
-                          width={112}
-                          height={140}
-                          className="pixelated object-contain transform -translate-y-4"
-                          onError={(e) => {
-                            // Fallback to colored blocks based on horseman type
-                            const target = e.target as HTMLImageElement
-                            target.style.display = "none"
-                            const parent = target.parentElement
-                            if (parent) {
-                              const fallback = document.createElement("div")
-                              fallback.className = `w-[112px] h-[140px] flex items-center justify-center text-white font-bold ${
-                                horseman.type === "death"
-                                  ? "bg-black"
-                                  : horseman.type === "pestilence"
-                                    ? "bg-green-800"
-                                    : horseman.type === "war"
-                                      ? "bg-red-800"
-                                      : "bg-purple-800"
-                              } rounded-md`
-                              fallback.innerHTML = `<span class="text-2xl uppercase">${horseman.type.charAt(0)}</span>`
-                              parent.appendChild(fallback)
-                            }
-                          }}
-                        />
+                        {imageLoadErrors[horseman.type] ? (
+                          getFallbackContent(horseman.type)
+                        ) : (
+                          <img
+                            src={horseman.image || "/placeholder.svg"}
+                            alt={horseman.type}
+                            width={80}
+                            height={100}
+                            className="pixelated object-contain transform -translate-y-4"
+                            onError={() => handleImageError(horseman.type)}
+                          />
+                        )}
                         <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
                           {horseman.type}
                         </span>

@@ -48,6 +48,7 @@ export const puzzlesSet5: Puzzle[] = [
       "Latin words like 'mors' (death) and 'crux' (cross) represent mathematical operations.",
     ],
   },
+  // Remaining levels unchanged
   {
     level: 44,
     question: "The Devil presents you with fragments of a haunting scene.",
