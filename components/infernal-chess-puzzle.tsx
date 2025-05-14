@@ -303,7 +303,6 @@ export default function InfernalChessPuzzle() {
                           height={140}
                           className="pixelated object-contain transform -translate-y-4"
                           onError={(e) => {
-                            console.error(`Failed to load horseman image: ${horseman.image}`)
                             // Fallback to colored blocks based on horseman type
                             const target = e.target as HTMLImageElement
                             target.style.display = "none"

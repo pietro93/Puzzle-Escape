@@ -80,10 +80,6 @@ export default function SplashScreen({
               width={288}
               height={288}
               className="pixelated w-full h-full object-contain"
-              onError={(e) => {
-                console.error("Failed to load logo image: /images/logo.webp")
-                ;(e.target as HTMLImageElement).src = "/placeholder.svg?height=288&width=288"
-              }}
             />
           </div>
         </div>
