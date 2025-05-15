@@ -257,6 +257,7 @@ export default function InfernalChessPuzzle() {
 
   // Handle image load error
   const handleImageError = (type: HorsemanType) => {
+    console.error(`Failed to load image for ${type}: ${horsemen.find((h) => h.type === type)?.image}`)
     setImageLoadErrors((prev) => ({
       ...prev,
       [type]: true,

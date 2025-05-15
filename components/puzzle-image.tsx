@@ -17,7 +17,12 @@ export default function PuzzleImage({ src, alt, className = "", width = 300, hei
   const [error, setError] = useState(false)
 
   const handleError = () => {
-    console.error(`Failed to load puzzle image: ${src}`)
+    console.error(`Failed to load puzzle image: ${src}`, {
+      path: src,
+      alt,
+      width,
+      height,
+    })
     setError(true)
   }
 
