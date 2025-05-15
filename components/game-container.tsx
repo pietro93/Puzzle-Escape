@@ -17,6 +17,7 @@ import { useHaptics } from "@/hooks/use-haptics"
 const SAVE_KEY = "riddle_escape_save"
 
 export default function GameContainer() {
+  // Game state
   const [showSplash, setShowSplash] = useState(true)
   const [gameStarted, setGameStarted] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
@@ -27,6 +28,7 @@ export default function GameContainer() {
   const [hasSavedGame, setHasSavedGame] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
 
+  // Hooks
   const {
     playBackgroundMusic,
     stopBackgroundMusic,
@@ -36,9 +38,6 @@ export default function GameContainer() {
     playTransitionSound,
     isMuted,
     toggleMute,
-    correctSoundRef,
-    wrongSoundRef,
-    buttonSoundRef,
   } = useAudio()
 
   const { saveGame, loadGame, clearGame } = useStorage()
@@ -81,6 +80,7 @@ export default function GameContainer() {
     }
   }, [currentLevel, gameStarted, soundEnabled, saveGame])
 
+  // Game navigation functions
   const startNewGame = () => {
     playButtonSound()
     setShowSplash(false)
@@ -89,19 +89,16 @@ export default function GameContainer() {
 
   const continueGame = () => {
     playButtonSound()
-    if (typeof window !== "undefined") {
-      const savedGame = localStorage.getItem(SAVE_KEY)
-      if (savedGame) {
-        try {
-          const { level, soundEnabled: savedSoundEnabled } = JSON.parse(savedGame)
-          setCurrentLevel(level)
-          if (savedSoundEnabled !== undefined) setSoundEnabled(savedSoundEnabled)
-          setShowSplash(false)
-          setGameStarted(true)
-        } catch (e) {
-          console.error("Error parsing saved game", e)
-        }
-      }
+    loadSavedGame()
+  }
+
+  const loadSavedGame = async () => {
+    const savedGame = await loadGame()
+    if (savedGame) {
+      if (savedGame.level) setCurrentLevel(savedGame.level)
+      if (savedGame.soundEnabled !== undefined) setSoundEnabled(savedGame.soundEnabled)
+      setShowSplash(false)
+      setGameStarted(true)
     }
   }
 
@@ -184,51 +181,10 @@ export default function GameContainer() {
     }
   }
 
-  const jumpToLevel = (level: number) => {
-    playButtonSound()
-
-    // Check if the level exists in puzzleData
-    const puzzleExists = puzzleData.some((p) => p.level === level)
-    if (!puzzleExists) {
-      console.warn(`Level ${level} does not exist in puzzleData`)
-      return
-    }
-
-    setCurrentLevel(level)
-  }
-
-  const completeTransition = () => {
-    playButtonSound()
-    setShowTransition(false)
-    setCurrentLevel(currentLevel + 1)
-  }
-
-  const resetGame = () => {
-    playButtonSound()
-    clearGame()
-    setCurrentLevel(1)
-    setShowCongrats(false)
-    setShowSplash(true)
-    setGameStarted(false)
-    setHasSavedGame(false)
-  }
-
-  const handleWrongAnswer = () => {
-    playWrongSound()
-  }
-
+  // Sound and haptic feedback
   const toggleSound = () => {
     setSoundEnabled(!soundEnabled)
     toggleMute()
-  }
-
-  // Get current setting and character based on level
-  const getCurrentSetting = () => {
-    if (currentLevel <= 10) return { setting: "prison", character: "skeleton" }
-    if (currentLevel <= 20) return { setting: "mansion", character: "butler" }
-    if (currentLevel <= 30) return { setting: "forest", character: "gypsy" }
-    if (currentLevel <= 40) return { setting: "desert", character: "sphinx" }
-    return { setting: "hell", character: "devil" }
   }
 
   const playCorrectSound = useCallback(() => {
@@ -257,6 +213,48 @@ export default function GameContainer() {
     // Add haptic feedback
     impact("light")
   }, [soundEnabled, impact, playButtonSoundBase])
+
+  const jumpToLevel = (level: number) => {
+    playButtonSound()
+
+    // Check if the level exists in puzzleData
+    const puzzleExists = puzzleData.some((p) => p.level === level)
+    if (!puzzleExists) {
+      console.warn(`Level ${level} does not exist in puzzleData`)
+      return
+    }
+
+    setCurrentLevel(level)
+  }
+
+  const handleWrongAnswer = () => {
+    playWrongSound()
+  }
+
+  const completeTransition = () => {
+    playButtonSound()
+    setShowTransition(false)
+    setCurrentLevel(currentLevel + 1)
+  }
+
+  const resetGame = () => {
+    playButtonSound()
+    clearGame()
+    setCurrentLevel(1)
+    setShowCongrats(false)
+    setShowSplash(true)
+    setGameStarted(false)
+    setHasSavedGame(false)
+  }
+
+  // Helper functions
+  const getCurrentSetting = () => {
+    if (currentLevel <= 10) return { setting: "prison", character: "skeleton" }
+    if (currentLevel <= 20) return { setting: "mansion", character: "butler" }
+    if (currentLevel <= 30) return { setting: "forest", character: "gypsy" }
+    if (currentLevel <= 40) return { setting: "desert", character: "sphinx" }
+    return { setting: "hell", character: "devil" }
+  }
 
   return (
     <div className="relative w-full h-full flex flex-col">

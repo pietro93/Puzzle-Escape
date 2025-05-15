@@ -4,49 +4,69 @@ import { useState, useEffect, useRef, useCallback } from "react"
 
 export function useAudio() {
   const [isMuted, setIsMuted] = useState(false)
-  const bgMusicRef = useRef<HTMLAudioElement | null>(null)
-  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
-  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
-  const buttonSoundRef = useRef<HTMLAudioElement | null>(null)
-  const transitionSoundRef = useRef<HTMLAudioElement | null>(null)
+  const audioRefs = useRef({
+    bgMusic: null as HTMLAudioElement | null,
+    correctSound: null as HTMLAudioElement | null,
+    wrongSound: null as HTMLAudioElement | null,
+    buttonSound: null as HTMLAudioElement | null,
+    transitionSound: null as HTMLAudioElement | null,
+  })
 
   // Initialize audio elements
   useEffect(() => {
     if (typeof window !== "undefined") {
-      bgMusicRef.current = new Audio("/audio/ambient-mystery.mp3")
-      bgMusicRef.current.loop = true
-      bgMusicRef.current.volume = 0.3
+      // Background music
+      audioRefs.current.bgMusic = new Audio("/audio/ambient-mystery.mp3")
+      audioRefs.current.bgMusic.loop = true
+      audioRefs.current.bgMusic.volume = 0.3
 
-      correctSoundRef.current = new Audio("/audio/correct.mp3")
-      correctSoundRef.current.volume = 0.5
+      // Sound effects
+      audioRefs.current.correctSound = new Audio("/audio/correct.mp3")
+      audioRefs.current.correctSound.volume = 0.5
 
-      wrongSoundRef.current = new Audio("/audio/wrong.mp3")
-      wrongSoundRef.current.volume = 0.5
+      audioRefs.current.wrongSound = new Audio("/audio/wrong.mp3")
+      audioRefs.current.wrongSound.volume = 0.5
 
-      buttonSoundRef.current = new Audio("/audio/button-click.mp3")
-      buttonSoundRef.current.volume = 0.4
+      audioRefs.current.buttonSound = new Audio("/audio/button-click.mp3")
+      audioRefs.current.buttonSound.volume = 0.4
 
-      transitionSoundRef.current = new Audio("/audio/transition.mp3")
-      transitionSoundRef.current.volume = 0.5
+      audioRefs.current.transitionSound = new Audio("/audio/transition.mp3")
+      audioRefs.current.transitionSound.volume = 0.5
     }
 
+    // Cleanup function
     return () => {
-      if (bgMusicRef.current) {
-        bgMusicRef.current.pause()
-        bgMusicRef.current = null
+      Object.values(audioRefs.current).forEach((audio) => {
+        if (audio) {
+          audio.pause()
+          audio.src = ""
+        }
+      })
+      audioRefs.current = {
+        bgMusic: null,
+        correctSound: null,
+        wrongSound: null,
+        buttonSound: null,
+        transitionSound: null,
       }
-      correctSoundRef.current = null
-      wrongSoundRef.current = null
-      buttonSoundRef.current = null
-      transitionSoundRef.current = null
     }
   }, [])
 
-  const playBackgroundMusic = useCallback(() => {
-    if (bgMusicRef.current && !isMuted) {
-      // Some browsers require user interaction before playing audio
-      const playPromise = bgMusicRef.current.play()
+  // Play audio helper function
+  const playAudio = useCallback(
+    (audioRef: HTMLAudioElement | null) => {
+      if (audioRef && !isMuted) {
+        audioRef.currentTime = 0
+        audioRef.play().catch((e) => console.log("Error playing sound:", e))
+      }
+    },
+    [isMuted],
+  )
 
+  // Audio control functions
+  const playBackgroundMusic = useCallback(() => {
+    if (audioRefs.current.bgMusic && !isMuted) {
+      const playPromise = audioRefs.current.bgMusic.play()
       if (playPromise !== undefined) {
         playPromise.catch((error) => {
           console.log("Auto-play was prevented. User interaction required.")
@@ -56,49 +76,49 @@ export function useAudio() {
   }, [isMuted])
 
   const stopBackgroundMusic = useCallback(() => {
-    if (bgMusicRef.current) {
-      bgMusicRef.current.pause()
-      bgMusicRef.current.currentTime = 0
+    if (audioRefs.current.bgMusic) {
+      audioRefs.current.bgMusic.pause()
+      audioRefs.current.bgMusic.currentTime = 0
     }
   }, [])
 
   const playCorrectSound = useCallback(() => {
-    if (correctSoundRef.current && !isMuted) {
-      correctSoundRef.current.currentTime = 0
-      correctSoundRef.current.play().catch((e) => console.log("Error playing sound:", e))
-    }
-  }, [isMuted])
+    playAudio(audioRefs.current.correctSound)
+  }, [playAudio])
 
   const playWrongSound = useCallback(() => {
-    if (wrongSoundRef.current && !isMuted) {
-      wrongSoundRef.current.currentTime = 0
-      wrongSoundRef.current.play().catch((e) => console.log("Error playing sound:", e))
-    }
-  }, [isMuted])
+    playAudio(audioRefs.current.wrongSound)
+  }, [playAudio])
 
   const playButtonSound = useCallback(() => {
-    if (buttonSoundRef.current && !isMuted) {
-      buttonSoundRef.current.currentTime = 0
-      buttonSoundRef.current.play().catch((e) => console.log("Error playing sound:", e))
-    }
-  }, [isMuted])
+    playAudio(audioRefs.current.buttonSound)
+  }, [playAudio])
 
   const playTransitionSound = useCallback(() => {
-    if (transitionSoundRef.current && !isMuted) {
-      transitionSoundRef.current.currentTime = 0
-      transitionSoundRef.current.play().catch((e) => console.log("Error playing sound:", e))
-    }
-  }, [isMuted])
+    playAudio(audioRefs.current.transitionSound)
+  }, [playAudio])
+
+  // Generic sound player for any audio file
+  const playSound = useCallback(
+    (src: string) => {
+      if (isMuted) return
+
+      const audio = new Audio(src)
+      audio.volume = 0.5
+      audio.play().catch((e) => console.log("Error playing sound:", e))
+    },
+    [isMuted],
+  )
 
   const toggleMute = useCallback(() => {
     setIsMuted((prev) => {
       const newMuted = !prev
 
-      if (bgMusicRef.current) {
+      if (audioRefs.current.bgMusic) {
         if (newMuted) {
-          bgMusicRef.current.pause()
+          audioRefs.current.bgMusic.pause()
         } else {
-          bgMusicRef.current.play().catch((e) => console.log("Error playing sound:", e))
+          audioRefs.current.bgMusic.play().catch((e) => console.log("Error playing sound:", e))
         }
       }
 
@@ -113,10 +133,11 @@ export function useAudio() {
     playWrongSound,
     playButtonSound,
     playTransitionSound,
+    playSound,
     isMuted,
     toggleMute,
-    correctSoundRef,
-    wrongSoundRef,
-    buttonSoundRef,
+    correctSoundRef: audioRefs.current.correctSound,
+    wrongSoundRef: audioRefs.current.wrongSound,
+    buttonSoundRef: audioRefs.current.buttonSound,
   }
 }
