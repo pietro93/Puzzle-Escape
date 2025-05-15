@@ -37,7 +37,8 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 43,
     question: "The Devil shows you an ancient parchment covered in Latin text.",
-    description: "The parchment contains Latin text with religious symbols and mathematical operations hidden within.",
+    description: "", // Empty description since we're using an image
+    imageUrl: "/images/latinmathpuzzle.webp",
     solution: "23",
     category: "math",
     hints: [
