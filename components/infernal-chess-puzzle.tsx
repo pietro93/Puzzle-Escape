@@ -17,7 +17,6 @@ type Horseman = {
   position: Position
   targetPosition: Position
   color: string
-  image: string
   mayhemText: string
 }
 
@@ -86,7 +85,6 @@ export default function InfernalChessPuzzle() {
       position: { row: 0, col: 0 },
       targetPosition: { row: 4, col: 4 },
       color: "black",
-      image: "/images/horseman_death.webp",
       mayhemText: "Death brings eternal silence to all living souls.",
     },
     {
@@ -94,7 +92,6 @@ export default function InfernalChessPuzzle() {
       position: { row: 4, col: 0 },
       targetPosition: { row: 0, col: 4 },
       color: "green",
-      image: "/images/horseman_pestilence.webp",
       mayhemText: "Pestilence spreads disease through every corner of the world.",
     },
     {
@@ -102,7 +99,6 @@ export default function InfernalChessPuzzle() {
       position: { row: 0, col: 4 },
       targetPosition: { row: 4, col: 0 },
       color: "red",
-      image: "/images/horseman_war.webp",
       mayhemText: "War ignites conflict and bloodshed across all nations.",
     },
     {
@@ -110,7 +106,6 @@ export default function InfernalChessPuzzle() {
       position: { row: 4, col: 4 },
       targetPosition: { row: 0, col: 0 },
       color: "purple",
-      image: "/images/horseman_famine.webp",
       mayhemText: "Famine withers crops and starves the masses into desperation.",
     },
   ]
@@ -125,7 +120,6 @@ export default function InfernalChessPuzzle() {
   const [showError, setShowError] = useState<Position | null>(null)
   const [moveCount, setMoveCount] = useState(0)
   const [mayhemTexts, setMayhemTexts] = useState<string[]>([])
-  const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({})
 
   // Check if the puzzle is complete
   useEffect(() => {
@@ -255,16 +249,8 @@ export default function InfernalChessPuzzle() {
     }
   }
 
-  // Handle image load error
-  const handleImageError = (type: HorsemanType) => {
-    setImageLoadErrors((prev) => ({
-      ...prev,
-      [type]: true,
-    }))
-  }
-
-  // Get fallback content for horseman
-  const getFallbackContent = (type: HorsemanType) => {
+  // Get horseman display content
+  const getHorsemanContent = (type: HorsemanType) => {
     const colorClass =
       type === "death"
         ? "bg-black"
@@ -325,18 +311,7 @@ export default function InfernalChessPuzzle() {
                       transition={{ duration: 0.2 }}
                     >
                       <div className="relative w-full h-full">
-                        {imageLoadErrors[horseman.type] ? (
-                          getFallbackContent(horseman.type)
-                        ) : (
-                          <img
-                            src={horseman.image || "/placeholder.svg"}
-                            alt={horseman.type}
-                            width={80}
-                            height={100}
-                            className="pixelated object-contain transform -translate-y-4"
-                            onError={() => handleImageError(horseman.type)}
-                          />
-                        )}
+                        {getHorsemanContent(horseman.type)}
                         <span className="absolute bottom-0 left-0 right-0 text-center text-xs text-white font-pixel capitalize bg-black/50 px-1 rounded">
                           {horseman.type}
                         </span>
