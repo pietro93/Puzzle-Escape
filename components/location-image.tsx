@@ -27,16 +27,6 @@ export default function LocationImage({ setting, customImage, hintImage, level }
       return "/images/murder-mystery/crime-scene.webp"
     }
 
-    // Special case for level 50
-    if (level === 50) {
-      // If customImage is provided, use that (this would be the elevator image when appropriate)
-      if (customImage) {
-        return customImage
-      }
-      // Otherwise use the default hell background
-      return "/images/hell-bg.webp"
-    }
-
     // Otherwise use the default image for the setting
     switch (setting) {
       case "prison":
