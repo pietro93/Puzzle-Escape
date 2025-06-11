@@ -11,7 +11,6 @@
   "dependencies": {
     "@capacitor/cli": "latest",
     "@emotion/is-prop-valid": "latest",
-    "@radix-ui/react-slot": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "electron": "latest",
@@ -20,7 +19,6 @@
     "fs": "latest",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
-    "next-themes": "latest",
     "path": "latest",
     "react": "^18",
     "react-dom": "^18",

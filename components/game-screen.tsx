@@ -102,7 +102,7 @@ export default function GameScreen({
   const [floorLabels, setFloorLabels] = useState<Record<number, string>>({})
   const [hasUsedElevator, setHasUsedElevator] = useState(false)
   const [isSubmitButtonHovered, setIsSubmitButtonHovered] = useState(false)
-  const [showElevator, setShowElevator] = useState(true)
+  const [showElevator, setShowElevator] = useState(false)
   const [showElevatorPanel, setShowElevatorPanel] = useState(false)
   const [elevatorDescription, setElevatorDescription] = useState("")
   const [characterDialogue, setCharacterDialogue] = useState<string>("")
