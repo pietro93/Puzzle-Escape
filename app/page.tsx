@@ -1,25 +1,30 @@
 "use client"
 
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
+import GameContainer from "@/components/game-container-web"
 
-export default function Page() {
+export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
-    const listFiles = async () => {
-      try {
-        const response = await fetch("/api/list-files")
-        const data = await response.json()
-        console.log("Files in public directory:", data)
-      } catch (error) {
-        console.error("Error listing files:", error)
-      }
-    }
+    // Simulate loading assets
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 1500)
 
-    listFiles()
+    return () => clearTimeout(timer)
   }, [])
 
   return (
-    <div>
-      <h1>Puzzle Escape</h1>
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-0 bg-black text-white">
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-purple-500 border-solid rounded-full animate-spin"></div>
+          <p className="mt-4 font-pixel text-purple-400">Loading...</p>
+        </div>
+      ) : (
+        <GameContainer />
+      )}
+    </main>
   )
 }
