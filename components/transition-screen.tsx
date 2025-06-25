@@ -13,7 +13,6 @@ interface TransitionScreenProps {
 }
 
 export default function TransitionScreen({ transition, onContinue, soundEnabled, toggleSound }: TransitionScreenProps) {
-  // State
   const [currentParagraph, setCurrentParagraph] = useState(0)
   const [textVisible, setTextVisible] = useState("")
   const [isTyping, setIsTyping] = useState(true)
@@ -21,67 +20,6 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
   const [showSkipButton, setShowSkipButton] = useState(false)
   const [currentImage, setCurrentImage] = useState<string>("")
   const [fadeIn, setFadeIn] = useState(false)
-
-  // Helper functions
-  const getPreviousCharacter = (nextLocation: string): string => {
-    const characterMap: Record<string, string> = {
-      "the Mansion": "/images/skeleton.webp", // Coming from prison
-      "the Forest": "/images/butler.webp", // Coming from mansion
-      "the Desert": "/images/gypsy.webp", // Coming from forest
-      "the Afterlife": "/images/sphinx.webp", // Coming from desert
-    }
-
-    return characterMap[nextLocation] || "/images/skeleton.webp"
-  }
-
-  const getPreviousLocation = (nextLocation: string): string => {
-    const locationMap: Record<string, string> = {
-      "the Mansion": "/images/prison-bg.webp", // Coming from prison
-      "the Forest":
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-Qd9jgVQwNdCF6yT2PFKtFg0KEhxQ4Q.webp", // Coming from mansion (interior)
-      "the Desert": "/images/forest-bg.webp", // Coming from forest
-      "the Afterlife": "/images/desert-bg.webp", // Coming from desert
-    }
-
-    return locationMap[nextLocation] || "/images/prison-bg.webp"
-  }
-
-  const getLocationFromName = (locationName: string): string => {
-    const locationMap: Record<string, string> = {
-      "the Mansion":
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-exterior-KTmGONVi3wa6sx2G9nKqAybVn3qVV0.webp", // Mansion exterior
-      "the Forest": "/images/forest-bg.webp",
-      "the Desert": "/images/desert-bg.webp",
-      "the Afterlife": "/images/hell-bg.webp",
-    }
-
-    return locationMap[locationName] || "/images/prison-bg.webp"
-  }
-
-  const updateImageForParagraph = (paragraphIndex: number, transition: Transition) => {
-    const totalParagraphs = transition.paragraphs.length
-
-    if (paragraphIndex < Math.floor(totalParagraphs / 4)) {
-      // First quarter: Previous character
-      setCurrentImage(getPreviousCharacter(transition.nextLocation))
-    } else if (paragraphIndex < Math.floor(totalParagraphs / 2)) {
-      // Second quarter: Previous location
-      setCurrentImage(getPreviousLocation(transition.nextLocation))
-    } else if (paragraphIndex < Math.floor((3 * totalParagraphs) / 4)) {
-      // Third quarter: New location
-      const locationImage = getLocationFromName(transition.nextLocation)
-      setCurrentImage(locationImage)
-    } else {
-      // Last quarter: New character
-      setCurrentImage(transition.characterImage)
-    }
-
-    // Reset and trigger fade-in animation
-    setFadeIn(false)
-    setTimeout(() => {
-      setFadeIn(true)
-    }, 50)
-  }
 
   // Show skip button after a delay
   useEffect(() => {
@@ -135,7 +73,76 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
     return () => clearInterval(typingInterval)
   }, [currentParagraph, skipTyping, transition])
 
-  // Event handlers
+  const getPreviousCharacter = (nextLocation: string): string => {
+    switch (nextLocation) {
+      case "the Mansion":
+        return "/images/skeleton.webp" // Coming from prison
+      case "the Forest":
+        return "/images/butler.webp" // Coming from mansion
+      case "the Desert":
+        return "/images/gypsy.webp" // Coming from forest
+      case "the Afterlife":
+        return "/images/sphinx.webp" // Coming from desert
+      default:
+        return "/images/skeleton.webp"
+    }
+  }
+
+  const getPreviousLocation = (nextLocation: string): string => {
+    switch (nextLocation) {
+      case "the Mansion":
+        return "/images/prison-bg.webp" // Coming from prison
+      case "the Forest":
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-Qd9jgVQwNdCF6yT2PFKtFg0KEhxQ4Q.webp" // Coming from mansion (interior)
+      case "the Desert":
+        return "/images/forest-bg.webp" // Coming from forest
+      case "the Afterlife":
+        return "/images/desert-bg.webp" // Coming from desert
+      default:
+        return "/images/prison-bg.webp"
+    }
+  }
+
+  const updateImageForParagraph = (paragraphIndex: number, transition: Transition) => {
+    const totalParagraphs = transition.paragraphs.length
+
+    if (paragraphIndex < Math.floor(totalParagraphs / 4)) {
+      // First quarter: Previous character
+      setCurrentImage(getPreviousCharacter(transition.nextLocation))
+    } else if (paragraphIndex < Math.floor(totalParagraphs / 2)) {
+      // Second quarter: Previous location
+      setCurrentImage(getPreviousLocation(transition.nextLocation))
+    } else if (paragraphIndex < Math.floor((3 * totalParagraphs) / 4)) {
+      // Third quarter: New location
+      const locationImage = getLocationFromName(transition.nextLocation)
+      setCurrentImage(locationImage)
+    } else {
+      // Last quarter: New character
+      setCurrentImage(transition.characterImage)
+    }
+
+    // Reset and trigger fade-in animation
+    setFadeIn(false)
+    setTimeout(() => {
+      setFadeIn(true)
+    }, 50)
+  }
+
+  const getLocationFromName = (locationName: string): string => {
+    switch (locationName) {
+      case "the Mansion":
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-exterior-KTmGONVi3wa6sx2G9nKqAybVn3qVV0.webp" // Mansion exterior
+      case "the Forest":
+        return "/images/forest-bg.webp"
+      case "the Desert":
+        return "/images/desert-bg.webp"
+      case "the Afterlife":
+        return "/images/hell-bg.webp"
+      default:
+        return "/images/prison-bg.webp"
+    }
+  }
+
   const handleContinue = () => {
     if (isTyping) {
       // If still typing, show full text immediately

@@ -33,29 +33,36 @@ interface GameScreenProps {
   onTransition: (transitionId: string) => void
 }
 
-// Helper functions
-const getBrainLampImage = (correctCombinations: number): string => {
-  const brainLampImages: Record<number, string> = {
-    0: "/images/brainlamp.webp", // 0 correct - static image
-    1: "/images/xbrainlampa1.webp", // 1 correct
-    2: "/images/xbrainlampa2.webp", // 2 correct
-    3: "/images/xbrainlampa3.webp", // 3 correct
-    4: "/images/xbrainlampa4.webp", // 4 correct
-    5: "/images/xbrainlampa5.webp", // 5 correct
-    6: "/images/xbrainlampa6.webp", // 6 correct (with red glow)
-  }
-
-  return brainLampImages[correctCombinations] || "/images/brainlamp.webp"
-}
-
-// Define dialogue options for brain lamp
-const brainDialogueOptions = [
+// Define dialogueOptions here
+const dialogueOptions = [
   "AAAGH! IT HURTS!",
   "Can't... think...",
   "STOP! PLEASE!",
   "My brain... melting...",
   "No more... switches...",
 ]
+
+// Update the getBrainLampImage function to use local file paths
+const getBrainLampImage = (correctCombinations: number) => {
+  switch (correctCombinations) {
+    case 0:
+      return "/images/brainlamp.webp" // 0 correct - static image
+    case 1:
+      return "/images/xbrainlampa1.webp" // 1 correct
+    case 2:
+      return "/images/xbrainlampa2.webp" // 2 correct
+    case 3:
+      return "/images/xbrainlampa3.webp" // 3 correct
+    case 4:
+      return "/images/xbrainlampa4.webp" // 4 correct
+    case 5:
+      return "/images/xbrainlampa5.webp" // 5 correct
+    case 6:
+      return "/images/xbrainlampa6.webp" // 6 correct (with red glow)
+    default:
+      return "/images/brainlamp.webp" // Default - static image
+  }
+}
 
 export default function GameScreen({
   level,
@@ -102,7 +109,7 @@ export default function GameScreen({
   const [floorLabels, setFloorLabels] = useState<Record<number, string>>({})
   const [hasUsedElevator, setHasUsedElevator] = useState(false)
   const [isSubmitButtonHovered, setIsSubmitButtonHovered] = useState(false)
-  const [showElevator, setShowElevator] = useState(false)
+  const [showElevator, setShowElevator] = useState(true)
   const [showElevatorPanel, setShowElevatorPanel] = useState(false)
   const [elevatorDescription, setElevatorDescription] = useState("")
   const [characterDialogue, setCharacterDialogue] = useState<string>("")

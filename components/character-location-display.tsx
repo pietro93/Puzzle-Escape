@@ -246,7 +246,7 @@ export default function CharacterLocationDisplay({
           <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
             <Image
-              src={jigsawComplete && showElevator ? "/images/elevator.webp" : "/images/hell-bg.webp"}
+              src={hasUsedElevator || showElevator || jigsawComplete ? "/images/elevator.webp" : "/images/hell-bg.webp"}
               alt={`${setting} location`}
               width={160}
               height={160}

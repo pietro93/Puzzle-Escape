@@ -5,135 +5,6 @@ import Image from "next/image"
 import FinalJigsawPuzzle from "./final-jigsaw-puzzle"
 import ElevatorPanel from "./elevator-panel"
 
-// Helper functions for encoding/decoding
-/**
- * Convert a number to Roman numeral
- */
-function toRoman(num: number): string {
-  const romanNumerals: Record<number, string> = {
-    1: "I",
-    2: "II",
-    3: "III",
-    4: "IV",
-    5: "V",
-    6: "VI",
-    7: "VII",
-    8: "VIII",
-    9: "IX",
-    10: "X",
-  }
-
-  return romanNumerals[num] || num.toString()
-}
-
-/**
- * Find all positions of a character in the table
- */
-function findCharPositions(
-  char: string,
-  table: string[][],
-): Array<{ column: number; row: number; letterPosition: number }> {
-  const positions: Array<{ column: number; row: number; letterPosition: number }> = []
-
-  // Search through the table
-  for (let row = 0; row < table.length; row++) {
-    for (let col = 0; col < table[row].length; col++) {
-      const word = table[row][col].toLowerCase()
-
-      // Find all occurrences of the character in the word
-      for (let pos = 0; pos < word.length; pos++) {
-        if (word[pos] === char) {
-          positions.push({
-            column: col + 1, // 1-indexed
-            row: row + 1, // 1-indexed
-            letterPosition: pos + 1, // 1-indexed
-          })
-        }
-      }
-    }
-  }
-
-  return positions
-}
-
-/**
- * Validate if all characters in the input can be found in the table
- */
-function validateInput(input: string, table: string[][]): boolean {
-  const cleanInput = input.toLowerCase().replace(/\s/g, "")
-  for (const char of cleanInput) {
-    const positions = findCharPositions(char, table)
-    if (positions.length === 0) {
-      return false
-    }
-  }
-  return true
-}
-
-/**
- * Function to encode a string using position references from a table
- */
-function encodeString(input: string): string[] | null {
-  // Define the reference table
-  const table = [
-    ["Samjiva", "Hahava"],
-    ["Kalasutra", "Atata"],
-    ["Samghata", "Alala"],
-    ["Raurava", "Ababa"],
-    ["Maharaurava", "Utpala"],
-    ["Tapana", "Padma"],
-    ["Pratapana", "Kumuda"],
-    ["Avici", "Pundarika"],
-  ]
-
-  // First validate the input
-  if (!validateInput(input, table)) {
-    return null
-  }
-
-  // Remove spaces and convert to lowercase for consistent processing
-  const cleanInput = input.toLowerCase().replace(/\s/g, "")
-  const result: string[] = []
-
-  // Process each character
-  for (const char of cleanInput) {
-    const positions = findCharPositions(char, table)
-    // Randomly select one of the positions
-    const randomIndex = Math.floor(Math.random() * positions.length)
-    const position = positions[randomIndex]
-
-    // Convert to Roman numerals (column, row, letter position)
-    const romanPosition = `${toRoman(position.column)},${toRoman(position.row)},${toRoman(position.letterPosition)}`
-    result.push(romanPosition)
-  }
-
-  return result
-}
-
-// Helper function to get the appropriate hell image based on floor number
-function getHellImage(floor: number): string {
-  const hellImages: Record<number, string> = {
-    [-1]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sanjiva-Qum6JaYX4HbbmDQ7vboJhdurDG7Fcs.webp",
-    [-2]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/kalasutra-5wddXuYdte7YsztzNA1unMS0HB9soO.webp",
-    [-3]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/samghata-iVNtHRCeDMVY1dMIpbYTtZxsxi1eix.webp",
-    [-4]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/raurava-vB9FtmGGwk01dbh2vTmJBKCJnbaUfc.webp",
-    [-5]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/maharaurava-ScCMruzUupCO6VYubvWaMecp36xAGU.webp",
-    [-6]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tapana-V4P1oGePE8JLCyNFILAkoenvSHeyJ1.webp",
-    [-7]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pratapana-axNRuDoGpQblmqBLO6EfNycHn2Pmmz.webp",
-    [-8]: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/avici-ve4kJh6a29EjVPErs7MlHZGYVON4zh.webp",
-    [-9]: "/images/arbuda.webp",
-    [-10]: "/images/nirarbuda.webp",
-    [-11]: "/images/atata.webp",
-    [-12]: "/images/hahava.webp",
-    [-13]: "/images/huhuva.webp",
-    [-14]: "/images/utpala.webp",
-    [-15]: "/images/mahapadma.webp",
-    [-16]: "/images/pundarika.webp",
-  }
-
-  return hellImages[floor] || "/images/elevator.webp"
-}
-
 interface FinalLevelPuzzleProps {
   onSolve: () => void
   onDevilClick: () => void
@@ -461,4 +332,158 @@ export default function FinalLevelPuzzle({
       )}
     </div>
   )
+}
+
+// Helper function to get the appropriate hell image based on floor number
+function getHellImage(floor: number): string {
+  switch (floor) {
+    case -1: // Samjiva
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sanjiva-Qum6JaYX4HbbmDQ7vboJhdurDG7Fcs.webp"
+    case -2: // Kalasutra
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/kalasutra-5wddXuYdte7YsztzNA1unMS0HB9soO.webp"
+    case -3: // Samghata
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/samghata-iVNtHRCeDMVY1dMIpbYTtZxsxi1eix.webp"
+    case -4: // Raurava
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/raurava-vB9FtmGGwk01dbh2vTmJBKCJnbaUfc.webp"
+    case -5: // Maharaurava
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/maharaurava-ScCMruzUupCO6VYubvWaMecp36xAGU.webp"
+    case -6: // Tapana
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tapana-V4P1oGePE8JLCyNFILAkoenvSHeyJ1.webp"
+    case -7: // Pratapana
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pratapana-axNRuDoGpQblmqBLO6EfNycHn2Pmmz.webp"
+    case -8: // Avici
+      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/avici-ve4kJh6a29EjVPErs7MlHZGYVON4zh.webp"
+    case -9: // Arbuda
+      return "/images/arbuda.webp"
+    case -10: // Nirarbuda
+      return "/images/nirarbuda.webp"
+    case -11: // Atata
+      return "/images/atata.webp"
+    case -12: // Hahava
+      return "/images/hahava.webp"
+    case -13: // Huhuva
+      return "/images/huhuva.webp"
+    case -14: // Utpala
+      return "/images/utpala.webp"
+    case -15: // Padma
+      return "/images/mahapadma.webp"
+    case -16: // Pundarika
+      return "/images/pundarika.webp"
+    default:
+      return "/images/elevator.webp"
+  }
+}
+
+/**
+ * Function to encode a string using position references from a table
+ * @param {string} input - The string to encode
+ * @returns {string[] | null} - Array of encoded strings for each letter or null if invalid input
+ */
+function encodeString(input: string): string[] | null {
+  // Define the reference table
+  const table = [
+    ["Samjiva", "Hahava"],
+    ["Kalasutra", "Atata"],
+    ["Samghata", "Alala"],
+    ["Raurava", "Ababa"],
+    ["Maharaurava", "Utpala"],
+    ["Tapana", "Padma"],
+    ["Pratapana", "Kumuda"],
+    ["Avici", "Pundarika"],
+  ]
+
+  // First validate the input
+  if (!validateInput(input, table)) {
+    return null
+  }
+
+  // Remove spaces and convert to lowercase for consistent processing
+  const cleanInput = input.toLowerCase().replace(/\s/g, "")
+  const result: string[] = []
+
+  // Process each character
+  for (const char of cleanInput) {
+    const positions = findCharPositions(char, table)
+    // Randomly select one of the positions
+    const randomIndex = Math.floor(Math.random() * positions.length)
+    const position = positions[randomIndex]
+
+    // Convert to Roman numerals (column, row, letter position)
+    const romanPosition = `${toRoman(position.column)},${toRoman(position.row)},${toRoman(position.letterPosition)}`
+    result.push(romanPosition)
+  }
+
+  return result
+}
+
+/**
+ * Validate if all characters in the input can be found in the table
+ * @param {string} input - The string to validate
+ * @param {string[][]} table - The reference table
+ * @returns {boolean} - Whether the input is valid
+ */
+function validateInput(input: string, table: string[][]): boolean {
+  const cleanInput = input.toLowerCase().replace(/\s/g, "")
+  for (const char of cleanInput) {
+    const positions = findCharPositions(char, table)
+    if (positions.length === 0) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Find all positions of a character in the table
+ * @param {string} char - The character to find
+ * @param {string[][]} table - The reference table
+ * @returns {Array} - Array of positions {column, row, letterPosition}
+ */
+function findCharPositions(
+  char: string,
+  table: string[][],
+): Array<{ column: number; row: number; letterPosition: number }> {
+  const positions: Array<{ column: number; row: number; letterPosition: number }> = []
+
+  // Search through the table
+  for (let row = 0; row < table.length; row++) {
+    for (let col = 0; col < table[row].length; col++) {
+      const word = table[row][col].toLowerCase()
+
+      // Find all occurrences of the character in the word
+      for (let pos = 0; pos < word.length; pos++) {
+        if (word[pos] === char) {
+          positions.push({
+            column: col + 1, // 1-indexed
+            row: row + 1, // 1-indexed
+            letterPosition: pos + 1, // 1-indexed
+          })
+        }
+      }
+    }
+  }
+
+  return positions
+}
+
+/**
+ * Convert a number to Roman numeral
+ * @param {number} num - The number to convert
+ * @returns {string} - The Roman numeral representation
+ */
+function toRoman(num: number): string {
+  const romanNumerals: Record<number, string> = {
+    1: "I",
+    2: "II",
+    3: "III",
+    4: "IV",
+    5: "V",
+    6: "VI",
+    7: "VII",
+    8: "VIII",
+    9: "IX",
+    10: "X",
+  }
+
+  return romanNumerals[num] || num.toString()
 }
