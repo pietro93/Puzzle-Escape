@@ -33,17 +33,15 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 23,
-    question: "The gypsy woman's crystal ball reveals shadows from a faraway land.",
-    description:
-      "The crystal ball clouds over, then clears to reveal shifting patterns of light. 'I see a distant culture, an ancient zodiac cycle,' the gypsy whispers. 'Tell me the year and animal I'm seeing.'",
-    imageUrl: "/images/zodiac-animation.webp",
-    isPuzzleImage: true,
-    solution: "1639:Mèo|1639:mèo",
+    question: "The gypsy woman peers into her crystal ball, which begins to swirl with mist.",
+    description: "The crystal ball shows a sequence: 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, ...\nWhat is the next number?",
+    imageUrl: "",
+    solution: "6",
     category: "pattern",
     hints: [
-      "The shifting patterns in the crystal ball reveal an Eastern zodiac cycle.",
-      "Look carefully at the symbols - they represent a specific year in the Vietnamese zodiac.",
-      "The format should be [year]:[animal] - the animal name should be in Vietnamese with the correct accent mark.",
+      "Each number represents something about the numbers themselves.",
+      "Count the letters when you write each number as a word.",
+      "THREE has 5 letters, FOUR has 4 letters, FIVE has 4 letters...",
     ],
   },
   {

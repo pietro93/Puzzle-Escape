@@ -39,15 +39,6 @@ body {
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* No text shadow for book content */
-.book-content .font-pixel,
-.book-content h4,
-.book-content p,
-.book-content div {
-  text-shadow: none;
-  font-family: Arial, sans-serif;
-}
-
 .pixelated {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
@@ -294,15 +285,4 @@ body {
 /* Add this new utility class */
 .bg-gradient-radial {
   background-image: radial-gradient(var(--tw-gradient-stops));
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 }

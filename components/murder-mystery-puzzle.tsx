@@ -1,388 +1,368 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { demonologyBook } from "@/data/books"
 import Image from "next/image"
-import { demonologyBook } from "@/data/books/demonology"
-import { botanyBook } from "@/data/books/botany"
-import { puppiesBook } from "@/data/books/puppies"
-import { genghisKhanBook } from "@/data/books/genghis-khan"
-import { serialKillersBook } from "@/data/books/serial-killers"
-import { bloodDiseasesBook } from "@/data/books/blood-diseases"
-// Import refactored components and hooks
-import { useDialogueSystem } from "@/hooks/use-dialogue-system"
-import { useBookSystem } from "@/hooks/use-book-system"
-import {
-  PoliceReportModal,
-  PassportModal,
-  VictimBodyModal,
-  AutopsyReportModal,
-} from "@/components/murder-mystery/evidence-modals"
-import { BookModal } from "@/components/murder-mystery/book-modal"
-import { DialogueInterface } from "@/components/murder-mystery/dialogue-interface"
-import { LocationMap } from "@/components/murder-mystery/location-map"
-
-// Import data
-import { policewomanDialogue, morticianDialogue, librarianDialogue } from "@/components/murder-mystery/dialogue-data"
-import { autopsyReportPages, locations } from "@/components/murder-mystery/evidence-data"
+import { X, Book, MapPin, ChevronLeft, ChevronRight } from "lucide-react"
 
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
-  onLocationChange?: (location: string) => void
-  currentQuestion?: string
 }
 
-export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
-  // Location State
+// Enhanced botany book with sections
+const botanyBook = {
+  title: "Botany",
+  sections: [
+    {
+      id: "trees",
+      title: "Trees",
+      pages: [
+        {
+          title: "Oak Tree",
+          text: "The mighty oak is known for its strength and longevity. Its wood has been used for centuries in construction and furniture making. Oak trees can live for hundreds of years and provide habitat for countless species.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+        {
+          title: "Pine Tree",
+          text: "Evergreen and aromatic, pine trees are found across the northern hemisphere. They produce resin that has been used in traditional medicines. Their distinctive needles and cones make them easily recognizable in forests.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+        {
+          title: "Birch Tree",
+          text: "With its distinctive white bark, the birch tree has been important in many cultures. The bark can be used to make paper, containers, and even canoes. Birch sap can be tapped in spring and made into a refreshing drink.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+      ],
+    },
+    {
+      id: "plants",
+      title: "Plants",
+      pages: [
+        {
+          title: "Deadly Nightshade",
+          text: "Also known as belladonna, this highly toxic plant has been used both as a poison and medicine throughout history. All parts of the plant contain tropane alkaloids that can cause hallucinations and death.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+        {
+          title: "Foxglove",
+          text: "While beautiful, foxglove contains powerful cardiac glycosides that affect heart rhythm. In controlled doses, it's the source of the medicine digoxin, but improper use can be fatal.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+        {
+          title: "Professor Hemlock",
+          text: "Named after the renowned botanist who first classified it, this rare variety of water hemlock is among the most poisonous plants in North America. It contains cicutoxin that attacks the central nervous system, causing seizures and death. The poison can be extracted and concentrated into a nearly undetectable toxin that leaves minimal traces in the victim's system.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+        {
+          title: "Wolfsbane",
+          text: "Also called monkshood or aconite, this plant contains aconitine, a potent neurotoxin. It has been used in hunting and warfare throughout history. Even handling the plant without gloves can cause symptoms.",
+          imageUrl: "/placeholder.svg?height=150&width=200",
+        },
+      ],
+    },
+  ],
+}
+
+export default function MurderMysteryPuzzle({ onSolve }: MurderMysteryPuzzleProps) {
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
+  const [selectedBook, setSelectedBook] = useState<any>(null)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [currentSection, setCurrentSection] = useState<string | null>(null)
 
-  // Evidence State
-  const [showPoliceReport, setShowPoliceReport] = useState(false)
-  const [showPassport, setShowPassport] = useState(false)
-  const [showVictimBody, setShowVictimBody] = useState(false)
-  const [showAutopsyReport, setShowAutopsyReport] = useState(false)
+  const locations = [
+    { id: "crime scene", name: "Crime Scene", description: "A bloody mess with evidence scattered around." },
+    {
+      id: "police station",
+      name: "Police Station",
+      description: "Officers are busy with paperwork and interrogations.",
+    },
+    { id: "morgue", name: "Morgue", description: "Cold and clinical, with several bodies awaiting examination." },
+    { id: "library", name: "Library", description: "Rows of books and ancient tomes line the walls." },
+  ]
 
-  // Knowledge State - for conditional dialogue options
-  const [knowsAboutAnemia, setKnowsAboutAnemia] = useState(false)
-  const [knowsAboutBodyMarks, setKnowsAboutBodyMarks] = useState(false)
-
-  // Tracking state for viewed evidence
-  const [hasSeenPoliceReport, setHasSeenPoliceReport] = useState(false)
-  const [hasSeenPassport, setHasSeenPassport] = useState(false)
-  const [hasSeenBody, setHasSeenBody] = useState(false)
-  const [hasSeenAutopsyReport, setHasSeenAutopsyReport] = useState(false)
-
-  // Mortician specific state
-  const [canSeeBody, setCanSeeBody] = useState(false)
-  const [askedAboutFriends, setAskedAboutFriends] = useState(false)
-  const [askedHobbies, setAskedHobbies] = useState(false)
-  const [askedPuzzleGames, setAskedPuzzleGames] = useState(false)
-  const [showedUnconditionalFriendship, setShowedUnconditionalFriendship] = useState(false)
-
-  // Track if the demonology book has been opened
-  const [demonologyBookOpened, setDemonologyBookOpened] = useState(false)
-
-  // Initialize dialogue system with the appropriate dialogue tree based on current location
-  const dialogue = useDialogueSystem({
-    initialDialogue:
-      currentLocation === "police station"
-        ? policewomanDialogue
-        : currentLocation === "morgue"
-          ? morticianDialogue
-          : librarianDialogue,
-  })
-
-  // Initialize book system
-  const bookSystem = useBookSystem()
-
-  // // // // // // MODALS  // // // // // // // // // // // // // // // // // // // // // //
-  const closePassport = () => {
-    setShowPassport(false)
-    setHasSeenPassport(true)
-    dialogue.setLastAction("viewed-passport")
-    dialogue.setCurrentResponse("Seen enough? I've got work to do, you know.")
-    dialogue.setTypedText("")
-    dialogue.setIsTyping(true)
-  }
-
-  const closePoliceReport = () => {
-    setShowPoliceReport(false)
-    setHasSeenPoliceReport(true)
-    dialogue.setLastAction("viewed-report")
-    dialogue.setCurrentResponse("Told you it wasn't anything special. Just a routine report.")
-    dialogue.setTypedText("")
-    dialogue.setIsTyping(true)
-  }
-
-  const closeVictimBody = () => {
-    setShowVictimBody(false)
-    setHasSeenBody(true)
-    dialogue.setLastAction("viewed-body")
-    dialogue.setCurrentResponse("Seen enough? The body isn't going anywhere. Neither am I, unfortunately.")
-    dialogue.setTypedText("")
-    dialogue.setIsTyping(true)
-  }
-
-  const closeAutopsyReport = () => {
-    setShowAutopsyReport(false)
-    setHasSeenAutopsyReport(true)
-    dialogue.setLastAction("viewed-autopsy")
-    dialogue.setCurrentResponse("Satisfied? Now get out of here.")
-    dialogue.setTypedText("")
-    dialogue.setIsTyping(true)
-  }
-
-  // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
-  // Custom filter for policewoman dialogue options
-  const filterPoliceOptions = (options: any[]) => {
-    return options.filter((opt) => {
-      // Only show "police-report" option if the player has asked about the murder
-      if (opt.id === "police-report") {
-        return dialogue.askedQuestions.has("tell-about-murder")
-      }
-
-      // Only show "were-there-any-witnesses" if the player has asked about the murder
-      if (opt.id === "were-there-any-witnesses") {
-        return dialogue.askedQuestions.has("tell-about-murder")
-      }
-
-      // Only show "can-see-report-again" if the player has seen the police report
-      if (opt.id === "can-see-report-again") {
-        return hasSeenPoliceReport
-      }
-
-      // Only show "can-see-passport-again" if the player has seen the passport
-      if (opt.id === "can-see-passport-again") {
-        return hasSeenPassport
-      }
-
-      // Show all other options
-      return true
-    })
-  }
-
-  // Custom filter for mortician dialogue options
-  const filterMorticianOptions = (options: any[]) => {
-    return options.filter((opt) => {
-      if (opt.id === "like-job" || opt.id === "can-see-body-initial") {
-        return !canSeeBody
-      }
-      if (opt.id === "check-victim-body") {
-        return canSeeBody
-      }
-      if (opt.id === "after-viewing-evidence") {
-        return (
-          dialogue.lastAction === "viewed-body" ||
-          dialogue.lastAction === "viewed-passport" ||
-          dialogue.lastAction === "viewed-report" ||
-          dialogue.lastAction === "viewed-autopsy"
-        )
-      }
-      if (opt.id === "be-your-friend") {
-        return askedAboutFriends
-      }
-      // Show the "let-me-see-body" option only if both hobbies and puzzle games have been asked about
-      // and it hasn't been shown before
-      if (opt.id === "let-me-see-body") {
-        return askedHobbies && askedPuzzleGames && !showedUnconditionalFriendship
-      }
-      if ((opt.id === "hobbies" || opt.id === "puzzle-games") && askedHobbies && askedPuzzleGames) {
-        return false
-      }
-      return true
-    })
-  }
-
-  // Custom filter for librarian dialogue options
-  const filterLibrarianOptions = (options: any[]) => {
-    return options.filter((opt) => {
-      if (opt.id === "book-about-blood-diseases") {
-        return knowsAboutAnemia
-      }
-      if (opt.id === "book-about-demons") {
-        return knowsAboutBodyMarks
-      }
-      return true
-    })
-  }
-
-  // Handle dialogue option selection with special actions
-  const handleDialogueOption = (option: any) => {
-    // Special actions based on option ID
-    if (option.id === "any-friends") {
-      setAskedAboutFriends(true)
-    } else if (option.id === "hobbies") {
-      setAskedHobbies(true)
-    } else if (option.id === "puzzle-games") {
-      setAskedPuzzleGames(true)
-    } else if (option.id === "let-me-see-body") {
-      // Immediately set canSeeBody to true and mark the option as shown
-      setCanSeeBody(true)
-      setShowedUnconditionalFriendship(true)
-
-      // After handling the dialogue response, immediately show the check body option
-      setTimeout(() => {
-        // Force update the dialogue options to show the check body option
-        dialogue.setCurrentDialogueOptions(filterMorticianOptions(dialogue.currentDialogueOptions))
-      }, 100)
-    } else if (option.id === "can-see-report" || option.id === "can-see-report-again") {
-      setShowPoliceReport(true)
-      dialogue.setLastAction("viewing-report")
-    } else if (option.id === "can-see-passport" || option.id === "can-see-passport-again") {
-      setShowPassport(true)
-      dialogue.setLastAction("viewing-passport")
-    } else if (option.id === "check-victim-body") {
-      setShowVictimBody(true)
-      dialogue.setLastAction("viewing-body")
-    } else if (option.id === "check-autopsy-report") {
-      setShowAutopsyReport(true)
-      dialogue.setLastAction("viewing-autopsy")
-    } else if (option.id === "anemia-question") {
-      setKnowsAboutAnemia(true)
-    } else if (option.id === "weird-signs") {
-      setKnowsAboutBodyMarks(true)
-    } else if (
-      option.id === "read-favorite-book" ||
-      option.id === "read-puppies-book" ||
-      option.id === "read-serial-killers-book" ||
-      option.id === "read-botany-book" ||
-      option.id === "read-blood-diseases-book" ||
-      option.id === "read-demons-book"
-    ) {
-      // Handle book reading
-      const bookId = option.id.replace("read-", "").replace("-book", "")
-      handleOpenBook(bookId)
-    }
-
-    // Use the dialogue system to handle the option with the appropriate filter
-    if (currentLocation === "police station") {
-      dialogue.handleDialogueOption(option, filterPoliceOptions)
-    } else if (currentLocation === "morgue") {
-      dialogue.handleDialogueOption(option, filterMorticianOptions)
-    } else {
-      dialogue.handleDialogueOption(option, filterLibrarianOptions)
-    }
-  }
-
-  // Handle opening books
-  const handleOpenBook = (bookId: string) => {
-    let book = null
-    if (bookId === "favorite") {
-      book = genghisKhanBook
-    } else if (bookId === "puppies") {
-      book = puppiesBook
-    } else if (bookId === "serial-killers") {
-      book = serialKillersBook
-    } else if (bookId === "botany") {
-      book = botanyBook
-    } else if (bookId === "blood-diseases") {
-      book = bloodDiseasesBook
-    } else if (bookId === "demons") {
-      book = demonologyBook
-      if (!demonologyBookOpened) {
-        setDemonologyBookOpened(true)
-      }
-    }
-
-    if (book) {
-      bookSystem.openBook(book)
-    }
-  }
-
-  // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // // //
   const navigateTo = (location: string) => {
     setCurrentLocation(location)
-    dialogue.closeDialogue()
+  }
 
-    if (onLocationChange) {
-      onLocationChange(location)
+  const openBook = (book: any) => {
+    setSelectedBook(book)
+    setCurrentPage(0)
+
+    // If it's the botany book, set the initial section
+    if (book.sections) {
+      setCurrentSection(book.sections[0].id)
+    } else {
+      setCurrentSection(null)
     }
   }
 
-  // Automatically start dialogue when entering the police station, morgue, or library
-  useEffect(() => {
-    if (currentLocation === "police station") {
-      // Start dialogue with policewoman and apply police filter
-      dialogue.startDialogue("policewoman", policewomanDialogue, filterPoliceOptions)
-    } else if (currentLocation === "morgue") {
-      // Start dialogue with mortician and apply mortician filter
-      dialogue.startDialogue("mortician", morticianDialogue, filterMorticianOptions)
-    } else if (currentLocation === "library") {
-      // Start dialogue with librarian and apply librarian filter
-      dialogue.startDialogue("librarian", librarianDialogue, filterLibrarianOptions)
+  const closeBook = () => {
+    setSelectedBook(null)
+    setCurrentPage(0)
+    setCurrentSection(null)
+  }
+
+  const nextPage = () => {
+    if (selectedBook) {
+      if (selectedBook.sections) {
+        // For botany book with sections
+        const currentSectionObj = selectedBook.sections.find((s: any) => s.id === currentSection)
+        if (currentSectionObj && currentPage < currentSectionObj.pages.length - 1) {
+          setCurrentPage(currentPage + 1)
+        }
+      } else {
+        // For regular books
+        if (currentPage < selectedBook.pages.length - 1) {
+          setCurrentPage(currentPage + 1)
+        }
+      }
     }
-  }, [currentLocation])
+  }
+
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const switchSection = (sectionId: string) => {
+    setCurrentSection(sectionId)
+    setCurrentPage(0)
+  }
+
+  // Get current content based on book type and section
+  const getCurrentContent = () => {
+    if (!selectedBook) return null
+
+    if (selectedBook.sections) {
+      // For botany book with sections
+      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
+      if (section && section.pages[currentPage]) {
+        return section.pages[currentPage]
+      }
+      return null
+    } else {
+      // For regular books
+      return selectedBook.pages[currentPage]
+    }
+  }
+
+  // Get total pages for current view
+  const getTotalPages = () => {
+    if (!selectedBook) return 0
+
+    if (selectedBook.sections && currentSection) {
+      const section = selectedBook.sections.find((s: any) => s.id === currentSection)
+      return section ? section.pages.length : 0
+    } else {
+      return selectedBook.pages.length
+    }
+  }
+
+  const currentContent = getCurrentContent()
+  const totalPages = getTotalPages()
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
       <h2 className="text-xl font-bold text-red-500">Murder Mystery</h2>
+      <p className="text-gray-300 mb-2">Explore locations to gather clues and solve the mystery.</p>
 
       {/* Location Content */}
-      <Card className="w-full bg-black border-gray-700">
-        <CardHeader className="bg-black text-purple-300">
+      <Card className="w-full bg-gray-800 border-gray-700">
+        <CardHeader>
           <CardTitle className="text-purple-300">{locations.find((loc) => loc.id === currentLocation)?.name}</CardTitle>
         </CardHeader>
-        <CardContent className="bg-black p-0">
+        <CardContent>
           {currentLocation === "crime scene" && (
             <div className="flex justify-center">
-              <div className="w-full h-full relative pixelated-container bg-black p-0">
-                <Image
-                  src="/images/murder-mystery/crime-scene.webp"
-                  alt="Crime Scene"
-                  width={400}
-                  height={400}
-                  className="pixelated w-full h-full object-contain"
-                />
-              </div>
+              <Image
+                src="/images/murder-mystery/crime-scene.webp"
+                alt="Crime Scene"
+                width={500}
+                height={500}
+                className="rounded-lg max-h-[70vh] w-auto"
+              />
             </div>
           )}
 
-          {/* Police, Mortician, and Librarian Dialogue */}
-          {(currentLocation === "police station" || currentLocation === "morgue" || currentLocation === "library") &&
-            dialogue.showDialogue && (
-              <DialogueInterface
-                character={dialogue.currentCharacter}
-                typedText={dialogue.typedText}
-                dialogueOptions={dialogue.currentDialogueOptions}
-                askedQuestions={dialogue.askedQuestions}
-                dialoguePath={dialogue.dialoguePath}
-                onSelectOption={handleDialogueOption}
-                onGoBack={() => {
-                  if (currentLocation === "police station") {
-                    dialogue.goBackInDialogue(filterPoliceOptions)
-                  } else if (currentLocation === "morgue") {
-                    dialogue.goBackInDialogue(filterMorticianOptions)
-                  } else {
-                    dialogue.goBackInDialogue(filterLibrarianOptions)
-                  }
-                }}
+          {currentLocation === "police station" && (
+            <div className="flex justify-center">
+              <Image
+                src="/images/murder-mystery/policewoman.webp"
+                alt="Police Officer"
+                width={500}
+                height={500}
+                className="rounded-lg max-h-[70vh] w-auto"
               />
-            )}
+            </div>
+          )}
 
-          {/* Library View with Librarian */}
-          {currentLocation === "library" && !dialogue.showDialogue && (
-            <div className="flex flex-col items-center justify-center p-4">
-              <div className="w-full max-w-md h-64 relative pixelated-container bg-black mb-4">
-                <Image
-                  src="/images/murder-mystery/librarian-2.webp"
-                  alt="Librarian"
-                  width={400}
-                  height={300}
-                  className="pixelated w-full h-full object-contain"
-                />
+          {currentLocation === "morgue" && (
+            <div className="flex justify-center">
+              <Image
+                src="/images/murder-mystery/mortician.webp"
+                alt="Mortician"
+                width={500}
+                height={500}
+                className="rounded-lg max-h-[70vh] w-auto"
+              />
+            </div>
+          )}
+
+          {currentLocation === "library" && (
+            <div className="text-gray-300">
+              <p>The library contains thousands of books on various subjects.</p>
+              <p className="mt-2">Two books catch your attention:</p>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div
+                  className="bg-gray-700 p-3 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                  onClick={() => openBook(demonologyBook)}
+                >
+                  <div className="flex items-center gap-2">
+                    <Book className="text-red-400" />
+                    <h3 className="font-semibold text-red-300">Demonology</h3>
+                  </div>
+                  <p className="text-sm mt-2">A comprehensive guide to supernatural creatures that feed on humans.</p>
+                </div>
+
+                <div
+                  className="bg-gray-700 p-3 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                  onClick={() => openBook(botanyBook)}
+                >
+                  <div className="flex items-center gap-2">
+                    <Book className="text-green-400" />
+                    <h3 className="font-semibold text-green-300">Botany</h3>
+                  </div>
+                  <p className="text-sm mt-2">An encyclopedia of plants, including many poisonous varieties.</p>
+                </div>
               </div>
-              <button
-                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-                onClick={() => dialogue.startDialogue("librarian", librarianDialogue, filterLibrarianOptions)}
-              >
-                Talk to Librarian
-              </button>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Evidence Modals */}
-      <PoliceReportModal isOpen={showPoliceReport} onClose={closePoliceReport} />
-      <PassportModal isOpen={showPassport} onClose={closePassport} />
-      <VictimBodyModal isOpen={showVictimBody} onClose={closeVictimBody} />
-      <AutopsyReportModal isOpen={showAutopsyReport} onClose={closeAutopsyReport} pages={autopsyReportPages} />
+      {/* Navigation Bar - Now at the bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 border-t border-gray-700 z-10">
+        <div className="flex justify-between items-center max-w-md mx-auto">
+          {locations.map((location) => (
+            <Button
+              key={location.id}
+              variant={currentLocation === location.id ? "default" : "outline"}
+              size="sm"
+              onClick={() => navigateTo(location.id)}
+              className="flex items-center gap-1"
+            >
+              <MapPin className="w-3 h-3" />
+              <span className="text-xs sm:text-sm">{location.name}</span>
+            </Button>
+          ))}
+        </div>
+      </div>
 
-      {/* Book Modal */}
-      <BookModal
-        book={bookSystem.selectedBook}
-        currentPage={bookSystem.currentPage}
-        currentSection={bookSystem.currentSection}
-        onClose={bookSystem.closeBook}
-        onNextPage={bookSystem.nextPage}
-        onPrevPage={bookSystem.prevPage}
-        onSwitchSection={bookSystem.switchSection}
-        getCurrentContent={bookSystem.getCurrentContent}
-        getTotalPages={bookSystem.getTotalPages}
-      />
+      {/* Book Modal - Enhanced to look more like a book */}
+      {selectedBook && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+          <div className="bg-[#2a2a2a] rounded-lg max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
+            {/* Book Header */}
+            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-[#1a1a1a]">
+              <h3 className="text-xl font-bold text-amber-300">{selectedBook.title}</h3>
+              <Button variant="ghost" size="sm" onClick={closeBook} className="text-gray-400 hover:text-white">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
 
-      {/* Location Map */}
-      <LocationMap locations={locations} currentLocation={currentLocation} onNavigate={navigateTo} />
+            {/* Section Tabs for Botany Book */}
+            {selectedBook.sections && (
+              <div className="flex border-b border-gray-700">
+                {selectedBook.sections.map((section: any) => (
+                  <button
+                    key={section.id}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      currentSection === section.id
+                        ? "bg-green-900/30 text-green-300 border-b-2 border-green-500"
+                        : "text-gray-400 hover:text-white hover:bg-gray-700/30"
+                    }`}
+                    onClick={() => switchSection(section.id)}
+                  >
+                    {section.title}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Book Content */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-8 bg-[#252525] min-h-[300px] flex flex-col items-center">
+                {/* Book Page Content */}
+                <div className="max-w-md w-full bg-[#f5f5dc] text-gray-800 p-6 rounded shadow-md relative book-page">
+                  {currentContent?.title && (
+                    <h4 className="text-lg font-semibold text-center mb-4 text-gray-900 border-b border-gray-300 pb-2">
+                      {currentContent.title}
+                    </h4>
+                  )}
+
+                  {currentContent?.imageUrl && (
+                    <div className="flex justify-center mb-4">
+                      <div className="border border-gray-400 p-1 bg-white inline-block">
+                        <Image
+                          src={currentContent.imageUrl || "/placeholder.svg"}
+                          alt="Book illustration"
+                          width={200}
+                          height={150}
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-gray-700 whitespace-pre-line leading-relaxed font-serif">
+                    {currentContent?.text}
+                  </div>
+
+                  {/* Page number */}
+                  <div className="absolute bottom-2 right-2 text-gray-500 text-xs">{currentPage + 1}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Book Navigation */}
+            <div className="p-4 border-t border-gray-700 bg-[#1a1a1a] flex justify-between items-center">
+              <Button
+                variant="outline"
+                onClick={prevPage}
+                disabled={currentPage === 0}
+                className="flex items-center gap-1"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Previous
+              </Button>
+
+              <span className="text-gray-400 text-sm">
+                Page {currentPage + 1} of {totalPages}
+              </span>
+
+              <Button
+                variant="outline"
+                onClick={nextPage}
+                disabled={currentPage === totalPages - 1}
+                className="flex items-center gap-1"
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        .book-page {
+          background-image: linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 5%, rgba(0,0,0,0) 95%, rgba(0,0,0,0.05) 100%);
+        }
+      `}</style>
     </div>
   )
 }

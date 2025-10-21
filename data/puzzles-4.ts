@@ -19,19 +19,56 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with a golden scarab and ancient pedestals.",
+    question: "The Sphinx presents you with four ancient figures, each claiming to know the secret of the desert.",
     description:
-      "The Sphinx speaks in riddles: 'Guide the sacred beetle along the path of the one whose generosity changed the value of gold itself. Trace the journey of the golden pilgrim who brought splendor to the lands he crossed.'",
+      "Four figures stand before you, each claiming to know the secret of the desert. The Sphinx tells you that only one speaks the truth, while the others lie. You must determine who speaks the truth.",
     imageUrl: "",
-    isGoldenScarabPuzzle: true,
-    solution: "sublime splendor",
-    category: "pattern",
+    isInteractiveInmates: true,
+    inmateData: [
+      {
+        name: "Priest",
+        image: "/images/priest.webp", // Placeholder
+        statements: [
+          { text: "The merchant knows the secret path through the desert." },
+          { text: "The scribe is not to be trusted." },
+          { text: "I have served the gods faithfully for decades." },
+        ],
+      },
+      {
+        name: "Merchant",
+        image: "/images/merchant.webp", // Placeholder
+        statements: [
+          { text: "The priest speaks falsely about me." },
+          { text: "The soldier has never set foot in the sacred temple." },
+          { text: "I have traveled the desert many times." },
+        ],
+      },
+      {
+        name: "Scribe",
+        image: "/images/scribe.webp", // Placeholder
+        statements: [
+          { text: "I alone know the ancient texts that reveal the secret." },
+          { text: "The priest has been corrupted by gold." },
+          { text: "The merchant's maps are forgeries." },
+        ],
+      },
+      {
+        name: "Soldier",
+        image: "/images/soldier.webp", // Placeholder
+        statements: [
+          { text: "I have guarded the secret for many years." },
+          { text: "The scribe's knowledge comes from stolen scrolls." },
+          { text: "The merchant has never left the city walls." },
+        ],
+      },
+    ],
+    guardStatement: "Only one of these four speaks the truth. The others lie. Who speaks the truth?",
+    solution: "merchant",
+    category: "logic",
     hints: [
-      "The golden scarab must follow a specific historical pilgrimage route.",
-      "Begin at the Land of Gold, then cross the Great Desert.",
-      "After visiting the Land of Pharaohs, continue to the Holy Land.",
-      "Return through the River Kingdom and back to where you started.",
-      "Complete the journey by returning the scarab to its central position.",
+      "Analyze each statement carefully and look for contradictions.",
+      "If only one person tells the truth, then all statements by the others must be false.",
+      "The truthful person's statements must all be true, while the liars must have at least one false statement each.",
     ],
   },
   {
@@ -40,7 +77,7 @@ export const puzzlesSet4: Puzzle[] = [
     description: "",
     imageUrl: "",
     isDarkRoomPuzzle: true,
-    solution: "broken heart|heartbroken|heart broken",
+    solution: "broken heart",
     category: "pattern",
     hints: [
       "Light the torches to reveal what's hidden in the darkness.",
@@ -79,18 +116,17 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 36,
-    question: "The Sphinx presents you with a challenge of construction.",
-    description: "Build a pyramid by moving blocks through the workshops.",
-    imageUrl: "",
-    isPyramidOfHanoiPuzzle: true,
-    solution: "menkaure",
-    category: "logic",
+    question: "The Sphinx challenges you with a mathematical sequence hidden in the stars.",
+    description:
+      "As night falls, the Sphinx points to a pattern of stars in the sky. 'These stars form a sequence,' it says. 'What number comes next?'\n\n2, 3, 5, 8, 13, 21, ?",
+    imageUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level36-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
+    solution: "34",
+    category: "math",
     hints: [
-      "You can only place smaller blocks on top of larger ones.",
-      "Each block must visit both the Carving Workshop and the Painting Workshop before reaching the Construction Site.",
-      "Start by moving the smallest block to make room for larger blocks.",
-      "The final pyramid should have all blocks in order from largest to smallest at the construction site.",
-      "The answer relates to one of the three main pyramids at Giza.",
+      "This is a famous mathematical sequence.",
+      "Each number is the sum of the two numbers before it.",
+      "This sequence is named after an Italian mathematician.",
     ],
   },
   {

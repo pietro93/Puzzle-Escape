@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { Play, HelpCircle, BookOpen, Volume2, VolumeX, Sparkles } from "lucide-react"
 
 interface SplashScreenProps {
@@ -74,13 +75,7 @@ export default function SplashScreen({
           style={{ transform: `scale(${logoScale})`, transition: "transform 1s ease-in-out" }}
         >
           <div className="w-72 h-72 relative mx-auto mb-4">
-            <img
-              src="/images/logo.webp"
-              alt="Puzzle Escape"
-              width={288}
-              height={288}
-              className="pixelated w-full h-full object-contain"
-            />
+            <Image src="/images/logo.webp" alt="Puzzle Escape" width={288} height={288} className="pixelated" />
           </div>
         </div>
 
