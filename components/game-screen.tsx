@@ -12,7 +12,7 @@ import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
-import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle } from "@/utils/dialogue-utils"
+import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
@@ -42,25 +42,25 @@ const dialogueOptions = [
   "No more... switches...",
 ]
 
-// Update the getBrainLampImage function to use local file paths
+// Define getBrainLampImage here
 const getBrainLampImage = (correctCombinations: number) => {
   switch (correctCombinations) {
     case 0:
-      return "/images/brainlamp.webp" // 0 correct - static image
+      return "/images/brainlamp.webp" // 0 correct
     case 1:
-      return "/images/xbrainlampa1.webp" // 1 correct
+      return "/images/brainlamp1animated.webp" // 1 correct
     case 2:
-      return "/images/xbrainlampa2.webp" // 2 correct
+      return "/images/brainlamp2animated.webp" // 2 correct
     case 3:
-      return "/images/xbrainlampa3.webp" // 3 correct
+      return "/images/brainlamp3animated.webp" // 3 correct
     case 4:
-      return "/images/xbrainlampa4.webp" // 4 correct
+      return "/images/brainlamp4animated.webp" // 4 correct
     case 5:
-      return "/images/xbrainlampa5.webp" // 5 correct
+      return "/images/brainlamp5animated.webp" // 5 correct
     case 6:
-      return "/images/xbrainlampa6.webp" // 6 correct (with red glow)
+      return "/images/brainlamp6animated.webp" // 6 correct (all)
     default:
-      return "/images/brainlamp.webp" // Default - static image
+      return "/images/brainlamp.webp" // Default
   }
 }
 
@@ -287,14 +287,8 @@ export default function GameScreen({
 
   // Update the handleGuardClick function to properly handle sphinx click for level 38
   const handleGuardClick = () => {
-    // Special handling for level 38 (sphinx riddle)
-    if (level === 38) {
-      // For level 38, we use the specific sphinxRiddle
-      setCharacterDialogue(sphinxRiddle)
-      setShowCharacterDialogue(true)
-    }
-    // Special handling for level 10 (guard puzzle)
-    else if (level === 10) {
+    // Only handle special guard click for level 10
+    if (level === 10 || level === 38) {
       // Rotate through guard dialog lines
       const nextIndex = (guardDialogIndex + 1) % guardDialogLines.length
       setGuardDialogIndex(nextIndex)
@@ -316,8 +310,6 @@ export default function GameScreen({
   // Add a function to close the character dialogue popup
   const handleCloseCharacterDialogue = () => {
     setShowCharacterDialogue(false)
-    setShowGuardPopup(false) // Also close guard popup if open
-    setShowBrainDialogue(false) // Also close brain dialogue if open
   }
 
   const handleJigsawComplete = () => {
@@ -398,7 +390,7 @@ export default function GameScreen({
           "No more... please...",
           "STOP THE PAIN!",
         ]
-        dialogue = middleDialogues[Math.floor(Math.random() * middleDialogues.length)]
+        dialogue = middleDialogues[Math.floor(Math.random() * dialogueOptions.length)]
       } else {
         // Late stage - extreme agony, barely coherent
         const lateDialogues = [
@@ -413,8 +405,8 @@ export default function GameScreen({
     }
 
     // Show the dialogue popup with the brain character
-    setShowBrainDialogue(true)
-    setBrainDialogue(dialogue)
+    //setShowBrainDialogue(true);
+    //setBrainDialogue(dialogue);
   }
 
   // Add this handler for the location image click
@@ -639,14 +631,14 @@ export default function GameScreen({
           character={character}
           dialogue={characterDialogue}
           onClose={handleCloseCharacterDialogue}
-          brainImage={getBrainLampImage(binaryCorrectCombinations)}
+          brainImage={getBrainLampImage(binaryCorrectCombinations)} // Pass the brain image
         />
       )}
 
-      {/* Guard Dialog popup for level 10 and Sphinx Dialog popup for level 38 */}
-      {showGuardPopup && (
+      {/* Guard Dialog popup for level 10 */}
+      {showGuardPopup && (level === 10 || level === 38) && (
         <CharacterDialoguePopup
-          character={level === 38 ? "sphinx" : "skeleton"}
+          character={level === 10 ? "skeleton" : "sphinx"}
           dialogue={guardDialogLines[guardDialogIndex]}
           onClose={handleCloseGuardPopup}
           isGuardPopup={true}

@@ -1,279 +1,256 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
 
-type City = {
-  name: string
-  acceptableAnswers: string[]
+import { useState } from "react"
+
+interface PinLocation {
+  id: string
+  x: number // percentage from left
+  y: number // percentage from top
+  color: string
+  correctAnswers: string[]
+  userAnswer: string
 }
 
-type CityPair = {
-  color: string
-  pinImage: string
-  cities: City[]
-  inputs: {
-    value: string
-    isCorrect: boolean
-    cityIndex: number | null
-  }[]
-  connectionImage?: string
+interface ConnectionPair {
+  pin1Id: string
+  pin2Id: string
+  overlayImage: string
 }
 
 export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
-  const [cityPairs, setCityPairs] = useState<CityPair[]>([
+  // Define all pins with their positions as percentages for responsiveness
+  const [pins, setPins] = useState<PinLocation[]>([
     {
-      color: "black",
-      pinImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_black-oOCVCTkBuzSeRxciw7sK8DJda1Qf0H.webp", // hellmap_pin_black
-      cities: [
-        {
-          name: "Zhanaozen",
-          acceptableAnswers: ["zhanaozen", "жаңаөзен"],
-        },
-        {
-          name: "Mary",
-          acceptableAnswers: ["mary"],
-        },
-      ],
-      inputs: [
-        { value: "", isCorrect: false, cityIndex: null },
-        { value: "", isCorrect: false, cityIndex: null },
-      ],
-      connectionImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_zhanaozen-mary-veJaDHrUxQAEsQIvPQMkvesf7QDApG.webp", // hellmap_zhanaozen-mary
+      id: "pin1",
+      x: 6.2, // Zhanaozen (grey top left)
+      y: 8.6,
+      color: "grey",
+      correctAnswers: ["zhanaozen", "жаңаөзен"],
+      userAnswer: "",
     },
     {
+      id: "pin2",
+      x: 44.8, // Qonirat (top blue)
+      y: 14.8,
       color: "blue",
-      pinImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_blue-jR9KYSVMFAZDCYp6opZ2AZGcrNbsPz.webp", // hellmap_pin_blue
-      cities: [
-        {
-          name: "Kungrad",
-          acceptableAnswers: ["qonirat", "qońirat", "kungrad", "кунград"],
-        },
-        {
-          name: "Ashgabat",
-          acceptableAnswers: ["ashgabat"],
-        },
-      ],
-      inputs: [
-        { value: "", isCorrect: false, cityIndex: null },
-        { value: "", isCorrect: false, cityIndex: null },
-      ],
-      connectionImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_kungrad-ashgabat-fz1LayFBjPHIaKwt24eBWnfvFjt5e2.webp", // New kungrad-ashgabat connection
+      correctAnswers: ["qonirat", "qońirat", "kungrad", "кунград"],
+      userAnswer: "",
     },
     {
+      id: "pin3",
+      x: 58.7, // Urgench (top right green)
+      y: 23.4,
       color: "green",
-      pinImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_green-BB9LM9RnlIttE2M3MKbs1tdlgSSQZH.webp", // hellmap_pin_green
-      cities: [
-        {
-          name: "Urgench",
-          acceptableAnswers: ["urgench", "урганч"],
-        },
-        {
-          name: "Sari",
-          acceptableAnswers: ["siri", "sari", "سارى"],
-        },
-      ],
-      inputs: [
-        { value: "", isCorrect: false, cityIndex: null },
-        { value: "", isCorrect: false, cityIndex: null },
-      ],
-      connectionImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_sari-urgench-0iEmAQWEwxGXmdrtNBrHVtuWSPpZnM.webp", // hellmap_sari-urgench
+      correctAnswers: ["urgench", "урганч"],
+      userAnswer: "",
     },
     {
+      id: "pin4",
+      x: 86.5, // Navoi (far right purple)
+      y: 39.4,
       color: "purple",
-      pinImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pin_purple-7lFLoVeYNbE3GZFlcqaKzQDJBMMqmK.webp", // hellmap_pin_purple
-      cities: [
-        {
-          name: "Navoi",
-          acceptableAnswers: ["navoi", "navoiy", "навоий"],
-        },
-        {
-          name: "Turkmenbashi",
-          acceptableAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
-        },
-      ],
-      inputs: [
-        { value: "", isCorrect: false, cityIndex: null },
-        { value: "", isCorrect: false, cityIndex: null },
-      ],
-      connectionImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_turkmenbasy-navoi-5jq3S8SucwT5wGH63XiBPn1ZZIq4Xk.webp", // Updated turkmenbasy-navoi connection
+      correctAnswers: ["navoi", "navoiy", "навоий"],
+      userAnswer: "",
+    },
+    {
+      id: "pin5",
+      x: 6.2, // Turkmenbasy (far left purple)
+      y: 39.4,
+      color: "purple",
+      correctAnswers: ["turkmenbasy", "turkmenbashy", "turkmenbasi", "turkmenbashi"],
+      userAnswer: "",
+    },
+    {
+      id: "pin6",
+      x: 44.8, // Ashgabat (bottom blue)
+      y: 60.3,
+      color: "blue",
+      correctAnswers: ["ashgabat"],
+      userAnswer: "",
+    },
+    {
+      id: "pin7",
+      x: 61.8, // Mary (bottom right grey)
+      y: 60.3,
+      color: "grey",
+      correctAnswers: ["mary"],
+      userAnswer: "",
+    },
+    {
+      id: "pin8",
+      x: 6.2, // Siri (bottom left green)
+      y: 75.0,
+      color: "green",
+      correctAnswers: ["siri", "sari", "سارى"],
+      userAnswer: "",
     },
   ])
 
-  const [activeConnections, setActiveConnections] = useState<string[]>([])
-  const [allCitiesGuessed, setAllCitiesGuessed] = useState(false)
+  // Define connection pairs
+  const connectionPairs: ConnectionPair[] = [
+    {
+      pin1Id: "pin8", // Siri
+      pin2Id: "pin3", // Urgench
+      overlayImage: "/images/hellmap/hellmap_sari-urgench.webp",
+    },
+    {
+      pin1Id: "pin5", // Turkmenbasy
+      pin2Id: "pin4", // Navoi
+      overlayImage: "/images/hellmap/hellmap_turkmenbay-navoi.webp",
+    },
+  ]
 
-  useEffect(() => {
-    const allCorrect = cityPairs.every((pair) => pair.inputs.every((input) => input.isCorrect))
-    setAllCitiesGuessed(allCorrect)
-  }, [cityPairs])
+  const [activePin, setActivePin] = useState<string | null>(null)
+  const [inputValue, setInputValue] = useState("")
+  const [activeOverlays, setActiveOverlays] = useState<string[]>([])
+  const [solved, setSolved] = useState(false)
 
-  const handleInputChange = (pairIndex: number, inputIndex: number, value: string) => {
-    const updatedCityPairs = [...cityPairs]
-    updatedCityPairs[pairIndex].inputs[inputIndex].value = value
-    setCityPairs(updatedCityPairs)
+  // Handle input click
+  const handleInputClick = (pinId: string) => {
+    const pin = pins.find((p) => p.id === pinId)
+    if (pin) {
+      setActivePin(pinId)
+      setInputValue(pin.userAnswer)
+    }
   }
 
-  const checkAnswer = (pairIndex: number, inputIndex: number) => {
-    const pair = cityPairs[pairIndex]
-    const inputValue = pair.inputs[inputIndex].value.trim().toLowerCase()
-
-    if (!inputValue) return
-
-    // Check which city this input matches
-    let matchedCityIndex: number | null = null
-
-    // First check if the other input already has a correct city assigned
-    const otherInputIndex = inputIndex === 0 ? 1 : 0
-    const otherInput = pair.inputs[otherInputIndex]
-
-    if (otherInput.isCorrect && otherInput.cityIndex !== null) {
-      // The other input is already correct, so this must be the remaining city
-      const remainingCityIndex = otherInput.cityIndex === 0 ? 1 : 0
-      const remainingCity = pair.cities[remainingCityIndex]
-
-      if (remainingCity.acceptableAnswers.some((answer) => answer.toLowerCase() === inputValue)) {
-        matchedCityIndex = remainingCityIndex
-      }
-    } else {
-      // Check against both cities
-      for (let i = 0; i < pair.cities.length; i++) {
-        if (pair.cities[i].acceptableAnswers.some((answer) => answer.toLowerCase() === inputValue)) {
-          matchedCityIndex = i
-          break
-        }
-      }
-    }
-
-    const updatedCityPairs = [...cityPairs]
-
-    if (matchedCityIndex !== null) {
-      // Valid city name found - capitalize the first letter
-      const cityName = pair.cities[matchedCityIndex].name
-
-      updatedCityPairs[pairIndex].inputs[inputIndex] = {
-        value: cityName,
-        isCorrect: true,
-        cityIndex: matchedCityIndex,
-      }
-
-      // Check if both inputs are now correct
-      const updatedPair = updatedCityPairs[pairIndex]
-      if (updatedPair.inputs.every((input) => input.isCorrect) && updatedPair.connectionImage) {
-        // Add connection if it's not already active
-        if (!activeConnections.includes(updatedPair.connectionImage)) {
-          setActiveConnections([...activeConnections, updatedPair.connectionImage])
-        }
-      }
-    } else {
-      // Invalid city name
-      updatedCityPairs[pairIndex].inputs[inputIndex] = {
-        value: inputValue,
-        isCorrect: false,
-        cityIndex: null,
-      }
-    }
-
-    setCityPairs(updatedCityPairs)
+  // Handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent, pairIndex: number, inputIndex: number) => {
+  // Handle save answer
+  const handleSaveAnswer = () => {
+    if (activePin) {
+      // Update pin answer
+      const updatedPins = pins.map((pin) => (pin.id === activePin ? { ...pin, userAnswer: inputValue.trim() } : pin))
+      setPins(updatedPins)
+      setActivePin(null)
+
+      // Check for connections
+      checkConnections(updatedPins)
+    }
+  }
+
+  // Handle keyboard events
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      checkAnswer(pairIndex, inputIndex)
+      handleSaveAnswer()
+    } else if (e.key === "Escape") {
+      setActivePin(null)
+    }
+  }
+
+  // Check for matching pairs to show overlays
+  const checkConnections = (currentPins: PinLocation[]) => {
+    const newOverlays: string[] = []
+
+    connectionPairs.forEach((pair) => {
+      const pin1 = currentPins.find((p) => p.id === pair.pin1Id)
+      const pin2 = currentPins.find((p) => p.id === pair.pin2Id)
+
+      if (pin1 && pin2) {
+        const pin1Correct = pin1.correctAnswers.some((answer) => answer.toLowerCase() === pin1.userAnswer.toLowerCase())
+        const pin2Correct = pin2.correctAnswers.some((answer) => answer.toLowerCase() === pin2.userAnswer.toLowerCase())
+
+        if (pin1Correct && pin2Correct) {
+          newOverlays.push(pair.overlayImage)
+        }
+      }
+    })
+
+    setActiveOverlays(newOverlays)
+
+    // Check if all pins are correct
+    const allCorrect = currentPins.every((pin) =>
+      pin.correctAnswers.some((answer) => answer.toLowerCase() === pin.userAnswer.toLowerCase()),
+    )
+
+    if (allCorrect && !solved) {
+      setSolved(true)
+      if (onSolve) onSolve()
     }
   }
 
   return (
     <div className="w-full bg-gray-900 rounded-lg overflow-hidden p-4">
-      <h3 className="text-lg font-bold mb-4 text-amber-500">Mysterious Map</h3>
+      <h3 className="text-lg font-bold mb-4 text-amber-500">Sacred Fires Map</h3>
 
-      <div className="w-full max-w-4xl mx-auto">
-        <div
-          className="relative border border-gray-700 rounded-lg overflow-hidden mb-4 bg-amber-50/90"
-          style={{ height: "400px" }}
-        >
-          {/* Base layer - City names map */}
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_cities-emL12jHZ4AuxFCMkhGkM3uPbg22iX3.webp" // hellmap_cities
-            alt="Map with city names"
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{ zIndex: 1 }}
-          />
+      <div className="mb-4 text-gray-300 text-sm">
+        <p>
+          An ancient map shows the locations of sacred eternal flames. Click near each pin to label it with the correct
+          name. When pairs of locations are correctly identified, hidden connections will be revealed.
+        </p>
+      </div>
 
-          {/* Middle layer - Connection lines */}
-          {activeConnections.map((connection, index) => (
+      <div className="relative w-full max-w-4xl mx-auto">
+        <div className="relative" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
+          {/* Base map image */}
+          <img src="/images/hellmap/hellmap_full.webp" alt="Map with location pins" className="w-full" />
+
+          {/* Overlay images for connections */}
+          {activeOverlays.map((overlay, index) => (
             <img
               key={index}
-              src={connection || "/placeholder.svg"}
-              alt="Connection line"
-              className="absolute inset-0 w-full h-full object-contain"
-              style={{ zIndex: 2 }}
+              src={overlay || "/placeholder.svg"}
+              alt="Connection overlay"
+              className="absolute inset-0 w-full h-full"
+              style={{ zIndex: 10 }}
             />
           ))}
 
-          {/* Top layer - Pins */}
-          <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_pins-x-LNkPuafsJLYCXm1OFBpJvmS5w2jj6p.webp" // hellmap_pins-x
-            alt="Location pins"
-            className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ${
-              allCitiesGuessed ? "opacity-50 grayscale" : ""
-            }`}
-            style={{ zIndex: 3 }}
-          />
-
-          {/* Central pin - only appears when all cities are guessed */}
-          {allCitiesGuessed && (
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hellmap_central-pin-oDy8nOxCTK6nQzT1bVEAOQfwcy2Huj.webp" // hellmap_central-pin
-              alt="Central location pin"
-              className="absolute inset-0 w-full h-full object-contain"
-              style={{ zIndex: 4 }}
-            />
-          )}
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          {cityPairs.map((pair, pairIndex) => (
-            <div key={pairIndex} className={`p-3 rounded-lg border border-${pair.color}-600`}>
-              <div className="space-y-3">
-                {pair.inputs.map((input, inputIndex) => (
-                  <div key={inputIndex} className="flex items-center gap-2">
-                    <img
-                      src={pair.pinImage || "/placeholder.svg"}
-                      alt={`${pair.color} pin`}
-                      className="w-8 h-8 object-contain"
-                    />
-                    <input
-                      type="text"
-                      value={input.value}
-                      onChange={(e) => handleInputChange(pairIndex, inputIndex, e.target.value)}
-                      onBlur={() => checkAnswer(pairIndex, inputIndex)}
-                      onKeyDown={(e) => handleKeyPress(e, pairIndex, inputIndex)}
-                      disabled={input.isCorrect}
-                      className={`px-2 py-1 text-sm rounded border w-full ${
-                        input.value
-                          ? input.isCorrect
-                            ? "border-green-500 bg-green-900/30"
-                            : "border-red-500 bg-red-900/30"
-                          : "border-gray-600 bg-gray-800"
-                      } text-white ${input.isCorrect ? "opacity-75" : ""}`}
-                      placeholder=""
-                    />
-                  </div>
-                ))}
-              </div>
+          {/* Input fields for each pin */}
+          {pins.map((pin) => (
+            <div
+              key={pin.id}
+              className="absolute"
+              style={{
+                left: `${pin.x}%`,
+                top: `${pin.y}%`,
+                transform: "translate(0, 30px)",
+                zIndex: 20,
+              }}
+            >
+              {activePin === pin.id ? (
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onBlur={handleSaveAnswer}
+                  onKeyDown={handleKeyPress}
+                  className="px-2 py-1 text-sm rounded border border-gray-400 w-24"
+                  autoFocus
+                />
+              ) : (
+                <div
+                  onClick={() => handleInputClick(pin.id)}
+                  className={`
+                    px-2 py-1 text-sm rounded cursor-pointer text-center w-24
+                    ${
+                      pin.userAnswer
+                        ? pin.correctAnswers.some((a) => a.toLowerCase() === pin.userAnswer.toLowerCase())
+                          ? "bg-green-600 text-white"
+                          : "bg-red-600 text-white"
+                        : "bg-gray-700 text-gray-200"
+                    }
+                  `}
+                >
+                  {pin.userAnswer || "?"}
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
+
+      {/* Success message */}
+      {solved && (
+        <div className="mt-4 p-2 bg-green-800 text-green-100 rounded-lg text-center">
+          All locations correctly identified!
+        </div>
+      )}
     </div>
   )
 }

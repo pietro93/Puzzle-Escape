@@ -30,10 +30,6 @@ import { useState } from "react"
 import FireMapPuzzle from "./fire-map-puzzle"
 import ColorPalettePuzzle from "./color-palette-puzzle"
 import MurderMysteryPuzzle from "./murder-mystery-puzzle"
-import GoldenScarabPuzzle from "./golden-scarab-puzzle"
-import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
-import MagicBoxPuzzle from "./magic-box-puzzle"
-import InfernalChessPuzzle from "./infernal-chess-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -56,7 +52,6 @@ interface PuzzleContentProps {
   onSolutionGenerated: (solution: string) => void
   setBinaryCorrectCombinations: (count: number) => void
   questionnaireRef: React.RefObject<any>
-  isMagicBoxPuzzle?: boolean
 }
 
 export default function PuzzleContent({
@@ -148,12 +143,6 @@ export default function PuzzleContent({
   // Check if this is a binary switch puzzle
   const isBinarySwitchPuzzle = puzzle.isBinarySwitchPuzzle
 
-  // Check if this is a pyramid of hanoi puzzle
-  const isPyramidOfHanoiPuzzle = puzzle.isPyramidOfHanoiPuzzle
-
-  // Check if this is a magic box puzzle
-  const isMagicBoxPuzzle = puzzle.isMagicBoxPuzzle
-
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
   // Add a new function to handle brain lamp clicks
@@ -207,16 +196,6 @@ export default function PuzzleContent({
         {level !== 17 && <p className="font-pixel text-lg text-purple-300 leading-relaxed">{puzzle.question}</p>}
       </div>
 
-      {isMagicBoxPuzzle ? (
-        <div className="my-4">
-          <MagicBoxPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
-        </div>
-      ) : null}
-
       {isInfernalCasinoPuzzle ? (
         <div className="my-4">
           <InfernalCasinoPuzzle
@@ -226,8 +205,6 @@ export default function PuzzleContent({
           />
         </div>
       ) : null}
-
-      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle />}
 
       {isCrystalJigsawPuzzle ? (
         <div className="my-4">
@@ -383,9 +360,11 @@ export default function PuzzleContent({
         <div className="flex justify-center my-4">
           <div className="w-full max-w-md relative pixelated-container">
             <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
-            <img
+            <Image
               src={puzzle.imageUrl || "/placeholder.svg"}
               alt={`Puzzle for level ${puzzle.level}`}
+              width={400}
+              height={400}
               className="pixelated z-10 relative w-full object-contain"
             />
             <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
@@ -520,18 +499,6 @@ export default function PuzzleContent({
           />
         </div>
       ) : null}
-      {isPyramidOfHanoiPuzzle ? (
-        <div className="my-4">
-          {puzzle.description && (
-            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
-          )}
-          <PyramidOfHanoiPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
-        </div>
-      ) : null}
       {puzzle.isFireMapPuzzle && <FireMapPuzzle onSolve={() => handleParrotSolve()} />}
       {puzzle.isColorPalettePuzzle && (
         <div className="mb-4">
@@ -539,7 +506,6 @@ export default function PuzzleContent({
         </div>
       )}
       {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
-      {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle />}
     </div>
   )
 }

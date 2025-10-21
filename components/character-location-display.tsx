@@ -1,5 +1,4 @@
 "use client"
-
 import Image from "next/image"
 import CharacterImage from "./character-image"
 import LocationImage from "./location-image"
@@ -43,21 +42,21 @@ export default function CharacterLocationDisplay({
   const getBrainLampImage = (correctCount: number) => {
     switch (correctCount) {
       case 0:
-        return "/images/brainlamp.webp" // 0 correct - static image
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-WFdoE18rmyknvtBRPsfJ9IhWxiF6UF.webp" // 0 correct
       case 1:
-        return "/images/xbrainlampa1.webp" // 1 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp1a-jtarQ6DvWLbkdtCw85rPutJZjTRo7m.webp" // 1 correct
       case 2:
-        return "/images/xbrainlampa2.webp" // 2 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp2a.webp-UzQCOHqf2namH8byDVbukpZaSsa4hh.jpeg" // 2 correct
       case 3:
-        return "/images/xbrainlampa3.webp" // 3 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp3a.webp-qAtXl3omCCUIuJTEfDrOR67BrSbG1Q.jpeg" // 3 correct
       case 4:
-        return "/images/xbrainlampa4.webp" // 4 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp4a-Xrk7CsmuuYZ9jE2TiSiO704I0Hz7GG.webp" // 4 correct
       case 5:
-        return "/images/xbrainlampa5.webp" // 5 correct
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp5a.webp-Zlp6vJ310VRTduwCjeLLFI19WZmY3t.jpeg" // 5 correct
       case 6:
-        return "/images/xbrainlampa6.webp" // 6 correct (with red glow)
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp6a.webp-tFVEX3bXENwvQR5P0V3jv2zOyTb7u4.jpeg" // 6 correct (all)
       default:
-        return "/images/brainlamp.webp" // Default - static image
+        return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/brainlamp-WFdoE18rmyknvtBRPsfJ9IhWxiF6UF.webp" // Default
     }
   }
 
@@ -206,6 +205,7 @@ export default function CharacterLocationDisplay({
         <div
           className="flex justify-center items-center cursor-pointer"
           onClick={() => {
+            // Call the location click handler which will trigger the dialogue
             if (onPyramidLocationImageClick) {
               onPyramidLocationImageClick()
             }
@@ -213,16 +213,13 @@ export default function CharacterLocationDisplay({
         >
           <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
-            <img
-              src={getBrainLampImage(binaryCorrectCombinations) || "/placeholder.svg"}
+            <Image
+              src={getBrainLampImage(binaryCorrectCombinations) || "/images/brainlamp.webp"}
               alt="Brain Lamp"
               width={160}
               height={160}
               className="pixelated z-10 relative w-full h-full object-contain"
-              style={{
-                opacity: getBrainLampOpacity(binaryCorrectCombinations),
-                imageRendering: "pixelated",
-              }}
+              style={{ opacity: getBrainLampOpacity(binaryCorrectCombinations) }}
             />
             <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
             <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
@@ -260,7 +257,7 @@ export default function CharacterLocationDisplay({
     )
   }
 
-  // Default display for all other levels (including level 38)
+  // Default display for all other levels
   return (
     <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
       <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>

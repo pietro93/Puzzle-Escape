@@ -6,49 +6,48 @@ export const puzzlesSet5: Puzzle[] = [
   // Level 41 - Fire Map Puzzle
   {
     level: 41,
-    question: "The Devil presents you with a mysterious map.",
-    description: "",
+    question: "The Devil presents you with a map of sacred eternal flames.",
+    description:
+      "The Devil smirks as he hands you an ancient map. 'These are the locations of sacred eternal flames. Label them correctly, and I'll reward you with knowledge.'",
     hints: [
-      "Each pin marks a location in Central Asia.",
-      "Pins of the same color are related somehow.",
-      "When you correctly identify both locations of the same color, a connection will appear.",
-      "The names may be written in different languages or scripts.",
+      "The pins mark locations of sacred eternal flames.",
+      "Try to identify the names of each location.",
+      "The symbols below some pins may provide additional clues.",
+      "When two pins of the same color have the same name, a connection will appear.",
     ],
-    solution: "gates of hell|the gates of hell",
+    solution: "inferno",
     isFireMapPuzzle: true,
     category: "pattern",
   },
-  // Level 42 - Infernal Chess Puzzle
   {
     level: 42,
     question: "The Devil challenges you to a game of infernal chess.",
-    description: "",
-    imageUrl: "",
-    solution: "apocalypse naught",
+    description:
+      "The chess pieces are made of bone and ember, and they move of their own accord. 'Find the winning move,' the Devil says with a smirk.",
+    imageUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level42-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
+    solution: "queen to h7",
     category: "logic",
-    isInfernalChessPuzzle: true,
     hints: [
-      "Each horseman must reach its target corner, indicated by the matching background color.",
-      "Knights move in L-shapes: two squares in one direction, then one square perpendicular.",
-      "You cannot move the same horseman twice in a row.",
-      "Plan your moves carefully - you'll need to coordinate all four horsemen.",
+      "Look for a checkmate in one move.",
+      "The queen is your most powerful piece.",
+      "The black king is vulnerable on the h-file.",
     ],
   },
   {
     level: 43,
-    question: "The Devil shows you an ancient parchment covered in Latin text.",
-    description: "", // Empty description since we're using an image
-    imageUrl: "/images/latinmathpuzzle.webp",
-    solution: "23",
-    category: "math",
+    question: "The Devil shows you a series of damned souls, each bearing a number.",
+    description: "Five souls stand in a line, each with a number branded on their forehead: 8, 5, 4, 9, ?",
+    imageUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/level43-placeholder-KjGxNqXIj7Bz3lk4O8unDeM6LrRptD.webp",
+    solution: "1",
+    category: "pattern",
     hints: [
-      "The Latin words represent religious concepts with associated numbers.",
-      "Mathematical operations are hidden within the text.",
-      "Look for patterns in Christian numerology: Satan (666), Apostles (12), Cross (4), etc.",
-      "Latin words like 'mors' (death) and 'crux' (cross) represent mathematical operations.",
+      "The numbers seem to follow a pattern, but not a mathematical one.",
+      "Try counting something about each number.",
+      "How many letters are in the word form of each number?",
     ],
   },
-  // Remaining levels unchanged
   {
     level: 44,
     question: "The Devil presents you with fragments of a haunting scene.",
@@ -150,5 +149,10 @@ export const puzzlesSet5: Puzzle[] = [
     solution:
       "dark haunting pain|dark plaguing limb|dark stinging limb|dark unliving pain|grim burning pains|grim hiding ruins|grim killing limbs|grim haunting ruin|grim plaguing pain|grim stinging pain|grim unliving ruin|harsh burning limbs|harsh hiding pains|harsh killing ruins|harsh plaguing ruin|harsh stinging ruin|lurid burning vault|lurid hiding blight|lurid killing limb|rigid burning limb|rigid hiding vault|rigid killing pain|brutal burning scar|brutal hiding vault|brutal killing ruin|dark burning ruins|dark hiding limbs|dark killing pains",
     category: "riddle",
+    hints: [
+      "The elevator takes you to different realms of Buddhist hell.",
+      "Each floor has a specific name. Try to identify them from the descriptions.",
+      "The Sanskrit word for the Buddhist hell realms is the solution.",
+    ],
   },
 ]
