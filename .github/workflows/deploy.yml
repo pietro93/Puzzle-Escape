@@ -1,0 +1,42 @@
+# .github/workflows/deploy.yml
+name: Deploy Capacitor Web Game to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # This action runs every time you push to the 'main' branch
+  # Allows you to manually trigger the workflow from the GitHub Actions tab
+  workflow_dispatch: 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code 🛎️
+        uses: actions/checkout@v4
+        # Needed if you are using relative paths in your build, which is common for GH Pages
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Production Build 🛠️
+        # This executes the build command for your framework (e.g., Ionic, React, Vue)
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 🚨 CRITICAL: Set this path to the folder your 'npm run build' command creates.
+          # Change './www' to './dist' or './build' if your project uses those.
+          publish_dir: ./www 
+          # The branch where the static site content will be pushed
+          publish_branch: gh-pages
