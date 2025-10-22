@@ -1,0 +1,118 @@
+name: Anthr
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Claude 3.5 Sonnet
+    provider: anthropic
+    model: claude-3.5-sonnet-20240521
+    apiKey: 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
+    roles: [chat, edit, apply]
+    apiBase: https://api.anthropic.com/v1
+
+  - name: Claude 3.5 Haiku
+    provider: anthropic
+    model: claude-3.5-haiku-20240521
+    apiKey: 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
+    roles: [chat, edit, apply]
+    apiBase: https://api.anthropic.com/v1
+
+customCommands:
+  - name: test
+    description: Generate unit tests for the current file
+    prompt: "Generate a comprehensive set of unit tests for the selected code. Use Vitest and React Testing Library where applicable. Include edge cases and mock data."
+
+  - name: docs
+    description: Write JSDoc comments
+    prompt: "Write clear, concise JSDoc comments for every exported function and interface in the selected code. Add examples where helpful."
+
+  - name: refactor
+    description: Suggest refactors
+    prompt: "Analyze the selected code and propose small, safe refactors that improve readability, performance, or maintainability. Output each refactor as a unified diff."
+
+indexingConfig:
+  include:
+    - "app/**/*.{ts,tsx,js,jsx}"
+    - "components/**/*.{ts,tsx,js,jsx}"
+    - "data/**/*.{ts,tsx,js,jsx,json}"
+    - "hooks/**/*.{ts,tsx,js,jsx}"
+    - "lib/**/*.{ts,tsx,js,jsx}"
+    - "utils/**/*.{ts,tsx,js,jsx}"
+    - "types/**/*.{ts,tsx,js,jsx}"
+    - "next.config.mjs"
+    - "tsconfig.json"
+    - "package.json"
+  exclude:
+    - "node_modules/**"
+    - ".next/**"
+    - "public/**"
+    - "android/**"
+    - "ios/**"
+    - "electron/**"
+    - "steam/**"
+    - "**/*.png"
+    - "**/*.jpg"
+    - "**/*.gif"
+    - "**/*.mp3"
+    - "**/*.wav"
+    - ".git/**"
+    - "coverage/**"
+    - "dist/**"
+    - "build/**"
+
+contextProviders:
+  - name: context
+    params:
+      includePatterns:
+        - "components/**/*.{ts,tsx}"
+        - "data/**/*.{ts,tsx,json}"
+        - "app/**/*.{ts,tsx}"
+        - "hooks/**/*.{ts,tsx}"
+        - "lib/**/*.{ts,tsx}"
+      excludePatterns:
+        - "**/*.png"
+        - "**/*.jpg"
+        - "**/*.webp"
+        - "**/*.mp3"
+        - "**/*.wav"
+      nRetrieve: 5
+      nFinal: 2
+      useReranking: true
+      minScore: 0.45
+
+  - name: game_logic
+    params:
+      includePatterns:
+        - "app/**/*.{ts,tsx}"
+        - "components/**/*.{ts,tsx}"
+        - "data/**/*.{ts,tsx}"
+      nRetrieve: 10
+      nFinal: 4
+      useReranking: true
+
+  - name: puzzle_system
+    params:
+      includePatterns:
+        - "data/puzzles/**/*.{ts,tsx,json}"
+        - "components/puzzle/**/*.{ts,tsx}"
+      nRetrieve: 5
+      nFinal: 2
+      useReranking: true
+
+  - name: dialogue_system
+    params:
+      includePatterns:
+        - "data/dialogue/**/*.{ts,tsx,json}"
+        - "components/dialogue/**/*.{ts,tsx}"
+      nRetrieve: 5
+      nFinal: 2
+      useReranking: true
+
+promptTemplates:
+  - name: analyze
+    role: system
+    content: |
+      You are a game designer and TypeScript engineer.
+      Use the context to succinctly answer the user's request.
+      Prefix code with the file path.
+      Propose changes with minimal git diff patches.

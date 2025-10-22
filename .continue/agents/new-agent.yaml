@@ -1,0 +1,29 @@
+name: Alt Google
+version: 1.0.0
+schema: v1
+
+# Latest free models as of October 2025
+models:
+  - name: gemini-25-flash
+    provider: openai
+    model: gemini-2.5-flash
+    apiBase: https://generativelanguage.googleapis.com/v1beta/openai/
+    apiKey: AIzaSyAsJdbRlNnLUu6ZHn9-UqX2Vh7BhiHk6bs
+
+  - name: gemini-25-pro
+    provider: openai
+    model: gemini-2.5-pro
+    apiBase: https://generativelanguage.googleapis.com/v1beta/openai/
+    apiKey: AIzaSyAsJdbRlNnLUu6ZHn9-UqX2Vh7BhiHk6bs
+
+  - name: gemini-25-flash-lite  
+    provider: openai
+    model: gemini-2.5-flash-lite
+    apiBase: https://generativelanguage.googleapis.com/v1beta/openai/
+    apiKey: AIzaSyAsJdbRlNnLUu6ZHn9-UqX2Vh7BhiHk6bs
+
+  - name: gemma-3n
+    provider: openai
+    model: gemma-3n-e4b-it
+    apiBase: https://generativelanguage.googleapis.com/v1beta/openai/
+    apiKey: AIzaSyAsJdbRlNnLUu6ZHn9-UqX2Vh7BhiHk6bs
