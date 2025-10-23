@@ -138,8 +138,8 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 20,
     question:
-      "I do hope you are prepared for a most intriguing challenge. I present you with the labyrinthine family tree of the House of Morvane, you shall uncover secrets shrouded in the very darkness that has haunted our noble lineage for generations. Your task, if you will, is to discover the identity of a forgotten heir who ruled with a brief yet most infamous reign. The answer, I dare say, lies within the dusty annals of our history and a cryptic prophecy that has plagued our house for centuries.",
-    description: "Find the name of the heir.",
+      "Find the name of the heir.",
+    description: "I do hope you are prepared for a most intriguing challenge. I present you with the labyrinthine family tree of the House of Morvane, you shall uncover secrets shrouded in the very darkness that has haunted our noble lineage for generations. Your task, if you will, is to discover the identity of a forgotten heir who ruled with a brief yet most infamous reign. The answer, I dare say, lies within the dusty annals of our history and a cryptic prophecy that has plagued our house for centuries.",
     imageUrl: "",
     isLibraryPuzzle: true,
     libraryData: {

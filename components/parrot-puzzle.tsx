@@ -619,8 +619,6 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
     if (userInput === "daft punk") {
         const responses = [
             "YOU DON'T NEED TO GIVE *ME* THE SOLUTION, GAWK!",
-            "I PREFER MY MUSIC LESS ROBOTIC\nAND MORE FOCUSED ON ETERNAL DAMNATION!",
-            "SQUAWK! THEIR MUSIC IS A TEMPORARY DISTRACTION\nFROM YOUR IMPENDING DOOM!",
         ];
         return getRandomResponse(responses);
     }
