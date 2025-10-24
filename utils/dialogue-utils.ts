@@ -167,12 +167,12 @@ butler: {
     "The stories preserved here far outlast the fleeting lives they recount.",
     "Fascinating. Your taste in literature appears... unrefined."
   ],
-  17: [ // Darkness Puzzle
-    "Darkness conceals many secrets, and not all are comforting.",
-    "One might say this place is less empty and more full of things unseen.",
+  17: [ // Light Switch & Compass Puzzle
+    "Ah, light. A considerable improvement. Your fumbling in the dark was quite audible.",
+    "The Master was fond of navigational instruments. This one, however, appears to have lost its bearings. It insists on pointing West.",
     "Nyctophilia is a fondness for darkness. I myself am a devoted practitioner.",
-    "Your fumbling is quite audible.",
-    "The Master could navigate this room blindfolded. Often did, in fact."
+    "Fascinating, isn't it? The first magnetic compass was invented in China during the Han Dynasty.",
+    "Are you lost, kind guest? Perhaps this compass will help you find the way."
   ],
   18: [ // Silverware / Math Puzzle
     "The family silverware is solid sterling. Polished daily, of course.",

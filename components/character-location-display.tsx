@@ -127,9 +127,9 @@ export default function CharacterLocationDisplay({
             <Image
               src={
                 solved
-                  ? "/images/mansion.webp"
+                  ? "/images/compass.webp"
                   : lightsOn
-                    ? "/images/mansion-lit.webp"
+                    ? "/images/compass_dim.webp"
                     : "/images/pitch-darkness.webp"
               }
               alt={lightsOn ? "Mansion" : "Darkness"}
@@ -283,3 +283,5 @@ export default function CharacterLocationDisplay({
     </div>
   )
 }
+
+

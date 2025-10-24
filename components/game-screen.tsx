@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Image from "next/image"
 
 import { useState, useRef, useEffect } from "react"
 import type { Puzzle } from "@/types/puzzle"
@@ -28,6 +29,7 @@ interface GameScreenProps {
   soundEnabled: boolean
   toggleSound: () => void
   onJumpToLevel?: (level: number) => void
+  onSolutionGenerated: (solution: string) => void
   characterDialogues?: Record<string, string[]>
   onLevelComplete: () => void
   onTransition: (transitionId: string) => void
@@ -67,6 +69,7 @@ export default function GameScreen({
   soundEnabled,
   toggleSound,
   onJumpToLevel,
+  onSolutionGenerated,
   characterDialogues,
   onLevelComplete,
   onTransition,
@@ -91,10 +94,13 @@ export default function GameScreen({
   const [jigsawComplete, setJigsawComplete] = useState(false)
   const [lightsOn, setLightsOn] = useState(false)
   const [solved, setSolved] = useState(false)
+  const [showCompassPopup, setShowCompassPopup] = useState(false) // State for the compass image popup
+
+  // State to manage interaction level for level 17: 'disabled', 'dim', 'active'
+  const [lightSwitchInteractionState, setLightSwitchInteractionState] = useState<'disabled' | 'dim' | 'active'>('disabled')
   const inputRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const questionnaireRef = useRef<any>(null)
-  const [dynamicSolution, setDynamicSolution] = useState<string | null>(null)
   const [currentPyramidRoom, setCurrentPyramidRoom] = useState<string>("entrance")
   const [hasPyramidTorch, setHasPyramidTorch] = useState(false)
   const [showDevilDialogue, setShowDevilDialogue] = useState(false)
@@ -116,6 +122,20 @@ export default function GameScreen({
   // Add state for brain dialogue
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
+
+  // New state for dim light butler dialogue popup
+  const [showDimLightButlerPopup, setShowDimLightButlerPopup] = useState(false)
+
+    // Effect to update interaction state based on lightsOn and solved
+  useEffect(() => {
+    if (solved) {
+      setLightSwitchInteractionState('active')
+    } else if (lightsOn) {
+      setLightSwitchInteractionState('dim')
+    } else {
+      setLightSwitchInteractionState('disabled')
+    }
+  }, [lightsOn, solved])
 
   // Focus input when component mounts
   useEffect(() => {
@@ -154,8 +174,7 @@ export default function GameScreen({
 
     const normalizedUserAnswer = answer.trim().toLowerCase()
     // Use dynamic solution for questionnaire puzzle if available
-    const normalizedCorrectAnswers =
-      puzzle.isQuestionnairePuzzle && dynamicSolution ? [dynamicSolution] : puzzle.solution.toLowerCase().split("|")
+    const normalizedCorrectAnswers = puzzle.solution.toLowerCase().split("|")
     const secretPassword = "tiengviet"
 
     // Check for level-specific secret password (e.g., TIENGVIET20)
@@ -269,8 +288,21 @@ export default function GameScreen({
     setShowPuzzleDetails(!showPuzzleDetails)
   }
 
-  // Handle location image click for level 50
+    const handleDimLightButlerClick = () => {
+    setShowDimLightButlerPopup(true)
+  }
+
+  const handleCompassClick = () => {
+    setShowCompassPopup(true)
+  }
+
+  // Handle location image click
   const handleLocationClick = () => {
+    if (level === 17 && lightSwitchInteractionState === 'active') {
+      handleCompassClick()
+      return
+    }
+
     if (level === 50) {
       // Always show elevator panel when location image is clicked in level 50
       setShowElevatorPanel(true)
@@ -511,8 +543,8 @@ export default function GameScreen({
         </button>
       </div>
 
-      {/* Character and location section */}
-      {showPuzzleDetails && (
+            {/* Character and location section */}
+      {showPuzzleDetails && level !== 17 && (
         <CharacterLocationDisplay
           level={level}
           setting={setting}
@@ -527,9 +559,55 @@ export default function GameScreen({
           showElevator={showElevator}
           jigsawComplete={jigsawComplete}
           onGuardClick={handleGuardClick}
-          onLocationClick={handleLocationClick}
+                    onLocationClick={handleLocationClick}
           onPyramidLocationImageClick={handlePyramidLocationImageClick}
         />
+      )}
+
+      {/* Special display for level 17 to handle custom interactions */}
+      {showPuzzleDetails && level === 17 && (
+        <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+          <div
+            className={`flex justify-center items-center ${lightSwitchInteractionState !== 'disabled' ? 'cursor-pointer' : ''}`}
+            onClick={lightSwitchInteractionState === 'active' ? handleGuardClick : (lightSwitchInteractionState === 'dim' ? handleDimLightButlerClick : undefined)}
+          >
+            <div className="w-40 h-40 relative pixelated-container">
+              <Image
+                src={
+                  solved
+                    ? "/images/butler.webp"
+                    : lightsOn
+                      ? "/images/butler-undead.webp"
+                      : "/images/pitch-darkness.webp"
+                }
+                alt={lightsOn ? "Butler" : "Darkness"}
+                width={160}
+                height={160}
+                className="pixelated"
+              />
+            </div>
+          </div>
+          <div
+            className={`flex justify-center items-center ${lightSwitchInteractionState === 'active' ? 'cursor-pointer' : ''}`}
+            onClick={lightSwitchInteractionState === 'active' ? handleLocationClick : undefined}
+          >
+            <div className="w-40 h-40 relative pixelated-container">
+              <Image
+                src={
+                  solved
+                    ? "/images/compass.webp"
+                    : lightsOn
+                      ? "/images/compass_dim.webp"
+                      : "/images/pitch-darkness.webp"
+                }
+                alt={lightsOn ? "Compass" : "Darkness"}
+                width={160}
+                height={160}
+                className="pixelated"
+              />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Puzzle content */}
@@ -551,7 +629,7 @@ export default function GameScreen({
         handleElevatorPanelOpen={handleElevatorPanelOpen}
         currentElevatorFloor={currentElevatorFloor}
         setCurrentElevatorFloor={setCurrentElevatorFloor}
-        onSolutionGenerated={(solution) => setDynamicSolution(solution)}
+        onSolutionGenerated={onSolutionGenerated}
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
       />
@@ -672,6 +750,62 @@ export default function GameScreen({
           }}
         />
       )}
+            {/* Compass image popup for level 17 */}
+      {showCompassPopup && level === 17 && (
+        <div
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-70 z-50 animate-fadeIn"
+          onClick={() => setShowCompassPopup(false)}
+        >
+          <div className="relative p-4 bg-gray-900 border-2 border-gray-700 rounded-lg">
+            <Image src="/images/compass.webp" alt="Compass" width={320} height={320} className="pixelated" />
+            <button
+                className="absolute top-2 right-2 px-2 py-1 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+                onClick={() => setShowCompassPopup(false)}
+            >
+                Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Dim light Butler popup for level 17 */}
+      {showDimLightButlerPopup && level === 17 && (
+        <div 
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50"
+          onClick={() => setShowDimLightButlerPopup(false)}
+        >
+          <div className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start gap-3">
+              <div className="w-16 h-16 relative pixelated-container shrink-0">
+                <Image
+                  src={"/images/butler-undead.webp"}
+                  alt={"butler-undead"}
+                  width={64}
+                  height={64}
+                  className="pixelated"
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-purple-300 font-pixel mb-2">
+                  Butler:
+                </p>
+                <p
+                  className="text-gray-200 text-sm whitespace-pre-line font-pixel"
+                >...</p>
+              </div>
+            </div>
+            <div className="mt-4 text-center">
+              <button
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
+                onClick={() => setShowDimLightButlerPopup(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Add the brain dialogue popup to the return statement, near the other dialogue popups */}
       {showBrainDialogue && (
         <CharacterDialoguePopup

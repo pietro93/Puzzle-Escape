@@ -341,7 +341,7 @@ export default function PuzzleContent({
           {level !== 17 && puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <LightSwitchPuzzle onSolve={() => {}} onUpdate={handleLightSwitchUpdate} />
+          <LightSwitchPuzzle onSolve={() => {}} onUpdate={handleLightSwitchUpdate} onSolutionGenerated={onSolutionGenerated} />
         </div>
       ) : isPyramidPuzzle ? (
         <div className="my-4">

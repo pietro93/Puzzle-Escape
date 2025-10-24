@@ -7,9 +7,10 @@ interface LightSwitchPuzzleProps {
   onSolve: () => void
   onUpdate?: (isLightOn: boolean, isSolved: boolean) => void
   onGuardClick: () => void 
+  onSolutionGenerated: (solution: string) => void
 }
 
-export default function LightSwitchPuzzle({ onSolve, onUpdate }: LightSwitchPuzzleProps) {
+export default function LightSwitchPuzzle({ onSolve, onUpdate, onSolutionGenerated, onGuardClick }: LightSwitchPuzzleProps) {
   // Switch states: true = up, false = down
   const [switches, setSwitches] = useState<boolean[][]>([
     [false, false, false, false, false], // Top row (invisible until solved)
@@ -61,50 +62,27 @@ export default function LightSwitchPuzzle({ onSolve, onUpdate }: LightSwitchPuzz
     const correctCombo = generateCombination()
     setCorrectCombination(correctCombo)
 
-    // Initialize switches with all down in middle row
+    // Determine the solution based on the number of UP switches in the correct combination
+    const upSwitchesInCombo = correctCombo.filter(Boolean).length
+    const solution = upSwitchesInCombo === 3 ? "northwest" : "southwest"
+    onSolutionGenerated(solution)
+
+    // Generate and shuffle a combined array for top and bottom rows (5 UP, 5 DOWN total)
+    const combinedSwitches = [...Array(5).fill(true), ...Array(5).fill(false)]
+    for (let i = combinedSwitches.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [combinedSwitches[i], combinedSwitches[j]] = [combinedSwitches[j], combinedSwitches[i]]
+    }
+
+    const topRow = combinedSwitches.slice(0, 5)
+    const bottomRow = combinedSwitches.slice(5, 10)
+
+    // Initialize switches
     setSwitches([
-      generateTopRow(), // Top row (3 UP, 2 DOWN)
+      topRow,
       Array(5).fill(false), // Middle row (all down initially)
-      generateBottomRow()  // Bottom row (2 UP, 3 DOWN)
+      bottomRow,
     ])
-
-    function generateTopRow() {
-      // Generate top row with exactly 3 UP and 2 DOWN switches in random positions
-      const row = Array(5).fill(false)
-      const positions = [0, 1, 2, 3, 4]
-      
-      // Shuffle positions
-      for (let i = positions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [positions[i], positions[j]] = [positions[j], positions[i]];
-      }
-      
-      // Set exactly 3 switches to UP
-      for (let i = 0; i < 3; i++) {
-        row[positions[i]] = true;
-      }
-      
-      return row;
-    }
-
-    function generateBottomRow() {
-      // Generate bottom row with exactly 2 UP and 3 DOWN switches in random positions
-      const row = Array(5).fill(false)
-      const positions = [0, 1, 2, 3, 4]
-      
-      // Shuffle positions
-      for (let i = positions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [positions[i], positions[j]] = [positions[j], positions[i]];
-      }
-      
-      // Set exactly 2 switches to UP
-      for (let i = 0; i < 2; i++) {
-        row[positions[i]] = true;
-      }
-      
-      return row;
-    }
   }, [])
 
   // Check if the puzzle is solved whenever switches change
@@ -135,6 +113,8 @@ export default function LightSwitchPuzzle({ onSolve, onUpdate }: LightSwitchPuzz
   }, [switches, solved, onSolve, onUpdate, lightSwitchIndex, correctCombination])
 
   const toggleSwitch = (row: number, index: number) => {
+    // If puzzle is solved, do not allow toggling
+    if (solved) return;
     // Only allow toggling switches in the middle row
     if (row !== 1) return
 
@@ -244,12 +224,7 @@ export default function LightSwitchPuzzle({ onSolve, onUpdate }: LightSwitchPuzz
         </div>
       </div>
 
-      {/* Solution message */}
-      {showSolution && (
-        <div className="absolute inset-0 flex items-end justify-center pb-4">
-          <div className="bg-black/70 px-4 py-2 rounded-lg text-green-400 font-mono">YOU MAY PROCEED</div>
-        </div>
-      )}
+
     </div>
   )
 }

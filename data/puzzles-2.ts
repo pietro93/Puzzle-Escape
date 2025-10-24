@@ -96,12 +96,13 @@ export const puzzlesSet2: Puzzle[] = [
     description: "It's pitch dark.",
     imageUrl: "",
     isLightSwitchPuzzle: true,
-    solution: "you may proceed",
+    solution: "RANDOM", // This will be overridden by the component
     category: "logic",
     hints: [
-      "It's too dark to see anything. But there must be something you can do to shed some light.",
-      "There are four switches hidden in the dark. Find and flip the third switch to turn on the lights.",
-      "While keeping the third switch flipped up, flip the other remaining switches up and down until you find the right combination and the solution will appear.",
+      "It's too dark to see anything. But there must be something you can do to shed some light in this room.",
+      "There are light switches hidden in the dark. Find the first switch then try different combinations on the others.",
+      "Perhaps the position of each lever holds significance beyond just providing light?",
+      "A compass needle is not supposed to point West. What happens if you move it 'Up' (clockwise) and 'Down'(anticlockwise)?"
     ],
   },
   {

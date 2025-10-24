@@ -20,6 +20,13 @@ export default function GameContainer() {
   const [showCongrats, setShowCongrats] = useState(false)
   const [showTransition, setShowTransition] = useState(false)
   const [currentTransition, setCurrentTransition] = useState(0)
+  const [currentPuzzle, setCurrentPuzzle] = useState<any>(null)
+
+  // Set the current puzzle whenever the level changes
+  useEffect(() => {
+    const puzzle = puzzleData.find((p) => p.level === currentLevel)
+    setCurrentPuzzle(puzzle)
+  }, [currentLevel])
   const [hasSavedGame, setHasSavedGame] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
 
@@ -300,6 +307,12 @@ export default function GameContainer() {
     playWrongSound()
   }
 
+  const handleSolutionGenerated = (solution: string) => {
+    if (currentPuzzle) {
+      setCurrentPuzzle({ ...currentPuzzle, solution })
+    }
+  }
+
   // Get current setting and character based on level
   const getCurrentSetting = () => {
     if (currentLevel <= 10) return { setting: "prison", character: "skeleton" }
@@ -341,9 +354,6 @@ export default function GameContainer() {
         (() => {
           const { setting, character } = getCurrentSetting()
 
-          // Find the current puzzle
-          const currentPuzzle = puzzleData.find((p) => p.level === currentLevel)
-
           // If puzzle not found, skip to the next available puzzle
           if (!currentPuzzle) {
             // Find the next available puzzle
@@ -370,6 +380,7 @@ export default function GameContainer() {
               soundEnabled={soundEnabled}
               toggleSound={toggleMute}
               onJumpToLevel={jumpToLevel}
+              onSolutionGenerated={handleSolutionGenerated}
             />
           )
         })()}
