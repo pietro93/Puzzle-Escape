@@ -1,18 +1,18 @@
-import type { Puzzle } from "@/types/puzzle"
+import type { Puzzle} from "@/types/puzzle"
 
 // Prison Cell - Skeleton Guard (Levels 1-10)
 export const puzzlesSet1: Puzzle[] = [
   {
     level: 1,
-    question: "First one is child's play.",
-    description: "The skeleton guard rattles its bones as it awaits your answer.",
-    imageUrl: "/images/puzzle1.webp",
-    solution: "murder",
-    category: "riddle",
+    question: "Escape the cell.",
+    description: "You are in a dark, cold cell. There must be a way out.",
+    solution: "placeholder", // To be determined by the puzzle logic
+    category: "interactive",
+    isPrisonCellPuzzle: true,
     hints: [
-      "The solution appears on a mirror.",
-      "The solution is mirrored - you have to spell it backwards.",
-      'The first letter is "M".',
+      "Look around the cell.",
+      "Maybe there is something in the other room.",
+      "What could this rag be for?",
     ],
   },
   {

@@ -34,6 +34,7 @@ import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
 import MagicBoxPuzzle from "./magic-box-puzzle"
 import InfernalChessPuzzle from "./infernal-chess-puzzle"
+import PrisonCellPuzzle from "./prison-cell-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -154,6 +155,9 @@ export default function PuzzleContent({
   // Check if this is a magic box puzzle
   const isMagicBoxPuzzle = puzzle.isMagicBoxPuzzle
 
+   // Check if this is a prison cell puzzle
+  const isPrisonCellPuzzle = puzzle.isPrisonCellPuzzle
+
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
   // Add a new function to handle brain lamp clicks
@@ -206,6 +210,16 @@ export default function PuzzleContent({
       <div className="flex justify-between items-center mb-3">
         {level !== 17 && <p className="font-pixel text-lg text-purple-300 leading-relaxed">{puzzle.question}</p>}
       </div>
+
+      {isPrisonCellPuzzle ? (
+        <div className="my-4">
+          <PrisonCellPuzzle
+            puzzle={puzzle}
+            onSolve={() => { onCorrect(false) }}
+          />
+        </div>
+       ) : null}
+
 
       {isMagicBoxPuzzle ? (
         <div className="my-4">
