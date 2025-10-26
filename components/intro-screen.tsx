@@ -166,7 +166,7 @@ export default function IntroScreen({ onStart, soundEnabled, toggleSound }: Intr
                 <div className="w-32 h-32 relative pixelated-container transition-opacity duration-500 opacity-100">
                   <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
                   <Image
-                    src="/images/prison-cell.webp"
+                    src="/images/prison-bg.webp"
                     alt="Prison Cell"
                     width={128}
                     height={128}
