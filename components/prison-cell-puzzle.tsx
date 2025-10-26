@@ -210,9 +210,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
             onClick: {
               disappears: true,
               addToInventory: true,
-              dialogue:
-                "A bottle of isopropyl alcohol. Probably for cleaning the toilet.",
-                skeletonComment: "Or for drinking, if you're having one of those days."
+                dialogue: "A bottle of isopropyl alcohol. Probably for cleaning the toilet. Or drinking, if you are having one of those days.",
             },
           } as InteractiveItem,
         ],
@@ -375,18 +373,96 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
   const handleDrop = (targetId: string) => {
     if (!draggedItem) return;
 
-    if (targetId === "tube" && draggedItem.name === "Rag") {
+     if (targetId === "tube" && draggedItem.name === "Rag") {
       setIsRagOnTube(true);
       setInventory((prevInventory) => prevInventory.filter((item) => item !== "Rag"));
+      return; // prevent other interactions with tube
     }
      if (targetId === "tube" && draggedItem.name === "Alcohol" && isRagOnTube) {
       setIsRagSoaked(true);
       setInventory((prevInventory) => prevInventory.filter((item) => item !== "Rubbing Alcohol"));
+      return; // prevent other interactions with tube
     }
 
       if (targetId === "tube" && draggedItem.name === "Lit Cigarette" && isRagSoaked) {
       setIsHeatOn(true);
       setInventory((prevInventory) => prevInventory.filter((item) => item !== "Lit Cigarette"));
+      return; // prevent other interactions with tube
+    }
+
+    if (targetId === "guard" && draggedItem.name === "Lit Cigarette") {
+      setDialogue("Giving back your stolen goods already? Tsk. I was starting to think you had a spine.");
+      return;
+    }
+
+    if (targetId === "guard" && draggedItem.name === "Alcohol") {
+      setDialogue("Thank you, I am not thirsty.");
+      return;
+    }
+
+    if (targetId === "guard" && draggedItem.name === "Rag") {
+      setDialogue("Planning a theatrical exit? Hang in there. Ha! Get it?");
+      return;
+    }
+
+    if (targetId === "window" && draggedItem.name === "Rag") {
+      setDialogue("You press the rag against the bars. They don't bend.");
+      return;
+    }
+
+    if (targetId === "toilet" && draggedItem.name === "Rag") {
+      setDialogue("You hold the rag over the bowl. Your gag reflex answers before your hands do.");
+      return;
+    }
+
+    if (targetId === "toilet" && draggedItem.name === "Lit Cigarette") {
+      setDialogue("It is a dreadful habit, but you decide to hold on to your only cigarette for now.");
+      return;
+    }
+
+    if (targetId === "lock" && draggedItem.name === "Rag") {
+      setDialogue("You rub the lock with the rag. The lock ignores your efforts completely.");
+      return;
+    }
+
+    if (targetId === "lock" && draggedItem.name === "Lit Cigarette") {
+      setDialogue("You succeed only in getting a small smudge of ash on the lock and burn your fingertip in the process.");
+      return;
+    }
+
+    if (targetId === "pillow" && draggedItem.name === "Alcohol") {
+      setDialogue("No amount of disinfectant could ever make that bed fit for sleeping. You'd rather take the floor.");
+      return;
+    }
+
+    if (targetId === "bed" && draggedItem.name === "Alcohol") {
+      setDialogue("No amount of disinfectant could ever make that bed fit for sleeping. You'd rather take the floor.");
+      return;
+    }
+
+    if (targetId === "toilet" && draggedItem.name === "Alcohol") {
+      setDialogue("The rubbing alcohol's purpose is probably to clean the toilet. Your job, however, is to get out of here.");
+      return;
+    }
+
+    if (targetId === "tube" && draggedItem.name === "Lit Cigarette" && isRagOnTube && !isRagSoaked) {
+        setDialogue("The rag smolders but doesn't catch. It is not flammable enough.");
+        return;
+    }
+
+    if (targetId === "sink" && draggedItem.name === "Lit Cigarette") {
+        setDialogue("Not even you are sure what you are trying to do there.");
+        return;
+    }
+
+    if (targetId === "sink" && draggedItem.name === "Rag" && !isTapOn) {
+        setDialogue("You give the sink a good wipe. Dust and rust shift around.");
+        return;
+    }
+
+    if (targetId === "sink" && draggedItem.name === "Rag" && isTapOn) {
+        setDialogue("You could soak the rag, but you decide against it.");
+        return;
     }
     setDraggedItem(null);
   };
@@ -436,6 +512,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
               height: pixelToPercentage(156, "height"),
             }}
             onClick={() => handleItemClick("pillow")}
+             onDrop={() => handleDrop("pillow")}
+                    onDragOver={(e) => e.preventDefault()}
           />
         )}
 
@@ -450,6 +528,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
               height: pixelToPercentage(89, "height"),
             }}
             onClick={() => handleItemClick("vent")}
+             onDrop={() => handleDrop("vent")}
+                    onDragOver={(e) => e.preventDefault()}
           />
         )}
 
@@ -473,6 +553,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
               height: pixelToPercentage(386, "height"),
             }}
             onClick={() => handleItemClick("toilet")}
+             onDrop={() => handleDrop("toilet")}
+            onDragOver={(e) => e.preventDefault()}
           />
         )}
 
@@ -487,6 +569,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
               height: pixelToPercentage(216, "height"),
             }}
             onClick={() => handleItemClick("mirror")}
+             onDrop={() => handleDrop("mirror")}
+                    onDragOver={(e) => e.preventDefault()}
           />
         )}
 
@@ -650,6 +734,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                     height: pixelToPercentage(162, "height"),
                 }}
                 onClick={() => handleItemClick("lock")}
+                 onDrop={() => handleDrop("lock")}
+                    onDragOver={(e) => e.preventDefault()}
             >
             </div>
         )}
@@ -666,6 +752,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                         height: pixelToPercentage(144, "height"),
                     }}
                     onClick={() => handleItemClick("guard")}
+                     onDrop={() => handleDrop("guard")}
+                    onDragOver={(e) => e.preventDefault()}
                 >
                 </div>
                 <div
@@ -677,6 +765,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                         height: pixelToPercentage(406, "height"),
                     }}
                     onClick={() => handleItemClick("guard")}
+                     onDrop={() => handleDrop("guard")}
+                    onDragOver={(e) => e.preventDefault()}
                 >
                 </div>
                 <div
@@ -688,6 +778,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                         height: pixelToPercentage(120, "height"),
                     }}
                     onClick={() => handleItemClick("guard")}
+                     onDrop={() => handleDrop("guard")}
+                    onDragOver={(e) => e.preventDefault()}
                 >
                 </div>
             </>
@@ -704,6 +796,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                     height: pixelToPercentage(386, "height"),
                 }}
                 onClick={() => handleItemClick("bed")}
+                 onDrop={() => handleDrop("bed")}
+                    onDragOver={(e) => e.preventDefault()}
             >
             </div>
         )}
@@ -719,6 +813,8 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                     height: pixelToPercentage(159, "height"),
                 }}
                 onClick={() => handleItemClick("window")}
+                 onDrop={() => handleDrop("window")}
+                    onDragOver={(e) => e.preventDefault()}
             >
             </div>
         )}
@@ -758,13 +854,13 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
       </div>
 
 
-   {/* Inventory Display */}
+       {/* Inventory Display */}
       <div className="bg-gray-800/50 p-2 rounded-md shadow-md mt-4">
-        <h3 className="text-purple-200 font-pixel text-sm mb-1">Inventory:</h3>
+        {/* Removed Inventory: text */}
         {inventory.length === 0 ? (
           <span className="text-gray-400 font-pixel text-xs">Empty</span>
         ) : (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {inventory.map((item, index) => {
                 const imageSrc = getItemImage(item);
                 return (
@@ -773,7 +869,18 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
                           key={index}
                           src={imageSrc}
                           alt={item}
-                          className="w-8 h-8" // Adjust size as needed
+                          className="w-12 h-12 opacity-50" // Adjusted size and opacity
+                          draggable
+                          onDragStart={(e) => {
+                            if (item === "Rag") {
+                              handleDragStart({ id: "rag", name: "Rag", imageUrl: "/images/prison-cell/rag-inventory.webp" });
+                            } else if (item === "Rubbing Alcohol") {
+                              handleDragStart({ id: "alcohol", name: "Alcohol", imageUrl: "/images/prison-cell/alcohol-inventory.webp" });
+                            } else if (item === "Lit Cigarette") {
+                              handleDragStart({ id: "cigarette", name: "Lit Cigarette", imageUrl: "" });
+                            }
+                          }}
+                          onDragEnd={handleDragEnd}
                       />
                   ) : (
                       <div
