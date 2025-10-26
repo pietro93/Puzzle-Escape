@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import CharacterDialoguePopup from "@/components/character-dialogue-popup";
 
 interface PrisonCellPuzzleProps {
   onSolve: () => void;
 }
 
-// Define the InteractiveItem type here
 interface InteractiveItem {
   id: string;
   name: string;
@@ -26,7 +26,6 @@ interface InteractiveItem {
 }
 
 const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
-  // Define prisonCellPuzzleData directly in the component
   const prisonCellPuzzleData = {
     initialRoom: "bars",
     rooms: [
@@ -106,7 +105,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
             unit: "px",
             initialVisibility: true,
             onClick: {
-              dialogue: "It's a toilet. What did you expect?",
+              
             },
           } as InteractiveItem,
           {
@@ -136,32 +135,6 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
               addToInventory: true,
             },
           } as InteractiveItem,
-          {
-            id: "toilet",
-            name: "Toilet",
-            imageUrl: "/images/prison-cell/toilet2.webp",
-            position: { top: 423, left: 494 },
-            width: 259,
-            height: 386,
-            unit: "px",
-            initialVisibility: true,
-            onClick: {
-              dialogue: "It's a toilet. What did you expect?",
-            },
-          } as InteractiveItem,
-          {
-            id: "mirror",
-            name: "Mirror",
-            imageUrl: "",
-            position: { top: 164, left: 183 },
-            width: 192,
-            height: 216,
-            unit: "px",
-            initialVisibility: true,
-            onClick: {
-              dialogue: "Just your ugly mug staring back at you.",
-            },
-          } as InteractiveItem,
         ],
         nav: {
           right: "bars",
@@ -182,8 +155,11 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
   const [showVent, setShowVent] = useState<boolean>(true);
   const [isHeatOn, setIsHeatOn] = useState<boolean>(false);
   const [isTapOn, setIsTapOn] = useState<boolean>(false);
+  const [isCigaretteClicked, setIsCigaretteClicked] = useState<boolean>(false);
+  const [showGuardDialogue, setShowGuardDialogue] = useState<boolean>(false);
   const [roomBackgrounds, setRoomBackgrounds] = useState<Record<string, string>>({
     bathroom: "/images/prison-cell/bathroom.webp",
+    bars: "/images/prison-cell/bars.webp",
   });
 
   const pixelToPercentage = (pixel: number, dimension: "width" | "height", baseDimension: number = 950) => {
@@ -205,6 +181,14 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
       setShowVent(false);
       return;
     }
+
+     if (itemId === "cigarette") {
+        changeRoomBackground("bars", "/images/prison-cell/bars-2.webp");
+        setShowGuardDialogue(true);
+        setInventory((prev) => [...prev, "Lit Cigarette"]);
+        return;
+    }
+
     const item = prisonCellPuzzleData.rooms
       .find((room) => room.id === currentRoomId)
       ?.items.find((i) => i.id === itemId);
@@ -225,7 +209,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
     }
 
     if (itemId === "toilet") {
-      setIsToiletClicked(true);
+      setIsToiletClicked(!isToiletClicked);
     }
   };
 
@@ -242,8 +226,12 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
     setDialogue(null);
   };
 
+  const closeGuardDialogue = () => {
+    setShowGuardDialogue(false);
+  };
+
   return (
-    <div className="relative w-full h-full w-full h-full">
+    <div className="relative w-full h-full">
       {/* Room Container */}
       <div className="relative w-full h-full">
         {/* Background Image - Container */}
@@ -265,7 +253,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
         {/* Rag Phantom Div - Clickable Area (Smaller) */}
         {currentRoomId === "bedroom" && showRag && (
           <div
-            className="absolute cursor-pointer z-2"
+            className="absolute cursor-pointer z-20"
             style={{
               top: pixelToPercentage(747, "height"),
               left: pixelToPercentage(100, "width"),
@@ -279,7 +267,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
         {/* Pillow Phantom Div - Clickable Area */}
         {currentRoomId === "bedroom" && (
           <div
-            className="absolute cursor-pointer z-2"
+            className="absolute cursor-pointer z-20"
             style={{
               top: pixelToPercentage(362, "height"),
               left: pixelToPercentage(271, "width"),
@@ -304,10 +292,10 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
           />
         )}
 
-        {/* Toilet Image (Stacked) */}
+          {/* Toilet Image (Stacked) */}
         {(currentRoomId === "bathroom") && (
           <img
-            src={currentRoomId === "bathroom" && !isToiletClicked ? "/images/prison-cell/toilet.webp" : "/images/prison-cell/toilet2.webp"}
+            src={isToiletClicked ? "/images/prison-cell/toilet2.webp" : "/images/prison-cell/toilet.webp"}
             alt="Toilet"
             className="absolute top-0 left-0 object-cover z-1"
           />
@@ -316,7 +304,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
         {/* Toilet Phantom Div - Clickable Area */}
         {(currentRoomId === "bathroom") && (
           <div
-            className="absolute cursor-pointer z-2"
+            className="absolute cursor-pointer z-20"
             style={{
               top: pixelToPercentage(423, "height"),
               left: pixelToPercentage(494, "width"),
@@ -330,7 +318,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
         {/* Mirror Phantom Div - Clickable Area */}
         {(currentRoomId === "bathroom") && (
           <div
-            className="absolute cursor-pointer z-2"
+            className="absolute cursor-pointer z-20"
             style={{
               top: pixelToPercentage(164, "height"),
               left: pixelToPercentage(183, "width"),
@@ -353,7 +341,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
         {/* Alcohol Phantom Div - Clickable Area */}
         {currentRoomId === "bathroom" && showAlcohol && (
           <div
-            className="absolute cursor-pointer z-2"
+            className="absolute cursor-pointer z-20"
             style={{
               top: pixelToPercentage(711, "height"),
               left: pixelToPercentage(185, "width"),
@@ -363,107 +351,116 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
             onClick={() => handleItemClick("alcohol")}
           />
         )}
-      </div>
 
-      {/* Tap Image (Stacked) */}
-      {currentRoomId === "bathroom" && (
-        <>
-          {isTapOn && (
-            <img
-              src="/images/prison-cell/tap-on.webp"
-              alt="Tap"
-              className="absolute top-0 left-0 object-cover z-1"
-              style={{
-                top: pixelToPercentage(422, "height"),
-                left: pixelToPercentage(258, "width"),
-                width: pixelToPercentage(85, "width"),
-                height: pixelToPercentage(78, "height"),
-              }}
-            />
-          )}
+        {/* Tap Image (Stacked) */}
+        {currentRoomId === "bathroom" && (
+          <>
+            {isTapOn && (
+              <img
+                src="/images/prison-cell/tap-on.webp"
+                alt="Tap"
+                className="absolute top-0 left-0 object-cover z-1"
+              />
+            )}
 
-          {isHeatOn && isTapOn && (
-            <img
-              src="/images/prison-cell/tap-hot.webp"
-              alt="Hot Tap"
-              className="absolute top-0 left-0 object-cover z-2"
-              style={{
-                top: pixelToPercentage(422, "height"),
-                left: pixelToPercentage(258, "width"),
-                width: pixelToPercentage(85, "width"),
-                height: pixelToPercentage(78, "height"),
-              }}
-            />
-          )}
-        </>
-      )}
+            {isHeatOn && isTapOn && (
+              <img
+                src="/images/prison-cell/tap-hot.webp"
+                alt="Hot Tap"
+                className="absolute top-0 left-0 object-cover z-2"
+              />
+            )}
+          </>
+        )}
 
-      {/* Tap Phantom Div - Clickable Area */}
-      {currentRoomId === "bathroom" && !isHeatOn && (
-        <div
-          className="absolute cursor-pointer z-3"
-          style={{
-            top: pixelToPercentage(422, "height"),
-            left: pixelToPercentage(258, "width"),
-            width: pixelToPercentage(85, "width"),
-            height: pixelToPercentage(78, "height"),
-          }}
-          onClick={() => handleItemClick("tap")}
-        />
-      )}
+        {/* Tap Phantom Div - Clickable Area */}
+        {currentRoomId === "bathroom" && (
+          <div
+            className="absolute cursor-pointer z-50"
+            style={{
+              top: pixelToPercentage(422, "height"),
+              left: pixelToPercentage(258, "width"),
+              width: pixelToPercentage(57, "width"),
+              height: pixelToPercentage(84, "height"),
+            }}
+            onClick={() => setIsTapOn(!isTapOn)}
+          />
+        )}
 
-      {/* Navigation Arrows */}
-      {prisonCellPuzzleData.rooms.find((room) => room.id === currentRoomId)?.nav.left && (
-        <button
-          onClick={() => navigate("left")}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-        >
-          &larr;
-        </button>
-      )}
-      {prisonCellPuzzleData.rooms.find((room) => room.id === currentRoomId)?.nav.right && (
-        <button
-          onClick={() => navigate("right")}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-        >
-          &rarr;
-        </button>
-      )}
+        {/* Cigarette Phantom Div - Clickable Area */}
+        {currentRoomId === "bars" && (
+          <div
+            className="absolute cursor-pointer z-20"
+            style={{
+              top: pixelToPercentage(439, "height"),
+              left: pixelToPercentage(370, "width"),
+              width: pixelToPercentage(30, "width"),
+              height: pixelToPercentage(8, "height"),
+            }}
+            onClick={() => handleItemClick("cigarette")}
+          />
+        )}
 
-      {/* Inventory Display */}
-      <div className="bg-gray-800/50 p-2 rounded-md shadow-md mt-4">
-        <h3 className="text-purple-200 font-pixel text-sm mb-1">Inventory:</h3>
-        {inventory.length === 0 ? (
-          <span className="text-gray-400 font-pixel text-xs">Empty</span>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {inventory.map((item, index) => (
-              <div
-                key={index}
-                className="bg-gray-700 px-2 py-1 rounded-full text-xs font-pixel text-gray-200"
+        {/* Navigation Arrows */}
+        {prisonCellPuzzleData.rooms.find((room) => room.id === currentRoomId)?.nav.left && (
+          <button
+            onClick={() => navigate("left")}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+          >
+            &larr;
+          </button>
+        )}
+        {prisonCellPuzzleData.rooms.find((room) => room.id === currentRoomId)?.nav.right && (
+          <button
+            onClick={() => navigate("right")}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+          >
+            &rarr;
+          </button>
+        )}
+        
+        {/* Dialogue Popup */}
+        {dialogue && (
+          <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-gray-900 p-4 rounded-md shadow-md w-1/2">
+              <p className="text-gray-200 font-pixel text-sm">{dialogue}</p>
+              <button
+                onClick={closeDialogue}
+                className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-md mt-4"
               >
-                {item}
-              </div>
-            ))}
+                Close
+              </button>
+            </div>
           </div>
         )}
-      </div>
+      </div>       
 
-      {/* Dialogue Popup */}
-      {dialogue && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-4 rounded-md shadow-md w-1/2">
-            <p className="text-gray-200 font-pixel text-sm">{dialogue}</p>
-            <button
-              onClick={closeDialogue}
-              className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-md mt-4"
-            >
-              Close
-            </button>
-          </div>
+        {/* Inventory Display */}
+        <div className="bg-gray-800/50 p-2 rounded-md shadow-md mt-4">
+          <h3 className="text-purple-200 font-pixel text-sm mb-1">Inventory:</h3>
+          {inventory.length === 0 ? (
+            <span className="text-gray-400 font-pixel text-xs">Empty</span>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {inventory.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-700 px-2 py-1 rounded-full text-xs font-pixel text-gray-200"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+        {showGuardDialogue && (
+          <CharacterDialoguePopup
+            character="skeleton"
+            dialogue="HEY! I WAS HOLDING THAT! ...whatever, not like I can smoke anyways. I have no lungs."
+            onClose={closeGuardDialogue}
+          />
+        )}
+        </div>
   );
 };
 
