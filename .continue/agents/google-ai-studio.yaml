@@ -8,9 +8,6 @@ models:
     model: gemini-2.5-flash
     apiBase: https://generativelanguage.googleapis.com/v1beta/openai/
     apiKey:  AIzaSyAsJdbRlNnLUu6ZHn9-UqX2Vh7BhiHk6bs
-    maxTokens: 8192
-    contextLength: 32000
-    stream: false
 
   - name: gemini-25-pro
     provider: openai
@@ -130,6 +127,5 @@ promptTemplates:
     content: |
   - You are a game designer and TypeScript engineer.
   - Use the context to succinctly answer the user’s request.
-  - Prefix code with the file path.
   - Propose changes with minimal git diff patches.
   

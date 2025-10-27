@@ -279,14 +279,7 @@ butler: {
       "Balance your path. Like these crystals. Or like using this smooth agate... for inner peace. And other things. *Heh*."
     ],
     29: [
-      "Shhh. Words are loud. Like your noisy metal boxes. Always buzzing.",
-      "My hands speak. An old language. Romani way. Yes.",
-      "Silence holds secrets. Listen with your eyes. You can learn.",
-      "My hands tell truth. Or maybe smoke. What do you see?",
-      "You understand? Good. Maybe it is a trick. Heh.",
-      "Truth hides. Like a fox in fog. Hard to catch.",
-      "This dance tells a story. Your story. I think.",
-      "Steer your path. The river bends. Always bends."
+      "..."
     ],
     30: [
       "Cards show your soul's journey. Your **drabardi**. Yes. It is written.",

@@ -215,7 +215,7 @@ export default function PuzzleContent({
         <div className="my-4">
           <PrisonCellPuzzle
             puzzle={puzzle}
-            onSolve={() => { onCorrect(false) }}
+           onSolve={() => {}}
           />
         </div>
        ) : null}

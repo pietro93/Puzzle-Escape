@@ -4,15 +4,18 @@ import type { Puzzle} from "@/types/puzzle"
 export const puzzlesSet1: Puzzle[] = [
   {
     level: 1,
-    question: "Escape the cell.",
-    description: "You are in a dark, cold cell. There must be a way out.",
-    solution: "placeholder", // To be determined by the puzzle logic
+    question: "There's a secret message hidden somewhere.",
+    description: "",
+    solution: "MURDER", 
     category: "interactive",
     isPrisonCellPuzzle: true,
     hints: [
-      "Look around the cell.",
-      "Maybe there is something in the other room.",
-      "What could this rag be for?",
+      "Look around the cell. There are three items you can pick up that will help you solve this puzzle.",
+      "The guard hints at the mirror. Perhaps the solution is written there - but you will need to make it visible somehow.",
+      "Try wrapping the rag under the sink. Check every vent, see if you can find a way to make it flammable.",
+      "Pick up the rubbing alcohol hidden inside the vent and steal the cigarette from the guard.",
+      "Set the rag on fire to heat the sink, then turn the tap on. Condensation will make a message appear on the mirror.",
+      "Things you see on mirror are reflected... so is your solution to this level."
     ],
   },
   {
