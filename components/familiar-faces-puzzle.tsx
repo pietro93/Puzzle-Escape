@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
+import { SpeechIndicator } from "./character-location-display"
 
 interface DialogueOption {
   id: string
@@ -992,7 +993,8 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
                 height={96}
                 className="pixelated z-10 relative"
               />
-              <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+              <SpeechIndicator />
+            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
             </div>
             <p className="text-center font-pixel text-xs text-purple-300">{character.name}</p>
           </div>

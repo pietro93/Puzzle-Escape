@@ -20,10 +20,10 @@ export function LocationMap({ locations, currentLocation, onNavigate }: Location
             variant={currentLocation === location.id ? "default" : "outline"}
             size="sm"
             onClick={() => onNavigate(location.id)}
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 flex-1 min-w-0"
           >
             <MapPin className="w-3 h-3" />
-            <span className="text-xs sm:text-sm">{location.name}</span>
+            <span className="text-xs sm:text-sm truncate">{location.name}</span>
           </Button>
         ))}
       </div>

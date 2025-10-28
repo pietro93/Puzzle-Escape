@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react" //Import useEffect
 import CharacterDialoguePopup from "./character-dialogue-popup" // Import CharacterDialoguePopup component
 import Image from "next/image"
+import { SpeechIndicator } from "./character-location-display"
 
 
 interface InmateStatement {
@@ -102,6 +103,7 @@ export default function InmatePuzzle({
                 height={128}
                 className="pixelated"
               />
+            <SpeechIndicator />
             </div>
             <p className="text-center font-pixel text-sm text-purple-300">{inmate.name}</p>
           </div>
