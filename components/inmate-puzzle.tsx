@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react" //Import useEffect
-import Image from "next/image"
 import CharacterDialoguePopup from "./character-dialogue-popup" // Import CharacterDialoguePopup component
+import Image from "next/image"
+
 
 interface InmateStatement {
   text: string
@@ -181,3 +182,6 @@ export default function InmatePuzzle({
     </div>
   )
 }
+
+
+

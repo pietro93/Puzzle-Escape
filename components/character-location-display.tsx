@@ -17,10 +17,45 @@ interface CharacterLocationDisplayProps {
   hasUsedElevator?: boolean
   showElevator?: boolean
   jigsawComplete?: boolean
-  onGuardClick: () => void
+  onGuardClick: () => void; // Added semicolon here
   onLocationClick?: () => void
   onPyramidLocationImageClick?: () => void
 }
+
+// Speech Indicator Component using the new image
+export const SpeechIndicator = () => (
+  <div className="absolute bottom-1 right-1 w-6 h-6 z-40">
+    <Image
+      src="/images/speech-icon.webp"
+      alt="Speech Icon"
+      width={24} // Adjust size as needed
+      height={24} // Adjust size as needed
+      className="pixelated animate-pulse" // Optional: Add pulsing animation
+    />
+  </div>
+);
+
+// Character Display Wrapper Component for reusability
+interface CharacterDisplayWrapperProps {
+  character: string;
+  onGuardClick: () => void;
+  enableInteraction: boolean; // Controls clickability and speech icon visibility
+}
+
+const CharacterDisplayWrapper = ({ character, onGuardClick, enableInteraction }: CharacterDisplayWrapperProps) => {
+  return (
+    <div className="flex justify-center items-center">
+      <div
+        className={`w-40 h-40 relative pixelated-container ${enableInteraction ? "cursor-pointer" : ""}`}
+        onClick={enableInteraction ? onGuardClick : undefined}
+      >
+        <CharacterImage character={character} />
+        {enableInteraction && <SpeechIndicator />}
+      </div>
+    </div>
+  );
+};
+
 
 export default function CharacterLocationDisplay({
   level,
@@ -105,8 +140,12 @@ export default function CharacterLocationDisplay({
   if (level === 17) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        {/* Character image for level 17 - clickable only when solved */}
         <div className="flex justify-center items-center">
-          <div className="w-40 h-40 relative pixelated-container">
+          <div
+            className={`w-40 h-40 relative pixelated-container ${solved ? "cursor-pointer" : ""}`}
+            onClick={solved ? onGuardClick : undefined} // Only clickable if solved
+          >
             <Image
               src={
                 solved
@@ -120,13 +159,13 @@ export default function CharacterLocationDisplay({
               height={160}
               className="pixelated"
             />
+            {solved && <SpeechIndicator />} {/* Only show indicator if solved */}
           </div>
         </div>
         <div className="flex justify-center items-center">
           <div className="w-40 h-40 relative pixelated-container">
             <Image
-              src={
-                solved
+              src={                solved
                   ? "/images/compass.webp"
                   : lightsOn
                     ? "/images/compass_dim.webp"
@@ -147,9 +186,7 @@ export default function CharacterLocationDisplay({
   if (level === 29) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <div className="flex justify-center items-center">
-          <CharacterImage character={character} />
-        </div>
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
         <div className="flex justify-center items-center">
           <LocationImage setting={setting} customImage={puzzle.locationImage} hintImage={puzzle.imageHint} />
         </div>
@@ -161,9 +198,7 @@ export default function CharacterLocationDisplay({
   if (level === 39) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <div className="flex justify-center items-center">
-          <CharacterImage character={character} />
-        </div>
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
         <div className="flex justify-center items-center">
           <LocationImage setting={setting} customImage={null} hintImage={null} />
         </div>
@@ -175,9 +210,7 @@ export default function CharacterLocationDisplay({
   if (level === 40) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
-          <CharacterImage character={character} />
-        </div>
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
         <div className="flex justify-center items-center cursor-pointer" onClick={onPyramidLocationImageClick}>
           <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
@@ -200,9 +233,7 @@ export default function CharacterLocationDisplay({
   if (level === 47) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
-          <CharacterImage character={character} />
-        </div>
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
         <div
           className="flex justify-center items-center cursor-pointer"
           onClick={() => {
@@ -230,16 +261,12 @@ export default function CharacterLocationDisplay({
         </div>
       </div>
     )
-  }
-
-  // Special handling for level 50 (elevator puzzle)
+  }  // Special handling for level 50 (elevator puzzle)
   if (level === 50) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         {/* Character image (Devil) */}
-        <div className="flex justify-center items-center">
-          <CharacterImage character="devil" />
-        </div>
+        <CharacterDisplayWrapper character="devil" onGuardClick={onGuardClick} enableInteraction={true} />
 
         {/* Location image - always clickable for elevator access */}
         <div className="flex justify-center items-center cursor-pointer" onClick={onLocationClick}>
@@ -251,8 +278,7 @@ export default function CharacterLocationDisplay({
               width={160}
               height={160}
               className="pixelated z-10 relative"
-            />
-            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
+            />            <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
             <div className="absolute -bottom-1 left-0 right-0 h-1 bg-black/50 blur-sm z-30"></div>
           </div>
         </div>
@@ -263,9 +289,7 @@ export default function CharacterLocationDisplay({
   // Default display for all other levels (including level 38)
   return (
     <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-      <div className="flex justify-center items-center cursor-pointer" onClick={onGuardClick}>
-        <CharacterImage character={character} />
-      </div>
+      <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
       <div className="flex justify-center items-center">
         <div className="w-40 h-40 relative pixelated-container">
           <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
@@ -283,5 +307,3 @@ export default function CharacterLocationDisplay({
     </div>
   )
 }
-
-
