@@ -350,8 +350,8 @@ butler: {
     40: [
       "Pyramids contain chambers unknown even to their builders.",
       "Light penetrates the deepest darkness once yearly.",
-      "Ra's journey through the underworld mirrors your own.",
-      "Some chambers were sealed to contain dangers, not treasures.",
+      "A lost soul's journey through the underworld mirrors your own.",
+      "Some chambers were sealed to contain dangers, others treasures",
     ],
   },
   devil: {

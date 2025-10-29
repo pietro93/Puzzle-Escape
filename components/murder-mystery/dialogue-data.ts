@@ -416,7 +416,7 @@ export const librarianDialogue: DialogueOption[] = [
             followUp: [
               {
                 id: "read-blood-diseases-book",
-                text: 'Read Book: "Blood diseases: Causes, Signs and Symptoms"',
+                text: 'Read Book: "Hematology for Kids: Blood Diseases Explain Like You Are Five"',
                 response: "",
                 followUp: [],
                 specialAction: () => {}, // This will be handled in the component

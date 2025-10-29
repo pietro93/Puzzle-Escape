@@ -150,8 +150,10 @@ export const puzzlesSet4: Puzzle[] = [
     solution: "bird of prey",
     category: "pattern",
     hints: [
-      "Find a way to bring light to all chambers. Perhaps Ra can help?",
+      "Find a way to bring light to all chambers. Perhaps one of the Gods can help?",
       "The murals hidden in the dark can help you translate the message in the entrance room.",
+      "Try to guess what each mural is representing, and see if you can decipher the symbols under each mural.",
+      "Each symbol represents one letter. Find all the relevant letters to decode the message at the entrance."
     ],
   },
 ]

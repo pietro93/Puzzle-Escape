@@ -58,6 +58,7 @@ interface PuzzleContentProps {
   setBinaryCorrectCombinations: (count: number) => void
   questionnaireRef: React.RefObject<any>
   isMagicBoxPuzzle?: boolean
+  onMurderMysteryLocationUpdate?: (location: string) => void
 }
 
 export default function PuzzleContent({
@@ -81,6 +82,7 @@ export default function PuzzleContent({
   onSolutionGenerated,
   setBinaryCorrectCombinations,
   questionnaireRef,
+  onMurderMysteryLocationUpdate,
 }: PuzzleContentProps) {
   // Check if this puzzle has an image
   const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
@@ -552,7 +554,7 @@ export default function PuzzleContent({
           <ColorPalettePuzzle onSolve={() => {}} />
         </div>
       )}
-      {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} />}
+      {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} onLocationUpdate={onMurderMysteryLocationUpdate} />}
       {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle />}
     </div>
   )

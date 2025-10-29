@@ -4,26 +4,40 @@ import type { AutopsyReportPage } from "./types"
 export const autopsyReportPages: AutopsyReportPage[] = [
   {
     title: "Autopsy Report - Page 1",
-    content: `Name: Declan Tremblay
-Age: Early 30s
-Eyes: Brown
-Hair: Brown`,
+    content: `Name: Dohn Joe  \n
+Gender: Male (assumed, based on tax records)  \n
+Age: Early 30s (the best years, lucky bastard died in his prime)   \n
+Eyes: The same shade of brown as a good, solid, albeit unremarkable coffee   \n
+Hair: The same shade of brown as a well-trodden forest path) \n
+**Additional Notes**:  
+> *“Subject appeared to be attempting to ‘relax’ while dying. Arms folded. Expression serene. Very rude. We had to reposition him for the photos.”*`,
+
   },
   {
     title: "Autopsy Report - Page 2",
-    content: `Clinical summary: The decedent was found dead following a suspected organ failure attributed to complications from anemia. Prior to death, the individual had called emergency services reporting feeling unwell. Upon arrival, paramedics found the victim deceased. There was no history or evidence of trauma or injury. The clinical picture is consistent with severe anemia leading to multiorgan compromise and failure.`,
+    content: `Clinical Summary: \n
+    Our dear Dohn met his untimely end due to a severe case of "not enough red stuff in the veins." Also known as anemia. \n
+    Before kicking the bucket, he called emergency services and said, "I'm not feeling well." Paramedics arrived, only to find he had already turned into a human-level lamp. No signs of trauma, injury, or anyone poking him with a stick.`,
   },
   {
     title: "Autopsy Report - Page 3",
-    content: `External examination: Height: 168 cm The body exhibited pallor with a slight reddish tint to the skin, consistent with anemia-related hypoxia and circulatory changes. Notably, ecchymoses were present on the arms and legs, indicative of minor subcutaneous bleeding or bruising without associated trauma. The body showed signs of reduced blood volume, with visibly low levels of blood noted at the scene. No external injuries, wounds, or signs of violence were observed.`,
+    content: `External examination: \n
+    Height: 168 cm \n
+    External examination: Height 168 cm. The body presents with the ghostly pallor of an underboiled shrimp. \n
+    Either weird bruises or VERY weird tattoos on limbs but no sign of struggle so I guess that's nothing to be concerned about.
+    `,
   },
   {
     title: "Autopsy Report - Page 4",
-    content: `Toxicology: Comprehensive toxicological analysis revealed no evidence of poison, venom, or other toxic substances contributing to death.`,
+    content: `Toxicology \n
+    Our tests found a profound absence of poison, venom, or exciting toxins. Bro did not know how to party.`,
   },
   {
     title: "Autopsy Report - Page 5",
-    content: `Summary: The external and clinical findings support death due to organ failure secondary to complications of anemia, with no indication of external trauma or intoxication. The presence of ecchymoses may reflect underlying hematologic fragility or coagulopathy associated with the anemia. This aligns with known fatal outcomes in severe anemia cases complicated by multiorgan dysfunction.`,
+    content: `Summary:
+    The official cause of death is organ failure due to extreme anemia. 
+    His blood gave up first, then his soul left his body out of politeness. \n
+    100% Natural. Case closed.`,
   },
 ]
 

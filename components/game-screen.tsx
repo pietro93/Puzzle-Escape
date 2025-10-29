@@ -80,6 +80,25 @@ export default function GameScreen({
   const { getItem, setItem } = useStorage()
   const getRandomDialogue = useCharacterDialogue()
 
+  // Handle sphinx interaction in pyramid puzzle
+  const handleSphinxInteract = (room: string) => {
+    const godRoomMessages: Record<string, string> = {
+      isis: "The mural in this chamber represents Isis, the goddess of magic and fertility.",
+      osiris: "The mural in this chamber represents Osiris, the god of the underworld.",
+      horus: "The mural in this chamber represents Horus, the god of the sky.",
+      toth: "The mural in this chamber represents Thoth, the god of wisdom and writing.",
+      ra: "The mural in this chamber represents Ra, the god of light.",
+      anubis: "The mural in this chamber represents Anubis, the god of mummification.",
+    }
+
+    if (godRoomMessages[room]) {
+      setCharacterDialogue(godRoomMessages[room])
+    } else {
+      setCharacterDialogue(getRandomDialogue("sphinx", level))
+    }
+    setShowCharacterDialogue(true)
+  }
+
   const [answer, setAnswer] = useState("")
   const [feedback, setFeedback] = useState("")
   const [isCorrect, setIsCorrect] = useState(false)
@@ -114,6 +133,7 @@ export default function GameScreen({
   const [characterDialogue, setCharacterDialogue] = useState<string>("")
   const [showCharacterDialogue, setShowCharacterDialogue] = useState<boolean>(false)
   const [binaryCorrectCombinations, setBinaryCorrectCombinations] = useState(0)
+  const [murderMysteryLocation, setMurderMysteryLocation] = useState<string>("crime scene")
   const [currentPuzzle, setCurrentPuzzle] = useState<Puzzle | null>(null)
   const [userInput, setUserInput] = useState("")
   const [hintIndex, setHintIndex] = useState(0)
@@ -310,13 +330,17 @@ export default function GameScreen({
     }
   }
 
-  // Update the handleGuardClick function to properly handle sphinx click for level 38
+  // Update the handleGuardClick function to properly handle sphinx click for level 38 and 40
   const handleGuardClick = () => {
     // Special handling for level 38 (sphinx riddle)
     if (level === 38) {
       // For level 38, we use the specific sphinxRiddle
       setCharacterDialogue(sphinxRiddle)
       setShowCharacterDialogue(true)
+    }
+    // Special handling for level 40 (pyramid puzzle sphinx interaction)
+    else if (level === 40) {
+      handleSphinxInteract(currentPyramidRoom)
     }
     // Special handling for level 10 (guard puzzle)
     else if (level === 10) {
@@ -443,6 +467,10 @@ export default function GameScreen({
     }
   }
 
+  const handleMurderMysteryLocationUpdate = (location: string) => {
+    setMurderMysteryLocation(location)
+  }
+
   // Handle submit button hover for level 50
   const handleSubmitButtonMouseEnter = () => {
     if (level === 50 && jigsawComplete && !showElevator) {
@@ -561,6 +589,7 @@ export default function GameScreen({
           onGuardClick={handleGuardClick}
                     onLocationClick={handleLocationClick}
           onPyramidLocationImageClick={handlePyramidLocationImageClick}
+          murderMysteryLocation={murderMysteryLocation}
         />
       )}
 
@@ -632,6 +661,7 @@ export default function GameScreen({
         onSolutionGenerated={onSolutionGenerated}
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
+        onMurderMysteryLocationUpdate={handleMurderMysteryLocationUpdate}
       />
 
       {/* Answer input section */}

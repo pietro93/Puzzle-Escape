@@ -3,9 +3,10 @@ interface LocationImageProps {
   customImage?: string | null
   hintImage?: string
   level?: number
+  murderMysteryLocation?: string
 }
 
-export default function LocationImage({ setting, customImage, hintImage, level }: LocationImageProps) {
+export default function LocationImage({ setting, customImage, hintImage, level, murderMysteryLocation }: LocationImageProps) {
   const getLocationImage = () => {
     // If there's a hint image specified, use that
     if (hintImage) {
@@ -24,7 +25,17 @@ export default function LocationImage({ setting, customImage, hintImage, level }
 
     // Special case for murder mystery images
     if (setting === "murder-mystery") {
-      return "/images/murder-mystery/crime-scene.webp"
+      switch (murderMysteryLocation) {
+        case "library":
+          return "/images/murder-mystery/library.webp"
+        case "police station":
+          return "/images/murder-mystery/police-station.webp"
+        case "morgue":
+          return "/images/murder-mystery/morgue.webp"
+        case "crime scene":
+        default:
+          return "/images/murder-mystery/crime-scene.webp"
+      }
     }
 
     // Otherwise use the default image for the setting

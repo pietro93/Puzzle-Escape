@@ -17,6 +17,7 @@ interface CharacterLocationDisplayProps {
   hasUsedElevator?: boolean
   showElevator?: boolean
   jigsawComplete?: boolean
+  murderMysteryLocation?: string
   onGuardClick: () => void; // Added semicolon here
   onLocationClick?: () => void
   onPyramidLocationImageClick?: () => void
@@ -70,6 +71,7 @@ export default function CharacterLocationDisplay({
   hasUsedElevator = false,
   showElevator = false,
   jigsawComplete = false,
+  murderMysteryLocation,
   onGuardClick,
   onLocationClick,
   onPyramidLocationImageClick,
@@ -122,18 +124,26 @@ export default function CharacterLocationDisplay({
   const getPyramidLocationImage = () => {
     if (level !== 40) return null
 
-    // Ra room with no torch
-    if (currentPyramidRoom === "ra" && !hasPyramidTorch) {
-      return "/images/pyramid-inside-lit.webp"
+    switch (currentPyramidRoom) {
+    case "entrance":
+    case "isis":
+    case "osiris":
+    case "horus":
+    case "toth":
+    case "anubis":
+      return "/images/pyramid-inside.webp"
+    case "ra":
+      // Ra room: lit initially, becomes regular inside after torch is taken
+      return hasPyramidTorch ? "/images/pyramid-inside.webp" : "/images/pyramid-inside-lit.webp"
+    case "mural1":
+    case "mural2":
+    case "mural3":
+    case "mural4":
+        // Mural rooms: dark without torch, inside with torch
+        return hasPyramidTorch ? "/images/pyramid-inside.webp" : "/images/pitch-darkness.webp"
+      default:
+        return "/images/pitch-darkness.webp"
     }
-
-    // Dark mural rooms with no torch
-    if (!hasPyramidTorch && ["mural1", "mural2", "mural3", "mural4"].includes(currentPyramidRoom)) {
-      return "/images/pitch-darkness.webp"
-    }
-
-    // Default for all other rooms or when torch is present
-    return "/images/pitch-darkness.webp"
   }
 
   // Special handling for level 17 (light switch puzzle)
@@ -188,7 +198,7 @@ export default function CharacterLocationDisplay({
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
         <div className="flex justify-center items-center">
-          <LocationImage setting={setting} customImage={puzzle.locationImage} hintImage={puzzle.imageHint} />
+          <LocationImage setting={setting} customImage={puzzle.locationImage} hintImage={puzzle.imageHint} murderMysteryLocation={murderMysteryLocation} />
         </div>
       </div>
     )
@@ -200,7 +210,7 @@ export default function CharacterLocationDisplay({
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
         <div className="flex justify-center items-center">
-          <LocationImage setting={setting} customImage={null} hintImage={null} />
+          <LocationImage setting={setting} customImage={null} murderMysteryLocation={murderMysteryLocation} />
         </div>
       </div>
     )
@@ -211,7 +221,10 @@ export default function CharacterLocationDisplay({
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
-        <div className="flex justify-center items-center cursor-pointer" onClick={onPyramidLocationImageClick}>
+        <div
+          className={`flex justify-center items-center ${!hasPyramidTorch ? "cursor-pointer" : ""}`}
+          onClick={!hasPyramidTorch ? onPyramidLocationImageClick : undefined}
+        >
           <div className="w-40 h-40 relative pixelated-container">
             <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
             <Image
@@ -288,6 +301,23 @@ export default function CharacterLocationDisplay({
   }
 
   // Default display for all other levels (including level 38)
+  const getLocationImageSrc = () => {
+    if (puzzle.isMurderMysteryPuzzle && murderMysteryLocation) {
+      switch (murderMysteryLocation) {
+        case "library":
+          return "/images/murder-mystery/library.webp"
+        case "police station":
+          return "/images/murder-mystery/police-station.webp"
+        case "morgue":
+          return "/images/murder-mystery/morgue.webp"
+        case "crime scene":
+        default:
+          return "/images/murder-mystery/crime-scene-loc.webp"
+      }
+    }
+    return puzzle.locationImage || `/images/${setting}-bg.webp`
+  }
+
   return (
     <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
       <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
@@ -295,7 +325,7 @@ export default function CharacterLocationDisplay({
         <div className="w-40 h-40 relative pixelated-container">
           <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
           <Image
-            src={puzzle.locationImage || `/images/${setting}-bg.webp`}
+            src={getLocationImageSrc()}
             alt={`${setting} location`}
             width={160}
             height={160}

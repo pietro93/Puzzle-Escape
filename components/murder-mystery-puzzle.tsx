@@ -29,10 +29,11 @@ import { autopsyReportPages, locations } from "@/components/murder-mystery/evide
 interface MurderMysteryPuzzleProps {
   onSolve?: () => void
   onLocationChange?: (location: string) => void
+  onLocationUpdate?: (location: string) => void
   currentQuestion?: string
 }
 
-export default function MurderMysteryPuzzle({ onSolve, onLocationChange, currentQuestion }: MurderMysteryPuzzleProps) {
+export default function MurderMysteryPuzzle({ onSolve, onLocationChange, onLocationUpdate, currentQuestion }: MurderMysteryPuzzleProps) {
   // Location State
   const [currentLocation, setCurrentLocation] = useState<string>("crime scene")
 
@@ -269,7 +270,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     }
   }
 
-  // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // // //
+  // // // // // // NAVIGATION  // // // // // // // // // // // // // // // // // // // // //
   const navigateTo = (location: string) => {
     setCurrentLocation(location)
     dialogue.closeDialogue()
@@ -277,10 +278,18 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
     if (onLocationChange) {
       onLocationChange(location)
     }
+
+    if (onLocationUpdate) {
+      onLocationUpdate(location)
+    }
   }
 
   // Automatically start dialogue when entering the police station, morgue, or library
   useEffect(() => {
+    if (onLocationUpdate) {
+      onLocationUpdate(currentLocation)
+    }
+
     if (currentLocation === "police station") {
       // Start dialogue with policewoman and apply police filter
       dialogue.startDialogue("policewoman", policewomanDialogue, filterPoliceOptions)
@@ -291,7 +300,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, current
       // Start dialogue with librarian and apply librarian filter
       dialogue.startDialogue("librarian", librarianDialogue, filterLibrarianOptions)
     }
-  }, [currentLocation])
+  }, [currentLocation, onLocationUpdate])
 
   return (
     <div className="flex flex-col items-center space-y-4 relative pb-16">
