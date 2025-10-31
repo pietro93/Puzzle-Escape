@@ -8,59 +8,59 @@ import { Sparkles, Home, RotateCcw, Volume2, VolumeX } from "lucide-react"
 const DEVIL_INTRO = [
   "As you solve the Devil's final riddle, a profound silence falls over the hellish landscape. The flames around you dim to embers, casting long, dancing shadows across the obsidian floor.",
 
-  '"Bravo! BRAVO!" The Devil\'s voice booms as he slow-claps with theatrical flair, his perfect teeth gleaming in a smile that never quite reaches his eyes. "Few souls have ever made it this far, and fewer still have matched wits with me and lived to tell the tale."',
+  '"Bravo. BRAVO!" The Devil\'s voice booms as he slow-claps with theatrical flair, his perfect teeth gleaming in a smile that never quite reaches his eyes. "Few souls make it this far and match wits with me."',
 
   "He circles you like a predator, his form shifting between human and something ancient and wrong, with too many angles to look at, too many teeth that grin menaciously at you.",
 
-  '"I find myself with a most intriguing moral dilemma," he purrs, conjuring an ornate throne from the darkness and lounging upon it. "Perhaps a clever soul like yourself could offer some... insight."',
+  '"I find myself with an intriguing moral dilemma," he purrs, conjuring an ornate throne from the darkness and lounging upon it. "Perhaps a clever soul like yourself could offer insight."',
 
-  'The Devil leans forward, his eyes now glowing like hot coals. "I have a particular soul in my ledger—a fascinating case study in human fallibility. This person was, by all accounts, good. Kind to strangers. Generous to charities. Loved by friends and family."',
+  'The Devil leans forward, his eyes now glowing like hot coals. "I have a particular soul in my ledger. A fascinating case study in human fallibility. This person lived virtuously. Kind to strangers. Generous to charities. Loved by friends and family."',
 
-  'His voice drops to a whisper that somehow fills the entire chamber. "But then came one fateful night. This person, struggling with inner demons, made a catastrophic error. They mixed alcohol with prescription antidepressants—a deadly cocktail—and decided to drive home."',
+  'His voice drops to a whisper that somehow fills the entire chamber. "One fateful night brought catastrophic error. They mixed alcohol with prescription antidepressants and decided to drive home."',
 
   "With a snap of his long fingers, the air before you tears open like a wound. Through the rift, you see images playing out in terrible clarity: rain-slicked roads, headlights blurring through a windshield, empty bottles rolling on a car floor, a driver's unfocused eyes.",
 
-  '"The inevitable occurred," the Devil continues, his voice now soft with mock sympathy. "A crash. Metal screaming against metal. Glass shattering like frozen stars. And when the silence finally fell, two lives had been extinguished—the driver\'s and an innocent pedestrian\'s who was simply in the wrong place at the wrong time."',
+  '"The inevitable occurred," the Devil continues, his voice now soft with mock sympathy. "A crash. Metal screaming against metal. Glass shattering like frozen stars. Two lives were extinguished. The driver\'s and an innocent pedestrian\'s who was simply in the wrong place at the wrong time."',
 
   "He dismisses the vision with a casual flick of his wrist, and the rift seals itself with a sound like tearing silk. The Devil's eyes bore into yours, unblinking and ancient.",
 
-  '"So here\'s my quandary: What is the just fate for such a soul? They lived virtuously but died causing death and destruction. One moment of selfish, reckless behavior erased a lifetime of goodness."',
+  '"What is the just fate for such a soul? This soul lived virtuously yet caused death and destruction. One moment of selfishness erased a lifetime of goodness."',
 
   "The Devil rises from his throne, which crumbles to ash behind him. He extends a hand toward you, palm up, fingers slightly curled as if beckoning.",
 
-  '"Should this soul burn in Hell for eternity for one terrible mistake?" His voice drops an octave, resonating through your bones. "Should they be forgiven and welcomed into Heaven despite the life they took?" His tone becomes mocking. "Or perhaps... something else entirely?"',
+  '"Should this soul burn in Hell for eternity for one terrible mistake?" His voice drops an octave, resonating through your bones. "Should they be forgiven and welcomed into Heaven despite the life they took?" His tone becomes mocking. "Or perhaps something else entirely?"',
 
   'The chamber grows darker, the flames dimming further until only the Devil\'s eyes glow in the darkness. "What say you, clever soul? Heaven, Hell, or Neither?"',
 ]
 
 const HELL_ENDING = [
-  '"Hell?!" The Devil\'s eyes flare with sudden, terrible delight! His smile stretches impossibly wide, revealing row upon row of needle-sharp teeth. "How deliciously severe of you! Such unwavering moral judgment!!!"',
+  '"Hell!" The Devil\'s eyes flare with sudden, terrible delight! His smile stretches impossibly wide, revealing row upon row of needle-sharp teeth. "How deliciously severe of you. Such unwavering moral judgment."',
 
   "He stalks around you, his movements no longer human but predatory, joints bending at unnatural angles. The temperature in the chamber rises dramatically, the air becoming thick and difficult to breathe.",
 
-  '"One mistake," he hisses, his voice now layered with multiple tones speaking in unison, "and eternal damnation follows. No redemption! No second chances! Just endless suffering as payment for a single moment of weakness! How so deliciously human!"',
+  '"One mistake brings eternal damnation. Endless suffering is the price of weakness. How deliciously human."',
 
   "The Devil stops abruptly before you, growing taller, his shadow stretching across the walls like spilled ink. His skin cracks in places, revealing molten fire beneath.",
 
-  '"I couldn\'t agree more," he growls, the ground trembling beneath your feet. "And how... FORTUNATE... that you\'ve made your judgment so clear."',
+  '"I could not agree more," he growls, the ground trembling beneath your feet. "How FORTUNATE that you have made your judgment so clear."',
 
   "With a violent gesture, he tears another rift in reality. But this time, the vision shows you behind the wheel of that car on that rainy night.",
 
-  '"Because the soul I described," the Devil whispers, his breath hot against your ear though he stands before you, "was yours."',
+  '"The soul I described was yours."',
 
   "The memories crash into you like a physical blow. The drinks. The pills. The rain-slicked roads. The momentary distraction. The horrific impact. The screams. The silence. Your death—and the death you caused.",
 
   "Horror floods through you as you realize the truth. This entire journey—the prison, the mansion, the forest, the desert, and finally this hellish domain—it was all a trial for your soul.",
 
-  '"By your own judgment," the Devil says, his voice now a triumphant roar, "you belong to ME."',
+  '"By your own judgment, you belong to ME."',
 
   "His hand, now a twisted claw of obsidian and flame, closes around your wrist with burning finality. The flesh where he touches you blackens and smokes.",
 
-  '"I have so many puzzles prepared for you," he whispers, his face inches from yours. "Puzzles with no solutions. Riddles with no answers. Locks without keys. And we have all of eternity to explore them together."',
+  '"I have so many puzzles prepared for you. Unsolvable puzzles. Infinite riddles. Impossible locks. We have all of ETERNITY to explore them together."',
 
   "The ground beneath you splits open, revealing a chasm of writhing flames and distant screams. As you begin to fall, the Devil's laughter follows you down, down into the endless dark.",
 
-  '"Welcome home," his voice echoes as the inferno rises to claim you. "We\'re going to have so much FUN together."',
+  '"Welcome home. We are going to have so much FUN together."',
 
   "You plummet through layers of fire and darkness, each level more terrifying than the last. The screams of the damned rise to meet you, a cacophony of eternal suffering that will soon include your own voice.",
 
@@ -68,7 +68,7 @@ const HELL_ENDING = [
 
   "Your fall slows as you approach your own personal hell. A twisted version of that rain-soaked highway stretches before you, the moment of impact playing on endless loop. Each time, you feel the full force of the crash, the terror, the guilt, the pain—only to be reset and forced to experience it again.",
 
-  "The Devil's voice surrounds you, no longer charming but raw with malevolent glee: \"You chose this fate for others, and now you've chosen it for yourself. Poetic, isn't it? I do so love when souls condemn themselves.\"",
+  "The Devil's voice surrounds you, no longer charming but raw with malevolent glee: \"You chose this fate for others and now for yourself. Poetic, is it not? I do so love when souls condemn themselves.\"",
 
   "And so begins your eternity—trapped in the moment of your greatest failure, your greatest sin, with no hope of redemption or escape. Just as you judged, so have you been judged.",
 
@@ -76,31 +76,31 @@ const HELL_ENDING = [
 ]
 
 const HEAVEN_ENDING = [
-  '"Heaven?" The Devil\'s eyebrows arch high on his forehead, his expression one of genuine surprise that quickly morphs into something darker. "How... remarkably generous of you. Forgiveness regardless of consequence. How very... convenient."',
+  '"Heaven?" The Devil\'s eyebrows arch high on his forehead, his expression one of genuine surprise that quickly morphs into something darker. "How remarkably generous of you. Forgiveness regardless of consequence. How very convenient."',
 
   'He begins to pace, his movements becoming increasingly agitated, leaving scorched footprints on the stone floor. "So one should be judged by the entirety of their life, not by a single mistake? Even when that mistake STOLE an innocent life?"',
 
-  'The Devil stops abruptly, his handsome face contorting with barely contained rage. "How DARE you presume to be so magnanimous with forgiveness that isn\'t yours to give!"',
+  'The Devil stops abruptly, his handsome face contorting with barely contained rage. "How DARE you presume to such magnanimity. Forgiveness that is not yours to give."',
 
   "With a violent gesture, he tears open another rift in reality. But this time, the vision shows you behind the wheel of that car on that rainy night.",
 
-  '"The soul I described," he snarls, all pretense of charm vanishing, "was YOURS."',
+  '"The soul I described was YOURS."',
 
   "The memories flood back in a torrent of guilt and horror. The drinks. The pills. The fatal decision to drive. The crash. The life you ended along with your own.",
 
   "The Devil's form grows larger, more monstrous, his skin splitting to reveal something ancient and terrible beneath. His voice becomes a cacophony of screams and whispers.",
 
-  '"SUCH NARCISSISM!" he roars, the chamber shaking with his fury. "Such ENTITLEMENT! You think you deserve paradise after what you\'ve done? You think your \'good life\' outweighs the life you STOLE?"',
+  '"SUCH NARCISSISM. Such ENTITLEMENT. You believe you deserve paradise after what you have done? Your good life serves as no counterweight to the life you STOLE?"',
 
-  'He looms over you, his shadow engulfing you completely. "You disgust me with your self-serving morality. Heaven? HEAVEN?! You won\'t see Heaven for a thousand lifetimes!"',
+  'He looms over you, his shadow engulfing you completely. "You disgust me with your self-serving morality. Heaven? HEAVEN? You will not see Heaven for a thousand lifetimes."',
 
-  "The Devil's rage suddenly cools, replaced by something more calculated and cruel. \"But I'm feeling... creative today. I can't claim your soul—your judgment prevents that—but I can ensure you remain in Limbo. Forever.\"",
+  "The Devil's rage suddenly cools, replaced by something more calculated and cruel. \"I feel creative today. Your judgment traps my claim upon your soul. Instead, I shall ensure you remain in Limbo forever.\"",
 
-  'He leans in close, his breath like the heat from an open grave. "Neither Heaven nor Hell will have you. You\'ll drift in the void between worlds, alone with your memories and guilt for eternity. Or perhaps..."',
+  'He leans in close, his breath like the heat from an open grave. "Neither Heaven nor Hell will claim you. You shall drift in the void between worlds, alone with your memories and guilt for eternity."',
 
-  'A terrible smile spreads across his face. "Perhaps reincarnation is in order. Something humbling. A dung beetle, perhaps? Or if you\'re lucky, a cute but perpetually confused puppy, doomed to chase its tail in endless circles, much like your circular, self-serving logic."',
+  'A terrible smile spreads across his face. "Perhaps reincarnation awaits you. Something humbling. A dung beetle, perhaps. Or if you are fortunate, a cute but perpetually confused puppy, doomed to chase its tail in endless circles, much like your circular, self-serving logic."',
 
-  'As the ground beneath you dissolves into mist, the Devil\'s mocking laughter follows you into the void. "Better luck next time! Do try to make better choices!"',
+  'As the ground beneath you dissolves into mist, the Devil\'s mocking laughter follows you into the void. "Better luck next time. Do try to make better choices."',
 
   "The mist envelops you completely, and you feel yourself drifting, untethered from physical form. The Devil's realm fades away, but so does any sense of direction or purpose. You are nowhere and everywhere, suspended in a gray limbo of your own making.",
 
@@ -110,7 +110,7 @@ const HEAVEN_ENDING = [
 
   "Sometimes, you feel yourself drawn toward a new beginning—the pull of reincarnation, the promise of another chance. But each time, at the threshold of rebirth, you hesitate, paralyzed by the fear of making the same mistakes again.",
 
-  "This is your purgatory—not a place of cleansing and redemption, but a state of eternal indecision and regret. Neither damned nor saved, neither punished nor forgiven. Just... forgotten.",
+  "This is your purgatory—not a place of cleansing and redemption, but a state of eternal indecision and regret. Neither damned nor saved, neither punished nor forgiven. Just forgotten.",
 
   "In rare moments of clarity, you wonder if this was the Devil's cruelest trick of all—letting you believe you could judge your own fate, only to ensure you would choose the one path that would leave you forever adrift, forever alone with the knowledge of what you've done and what you've lost.",
 
@@ -118,31 +118,31 @@ const HEAVEN_ENDING = [
 ]
 
 const NEITHER_ENDING = [
-  '"Neither?" The Devil tilts his head, studying you with newfound interest. His eyes narrow, then widen with something almost like respect. "Not Heaven, not Hell... a nuanced answer. How... unexpected."',
+  '"Neither? A choice that rejects both Heaven and Hell. A nuanced answer. How unexpected."',
 
   'He circles you slowly, tapping one long finger against his chin. "Justice tempered with mercy. Punishment without eternal condemnation. Fascinating."',
 
-  'For the first time, the Devil\'s theatrical facade seems to slip, revealing something older and more contemplative beneath. "You know," he says quietly, "I think you\'ve just solved my little riddle."',
+  'For the first time, the Devil\'s theatrical facade seems to slip, revealing something older and more contemplative beneath. "You have solved my riddle."',
 
   "With a gesture more gentle than before, he opens another rift in reality. But this time, the vision shows you behind the wheel of that car on that rainy night.",
 
-  '"The soul I described," he says, his voice now soft but clear, "was yours."',
+  '"The soul I described was yours."',
 
   "The memories return, not in a crushing wave but in a steady flow of clarity. The depression. The medication. The alcohol that promised temporary relief. The fatal decision to drive. The crash. The life you took along with your own.",
 
-  '"Your journey has ultimately served its purpose," the Devil says, his form now more contained, almost dignified. "You little, insignificant human. Are you really that attached to this life of yours?"',
+  '"Your journey served its purpose. You, insignificant human. Are you truly attached to this life?"',
 
-  'He gestures, and a path of soft light appears, cutting through the darkness toward a distant horizon. "Not Heaven—that door is closed to you now. But not Hell either. This is a wager. A bet that you can do better. Most souls lose that bet."',
+  'He gestures, and a path of soft light appears, cutting through the darkness toward a distant horizon. "Heaven closes to you now. Hell rejects you as well. This is a wager. A bet that you can do better. Most souls fail that bet."',
 
-  'The Devil approaches you, extending his hand not to grab you but in a gesture almost like... respect. "A new life awaits you. New challenges, new puzzles to solve. A chance to do better."',
+  'The Devil approaches you, extending his hand not to grab you but in a gesture almost like respect. "A new life awaits you. New challenges, new puzzles to solve. A chance to do better."',
 
   "As you step onto the path of light, the Devil's expression shifts to something unreadable—part amusement, part warning.",
 
-  '"The universe rarely offers second chances. Don\'t mess it up this time," he calls after you, his smile now all teeth. "Though we both know you will. They always do. And when you return to me and you will return—I\'ll be waiting."',
+  '"The universe rarely offers second chances. Do not waste this one. You will return to me. You always do. I shall be waiting."',
 
   "The path before you brightens, and as you walk forward, you feel the weight of your past life lifting. Not forgotten—never that—but no longer a chain binding you to eternal punishment.",
 
-  'Behind you, barely audible as the light grows stronger, you hear the Devil\'s final words: "Until we meet again... and we will meet again."',
+  'Behind you, barely audible as the light grows stronger, you hear the Devil\'s final words: "Until we meet again. We will meet again."',
 
   "The path leads you through a shimmering veil, and suddenly you're standing in a vast, misty expanse. It's neither the fiery depths of Hell nor the radiant heights of Heaven, but something in between—a realm of second chances.",
 

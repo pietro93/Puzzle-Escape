@@ -143,6 +143,9 @@ export default function GameScreen({
   const [brainDialogue, setBrainDialogue] = useState<string>("")
   const [showBrainDialogue, setShowBrainDialogue] = useState<boolean>(false)
 
+  // State for devil dialogue cycling in level 50
+  const [devilDialogueIndices, setDevilDialogueIndices] = useState<Record<number, number>>({})
+
   // New state for dim light butler dialogue popup
   const [showDimLightButlerPopup, setShowDimLightButlerPopup] = useState(false)
 
@@ -330,10 +333,175 @@ export default function GameScreen({
     }
   }
 
+  // Get devil dialogue for level 50 based on current floor and dialogue part
+  const getDevilDialogueForFloor = (floor: number, dialogueIndex: number = 0): string => {
+    const devilDialogues: Record<number, string[]> = {
+      // HOT HELLS
+      [-1]: [
+        "In this realm, death becomes meaningless.",
+        "The damned are slaughtered by my guards, only to awaken fully aware of what they have just endured.",
+        "The memory is pristine. Unbearable. And then it happens again.",
+        "Do you understand the cruelty of that? A soul cannot escape even through oblivion."
+      ],
+
+      [-2]: [
+        "My surveyors mark each victim with precision before the saws descend.",
+        "Black lines chart their division perfectly. Flesh parts from flesh with geometric accuracy.",
+        "Once severed, the pieces reassemble themselves—only to be marked anew and cut again.",
+        "I find the symmetry of this punishment particularly elegant."
+      ],
+
+      [-3]: [
+        "Two mountains serve as my instrument of compression.",
+        "They meet with inexorable force, and the damned experience the full mathematics of being crushed.",
+        "Bones become powder. Organs become paste.",
+        "When the mountains part, what remains reassembles, awaiting the next collision. I have perfected the timing of their embrace."
+      ],
+
+      [-4]: [
+        "The screaming here reaches decibel levels that would rupture mortal eardrums.",
+        "The damned cook slowly in iron cauldrons, their skin separating from muscle.",
+        "The chorus of wailing gives this realm its nature.",
+        "Imagine a scream that never diminishes, never finds release. That is what I have created here."
+      ],
+
+      [-5]: [
+        "Molten metal serves as both tomb and womb.",
+        "The damned submerge into glowing pools, dissolve, reform, and sink again in an endless tide.",
+        "The metal glows with colors that have no name.",
+        "Each reformation brings fresh sensation, fresh agony. This realm is the amplified version of my screaming hall. Everything is magnified."
+      ],
+
+      [-6]: [
+        "Iron stakes pierce through the soles of the damned and emerge from their crowns.",
+        "The heat radiates from within, cooking organs slowly and deliberately.",
+        "My attendants rotate the stakes to ensure even distribution of suffering.",
+        "I take great care with this one. Precision matters."
+      ],
+
+      [-7]: [
+        "Cauldrons the size of mountains filled with blazing fire.",
+        "The damned are thrown into this furnace where they are cooked like stew.",
+        "The bubbling is constant. The heat is tremendous.",
+        "This realm makes my other heating hell seem almost gentle by comparison."
+      ],
+
+      [-8]: [
+        "There is no respite here. Not even for a moment.",
+        "Individual cells of flame isolate each soul in solitary burning.",
+        "The fire burns so hot it appears white—it consumes yet preserves the damned for eternity.",
+        "This is uninterrupted suffering. This is my final statement on heat. Nothing lies beneath this."
+      ],
+
+      // COLD HELLS
+      [-9]: [
+        "Cold becomes a weapon more terrible than flame.",
+        "The skin of the damned erupts in blisters the size of mountains, filled with infected ice and frozen blood.",
+        "The winds howl through this barren white landscape.",
+        "This is where cold suffering begins. This is where I introduce the damned to freezing."
+      ],
+
+      [-10]: [
+        "The blisters burst. That is the defining cruelty of this realm.",
+        "The cold is so severe that the massive frozen sores split open from internal pressure.",
+        "Jagged crystals of ice tear outward from within the flesh.",
+        "The wounds refreeze immediately. This is the escalation. Everything that came before, but worse."
+      ],
+
+      [-11]: [
+        "The damned can only produce one sound here: at-at-at.",
+        "Their teeth chatter so violently that muscles tear and bones splinter.",
+        "Their bodies convulse and freeze in grotesque positions.",
+        "Imagine your own skeleton fracturing with every tremor. Imagine that never stopping."
+      ],
+
+      [-12]: [
+        "A different cry reaches this level: ha-ha-va.",
+        "Their breath freezes solid as it leaves their mouths, creating clouds of ice that hang suspended like ghosts.",
+        "The frostbite claims extremities that snap away like icicles.",
+        "Skin turns white, then blue, then black. This realm is colder than before."
+      ],
+
+      [-13]: [
+        "The bodies turn completely blue in this realm.",
+        "The sound becomes hu-hu-va—the damned try to scream but their voices freeze in their throats.",
+        "Their blood becomes ice in their veins. Crystals tear through arteries.",
+        "Joint by joint, they become immobilized by their own frozen essence."
+      ],
+
+      [-14]: [
+        "A delicate flower gives this realm its character.",
+        "The skin takes on the color of the utpala—perfect blue.",
+        "The cold reaches into the eye sockets and freezes the eyeballs solid.",
+        "The tongue becomes a rigid block of ice. The landscape fills with frozen statues, each locked in eternal agony."
+      ],
+
+      [-15]: [
+        "The skin cracks into petal-like patterns, as if blooming in slow motion.",
+        "Beautiful cracks that deepen until they reach bone.",
+        "The bone itself splits along these same lines.",
+        "The damned become flowers themselves. The realm grows quiet here. Even I appreciate the silence of such perfect suffering."
+      ],
+
+      [-16]: [
+        "This is the absolute. The coldest. The deepest. The final realm of freezing suffering.",
+        "The skin splits into enormous petal-like patterns.",
+        "Chunks of flesh fall like autumn leaves, revealing muscle and bone preserved in perfect ice.",
+        "Thought itself begins to freeze. Consciousness becomes a burden they carry for eons. This is my greatest work. Beyond this, there is only void."
+      ],
+    }
+
+    const floorDialogues = devilDialogues[floor]
+    if (!floorDialogues) return "This realm defies description. Even I find it difficult to articulate the nature of the suffering here."
+
+    return floorDialogues[dialogueIndex % floorDialogues.length] || floorDialogues[0]
+  }
+
+  // Get the number of dialogue parts for a floor
+  const getDevilDialoguePartsCount = (floor: number): number => {
+    const devilDialogues: Record<number, string[]> = {
+      [-1]: ["In this realm, death becomes meaningless.", "The damned are slaughtered by my guards, only to awaken fully aware of what they have just endured.", "The memory is pristine. Unbearable. And then it happens again.", "Do you understand the cruelty of that? A soul cannot escape even through oblivion."],
+      [-2]: ["My surveyors mark each victim with precision before the saws descend.", "Black lines chart their division perfectly. Flesh parts from flesh with geometric accuracy.", "Once severed, the pieces reassemble themselves—only to be marked anew and cut again.", "I find the symmetry of this punishment particularly elegant."],
+      [-3]: ["Two mountains serve as my instrument of compression.", "They meet with inexorable force, and the damned experience the full mathematics of being crushed.", "Bones become powder. Organs become paste.", "When the mountains part, what remains reassembles, awaiting the next collision. I have perfected the timing of their embrace."],
+      [-4]: ["The screaming here reaches decibel levels that would rupture mortal eardrums.", "The damned cook slowly in iron cauldrons, their skin separating from muscle.", "The chorus of wailing gives this realm its nature.", "Imagine a scream that never diminishes, never finds release. That is what I have created here."],
+      [-5]: ["Molten metal serves as both tomb and womb.", "The damned submerge into glowing pools, dissolve, reform, and sink again in an endless tide.", "The metal glows with colors that have no name.", "Each reformation brings fresh sensation, fresh agony. This realm is the amplified version of my screaming hall. Everything is magnified."],
+      [-6]: ["Iron stakes pierce through the soles of the damned and emerge from their crowns.", "The heat radiates from within, cooking organs slowly and deliberately.", "My attendants rotate the stakes to ensure even distribution of suffering.", "I take great care with this one. Precision matters."],
+      [-7]: ["Cauldrons the size of mountains filled with blazing fire.", "The damned are thrown into this furnace where they are cooked like stew.", "The bubbling is constant. The heat is tremendous.", "This realm makes my other heating hell seem almost gentle by comparison."],
+      [-8]: ["There is no respite here. Not even for a moment.", "Individual cells of flame isolate each soul in solitary burning.", "The fire burns so hot it appears white—it consumes yet preserves the damned for eternity.", "This is uninterrupted suffering. This is my final statement on heat. Nothing lies beneath this."],
+      [-9]: ["Cold becomes a weapon more terrible than flame.", "The skin of the damned erupts in blisters the size of mountains, filled with infected ice and frozen blood.", "The winds howl through this barren white landscape.", "This is where cold suffering begins. This is where I introduce the damned to freezing."],
+      [-10]: ["The blisters burst. That is the defining cruelty of this realm.", "The cold is so severe that the massive frozen sores split open from internal pressure.", "Jagged crystals of ice tear outward from within the flesh.", "The wounds refreeze immediately. This is the escalation. Everything that came before, but worse."],
+      [-11]: ["The damned can only produce one sound here: at-at-at.", "Their teeth chatter so violently that muscles tear and bones splinter.", "Their bodies convulse and freeze in grotesque positions.", "Imagine your own skeleton fracturing with every tremor. Imagine that never stopping."],
+      [-12]: ["A different cry reaches this level: ha-ha-va.", "Their breath freezes solid as it leaves their mouths, creating clouds of ice that hang suspended like ghosts.", "The frostbite claims extremities that snap away like icicles.", "Skin turns white, then blue, then black. This realm is colder than before."],
+      [-13]: ["The bodies turn completely blue in this realm.", "The sound becomes hu-hu-va—the damned try to scream but their voices freeze in their throats.", "Their blood becomes ice in their veins. Crystals tear through arteries.", "Joint by joint, they become immobilized by their own frozen essence."],
+      [-14]: ["A delicate flower gives this realm its character.", "The skin takes on the color of the utpala—perfect blue.", "The cold reaches into the eye sockets and freezes the eyeballs solid.", "The tongue becomes a rigid block of ice. The landscape fills with frozen statues, each locked in eternal agony."],
+      [-15]: ["The skin cracks into petal-like patterns, as if blooming in slow motion.", "Beautiful cracks that deepen until they reach bone.", "The bone itself splits along these same lines.", "The damned become flowers themselves. The realm grows quiet here. Even I appreciate the silence of such perfect suffering."],
+      [-16]: ["This is the absolute. The coldest. The deepest. The final realm of freezing suffering.", "The skin splits into enormous petal-like patterns.", "Chunks of flesh fall like autumn leaves, revealing muscle and bone preserved in perfect ice.", "Thought itself begins to freeze. Consciousness becomes a burden they carry for eons. This is my greatest work. Beyond this, there is only void."],
+    }
+
+    return devilDialogues[floor]?.length || 4
+  }
+
   // Update the handleGuardClick function to properly handle sphinx click for level 38 and 40
   const handleGuardClick = () => {
+    // Special handling for level 50 (devil interaction after accessing hell rooms)
+    if (level === 50 && hasUsedElevator && currentElevatorFloor !== 0) {
+      // Get current dialogue index for this floor, default to 0
+      const currentIndex = devilDialogueIndices[currentElevatorFloor] || 0
+
+      // Get the dialogue for current index
+      const devilDialogue = getDevilDialogueForFloor(currentElevatorFloor, currentIndex)
+
+      // Update the index for next click (cycle through the parts)
+      setDevilDialogueIndices(prev => ({
+        ...prev,
+        [currentElevatorFloor]: (currentIndex + 1) % getDevilDialoguePartsCount(currentElevatorFloor)
+      }))
+
+      setCharacterDialogue(devilDialogue)
+      setShowCharacterDialogue(true)
+    }
     // Special handling for level 38 (sphinx riddle)
-    if (level === 38) {
+    else if (level === 38) {
       // For level 38, we use the specific sphinxRiddle
       setCharacterDialogue(sphinxRiddle)
       setShowCharacterDialogue(true)

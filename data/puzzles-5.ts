@@ -24,7 +24,7 @@ export const puzzlesSet5: Puzzle[] = [
     question: "The Devil challenges you to a game of infernal chess.",
     description: "",
     imageUrl: "",
-    solution: "arena of the anointed",
+    solution: "arena of anointed",
     category: "logic",
     isInfernalChessPuzzle: true,
     hints: [
@@ -35,17 +35,18 @@ export const puzzlesSet5: Puzzle[] = [
     ],
   },
   {
-    level: 43,
-    question: "The Devil shows you an ancient parchment covered in Latin text.",
-    description: "", // Empty description since we're using an image
-    imageUrl: "/images/latinmathpuzzle.webp",
-    solution: "23",
-    category: "math",
-    hints: [
-      "The Latin words represent religious concepts with associated numbers.",
-      "Mathematical operations are hidden within the text.",
-      "Look for patterns in Christian numerology: Satan (666), Apostles (12), Cross (4), etc.",
-      "Latin words like 'mors' (death) and 'crux' (cross) represent mathematical operations.",
+  level: 43,
+  question: "The Devil presents you with five mysterious chests. You can hear screaming inside.",
+  description: "", 
+  imageUrl: "",
+  solution: "23",
+  category: "math",
+  isDamnedSoulsPuzzle: true,
+  hints: [
+  "The Latin words represent religious concepts with associated numbers.",
+  "Mathematical operations are hidden within the text.",
+  "Look for patterns in Christian numerology: Satan (666), Apostles (12), Cross (4), etc.",
+    "Latin words like 'mors' (death) and 'crux' (cross) represent mathematical operations.",
     ],
   },
   // Remaining levels unchanged

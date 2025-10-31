@@ -11,6 +11,7 @@ type Tile = {
   targetFor?: HorsemanType
   startFor?: HorsemanType
   background: string
+  imageNum: number
 }
 type Horseman = {
   type: HorsemanType
@@ -157,7 +158,8 @@ export default function InfernalChessPuzzle() {
           .map((_, col) => ({
             visible: true,
             background:
-              (row + col) % 2 === 0 ? "bg-gray-800" : "bg-gray-700",
+              (row + col) % 2 === 0 ? "bg-gray-700" : "bg-gray-400",
+            imageNum: Math.floor(Math.random() * 6) + 1,
           })),
       )
 
@@ -617,7 +619,7 @@ export default function InfernalChessPuzzle() {
               )
               const isErr = showError?.row === rIdx && showError?.col === cIdx
               const isCorner = (rIdx === 0 && cIdx === 0) || (rIdx === 0 && cIdx === 4) || (rIdx === 4 && cIdx === 0) || (rIdx === 4 && cIdx === 4)
-              
+
               // Determine corner glow color
               let cornerColor = ""
               if (isCorner) {
@@ -626,7 +628,7 @@ export default function InfernalChessPuzzle() {
                 else if (rIdx === 4 && cIdx === 0) cornerColor = "text-red-500"
                 else if (rIdx === 4 && cIdx === 4) cornerColor = "text-black"
               }
-              
+
               // Get touched tile data
               const tileKey = `${rIdx},${cIdx}`
               const touchedTileData = touchedTiles.find(t => t.key === tileKey)
@@ -641,8 +643,8 @@ export default function InfernalChessPuzzle() {
                     relative aspect-square flex items-center justify-center
                     ${tile.background}
                     ${isCorner ? `corner-glow ${cornerColor}` : ""}
-                    ${!isComplete && isSelected ? "ring-2 ring-yellow-400 z-2" : ""}
-                    ${!isComplete && isValid ? "ring-2 ring-yellow-300 cursor-pointer hover:bg-yellow-800/50" : ""}
+                    ${!isComplete && isSelected ? "ring-2 ring-white-400 z-2" : ""}
+                    ${!isComplete && isValid ? "ring-2 ring-white-300 cursor-pointer hover:bg-yellow-800/50" : ""}
                     ${!isComplete && isErr ? "ring-2 ring-red-500 animate-pulse" : ""}
                     transition-all duration-200
                   `}
@@ -651,8 +653,12 @@ export default function InfernalChessPuzzle() {
                     boxShadow: `inset 0 0 ${12 * touchOpacity}px ${6 * touchOpacity}px ${HORSEMAN_GLOW_COLORS[touchedTileData.horseman]}`,
                   } : undefined}
                 >
+                  <div
+                    className="absolute inset-0 opacity-55 pointer-events-none"
+                    style={{ backgroundImage: `url("/images/chess-tile-${tile.imageNum}.webp")`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}
+                  ></div>
                   {isComplete && TILE_LETTERS[`${rIdx},${cIdx}`] && (
-                    <span className="absolute text-4xl md:text-5xl font-pixel text-yellow-300/90 select-none pointer-events-none">
+                    <span className="opacity-70 absolute text-4xl md:text-5xl font-pixel text-white-300/90 select-none pointer-events-none">
                       {TILE_LETTERS[`${rIdx},${cIdx}`]}
                     </span>
                   )}

@@ -372,7 +372,7 @@ export default function ElevatorPanel({
         </div>
         {/* Footer */}
         <div className="bg-gray-900 p-3 border-t border-gray-800">
-          <p className="text-xs text-gray-400 text-center">{/* Removed text as requested */}</p>
+          <p className="text-xs text-gray-400 text-center">{}</p>
         </div>
       </div>
     </div>

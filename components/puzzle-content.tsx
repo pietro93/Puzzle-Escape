@@ -34,6 +34,7 @@ import GoldenScarabPuzzle from "./golden-scarab-puzzle"
 import PyramidOfHanoiPuzzle from "./pyramid-of-hanoi-puzzle"
 import MagicBoxPuzzle from "./magic-box-puzzle"
 import InfernalChessPuzzle from "./infernal-chess-puzzle"
+import DamnedSoulsPuzzle from "./damned-souls-puzzle"
 import PrisonCellPuzzle from "./prison-cell-puzzle"
 
 interface PuzzleContentProps {
@@ -244,6 +245,8 @@ export default function PuzzleContent({
       ) : null}
 
       {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle />}
+
+      {puzzle.isDamnedSoulsPuzzle && <DamnedSoulsPuzzle />}
 
       {isCrystalJigsawPuzzle ? (
         <div className="my-4">

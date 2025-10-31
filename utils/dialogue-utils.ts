@@ -355,67 +355,78 @@ butler: {
     ],
   },
   devil: {
-    41: [
-      "Geography is different in hell. Places bleed into one another.",
-      "Some locations on Earth mirror my domain perfectly.",
-      "Humans named this place well. Their fear amuses me.",
-      "Fire above ground is nothing compared to what burns below.",
-    ],
-    42: [
-      "Chess was invented in my domain, did you know?",
-      "Kings and pawns end up in the same place eventually.",
-      "Strategy is pointless when the game is rigged from the start.",
-      "I've played this game for millennia. Never lost.",
-    ],
-    43: [
-      "Numbers have meaning beyond your mortal understanding.",
-      "These souls counted their sins differently than I did.",
-      "Patterns exist even in chaos. Especially in chaos.",
-      "Count carefully. Your soul may depend on it.",
-    ],
-    44: [
-      "This vessel carries souls across the burning sea.",
-      "Many artists have glimpsed my domain in their nightmares.",
-      "Bosch came closest to capturing the true essence of hell.",
-      "Fragments of horror, when assembled, become unbearable.",
-    ],
-    45: [
-      "Your companions from previous realms have all found their way to me.",
-      "Trust is a luxury you cannot afford in my domain.",
-      "Everyone lies in hell. Even me. Especially me.",
-      "Literature is full of lost souls. Some more lost than others.",
-    ],
-    46: [
-      "Gambling with me always ends the same way.",
-      "The house always wins. And I own the house.",
-      "Luck is an illusion I allow humans to believe in.",
-      "Roll the dice. Spin the wheel. The outcome was decided eons ago.",
-    ],
-    47: [
-      "This poor soul was a brilliant scientist in life.",
-      "Their mind now serves a greater purpose in my collection.",
-      "Pain focuses the intellect wonderfully, don't you think?",
-      "Binary is the language of modern souls. On or off. Pain or agony.",
-    ],
-    48: [
-      "The Mouth of Truth bites liars and devours souls.",
-      "Ancient Romans barely glimpsed the true power of this artifact.",
-      "Place your hand inside if you're feeling particularly brave.",
-      "Truth in hell is more painful than any lie on Earth.",
-    ],
-    49: [
-      "Murder is such a human concept. I prefer 'soul acquisition.'",
-      "This little game is based on a true story. Several, actually.",
-      "Detectives in hell solve cases for eternity, never finding peace.",
-      "The victim deserved worse than death. The killer deserved better.",
-    ],
-    50: [
-      "We've reached the end of our little game.",
-      "Fifty levels of torment, and still you persist.",
-      "Freedom is an illusion I allow you to believe in.",
-      "Perhaps I'll let you go. Perhaps I already have.",
-    ],
-  },
+  41: [
+    "Maps are just stories people tell themselves about territory they don't own.",
+    "All roads lead to Rome. Or, well... to here in hell, with me. Ha!",
+    "Geography is just politics with better maps.",
+    "Maps are so futile, every lost soul ends up here eventually."
+  ],
+
+  42: [
+    "I've played this game longer than your civilization has existed.",
+    "The Horsemen are such reliable employees. Pestilence always clears the board for War.",
+    "Twenty moves to orchestrate the apocalypse. I could do it in one, but I appreciate the theater.",
+    "I choreographed the apocalypse itself; your moves are merely a curtain call."
+  ],
+
+  43: [
+    "Theology and mathematics—both systems designed by people who needed meaning.",
+    "Mathematics is the art of pretending to understand the world around you.",
+    "Your scriptures speak of divine judgment? How well do you know your Bible?",
+    "Feeling sorry for them? These were horrible humans or they would have not ended up here.",
+    "What? Did you think being in the Church grants you access to heaven? Ha! These souls belong to me."
+  ],
+
+  44: [
+    "Many artists have glimpsed my domain in their nightmares.",
+    "Painters throughout history have tried to warn you. Their visions were accurate, if anything, understated.",
+    "Horror and beauty dance together in the best nightmares. I'm quite the artist myself.",
+    "Madness is just clarity with better lighting. Artists understand this.",
+    "Some souls see my realm in fever dreams and spend their lives trying to paint it. They never quite capture the smell."
+  ],
+
+  45: [
+    "You seek a single soul among millions? Like hunting for needles in a haystack.",
+    "Consult the Skeleton Guard if you wish. That rattling fool with his bone-dry wit thinks himself clever, but his humor is as blunt as his femur clubs.",
+    "Consult the butler if you wish. His mask of civility is a charming performance, what a caricature.",
+    "You seek truth from a chorus of fools and frauds. That Romani woman's magic is nothing but charming folk nonsense.",
+    "The Sphinx and I are kin of a sort—ancient arbiters of judgment. Though I suspect she'd find my methods lacking in subtlety.",
+  ],
+
+  46: [
+    "Don't you love casinos? The only house where the odds are always in my favor.",
+    "The house never loses. The house is me. And I never lose.",
+    "Luck is what people call it when they don't understand probability.",
+    "Fear and Loathing, always."
+  ],
+
+  47: [
+    "Sharp minds make interesting subjects. And they save me a fortune on electricity bills.",
+    "The smarter they are, the louder they scream when I play with their brains.",
+    "I am quite proud of this machine of mine.",
+    "I believe this lost soul just had a BRILLIANT idea!"
+  ],
+
+  48: [
+    "Truth has teeth. The Romans learned that slowly.",
+    "This is the Mouth of Truth. Place your hand inside if you're feeling particularly brave.",
+    "Honesty won't get you far in hell. Everyone lies here. Even me... well, ESPECIALLY me. He he.",
+    "Losing your marbles on this one?"
+  ],
+
+  49: [
+    "A murder mystery! How delightful. I do love a good whodunit. Especially when I did it.",
+    "The Butler did it, of course.",
+    "I always seek out creative murders when I am bored.",
+    "Thought you might enjoy a little game of Clue before the end of your journey."
+  ],
+
+  50: [
+    "We've reached the end of our little game. Feeling nostalgic already.",
+    "You made it this far. That says something about you: you are not a quitter. You must really like suffering.",
+    "Welcome to MY realm..."
+  ]
+},
   brain: {
     47: [
       "Please... make it stop...",

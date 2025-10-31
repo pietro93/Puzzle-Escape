@@ -164,7 +164,6 @@ export default function FinalLevelPuzzle({
   const [hasUsedElevator, setHasUsedElevator] = useState(false)
   const [encodedSolution, setEncodedSolution] = useState<string[]>([])
   const [solution, setSolution] = useState<string>("")
-  const [hellDescriptions, setHellDescriptions] = useState<Record<number, string>>({})
 
   // Sync with the currentFloor prop if provided
   useEffect(() => {
@@ -215,46 +214,11 @@ export default function FinalLevelPuzzle({
       const encoded = encodeString(randomSolution)
       if (encoded) {
         setEncodedSolution(encoded)
-
-        // Initialize hell descriptions
-        initializeHellDescriptions()
       }
     }
   }, [hasUsedElevator, encodedSolution.length])
 
-  // Initialize descriptions for each hell
-  const initializeHellDescriptions = () => {
-    const descriptions: Record<number, string> = {
-      // Hot hells
-      [-1]: "In this realm, the damned are repeatedly killed and revived, only to be killed again. The cycle of death and rebirth is endless, each revival bringing with it the full memory of previous torments. Guards with animal heads wield weapons of flame, hunting down souls who futilely attempt to hide or escape.",
-      [-2]: "Here, the damned are marked with black lines by demonic surveyors. Massive saws and blades follow these lines precisely, dismembering the victims along the markings. Once cut apart, the pieces reassemble, only for the process to begin anew. The ground runs black with ink and blood.",
-      [-3]: "Mountains of iron crash together like cymbals, with the damned caught between them. The sound of bones being pulverized echoes throughout this cavernous realm. When the mountains part, the flattened souls reform, only to be crushed again when the cycle repeats.",
-      [-4]: "The screams here are so loud they would shatter mortal eardrums. Souls burn in massive iron cauldrons, their skin blistering and peeling away. The air is thick with the stench of burning flesh and the sound of desperate wailing that gives this hell its name.",
-      [-5]: "A place of great screaming, where souls are submerged in vats of molten metal. Their bodies melt and reform continuously, each cycle bringing fresh agony. The metal glows with an unnatural light, illuminating the twisted faces of the damned as they howl in torment.",
-      [-6]: "Souls here are impaled on red-hot iron stakes that enter through the feet and emerge from the crown of the head. The heat is so intense that the victims glow from within, their organs cooking slowly. Demonic attendants rotate the stakes to ensure even heating.",
-      [-7]: "The great heating hell, where souls are packed into immense iron cauldrons the size of mountains. The metal is heated until it glows white, and the damned within are cooked like so much stew. The bubbling of boiling blood and liquefied fat creates a horrific symphony.",
-      [-8]: "The lowest and most terrible of the hot hells. Here, there is no respite, not even for a moment - hence its name, 'without interruption.' Souls burn in individual cells of fire, isolated and alone. The flames are so hot they appear almost white, consuming everything yet preserving the damned for eternal suffering.",
 
-      // Cold hells
-      [-9]: "The first of the cold hells, where the temperature drops so low that the skin of the damned erupts in painful blisters. These blisters grow to enormous size, filled with frozen pus and blood. The landscape is barren and white, with howling winds that cut like knives.",
-      [-10]:
-        "Colder still than Arbuda, here the massive blisters that cover the damned burst open from the intense cold. The wounds immediately freeze over, creating jagged crystals of ice that tear at the flesh from within. The ground is littered with frozen fragments of skin and fluid.",
-      [-11]:
-        "In this realm of intense cold, the damned can only utter 'at-at-at' as their teeth chatter uncontrollably. Their bodies shake so violently that muscles tear and bones fracture, only to freeze solid in grotesque positions. The sound of chattering teeth creates a constant background noise.",
-      [-12]:
-        "The cold is so severe here that victims can only cry 'ha-ha-va' in their agony. Their breath freezes solid as it leaves their mouths, creating clouds of ice crystals that hang in the air. Skin turns blue then black as frostbite claims extremities, which snap off like icicles.",
-      [-13]:
-        "Souls here can only utter 'hu-hu-va' as their bodies turn completely blue from the cold. Their blood freezes in their veins, causing excruciating pain as the ice crystals tear through capillaries and arteries. Movement becomes impossible as joints freeze solid.",
-      [-14]:
-        "Named for the blue lotus, in this hell the skin of the damned turns as blue as the utpala flower. The cold is so intense that the eyeballs freeze solid in their sockets, and the tongue becomes a rigid block of ice. The landscape is dotted with frozen figures, their faces locked in expressions of agony.",
-      [-15]:
-        "In this penultimate cold hell, the skin cracks open in patterns resembling lotus flowers, with blood freezing as it seeps from the wounds. These cracks deepen until they reach bone, which also begins to split. The entire realm is silent except for the occasional sound of breaking bone.",
-      [-16]:
-        "The coldest and most terrible of all the cold hells. Here, the skin splits completely into great lotus-like patterns, with entire chunks of flesh falling away to reveal frozen muscle and bone beneath. The cold is so absolute that even thought itself begins to freeze, leaving victims in a state of semi-conscious agony for eons.",
-    }
-
-    setHellDescriptions(descriptions)
-  }
 
   // Handle puzzle completion
   const handlePuzzleComplete = () => {
@@ -350,13 +314,7 @@ export default function FinalLevelPuzzle({
     return messages[Math.floor(Math.random() * messages.length)]
   }
 
-  // Get the description for the current floor
-  const getHellDescription = (floor: number) => {
-    return (
-      hellDescriptions[floor] ||
-      "This realm defies description. Even the Devil finds it difficult to articulate the nature of the suffering here."
-    )
-  }
+
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -405,16 +363,15 @@ export default function FinalLevelPuzzle({
         <>
           <h3 className="text-center text-red-300 font-pixel mb-4">{getRandomElevatorMessage()}</h3>
 
-          <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{getHellDescription(currentFloor)}</p>
-
+          {/* Hell image */}
           <div className="flex justify-center mb-4">
-            <Image
-              src={getHellImage(currentFloor) || "/placeholder.svg"}
-              alt="Hell realm"
-              width={400}
-              height={400}
-              className="w-full h-auto rounded-lg border-2 border-gray-800"
-            />
+          <Image
+          src={getHellImage(currentFloor) || "/placeholder.svg"}
+          alt="Hell realm"
+          width={400}
+          height={400}
+          className="w-full h-auto rounded-lg border-2 border-gray-800"
+          />
           </div>
 
           {/* Encoded solution string */}

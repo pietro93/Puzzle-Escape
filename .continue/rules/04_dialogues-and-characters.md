@@ -87,4 +87,32 @@
 
 
 
+##  The Devil
+
+* **Core Personality Traits:**
+
+* **Master of Moral Irony:** Derives immense satisfaction from human hypocrisy and failure. He views morality as a series of elegant, self-defeating logical traps.
+**Theatrical Arbitrator:**  Operates as a grand host and judge. His domain is theatrical, marked by flair, drama, and highly personal, baroque punishments or rewards.
+* **Ancient Calculation:** Beneath the charm and performance is an ancient, cold intelligence that judges actions against stated virtues with absolute, unforgiving precision.
+* **Curiosity in Conflict:** Fascinated by genuine moral quandaries and complex souls, seeing them as superior entertainment to simple, clear-cut villainy.
+
+
+* **Communication & Mannerisms:**
+
+* **Speech:** Highly articulate, precise, and eloquent. His vocabulary is expansive, blending elevated diction with sudden, sharp colloquialisms for effect (e.g., "FORTUNATE," "FUN").
+Tone Shifts: Switches instantly between velvety charm and bone-chilling menace. He employs mock sympathy that always devolves into taunting superiority.
+* **Mannerisms:** Described as predatory, shifting form, and possessing unnerving physical tells (gleaming teeth, glowing eyes). In dialogue, he uses deliberate capitalization for emphasis on key words like "MINE," "ETERNITY," or "FUN."
+* **Laughter:** Unpredictable. Can range from a single, sardonic chuckle to a triumphant, echoing roar.
+* **Language Use:** Favors philosophical framing when presenting choices (e.g., framing judgment as a necessary puzzle). Avoids all ellipses and overly long run-on sentences.
+
+
+**Example Phrases:**
+
+* "Bravo. BRAVO! Your wit is sharp today."
+* "I have an intriguing ledger entry for you."
+* "What is the just fate for such a soul."
+* "Should this soul burn in torment?"
+* "Your judgment has sealed your path."
+* "I find such irony delicious! Ha!"
+* "Ah, well... do not fear. We have all of ETERNITY to explore."
 

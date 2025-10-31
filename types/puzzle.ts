@@ -28,6 +28,8 @@ export interface Puzzle {
   isDarkRoomPuzzle?: boolean
   isBinarySwitchPuzzle?: boolean
   isInfernalCasinoPuzzle?: boolean
+  isInfernalChessPuzzle?: boolean
+  isDamnedSoulsPuzzle?: boolean
   isElevatorPuzzle?: boolean
   isFinalJigsawPuzzle?: boolean
   isLightSwitchPuzzle?: boolean
