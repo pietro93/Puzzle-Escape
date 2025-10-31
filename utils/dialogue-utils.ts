@@ -427,20 +427,7 @@ butler: {
     "Welcome to MY realm..."
   ]
 },
-  brain: {
-    47: [
-      "Please... make it stop...",
-      "The pain... unbearable...",
-      "Help... me...",
-      "Can't... think... clearly...",
-      "Too many... connections...",
-      "Memories... fading...",
-      "Who... am I?",
-      "Was once... human...",
-      "They... took my body...",
-      "Just want... to die...",
-    ],
-  },
+
 }
 
 // Store the last shown dialogue index for each character and level
