@@ -1,3 +1,9 @@
+interface Inmate {
+  name: string
+  image: string
+  statements: { text: string }[]
+}
+
 export interface Puzzle {
   level: number
   question: string
@@ -39,4 +45,11 @@ export interface Puzzle {
   isFireMapPuzzle?: boolean
   isMagicBoxPuzzle?: boolean
   isPrisonCellPuzzle?: boolean
+  isBoneCountingPuzzle?: boolean
+  isInteractiveInmates?: boolean
+  inmateData?: Inmate[]
+  guardStatement?: string
+  isMurderMysteryPuzzle?: boolean
+  isColorPalettePuzzle?: boolean
+  libraryData?: any
 }

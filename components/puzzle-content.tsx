@@ -36,6 +36,7 @@ import MagicBoxPuzzle from "./magic-box-puzzle"
 import InfernalChessPuzzle from "./infernal-chess-puzzle"
 import DamnedSoulsPuzzle from "./damned-souls-puzzle"
 import PrisonCellPuzzle from "./prison-cell-puzzle"
+import BoneCountingPuzzle from "./bone-counting-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -159,7 +160,10 @@ export default function PuzzleContent({
   const isMagicBoxPuzzle = puzzle.isMagicBoxPuzzle
 
    // Check if this is a prison cell puzzle
-  const isPrisonCellPuzzle = puzzle.isPrisonCellPuzzle
+   const isPrisonCellPuzzle = puzzle.isPrisonCellPuzzle
+
+   // Check if this is a bone counting puzzle
+   const isBoneCountingPuzzle = puzzle.isBoneCountingPuzzle
 
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
 
@@ -215,16 +219,21 @@ export default function PuzzleContent({
       </div>
 
       {isPrisonCellPuzzle ? (
+      <div className="my-4">
+      <PrisonCellPuzzle
+      puzzle={puzzle}
+      onSolve={() => {}}
+      />
+      </div>
+      ) : null}
+
+       {isBoneCountingPuzzle ? (
         <div className="my-4">
-          <PrisonCellPuzzle
-            puzzle={puzzle}
-           onSolve={() => {}}
-          />
-        </div>
+           <BoneCountingPuzzle onSolve={() => {}} />
+         </div>
        ) : null}
 
-
-      {isMagicBoxPuzzle ? (
+       {isMagicBoxPuzzle ? (
         <div className="my-4">
           <MagicBoxPuzzle
             onSolve={() => {

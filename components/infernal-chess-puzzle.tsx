@@ -63,6 +63,14 @@ const HORSEMAN_COLORS: Record<HorsemanType, string> = {
   famine: "#a855f7",
 }
 
+// Text colors for horseman messages
+const HORSEMAN_TEXT_COLORS: Record<HorsemanType, string> = {
+  death: "#878787", // dark grey
+  pestilence: "#22c55e", // green
+  war: "#ef4444", // red
+  famine: "#a855f7", // purple
+}
+
 const HORSEMAN_GLOW_COLORS: Record<HorsemanType, string> = {
   death: "rgba(0, 0, 0, 0.9)",
   pestilence: "rgba(34, 197, 94, 0.9)",
@@ -258,6 +266,7 @@ export default function InfernalChessPuzzle() {
     war: false,
     famine: false,
   })
+  const [tempMessageHorseman, setTempMessageHorseman] = useState<HorsemanType | null>(null)
   const [trailParticles, setTrailParticles] = useState<TrailParticle[]>([])
   const [touchedTiles, setTouchedTiles] = useState<TouchedTile[]>([])
 
@@ -334,6 +343,9 @@ export default function InfernalChessPuzzle() {
   // Selection handlers
   const handleHorsemanSelect = (type: HorsemanType) => {
     if (isComplete) return
+    // Clear temporary message when selecting any horseman
+    setTempMessageHorseman(null)
+
     if (selectedHorseman === type) {
       setSelectedHorseman(null)
       setValidMoves([])
@@ -360,6 +372,9 @@ export default function InfernalChessPuzzle() {
       return
     }
     if (selectedHorseman) {
+      // Clear any temporary message when making a move attempt
+      setTempMessageHorseman(null)
+
       const isValidMove = validMoves.some(
         m => m.row === row && m.col === col,
       )
@@ -373,9 +388,15 @@ export default function InfernalChessPuzzle() {
         setMoveCount(v => v + 1)
         setSelectedHorseman(null)
         setValidMoves([])
-        
+
         // Mark tile as touched
         markTileTouched(row, col, selectedHorseman)
+
+        // Check if horseman reached target - show temporary message
+        const movedHorseman = horsemen.find(h => h.type === selectedHorseman)
+        if (movedHorseman && row === movedHorseman.targetPosition.row && col === movedHorseman.targetPosition.col) {
+          setTempMessageHorseman(selectedHorseman)
+        }
       } else {
         setShowError({ row, col })
         setTimeout(() => setShowError(null), 500)
@@ -741,10 +762,28 @@ export default function InfernalChessPuzzle() {
         })}
       </div>
 
+      {/* Temporary single horseman message */}
+      {tempMessageHorseman && !isComplete && (
+        <div className="mt-4 w-full max-w-lg">
+          <div className="bg-gray-900/80 border border-gray-700 rounded-lg p-3 text-sm font-pixel">
+            <p
+              className="mayhem-fade mb-1"
+              style={{
+                color: HORSEMAN_TEXT_COLORS[tempMessageHorseman],
+                textShadow: `0 0 8px ${HORSEMAN_COLORS[tempMessageHorseman]}, 0 0 16px ${HORSEMAN_COLORS[tempMessageHorseman]}
+                ,0 0 10px ${HORSEMAN_COLORS[tempMessageHorseman]}`
+              }}
+            >
+              {horsemen.find(h => h.type === tempMessageHorseman)?.mayhemText}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Mayhem texts (ordered Death, Pestilence, War, Famine) */}
       {isComplete && (
         <div className="mt-4 w-full max-w-lg">
-          <div className="bg-red-900/50 border border-red-800 rounded-lg p-3 text-sm font-pixel text-red-200">
+          <div className="bg-gray-900/80 border border-gray-700 rounded-lg p-3 text-sm font-pixel">
             {HORSEMAN_ORDER.map(type => {
               const h = horsemen.find(h => h.type === type)!
               const visible = started[type] || false
@@ -752,7 +791,12 @@ export default function InfernalChessPuzzle() {
                 <p
                   key={type}
                   className={`${visible ? "mayhem-fade" : "opacity-0"} mb-1`}
-                  style={{ transition: "opacity 950ms ease" }}
+                  style={{
+                    transition: "opacity 950ms ease",
+                    color: HORSEMAN_TEXT_COLORS[type],
+                    textShadow: `0 0 8px ${HORSEMAN_COLORS[type]}, 0 0 16px ${HORSEMAN_COLORS[type]}
+                    ,0 0 10px ${HORSEMAN_COLORS[type]}`
+                  }}
                 >
                   {h?.mayhemText}
                 </p>

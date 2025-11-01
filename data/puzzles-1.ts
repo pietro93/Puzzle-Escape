@@ -19,17 +19,17 @@ export const puzzlesSet1: Puzzle[] = [
     ],
   },
   {
-    level: 2,
-    question: "Fine, let's see if you figure out what to do next. Tsk.",
-    description: "",
-    imageUrl: "/images/level2.webp",
-    solution: "14123",
-    category: "pattern",
-    hints: [
-      "Why are the skulls and bones blue, green, white and red?",
-      "Try counting each set of colored bones.",
-      "Combine the number of bones for each color to the matching skull. E.g. Blue=1. The final solution is a number.",
-    ],
+  level: 2,
+  question: "Fine, let's see if you figure out what to do next. Tsk.",
+  description: "",
+  solution: "10 5 13 7|105137",
+  category: "pattern",
+  isBoneCountingPuzzle: true,
+  hints: [
+  "Why are the skulls and bones arranged in different colors?",
+  "Try counting each set of colored bones.",
+  "Combine the number of bones for each color to the matching skull. The skulls are in order: purple, orange, white, black. The final solution is four numbers separated by spaces.",
+  ],
   },
   {
     level: 3,
