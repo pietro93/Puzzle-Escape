@@ -95,12 +95,11 @@ skeleton: {
     ],
 
     7: [
-      "Hehe. I watched a man change life to death in only two steps.",
+      "Hehe. I can make you change LIFE to DEATH in only two steps.",
       "Your logic has more gaps than my ribcage.",
-      "Change hope to nope in one move. Congrats, you’re doomed.",
-      "Word games are for children. Thought you might enjoy this one.",
+      "Change HOPE to NOPE in one move. Congrats, you’re doomed.",
       "HATE becomes FATE becomes... whatever",
-      "Mphf. Word games are for children and fools. Thought you might like this."
+      "Mphf. Word games are for children and fools. Thought you might like this one."
     ],
 
     8: [

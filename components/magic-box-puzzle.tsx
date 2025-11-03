@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 
 interface MagicBoxPuzzleProps {
   onSolve: () => void
+  onSolved?: () => void
 }
 
 // Define a type for bone items with image path and value
@@ -16,62 +17,53 @@ interface BoneItem {
   imagePath: string
 }
 
-export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
+export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProps) {
   // Available bone images with their corresponding values
   const availableBones: BoneItem[] = [
     {
       id: 1,
       value: 1,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-1-FFNSjxKUKDdcwSV9i481pzaWusPRmz.webp",
+      imagePath: "/images/magicbox-1.webp",
     },
     {
       id: 2,
       value: 2,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-2-37qA48eH6bFEG8CM5yU8DGALHftwLZ.webp",
+      imagePath: "/images/magicbox-2.webp",
     },
     {
       id: 3,
       value: 2,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-2-2-SeuBeYE5RuSXxpigsJxFBjvPMx50Mj.webp",
+      imagePath: "/images/magicbox-2-2.webp",
     },
     {
       id: 4,
       value: 3,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp",
+      imagePath: "/images/magicbox-3.webp",
     },
     {
       id: 5,
       value: 3,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp",
+      imagePath: "/images/magicbox-3.webp",
     },
     {
       id: 6,
       value: 3,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-3-CTY5ahQWqrVfO9IHmkrr2E374YWCiG.webp",
+      imagePath: "/images/magicbox-3.webp",
     },
     {
       id: 7,
       value: 4,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-4-cwOUlxNvomZPV4Of21uutUd7SpfjDE.webp",
+      imagePath: "/images/magicbox-4.webp",
     },
     {
       id: 8,
       value: 4,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-4-2-cUnYt0IN8klOreHWDRcHFqAoVgRpjl.webp",
+      imagePath: "/images/magicbox-4-2.webp",
     },
     {
       id: 9,
       value: 5,
-      imagePath:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-5-2WND6ruWesJglRuseszC8kyI33RnAU.webp",
+      imagePath: "/images/magicbox-5.webp",
     },
   ]
 
@@ -94,6 +86,19 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   useEffect(() => {
     const shuffled = [...availableBones].sort(() => Math.random() - 0.5)
     setRemainingBones(shuffled)
+  }, [])
+
+  // Preload rebus images to prevent flickering
+  useEffect(() => {
+    const rebusImages = [
+      "/images/magicbox-blood.webp",
+      "/images/magicbox-shot.webp",
+      "/images/magicbox-ice.webp"
+    ]
+    rebusImages.forEach(src => {
+      const img = new Image()
+      img.src = src
+    })
   }, [])
 
   // Calculate sums for rows, columns, and diagonals
@@ -204,11 +209,11 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
   const getImageForPosition = (index: number) => {
     const position = flippedCells.indexOf(index)
     if (position === 0)
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-blood-tulR8tSVNOBVR4aAU3oOxlymQ8DGmp.webp" // Blood
+      return "/images/magicbox-blood.webp" // Blood
     if (position === 1)
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-shot-6JKmzjGfEG8FuuGEYA7bNoc8ucJOQy.webp" // Shot
+      return "/images/magicbox-shot.webp" // Shot
     if (position === 2)
-      return "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/magicbox-ice-U1CMGC7u1qxCSOtIQMB2XGqwukCwZc.webp" // Ice
+      return "/images/magicbox-ice.webp" // Ice
     return ""
   }
 
@@ -244,6 +249,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
         // Found three 3s in a line
         setIsSolved(true)
         onSolve()
+        onSolved?.()
 
         // Flip cells one by one
         setTimeout(() => {
@@ -266,6 +272,7 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
     if (grid[3]?.value === 3 && grid[4]?.value === 3 && grid[5]?.value === 3) {
       setIsSolved(true)
       onSolve()
+      onSolved?.()
 
       // Flip cells one by one
       setTimeout(() => {
@@ -303,14 +310,15 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
             <img
-              src={bone.imagePath || "/placeholder.svg"}
-              alt={`Bone value ${bone.value}`}
-              className="w-full h-full object-contain"
-              onError={(e) => {
-                console.error("Failed to load image:", bone.imagePath)
-                ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+            key={`bone-${bone.id}`}
+            src={bone.imagePath || "/placeholder.svg"}
+            alt={`Bone value ${bone.value}`}
+            className="w-full h-full object-contain"
+            onError={(e) => {
+            console.error("Failed to load image:", bone.imagePath)
+              ;(e.target as HTMLImageElement).src = "/placeholder.svg"
               }}
-            />
+                    />
           </motion.div>
         ))}
       </div>
@@ -382,34 +390,39 @@ export default function MagicBoxPuzzle({ onSolve }: MagicBoxPuzzleProps) {
             >
               {flippedCells.includes(index) ? (
                 <div className="w-full h-full flex items-center justify-center bg-white">
-                  <img
-                    src={getImageForPosition(index) || "/placeholder.svg"}
-                    alt=""
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      console.error("Failed to load image:", getImageForPosition(index))
-                      ;(e.target as HTMLImageElement).src = "/placeholder.svg"
-                    }}
+                <img
+                key={`rebus-${index}`}
+                src={getImageForPosition(index) || "/placeholder.svg"}
+                alt=""
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                console.error("Failed to load image:", getImageForPosition(index))
+                ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+                  }}
                   />
                 </div>
               ) : (
                 bone !== null && (
-                  <div
+                  <motion.div
                     className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
                     draggable={!isSolved && bone !== null}
                     onDragStart={(e) => bone !== null && handleDragStart(e, bone, true, index)}
+                  initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
                     <img
+                      key={`bone-${bone.id}`}
                       src={bone.imagePath || "/placeholder.svg"}
                       alt={`Bone value ${bone.value}`}
                       className="w-full h-full object-contain"
                       onError={(e) => {
-                        console.error("Failed to load image:", bone.imagePath)
-                        ;(e.target as HTMLImageElement).src = "/placeholder.svg"
-                      }}
-                    />
-                  </div>
-                )
+              console.error("Failed to load image:", bone.imagePath)
+                    ;(e.target as HTMLImageElement).src = "/placeholder.svg"
+                }}
+              />
+              </motion.div>
+              )
               )}
             </div>
           ))}

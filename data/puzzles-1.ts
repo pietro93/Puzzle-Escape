@@ -47,14 +47,15 @@ export const puzzlesSet1: Puzzle[] = [
   {
     level: 4,
     question: "FEAR YOUR DREAMS",
-    description: "F*1 E*2 A*0 R*1 Y*0 O*1 U*0 R*1 D*1 R*1 E*2 A*0 M*1 S*0",
-    imageUrl: "/images/puzzle4.webp",
+    description: "The guard introduces you to an ominous message scratched on a wall.",
     solution: "freedom",
-    category: "pattern",
+    category: "interactive",
+    isFearYourDreamsPuzzle: true,
     hints: [
-      "The roman numbers indicate how many times to include each letter.",
-      "If a letter has a dash next to it, don't include it in the answer.",
-      "The answer is a 7-letter word starting with 'F'.",
+    "Each letter has a mark that can be changed by tapping it. The marks cycle between 0, I, and II.",
+    "The end marks (IV, II, V) indicate the sum of the mark values for each word.",
+    "The marks represent Roman numerals indicating how many times to include each letter in the solution word.",
+    "Once all marks are correct, rearrange the included letters to form a 7-letter word starting with 'F'.",
     ],
   },
   {
@@ -86,14 +87,14 @@ export const puzzlesSet1: Puzzle[] = [
   {
     level: 7,
     question: "Mphf. I can't let you go. You won't solve this one!",
-    description: "BONE GONE GORE BONE TONE TOME",
-    imageUrl: "/images/puzzle10.webp",
-    solution: "BONE LONE LOVE",
-    category: "riddle",
+    description: "",
+    solution: "BONE LONE LOVE|BONE LONE LORE|BONE LONE LOSE|BONE LONE LOBE|BONE LONE LODE|BONE LONE LOGE|BONE LONE LOPE",
+    category: "interactive",
+    isWordLadderCarouselPuzzle: true,
     hints: [
-      'You have to change the word "BONE" like in the examples',
-      "Change one letter at a time, starting with B",
-      "The final solution is made of three words",
+      "Use the carousel to view different word ladders.",
+      "Observe how the words change from one to the next.",
+      "Find the pattern of letter changes and apply it to form the correct three-word sequence starting with BONE.",
     ],
   },
   {

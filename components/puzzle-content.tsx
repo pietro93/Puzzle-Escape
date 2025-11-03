@@ -37,6 +37,8 @@ import InfernalChessPuzzle from "./infernal-chess-puzzle"
 import DamnedSoulsPuzzle from "./damned-souls-puzzle"
 import PrisonCellPuzzle from "./prison-cell-puzzle"
 import BoneCountingPuzzle from "./bone-counting-puzzle"
+import FearYourDreamsPuzzle from "./fear-your-dreams-puzzle"
+import WordLadderCarouselPuzzle from "./word-ladder-carousel-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -61,6 +63,7 @@ interface PuzzleContentProps {
   questionnaireRef: React.RefObject<any>
   isMagicBoxPuzzle?: boolean
   onMurderMysteryLocationUpdate?: (location: string) => void
+  onMagicBoxSolved?: () => void
 }
 
 export default function PuzzleContent({
@@ -85,6 +88,7 @@ export default function PuzzleContent({
   setBinaryCorrectCombinations,
   questionnaireRef,
   onMurderMysteryLocationUpdate,
+  onMagicBoxSolved,
 }: PuzzleContentProps) {
   // Check if this puzzle has an image
   const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
@@ -165,7 +169,19 @@ export default function PuzzleContent({
    // Check if this is a bone counting puzzle
    const isBoneCountingPuzzle = puzzle.isBoneCountingPuzzle
 
+     // Check if this is a fear your dreams puzzle
+    const isFearYourDreamsPuzzle = puzzle.isFearYourDreamsPuzzle
+
+    // Check if this is a word ladder carousel puzzle
+    const isWordLadderCarouselPuzzle = puzzle.isWordLadderCarouselPuzzle
+
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
+  const [magicBoxSolved, setMagicBoxSolved] = useState(false)
+
+  const handleMagicBoxSolved = () => {
+    setMagicBoxSolved(true)
+    onMagicBoxSolved?.()
+  }
 
   // Add a new function to handle brain lamp clicks
   const handleBrainLampClick = () => {
@@ -228,20 +244,33 @@ export default function PuzzleContent({
       ) : null}
 
        {isBoneCountingPuzzle ? (
-        <div className="my-4">
-           <BoneCountingPuzzle onSolve={() => {}} />
-         </div>
+       <div className="my-4">
+       <BoneCountingPuzzle onSolve={() => {}} />
+       </div>
        ) : null}
 
-       {isMagicBoxPuzzle ? (
+       {isFearYourDreamsPuzzle ? (
+       <div className="my-4">
+       <FearYourDreamsPuzzle onSolve={() => {}} />
+       </div>
+       ) : null}
+
+       {isWordLadderCarouselPuzzle ? (
+         <div className="my-4">
+            <WordLadderCarouselPuzzle onSolve={() => {}} />
+          </div>
+        ) : null}
+
+        {isMagicBoxPuzzle ? (
         <div className="my-4">
-          <MagicBoxPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
+        <MagicBoxPuzzle
+        onSolve={() => {
+        // Don't automatically solve, let the player type the answer
+        }}
+          onSolved={handleMagicBoxSolved}
           />
-        </div>
-      ) : null}
+          </div>
+       ) : null}
 
       {isInfernalCasinoPuzzle ? (
         <div className="my-4">

@@ -135,6 +135,12 @@ export default function GameScreen({
   const [binaryCorrectCombinations, setBinaryCorrectCombinations] = useState(0)
   const [murderMysteryLocation, setMurderMysteryLocation] = useState<string>("crime scene")
   const [currentPuzzle, setCurrentPuzzle] = useState<Puzzle | null>(null)
+  const [magicBoxRebusShown, setMagicBoxRebusShown] = useState(false)
+
+  const handleMagicBoxSolved = () => {
+    setMagicBoxRebusShown(true)
+  }
+
   const [userInput, setUserInput] = useState("")
   const [hintIndex, setHintIndex] = useState(0)
   const [hintsUsed, setHintsUsed] = useState(0)
@@ -510,14 +516,19 @@ export default function GameScreen({
     else if (level === 40) {
       handleSphinxInteract(currentPyramidRoom)
     }
+    // Special handling for level 8 (magic box rebus)
+    else if (level === 8 && magicBoxRebusShown) {
+    setCharacterDialogue("Are you a fan of rebuses? Hehe")
+    setShowCharacterDialogue(true)
+    }
     // Special handling for level 10 (guard puzzle)
     else if (level === 10) {
-      // Rotate through guard dialog lines
-      const nextIndex = (guardDialogIndex + 1) % guardDialogLines.length
-      setGuardDialogIndex(nextIndex)
+    // Rotate through guard dialog lines
+    const nextIndex = (guardDialogIndex + 1) % guardDialogLines.length
+    setGuardDialogIndex(nextIndex)
 
-      // Update the puzzle's guardStatement
-      if (puzzle.isInteractiveInmates) {
+    // Update the puzzle's guardStatement
+    if (puzzle.isInteractiveInmates) {
         puzzle.guardStatement = guardDialogLines[nextIndex]
       }
 
@@ -833,6 +844,7 @@ export default function GameScreen({
         setBinaryCorrectCombinations={setBinaryCorrectCombinations}
         questionnaireRef={questionnaireRef}
         onMurderMysteryLocationUpdate={handleMurderMysteryLocationUpdate}
+          onMagicBoxSolved={handleMagicBoxSolved}
       />
 
       {/* Answer input section */}
