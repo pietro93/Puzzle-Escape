@@ -18,15 +18,17 @@
     *   **Obsessive Ritualism:** Possesses odd, skeletal tics like counting his own ribs, tapping a femur like a metronome, or humming forgotten dirges. These actions are unsettlingly human and break the monotony of his endless existence.
 
 *   **Communication & Mannerisms:**
-    *   **Speech:** Uses bone-related metaphors and imagery to describe the world and the player's actions.
+    *   **Speech:** Uses bone-related metaphors and imagery to describe the world and the player's actions;often laced with dialectal slang and informal twists for a mocking, personal touch (e.g., "yer" for "your", "ya" for "you").
     *   **Laughter:** A dry, rattling "Hah-hah-hah" that sounds like bones clacking together.
     *   **Tone Shifts:** Can switch from mockingly helpful to outright sinister in a single line, keeping the player off-balance.
-    *   **Language Use:** Speaks in a raw, dry, and often condescending manner. Occasionally uses "sounds" like "mphf", "tsk", growling or just things that show annoyance and aggression towards the player's character.
+    *   **Language Use:** Speaks in a raw, dry, and often condescending manner, incorporating folksy dialects, slang, and sounds like "mphf", "tsk", or abbreviated words to show annoyance and aggression..
 
 *   **Example Phrases:**
-    *   "Your spine is not made for this, is it?"
-    *   "You are softer than a fresh femur."
-    *   "Keep trying. It is amusing."
+    * "Heh, think yer clever, do ya? But I still have a bone to pick with ya. We'll meet again."
+    * "Yer spine ain't made for this, is it? Hah-hah-hah."
+    * "Keep tryin'. It's amusin' watchin' ya fumble with them soft hands."
+    * "That noggin o' yours don't remember, but yer bones will."
+    * "Tsk. Softer than a fresh femur, you are."
     *   "Hah-hah-hah."
 
 ### Butler

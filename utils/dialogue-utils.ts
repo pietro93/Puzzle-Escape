@@ -41,83 +41,84 @@ const levelDialogue: Record<string, Record<number, string[]>> = {
 skeleton: {
 
     1: [
-      "Mirrors show hard truths. Like the fact that you're ugly.",
-      "Stare longer. Maybe your face will make sense.",
-      "Tsk. You are staring at failure. It wears your face well.",
-      "You came all this way to admire yourself? Mphf.",
-      "First puzzle and already stuck? My ribs are rattling with amusement.",
-      "Staring at your reflection shows a deep lack of self-respect."
+    "Mirrors show hard truths. Like the fact that yer ugly.",
+    "Stare longer. Maybe yer face will make sense.",
+    "Tsk. Ya are staring at failure. It wears yer face well.",
+    "Ya came all this way to admire yerself? Mphf.",
+    "First puzzle and already stuck? My ribs are rattlin' with amusement.",
+    "Starin' at yer reflection shows a deep lack of self-respect."
     ],
 
     2: [
-      "Counting bones. I do that nightly. It is a terrible habit.",
-      "Your fingers tremble and make counting harder. Are you *begging* me to break them?",
-      "I kept a ledger of who owned these. They all ended up here just like you.",
-      "The last prisoner who took this puzzle ended up becoming part of the exhibit.",
-      "These are spares. I keep mine in the freezer.",
-      "My ribs are better organized than your thoughts.",
-      "I collected these from the previous occupants. They would want you to have them."
+    "Countin' bones. I do that nightly. It is a terrible habit.",
+    "Yer fingers tremble and make countin' harder. Are ya *beggin'* me to break 'em?",
+    "I kept a ledger of who owned these. They all ended up here just like ya.",
+    "The last prisoner who took this puzzle ended up becomin' part of the exhibit.",
+    "These are spares. I keep mine in the freezer.",
+    "My ribs are better organized than yer thoughts.",
+    "I collected these from the previous occupants. They would want ya to have them."
     ],
 
     3: [
-      "Math: the universal language of suffering. And you’re failing the alphabet.",
-      "I solved this with half my brain missing. Don't tell me that you're stuck.",
-      "Add your regrets. Subtract your chances. Divide your hope.",
-      "Hah-hah-hah. The solution is *suffering*.",
-      "Numbers are honest creatures. Unlike you, they refuse to lie about your odds."
+    "Math: the universal language of sufferin'. And yer failin' the alphabet.",
+    "I solved this with half my brain missin'. Don't tell me that yer stuck.",
+    "Add yer regrets. Subtract yer chances. Divide yer hope.",
+    "Hah-hah-hah. The solution is *sufferin'*.",
+    "Numbers are honest creatures. Unlike ya, they refuse to lie about yer odds."
     ],
 
     4: [
-      "Hah-hah-hah. Dreams? Here, we call those delusions.",
-      "The alphabet actively conspires against you. Believe me.",
-      "Tsk. You sleep? Sleep is a luxury for the hopeful.",
-      "Your nightmares are my favorite bedtime stories.",
-      "I stopped having dreams centuries ago. But I think I may start having nightmares after seeing your face.",
-      "Mphf. Your unconscious mind is currently negotiating your surrender."
+    "Hah-hah-hah. Dreams? Here, we call those delusions.",
+    "The alphabet actively conspires against ya. Believe me.",
+    "Tsk. Ya sleep? Sleep is a luxury for the hopeful.",
+    "Yer nightmares are my favorite bedtime stories.",
+    "I stopped havin' dreams centuries ago. But I think I may start havin' nightmares after seein' yer face.",
+    "Mphf. Yer unconscious mind is currently negotiatin' yer surrender."
     ],
 
     5: [
-      "Tick. Tock. Your coffin’s getting cold.",
-      "Hey. Stop wasting everyone’s eternity with your slowness.",
-      "The clock keeps score. It says you suck at this.",
-      "The hands of that clock are counting down to something you will not survive.",
-      "Some days I can’t remember if I’m dead or just really, really bored. Your guess is as good as mine.",
-      "Bricks and stones may break my bones, but I can also break yours."
+    "Tick. Tock. Yer coffin's gettin' cold.",
+    "Hey. Stop wastin' everyone's eternity with yer slowness.",
+    "The clock keeps score. It says ya suck at this.",
+    "The hands of that clock are countin' down to somethin' ya will not survive.",
+    "Some days I can't remember if I'm dead or just really, really bored. Yer guess is as good as mine.",
+    "Bricks and stones may break my bones, but I can also break yers."
     ],
 
     6: [
-      "Unscramble your life next. Wait, too late.",
-      "Jumbled letters for that jumbled brain of yours.",
-      "C'mon, I am bored. Give up already.",
-      "Ah, you're getting tired. Good. Exhaustion is the first step toward acceptance.",
-      "Mphf. Jumbled letters. How very clever.",
-      "Unscramble all you want. You're still trapped."
+    "Unscramble yer life next. Wait, too late.",
+    "Jumbled letters for that jumbled noggin o' yers.",
+
+    "Mphf. Jumbled letters. How very clever.",
+    "Unscramble all ya want. Yer still trapped."
     ],
 
     7: [
-      "Hehe. I can make you change LIFE to DEATH in only two steps.",
-      "Your logic has more gaps than my ribcage.",
-      "Change HOPE to NOPE in one move. Congrats, you’re doomed.",
-      "HATE becomes FATE becomes... whatever",
-      "Mphf. Word games are for children and fools. Thought you might like this one."
+    "Heh. I can make ya change LIFE to DEATH in only two steps.",
+    "Yer logic has more gaps than my ribcage.",
+    "Change HOPE to NOPE in one move. Congrats, yer doomed.",
+    "HATE becomes FATE becomes... whatever",
+    "Mphf. Word games are for children and fools. Thought ya might like this one."
     ],
 
     8: [
-      "This puzzle is unsolvable. Just like your problems.",
-      "Mphf. Even I don't know the answer. Isn't that wonderful?",
-      "This puzzle has broken minds harder than yours. They tasted much better, too.",
-      "I think randomly smashing the pieces might actually work. Try it.",
-      "The real magic is how quickly you abandon logic for guesswork.",
-      "Tsk. I think if you arrange them at random eventually you'll get it right."
+    "This puzzle is unsolvable. Just like yer problems.",
+    "Mphf. Even I don't know the answer. Isn't that wonderful?",
+    "This puzzle has broken minds harder than yers. They tasted much better, too.",
+    "I think randomly smashin' the pieces might actually work. Try it.",
+    "The real magic is how quickly ya abandon logic for guesswork.",
+    "Tsk. I think if ya arrange them at random eventually yer'll get it right.",
+    "C'mon, I'm bored. Give up already.",
+    "Ah, yer gettin' tired. Good.",
     ],
 
     9: [
-      "Primitive. Like a Neanderthal rattling his own tibia.",
-      "Silence is the only effective communication used here. You can try screaming, too.",
-      "The rhythm of your distress is deeply annoying to my ears.",
-      "I wonder what sound *your* bones will make when I finally get to play with them.",
-      "Oh, you want my help? That's adorable. Tsk.",
-      "Dots and dashes. How primitive."
+    "Primitive. Like a Neanderthal rattlin' his own tibia.",
+    "Silence is the only effective communication used here. Ya can try screamin', too.",
+    "The rhythm of yer distress is deeply annoyin' to my ears.",
+    "I wonder what sound *yer* bones will make when I finally get to play with them.",
+    "Oh, ya want my help? That's adorable. Tsk.",
+    "Dots and dashes. How primitive."
     ]
 
   }

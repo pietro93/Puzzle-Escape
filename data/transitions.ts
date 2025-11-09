@@ -7,7 +7,7 @@ export const transitions: Transition[] = [
     paragraphs: [
       "The skeleton guard's bones clatter to the floor as you solve the final riddle. The cell door creaks open, revealing a path to freedom.",
 
-      "\"Heh, think yer clever, do ya?\" the guard's skull hisses as you step past. \"But ya deserve to rot in 'ere. Ya know what ya did, even if that noggin o' yours don't remember it yet.\"",
+      "\"Heh, think yer clever, do ya?\" the guard's skull hisses as you step past. \"But I still have a bone to pick with ya. We'll meet again. That noggin o' yours know what ya did... Hah-hah-hah.\"",
 
       "His mocking words echo in your mind as you navigate through damp corridors and past empty cells. What did you do? Why can't you remember?",
 

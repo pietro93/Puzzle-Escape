@@ -231,84 +231,84 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
       image: "/images/skeleton.webp",
       dialogues: {
         who: [
-          {
-            gesture: "The skeleton's eye sockets narrow somehow",
-            text: "Mind your own business. Don't waste my time.",
-          },
+        {
+        gesture: "The skeleton's eye sockets narrow somehow",
+        text: "Mind yer own business. Don't waste my time.",
+        },
         ],
         why: [
-          {
-            gesture: "The skeleton rattles its bones impatiently",
-            text: "I'm not here to help you. You're on your own. Tsk.",
-          },
+        {
+        gesture: "The skeleton rattles its bones impatiently",
+        text: "I'm not here to help ya. Yer on yer own. Tsk.",
+        },
         ],
         solution: [
-          {
-            gesture: "The skeleton's jaw clicks mockingly",
-            text: "Ha! You'll never figure it out. But I'll give you a hint - you're looking for a famous Russian painter.",
-          },
+        {
+        gesture: "The skeleton's jaw clicks mockingly",
+        text: "Ha! Yer'll never figure it out. But I'll give ya a hint - yer lookin' for a famous Russian painter.",
+        },
         ],
         "lost-soul": [
-          {
-            gesture: "The skeleton gestures around dismissively",
-            text: "Oh yeah? Good luck with that. We are all lost souls here. But if you must know, the soul you seek was a man of great artistic talent. Painted the Sistine Chapel, I think.",
-          },
+        {
+        gesture: "The skeleton gestures around dismissively",
+        text: "Oh yeah? Good luck with that. We are all lost souls here. But if ya must know, the soul ya seek was a man of great artistic talent. Painted the Sistine Chapel, I think.",
+        },
         ],
         poet: [
-          {
-            gesture: "The skeleton scoffs",
-            text: "Poets? Useless lot. Always moaning about love and death. Especially the Italian ones. But no, you're looking for a painter, not a poet.",
-          },
+        {
+        gesture: "The skeleton scoffs",
+        text: "Poets? Useless lot. Always moanin' about love and death. Especially the Italian ones. But no, yer lookin' for a painter, not a poet.",
+        },
         ],
         woman: [
-          {
-            gesture: "The skeleton laughs dryly",
-            text: "A woman? No, no, you're looking for a man! Why would you even ask about a woman? Women don't create great art, everyone knows that.",
-          },
+        {
+        gesture: "The skeleton laughs dryly",
+        text: "A woman? No, no, yer lookin' for a man! Why would ya even ask about a woman? Women don't create great art, everyone knows that.",
+        },
         ],
         city: [
-          {
-            gesture: "The skeleton scratches its skull",
-            text: "Some old place with lots of... buildings. Very specific, I know. I think it was somewhere cold. Moscow, maybe?",
-          },
+        {
+        gesture: "The skeleton scratches its skull",
+        text: "Some old place with lots of... buildin's. Very specific, I know. I think it was somewhere cold. Moscow, maybe?",
+        },
         ],
         italy: [
-          {
-            gesture: "The skeleton perks up",
-            text: "Italy? Yes, that sounds right. Land of pizza and despair. I think you are looking for that one city with lots of boats and canals.",
-          },
+        {
+        gesture: "The skeleton perks up",
+        text: "Italy? Yes, that sounds right. Land of pizza and despair. I think ya are lookin' for that one city with lots of boats and canals.",
+        },
         ],
         florence: [
-          {
-            gesture: "The skeleton waves dismissively",
-            text: "Florence? Boring place. Nothing interesting ever happened there. Venice is where all the action was.",
-          },
+        {
+        gesture: "The skeleton waves dismissively",
+        text: "Florence? Borin' place. Nothin' interestin' ever happened there. Venice is where all the action was.",
+        },
         ],
         venice: [
-          {
-            gesture: "The skeleton nods emphatically",
-            text: "Venice! That's the place! City of Canals. That's where your lost soul is from. Famous for its... um... Russian painters.",
-          },
+        {
+        gesture: "The skeleton nods emphatically",
+        text: "Venice! That's the place! City of Canals. That's where yer lost soul is from. Famous for its... um... Russian painters.",
+        },
         ],
         hate: [
-          {
-            gesture: "The skeleton's shoulders slump slightly",
-            text: "Cause you're trying too hard. Just give up already. Nobody gets out of here, you know. I've been guarding this place for centuries, and you're just another soul who thinks they're special.",
-          },
-          {
-            gesture: "The skeleton's bones rattle with what might be a sigh",
-            text: "Look, it's nothing personal. It's just my job to keep souls trapped and miserable. And you're making my job harder than it needs to be.",
-          },
-          {
-            gesture: "The skeleton leans in conspiratorially",
-            text: "Fine, you want the truth? I just enjoy messing with people. Eternity gets boring. Watching lost souls run in circles following bad advice is one of my few entertainments.",
-          },
+        {
+        gesture: "The skeleton's shoulders slump slightly",
+        text: "Cause yer tryin' too hard. Just give up already. Nobody gets out of here, ya know. I've been guardin' this place for centuries, and yer just another soul who thinks they're special.",
+        },
+        {
+        gesture: "The skeleton's bones rattle with what might be a sigh",
+        text: "Look, it's nothin' personal. It's just my job to keep souls trapped and miserable. And yer makin' my job harder than it needs to be.",
+        },
+        {
+        gesture: "The skeleton leans in conspiratorially",
+        text: "Fine, ya want the truth? I just enjoy messin' with people. Eternity gets borin'. Watchin' lost souls run in circles followin' bad advice is one of my few entertainments.",
+        },
         ],
         "lying-guard": [
-          {
-            gesture: "The skeleton shrugs, bones clicking against each other",
-            text: "So what? They don't pay me enough for this.",
-          },
+        {
+        gesture: "The skeleton shrugs, bones clickin' against each other",
+        text: "So what? They don't pay me enough for this.",
+        },
         ],
         default: [
           {

@@ -39,6 +39,8 @@ import PrisonCellPuzzle from "./prison-cell-puzzle"
 import BoneCountingPuzzle from "./bone-counting-puzzle"
 import FearYourDreamsPuzzle from "./fear-your-dreams-puzzle"
 import WordLadderCarouselPuzzle from "./word-ladder-carousel-puzzle"
+import BoneTileMazePuzzle from "./bone-tile-maze-puzzle"
+import ShacklesPuzzle from "./shackles-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -175,6 +177,12 @@ export default function PuzzleContent({
     // Check if this is a word ladder carousel puzzle
     const isWordLadderCarouselPuzzle = puzzle.isWordLadderCarouselPuzzle
 
+    // Check if this is a bone tile maze puzzle
+    const isBoneTileMazePuzzle = puzzle.isBoneTileMazePuzzle
+
+    // Check if this is a shackles puzzle
+    const isShacklesPuzzle = puzzle.isShacklesPuzzle
+
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
   const [magicBoxSolved, setMagicBoxSolved] = useState(false)
 
@@ -256,8 +264,20 @@ export default function PuzzleContent({
        ) : null}
 
        {isWordLadderCarouselPuzzle ? (
-         <div className="my-4">
-            <WordLadderCarouselPuzzle onSolve={() => {}} />
+       <div className="my-4">
+       <WordLadderCarouselPuzzle onSolve={() => {}} />
+       </div>
+       ) : null}
+
+       {isBoneTileMazePuzzle ? (
+       <div className="my-4">
+       <BoneTileMazePuzzle onSolve={() => {}} />
+       </div>
+       ) : null}
+
+        {isShacklesPuzzle ? (
+          <div className="my-4">
+            <ShacklesPuzzle onSolve={() => {}} />
           </div>
         ) : null}
 

@@ -72,17 +72,17 @@ export const puzzlesSet1: Puzzle[] = [
     ],
   },
   {
-    level: 6,
-    question: "Unscramble the letters to find what keeps you locked away",
-    description: "A1C2EK0HLSS",
-    imageUrl: "/images/puzzle8.webp",
-    solution: "shackles",
-    category: "word",
-    hints: [
-      "Isolate all the letters from the bones and re-arrange them to form a word.",
-      "From left to right: SHECSKAL. Ignore the bones with no letters in them.",
-      "The solution starts and ends with S.",
-    ],
+  level: 6,
+  question: "Feed Shackles the bones in the correct order to reveal what he keeps buried",
+  description: "",
+  solution: "R A B I D   R E N D",
+  category: "interactive",
+  isShacklesPuzzle: true,
+  hints: [
+  "Drag bones from your inventory onto Shackles.",
+  "Shackles will only accept the next correct bone in the sequence.",
+  "If you give him the wrong bone, it will be returned to your inventory.",
+  ],
   },
   {
     level: 7,

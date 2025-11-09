@@ -25,7 +25,7 @@ export default function IntroScreen({ onStart, soundEnabled, toggleSound }: Intr
 
     "The sound of bones rattling against stone breaks the silence. A figure approaches your cell—a walking skeleton, its empty eye sockets somehow fixed upon you.",
 
-    '"Solve my riddles," it rasps, voice like dry leaves scraping against stone. "And you may walk free. Fail, and... Hah-hah-hah!"',
+    '"Solve my riddles," it rasps, voice like dry leaves scrapin\' against stone. "And ya may walk free. Fail, and... Hah-hah-hah!"',
   ]
 
   // Show skip button after a delay

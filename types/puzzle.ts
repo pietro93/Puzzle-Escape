@@ -54,4 +54,6 @@ export interface Puzzle {
   libraryData?: any
   isFearYourDreamsPuzzle?: boolean
   isWordLadderCarouselPuzzle?: boolean
+  isBoneTileMazePuzzle?: boolean
+  isShacklesPuzzle?: boolean
 }
