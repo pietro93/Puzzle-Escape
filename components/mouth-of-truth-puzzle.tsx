@@ -385,10 +385,6 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="text-center mb-4">
-        <h3 className="text-lg font-pixel text-purple-300 mb-2">The Mouth of Truth</h3>
-      </div>
-
       {/* Marbles selection area - hide if puzzle is solved */}
       {!puzzleSolved && (
         <div className="flex justify-center gap-4 mb-6">

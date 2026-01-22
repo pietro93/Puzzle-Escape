@@ -203,8 +203,6 @@ export default function PyramidPuzzle({
                         </div>
                     )}
 
-                    
-
                     {roomConnections[currentRoom as Room].right ? (
                         <button
                             onClick={() => navigateToRoom("right")}
