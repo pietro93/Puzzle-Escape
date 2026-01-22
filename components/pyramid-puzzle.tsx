@@ -81,28 +81,41 @@ export default function PyramidPuzzle({
 
     // Get sphinx message based on current room
     useEffect(() => {
-        const godRooms = ["isis", "osiris", "horus", "toth", "ra", "anubis"]
-        if (godRooms.includes(currentRoom)) {
-            setSphinxMessage("")
-        } else {
-            switch (currentRoom) {
-                case "entrance":
-                    setSphinxMessage("The mural in the entrance room depicts some kind of bird.")
-                    break
-                case "mural1":
-                case "mural2":
-                case "mural3":
-                case "mural4":
-                    if (!hasTorch) {
-                        setSphinxMessage("It's too dark to see anything in this chamber.")
-                    } else {
-                        // No descriptive messages when torch is active - let player discover the content
-                        setSphinxMessage("")
-                    }
-                    break
-                default:
+        switch (currentRoom) {
+            case "entrance":
+                setSphinxMessage("The mural in the entrance room depicts some kind of bird.")
+                break
+            case "isis":
+                setSphinxMessage("The goddess Isis gazes down from the wall, her presence powerful and serene.")
+                break
+            case "osiris":
+                setSphinxMessage("Osiris, god of the afterlife, is depicted on this ancient mural.")
+                break
+            case "horus":
+                setSphinxMessage("Horus, the falcon-headed god, watches over this chamber.")
+                break
+            case "toth":
+                setSphinxMessage("Thoth, the god of wisdom, is represented in this sacred space.")
+                break
+            case "ra":
+                setSphinxMessage("Ra, the sun god, shines brightly on this mural.")
+                break
+            case "anubis":
+                setSphinxMessage("Anubis, the jackal-headed god of the dead, presides over this chamber.")
+                break
+            case "mural1":
+            case "mural2":
+            case "mural3":
+            case "mural4":
+                if (!hasTorch) {
+                    setSphinxMessage("It's too dark to see anything in this chamber.")
+                } else {
+                    // No descriptive messages when torch is active - let player discover the content
                     setSphinxMessage("")
-            }
+                }
+                break
+            default:
+                setSphinxMessage("")
         }
     }, [currentRoom, hasTorch])
 
