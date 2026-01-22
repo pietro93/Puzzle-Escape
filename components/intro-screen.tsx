@@ -103,10 +103,7 @@ export default function IntroScreen({ onStart, soundEnabled, toggleSound }: Intr
 
   return (
     <div className="w-full max-w-md mx-auto p-4 rounded-lg bg-black min-h-[100vh] flex flex-col relative overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <Image src="/images/intro-bg.png" alt="Game Introduction" fill className="object-cover pixelated" />
-      </div>
+
 
       {/* Sound toggle button */}
       <div className="absolute top-4 right-4 z-20">
