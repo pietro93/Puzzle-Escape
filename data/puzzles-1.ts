@@ -73,7 +73,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
   level: 6,
-  question: "Feed Shackles the bones in the correct order to reveal what he keeps buried",
+  question: "The Guard introduces you to his pet dog Shackles.",
   description: "",
   solution: "R A B I D   R E N D",
   category: "interactive",

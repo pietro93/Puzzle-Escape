@@ -306,7 +306,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
             {dugBones.map((bone, index) => (
               <img
                 key={index}
-                src={`/images/shackles-bone-${bone.letter.toLowerCase()}.webp`}
+                src={bone.letter === " " ? `/images/shackles-bone-empty.webp` : `/images/shackles-bone-${bone.letter.toLowerCase()}.webp`}
                 alt={`Bone ${bone.letter}`}
                 className="absolute w-16 h-16 object-contain"
                 style={{
@@ -387,7 +387,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
               <div className="flex-1">
                 <p className="text-purple-300 font-pixel mb-2">Shackles:</p>
                 <p className="text-gray-200 text-sm whitespace-pre-line font-pixel mb-4">
-                  Inscribe a letter on this bone:
+                  Inscribe a letter on this bone?
                 </p>
                 <input
                   type="text"
@@ -404,21 +404,21 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
                   autoFocus
                 />
               </div>
-            </div>
-            <div className="mt-4 text-center">
+              </div>
+              <div className="mt-4 text-center">
               <button
                 className="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel mr-2"
                 onClick={handleInputSubmit}
               >
-                Submit
+                INSCRIBE
               </button>
               <button
                 className="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
                 onClick={handleInputCancel}
               >
-                Cancel
+                LEAVE BLANK
               </button>
-            </div>
+              </div>
           </div>
         </div>
       )}
