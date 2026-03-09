@@ -125,6 +125,13 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
   const handleShacklesClick = () => {
     if (shacklesState !== "resting") return // Prevent clicking during animation
 
+    // Stop providing bones after puzzle is solved
+    if (currentIndex >= solution.length) {
+      setDialogue("Shackles has already received all the bones needed. He contentedly chews on them.")
+      setTimeout(() => setDialogue(null), 3000)
+      return
+    }
+
     const hasBuriedFirstR = currentIndex > 0 // After first R is buried
 
     if (!hasBuriedFirstR) {

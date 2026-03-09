@@ -75,7 +75,7 @@ export const puzzlesSet1: Puzzle[] = [
   level: 6,
   question: "The Guard introduces you to his pet dog Shackles.",
   description: "",
-  solution: "R A B I D   R E N D",
+  solution: "RABID REND",
   category: "interactive",
   isShacklesPuzzle: true,
   hints: [
