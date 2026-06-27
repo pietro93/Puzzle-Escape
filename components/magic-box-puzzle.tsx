@@ -153,28 +153,43 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
     const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
     const oldGridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
 
-    // If the cell already has a bone, don't allow the drop
-    if (grid[index] !== null) return
-
     // Update the grid
     const newGrid = [...grid]
-
-    // If the bone is coming from another grid cell, clear that cell
-    if (fromGrid) {
-      newGrid[oldGridIndex] = null
-    }
-
-    // Place the bone in the new cell
-    newGrid[index] = { id, value, imagePath }
-
-    // Update the remaining bones
     let newRemainingBones = [...remainingBones]
 
-    if (fromGrid) {
-      // If moving within the grid, no need to update remaining bones
+    // Handle swap if cell is occupied
+    if (grid[index] !== null) {
+      const targetBone = grid[index]
+      if (targetBone === null) return
+
+      // Place dragged bone in target cell
+      newGrid[index] = { id, value, imagePath }
+
+      if (fromGrid) {
+        // Swap: put target bone in the cell we dragged from
+        newGrid[oldGridIndex] = targetBone
+      } else {
+        // Moving from remaining bones: target bone goes back to remaining bones
+        newRemainingBones = newRemainingBones.filter((bone) => bone.id !== id)
+        newRemainingBones = [...newRemainingBones, targetBone]
+      }
     } else {
-      // Remove the bone from remaining bones
-      newRemainingBones = newRemainingBones.filter((bone) => bone.id !== id)
+      // Normal placement (empty cell)
+      // If the bone is coming from another grid cell, clear that cell
+      if (fromGrid) {
+        newGrid[oldGridIndex] = null
+      }
+
+      // Place the bone in the new cell
+      newGrid[index] = { id, value, imagePath }
+
+      // Update the remaining bones
+      if (fromGrid) {
+        // If moving within the grid, no need to update remaining bones
+      } else {
+        // Remove the bone from remaining bones
+        newRemainingBones = newRemainingBones.filter((bone) => bone.id !== id)
+      }
     }
 
     setGrid(newGrid)
