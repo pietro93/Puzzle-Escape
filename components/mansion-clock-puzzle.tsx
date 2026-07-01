@@ -62,33 +62,33 @@ export default function MansionClockPuzzle({ onStepChange }: MansionClockPuzzleP
   const [pressed, setPressed] = useState<"green" | "red" | null>(null)
   const [hourRotation, setHourRotation] = useState(HOUR_BASELINE_DEG)
   const [minuteRotation, setMinuteRotation] = useState(MINUTE_BASELINE_DEG)
-  const [isShutDown, setIsShutDown] = useState(false)
-  // Idle starts true: at first mount the hands are already resting at XII, no animation to wait for.
-  const [isIdle, setIsIdle] = useState(true)
+  // Which resting face is showing. Starts "idle" since at first mount the hands are already at
+  // XII with no animation to wait for. Kept as a single piece of state (rather than two booleans)
+  // so a shutdown -> idle reset crossfades clock2 straight into clock0, never briefly exposing the
+  // bare clock.webp base layer in between.
+  const [restingFace, setRestingFace] = useState<"idle" | "shutdown" | null>("idle")
 
   useEffect(() => {
     onStepChange?.(step)
   }, [step, onStepChange])
 
-  // Only swap in the "shut down" face once the hands have actually finished their rotation.
-  useEffect(() => {
-    if (step >= SEQUENCE.length) {
-      const timer = setTimeout(() => setIsShutDown(true), HAND_TRANSITION_MS)
-      return () => clearTimeout(timer)
-    }
-    setIsShutDown(false)
-  }, [step])
-
-  // Same idea for the idle face: it only reappears once the reset hands have settled back at XII.
+  // Only swap in a resting face once the hands have actually finished moving. Turning the clock
+  // "on" (leaving a resting face) happens immediately instead, since that's the moment of the button press.
   useEffect(() => {
     if (step === 0) {
-      const timer = setTimeout(() => setIsIdle(true), HAND_TRANSITION_MS)
+      const timer = setTimeout(() => setRestingFace("idle"), HAND_TRANSITION_MS)
       return () => clearTimeout(timer)
     }
-    setIsIdle(false)
+    if (step >= SEQUENCE.length) {
+      const timer = setTimeout(() => setRestingFace("shutdown"), HAND_TRANSITION_MS)
+      return () => clearTimeout(timer)
+    }
+    setRestingFace(null)
   }, [step])
 
-  const isOff = isIdle || isShutDown
+  const isIdle = restingFace === "idle"
+  const isShutDown = restingFace === "shutdown"
+  const isOff = restingFace !== null
 
   const press = (which: "green" | "red") => {
     setPressed(which)

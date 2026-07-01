@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 interface ColorPalettePuzzleProps {
   onSolve?: () => void
@@ -123,20 +123,7 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
     Pink: false,
   })
 
-  // State for checking if all answers are correct
-  const [allCorrect, setAllCorrect] = useState(false)
-
-  // Check if all answers are correct
-  useEffect(() => {
-    const isAllCorrect = Object.values(correctInputs).every((value) => value === true)
-    setAllCorrect(isAllCorrect)
-
-    if (isAllCorrect && onSolve) {
-      onSolve()
-    }
-  }, [correctInputs, onSolve])
-
-  // Handle input change
+  // Handle input change - just update the typed value, don't validate mid-typing
   const handleInputChange = (color: string, value: string) => {
     // If the input is already correct and locked, don't allow changes
     if (correctInputs[color]) return
@@ -145,28 +132,31 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
       ...prev,
       [color]: value,
     }))
+  }
 
-    // Check if the input is correct
-    if (value) {
-      const numValue = Number.parseFloat(value)
-      const isCorrect = Math.abs(numValue - correctAnswers[color as keyof typeof correctAnswers]) < 0.001
+  // Validate once the user finishes typing (on blur), so the field doesn't
+  // snap/autofill mid-keystroke while the value is still within tolerance.
+  const handleInputBlur = (color: string) => {
+    if (correctInputs[color]) return
 
-      if (isCorrect) {
-        // Format to 4 decimal places
-        const formattedValue = correctAnswers[color as keyof typeof correctAnswers].toFixed(4)
+    const value = userInputs[color]
+    if (!value) return
 
-        // Update the input with the formatted value
-        setUserInputs((prev) => ({
-          ...prev,
-          [color]: formattedValue,
-        }))
+    const numValue = Number.parseFloat(value)
+    const isCorrect = Math.abs(numValue - correctAnswers[color as keyof typeof correctAnswers]) < 0.0001
 
-        // Mark this input as correct and locked
-        setCorrectInputs((prev) => ({
-          ...prev,
-          [color]: true,
-        }))
-      }
+    if (isCorrect) {
+      const formattedValue = correctAnswers[color as keyof typeof correctAnswers].toFixed(4)
+
+      setUserInputs((prev) => ({
+        ...prev,
+        [color]: formattedValue,
+      }))
+
+      setCorrectInputs((prev) => ({
+        ...prev,
+        [color]: true,
+      }))
     }
   }
 
@@ -198,6 +188,10 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
                     inputMode="decimal"
                     value={userInputs[entry.name]}
                     onChange={(e) => handleInputChange(entry.name, e.target.value)}
+                    onBlur={() => handleInputBlur(entry.name)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") e.currentTarget.blur()
+                    }}
                     className={`w-full px-2 py-1 border rounded text-sm font-pixel appearance-none ${
                       correctInputs[entry.name]
                         ? "bg-green-700/50 border-green-500 text-white"
@@ -215,11 +209,6 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
         ))}
       </div>
 
-      {allCorrect && (
-        <div className="mt-4 p-2 bg-green-900/50 border border-green-700 rounded-lg text-center">
-          <p className="text-green-300 font-pixel">Correct! You've solved the pattern.</p>
-        </div>
-      )}
     </div>
   )
 }

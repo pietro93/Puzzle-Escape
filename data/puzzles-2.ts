@@ -26,9 +26,10 @@ export const puzzlesSet2: Puzzle[] = [
     solution: "XV:XXXVI",
     category: "pattern",
     hints: [
-      "Convert the roman numerals to regular numbers to better analyze the sequence.",
-      "Find the next time in the sequence by analyzing how hours and minutes are added.",
-      "Convert the next time in the sequence back to roman numerals to find the solution.",
+      "Pay attention to the position of the hour and minute hands throughout the sequence.",
+      "Talk to the butler at each stage. He'll tell you the exact time.",
+      "Look at how the hour and minute values change from one entry to the next.",
+      "Calculate the next position in the sequence, then write the solution using roman numerals.",
     ],
   },
   {

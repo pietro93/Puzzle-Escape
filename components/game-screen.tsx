@@ -6,7 +6,7 @@ import Image from "next/image"
 import { useState, useRef, useEffect } from "react"
 import type { Puzzle } from "@/types/puzzle"
 import HintSystem from "./hint-system"
-import { Lightbulb, ChevronUp, ChevronDown, Volume2, VolumeX, Sparkles, RotateCcw } from "lucide-react"
+import { Lightbulb, Volume2, VolumeX, Sparkles, RotateCcw } from "lucide-react"
 import DevilDialogue from "./devil-dialogue"
 import ElevatorPanel from "./elevator-panel"
 import { useAudio } from "@/hooks/use-audio"
@@ -108,7 +108,6 @@ export default function GameScreen({
   const [isWrong, setIsWrong] = useState(false)
   const [touchStartY, setTouchStartY] = useState(0)
   const [touchEndY, setTouchEndY] = useState(0)
-  const [showPuzzleDetails, setShowPuzzleDetails] = useState(true)
   const [isAnimating, setIsAnimating] = useState(false)
   const [guardDialogIndex, setGuardDialogIndex] = useState(0)
   const [showGuardPopup, setShowGuardPopup] = useState(false)
@@ -317,11 +316,7 @@ export default function GameScreen({
     }
   }
 
-  const togglePuzzleDetails = () => {
-    setShowPuzzleDetails(!showPuzzleDetails)
-  }
-
-    const handleDimLightButlerClick = () => {
+  const handleDimLightButlerClick = () => {
     setShowDimLightButlerPopup(true)
   }
 
@@ -722,33 +717,6 @@ export default function GameScreen({
     <div
       className={`w-full max-w-md mx-auto p-4 ${getSettingBackground()} transition-colors duration-1000 min-h-[100vh] flex flex-col ${isAnimating ? "animate-fadeIn" : ""}`}
     >
-      {/* Sound toggle button */}
-      <div className="absolute top-4 right-4 z-20">
-        <button
-          onClick={toggleSound}
-          className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center border border-gray-700 hover:bg-gray-700/80 transition-colors"
-        >
-          {soundEnabled ? (
-            <Volume2 className="w-5 h-5 text-purple-300" />
-          ) : (
-            <VolumeX className="w-5 h-5 text-gray-500" />
-          )}
-        </button>
-      </div>
-
-      {/* Restart level button */}
-      {onRestartLevel && (
-        <div className="absolute top-4 left-4 z-20">
-          <button
-            onClick={() => setShowRestartConfirm(true)}
-            aria-label="Restart level"
-            className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center border border-gray-700 hover:bg-gray-700/80 transition-colors"
-          >
-            <RotateCcw className="w-5 h-5 text-purple-300" />
-          </button>
-        </div>
-      )}
-
       {/* Restart confirmation modal */}
       {showRestartConfirm && (
         <div
@@ -794,24 +762,10 @@ export default function GameScreen({
             The Brain
           </div>
         )}
-        <button
-          onClick={togglePuzzleDetails}
-          className="flex items-center gap-1 text-xs bg-gray-800/80 px-2 py-1 rounded-full font-pixel border border-gray-700 hover:bg-gray-700/80 transition-colors"
-        >
-          {showPuzzleDetails ? (
-            <>
-              Hide Details <ChevronUp className="w-3 h-3" />
-            </>
-          ) : (
-            <>
-              Show Details <ChevronDown className="w-3 h-3" />
-            </>
-          )}
-        </button>
       </div>
 
             {/* Character and location section */}
-      {showPuzzleDetails && level !== 17 && (
+      {level !== 17 && (
         <CharacterLocationDisplay
           level={level}
           setting={setting}
@@ -833,7 +787,7 @@ export default function GameScreen({
       )}
 
       {/* Special display for level 17 to handle custom interactions */}
-      {showPuzzleDetails && level === 17 && (
+      {level === 17 && (
         <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
           <div
             className={`flex justify-center items-center ${lightSwitchInteractionState !== 'disabled' ? 'cursor-pointer' : ''}`}
@@ -956,6 +910,29 @@ export default function GameScreen({
             <Lightbulb className="w-3 h-3" />
             {showHints ? "Hide Hints" : "Show Hints"}
           </button>
+
+          <div className="flex items-center gap-2">
+            {onRestartLevel && (
+              <button
+                onClick={() => setShowRestartConfirm(true)}
+                aria-label="Restart level"
+                className="w-8 h-8 rounded-full bg-gray-800/80 flex items-center justify-center border border-gray-700 hover:bg-gray-700/80 transition-colors"
+              >
+                <RotateCcw className="w-4 h-4 text-purple-300" />
+              </button>
+            )}
+            <button
+              onClick={toggleSound}
+              aria-label="Toggle sound"
+              className="w-8 h-8 rounded-full bg-gray-800/80 flex items-center justify-center border border-gray-700 hover:bg-gray-700/80 transition-colors"
+            >
+              {soundEnabled ? (
+                <Volume2 className="w-4 h-4 text-purple-300" />
+              ) : (
+                <VolumeX className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+          </div>
         </div>
 
         {showHints && <HintSystem hints={puzzle.hints} />}
