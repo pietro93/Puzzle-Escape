@@ -20,8 +20,7 @@ export const puzzlesSet4: Puzzle[] = [
   {
     level: 32,
     question: "The Sphinx presents you with a golden scarab and ancient pedestals.",
-    description:
-      "The Sphinx speaks in riddles: 'Guide the sacred beetle along the path of the one whose generosity changed the value of gold itself. Trace the journey of the golden pilgrim who brought splendor to the lands he crossed.'",
+    description: "Guide the sacred beetle along the path of the golden pilgrim.",
     imageUrl: "",
     isGoldenScarabPuzzle: true,
     solution: "sublime splendor",

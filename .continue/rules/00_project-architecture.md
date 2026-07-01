@@ -1,5 +1,9 @@
 Filename: .continue/rules/00_project-architecture.md
 
+For the full picture (puzzle data/rendering/answer-checking pipeline, dialogue
+system, key-files table, known traps), see docs/ARCHITECTURE.md. This file is
+the terse version.
+
 Project name: "Puzzle Escape" (interactive narrative puzzle game)
 
 High-level overview

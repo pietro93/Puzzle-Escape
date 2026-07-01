@@ -6,6 +6,9 @@ Welcome to the official game design and development documentation index for **Pu
 
 ## 📂 Design Documentation Index
 
+0. ### 🏗️ [Architecture](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/ARCHITECTURE.md)
+   - **Read this first for any code task.** Stack, folder layout, the puzzle data/rendering/answer-checking pipeline, the dialogue system, and a key-files quick-reference — written to avoid a full codebase browse.
+
 1. ### 🗂️ [Game Design Document (GDD)](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/GDD.md)
    - Core concept, pillars, game loops, progression system, platform architecture, and UX/UI design guidelines.
    
@@ -34,3 +37,6 @@ Welcome to the official game design and development documentation index for **Pu
 
 > [!NOTE]
 > All referenced documentation files are located under the `docs/` subdirectory of the workspace root and are written to conform with industry-standard game development practices.
+
+> [!NOTE]
+> Agent/AI-assistant house rules — coding standards, key canonical files, and full character voice/persona rules for dialogue — live separately under `.continue/rules/*.md` (not part of the `docs/` design doc set above, but equally load-bearing for any code or dialogue change).

@@ -68,8 +68,7 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 45,
     question: "The Devil brings back some familiar faces from your journey.",
-    description:
-      "The Devil grins wickedly. 'I've brought some old friends to help you with this challenge. One of them knows the identity of a lost soul you must name. But be careful who you trust...'",
+    description: "One of these familiar faces knows the identity of a lost soul you must name.",
     imageUrl: "",
     isFamiliarFacesPuzzle: true, // This will use our new component
     solution: "beatrice portinari",

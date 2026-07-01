@@ -3,7 +3,7 @@ import type { Book } from "../../components/murder-mystery/types"
 export const genghisKhanBook: Book = {
   id: "genghis-khan-book",
   title: "Absolutely True* Facts About Genghis Khan (*Not Actually True)",
-  coverImage: "/images/murder-mystery/books/genghis-khan.webp",
+  coverImage: "/images/murder-mystery/books/genghis-khan-cover.webp",
   pages: [
     {
       imageUrl: "/images/murder-mystery/books/genghis-khan-cover.webp",

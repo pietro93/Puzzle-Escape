@@ -101,11 +101,12 @@ This document details the mechanics, visual setup, player interactions, step-by-
 - **Aesthetic:** Polished mahogany libraries, bookshelves, Victorian wallpapers, and gold clock faces.
 
 ### Level 11: Anagram Spice
-- **What it Consists of:** A coded text layout: `Tx1 Hx0 Ex1 M*0 A*2 N*1 S*1 I*1 O*1 N*1`.
+- **What it Consists of:** A pantry of 21 draggable spice jars (two scrollable carousels), a plate flanked by two hands, and two pedestal "arches" of glowing slots curving out from the plate — the left arch already holds a fixed S, the right arch already holds a fixed A.
 - **How to Solve (Player Journey):**
-  1. Filter out all letters marked with $0$.
-  2. Extract the remaining letters based on their color/underline frequency multipliers (e.g. A used 2 times, N used 2 times, etc.).
-  3. Rearrange the resulting letters into the name of a kitchen spice.
+  1. Drag any two jars onto the plate. Each hand turns independently if the jar pair contains a letter belonging to its word: the left hand reacts to T/R/A (completing `S _ _ _` into STAR), the right hand reacts to N/I/E/S (completing `A _ _ _ _` into ANISE). A jar with no relevant letter leaves both hands still.
+  2. Use a jar you've already proven is a dud as a "control" partner to isolate the effect of each new jar you test.
+  3. Optionally rest confirmed jars on the matching pedestal to keep track — pedestal slot order is cosmetic, only the letters tested on the plate matter.
+  4. Once all relevant letters are identified, combine them into the spice's name (ANISE) and the shape its pods are known for (STAR) to form the final two-word answer.
 - **Answer:** `star anise`
 
 ### Level 12: Clock Roman Numerals

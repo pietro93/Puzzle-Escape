@@ -86,10 +86,6 @@ export default function AnswerInput({
       >
         <Send className="w-4 h-4" />
       </button>
-
-      <div className="absolute -bottom-5 left-0 right-0 flex justify-center">
-        <div className="text-xs text-gray-400 font-pixel">Swipe up to submit • Swipe down to clear</div>
-      </div>
     </div>
   )
 }

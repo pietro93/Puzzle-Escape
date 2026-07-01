@@ -7,6 +7,9 @@ interface BoneCountingPuzzleProps {
   onSolve?: () => void
 }
 
+const BONE_SIZE = 48
+const PILE_AREA_HEIGHT = 280
+
 interface Bone {
   id: string
   color: string
@@ -52,21 +55,37 @@ export default function BoneCountingPuzzle({ onSolve }: BoneCountingPuzzleProps)
     const initialBones: Bone[] = []
     let id = 0
 
+    // Flatten all bones first so we can scatter them into a "mountain" pile
+    // spanning the full width near the bottom of the area, instead of a tall
+    // narrow stack down the middle.
+    const allEntries: { color: string; number: number }[] = []
     configs.forEach((config) => {
       config.numbers.forEach((number) => {
-        initialBones.push({
-          id: `${config.color}-${number}-${id}`,
-          color: config.color,
-          number,
-          flipH: Math.random() > 0.5,
-          flipV: Math.random() > 0.5,
-          rotation: Math.random() * 360,
-          zIndex: Math.floor(Math.random() * 100) + 1,
-          left: 40 + Math.random() * 20, // Center around 50%
-          top: 100 + Math.random() * 200, // Below skulls
-        })
-        id++
+        allEntries.push({ color: config.color, number })
       })
+    })
+
+    const PILE_HEIGHT = PILE_AREA_HEIGHT - BONE_SIZE
+    const BASE_TOP = PILE_AREA_HEIGHT - BONE_SIZE
+
+    allEntries.forEach(({ color, number }) => {
+      const leftPercent = 6 + Math.random() * 88 // full width, small margin
+      const centerDist = Math.abs(leftPercent - 50) / 50 // 0 at center, 1 at edges
+      const pileHeightAtX = PILE_HEIGHT * (1 - centerDist * centerDist) // taller in the middle
+      const top = BASE_TOP - Math.random() * pileHeightAtX
+
+      initialBones.push({
+        id: `${color}-${number}-${id}`,
+        color,
+        number,
+        flipH: Math.random() > 0.5,
+        flipV: Math.random() > 0.5,
+        rotation: Math.random() * 360,
+        zIndex: Math.floor(Math.random() * 100) + 1,
+        left: leftPercent,
+        top: Math.max(0, top),
+      })
+      id++
     })
 
     setBones(initialBones)
@@ -97,10 +116,10 @@ export default function BoneCountingPuzzle({ onSolve }: BoneCountingPuzzleProps)
     const y = e.clientY - rect.top
 
     // Ensure bones stay within container bounds
-    const minY = 0 // Top of container (below skulls)
-    const maxY = rect.height - 48 // Bottom of container minus bone height
+    const minY = 0 // Top of container (right below skulls)
+    const maxY = rect.height - BONE_SIZE // Bottom of container minus bone height
     const minX = 0
-    const maxX = rect.width - 48 // Right edge minus bone width
+    const maxX = rect.width - BONE_SIZE // Right edge minus bone width
 
     const clampedX = Math.max(minX, Math.min(maxX, x))
     const clampedY = Math.max(minY, Math.min(maxY, y))
@@ -119,9 +138,9 @@ export default function BoneCountingPuzzle({ onSolve }: BoneCountingPuzzleProps)
 
   return (
     <div className="flex flex-col items-center justify-center p-4">
-      <div className="relative w-full max-w-md h-96">
+      <div className="relative w-full max-w-md">
         {/* Skulls at the top */}
-        <div className="flex justify-center gap-4 mb-8">
+        <div className="flex justify-center gap-4 mb-4">
           <img
             src="/images/bones/purple-skull.webp"
             alt="Purple skull"
@@ -144,10 +163,13 @@ export default function BoneCountingPuzzle({ onSolve }: BoneCountingPuzzleProps)
           />
         </div>
 
-        {/* Bones pile - now draggable */}
+        {/* Bones pile - now draggable. Height is explicit so the draggable
+            area matches the visible card exactly (no reaching past the
+            bottom edge, and bones can be dropped right up against the skulls). */}
         <div
           ref={containerRef}
-          className="relative w-full h-full"
+          className="relative w-full"
+          style={{ height: PILE_AREA_HEIGHT }}
           onDragOver={handleDragOver}
         >
           {bones.map((bone) => (

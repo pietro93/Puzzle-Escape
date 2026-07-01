@@ -51,15 +51,25 @@ const config: Config = {
       },
       fontFamily: {
         pixel: ["PixelFont", "monospace"],
+        medieval: ["var(--font-medieval)", "serif"],
+        parchment: ["var(--font-parchment)", "serif"],
       },
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "20%": { transform: "translateX(-4px)" },
+          "40%": { transform: "translateX(4px)" },
+          "60%": { transform: "translateX(-4px)" },
+          "80%": { transform: "translateX(4px)" },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-out forwards",
+        shake: "shake 0.4s ease-in-out",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

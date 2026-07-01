@@ -41,6 +41,11 @@ import FearYourDreamsPuzzle from "./fear-your-dreams-puzzle"
 import WordLadderCarouselPuzzle from "./word-ladder-carousel-puzzle"
 import BoneTileMazePuzzle from "./bone-tile-maze-puzzle"
 import ShacklesPuzzle from "./shackles-puzzle"
+import LockKeyPuzzle from "./lock-key-puzzle"
+import ClockworkPuzzle from "./clockwork-puzzle"
+import MorseRatsPuzzle from "./morse-rats-puzzle"
+import AnagramSpicePuzzle from "./anagram-spice-puzzle"
+import MansionClockPuzzle from "./mansion-clock-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -66,6 +71,7 @@ interface PuzzleContentProps {
   isMagicBoxPuzzle?: boolean
   onMurderMysteryLocationUpdate?: (location: string) => void
   onMagicBoxSolved?: () => void
+  onMansionClockStepChange?: (step: number) => void
 }
 
 export default function PuzzleContent({
@@ -91,6 +97,7 @@ export default function PuzzleContent({
   questionnaireRef,
   onMurderMysteryLocationUpdate,
   onMagicBoxSolved,
+  onMansionClockStepChange,
 }: PuzzleContentProps) {
   // Check if this puzzle has an image
   const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
@@ -183,6 +190,21 @@ export default function PuzzleContent({
     // Check if this is a shackles puzzle
     const isShacklesPuzzle = puzzle.isShacklesPuzzle
 
+    // Check if this is a lock & key puzzle
+    const isLockKeyPuzzle = puzzle.isLockKeyPuzzle
+
+    // Check if this is a clockwork puzzle
+    const isClockworkPuzzle = puzzle.isClockworkPuzzle
+
+    // Check if this is a morse rats puzzle
+    const isMorseRatsPuzzle = puzzle.isMorseRatsPuzzle
+
+    // Check if this is the anagram spice puzzle
+    const isAnagramSpicePuzzle = puzzle.isAnagramSpicePuzzle
+
+    // Check if this is the mansion clock puzzle
+    const isMansionClockPuzzle = puzzle.isMansionClockPuzzle
+
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
   const [magicBoxSolved, setMagicBoxSolved] = useState(false)
 
@@ -259,6 +281,9 @@ export default function PuzzleContent({
 
        {isFearYourDreamsPuzzle ? (
        <div className="my-4">
+       {puzzle.description && (
+         <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+       )}
        <FearYourDreamsPuzzle onSolve={() => {}} />
        </div>
        ) : null}
@@ -278,6 +303,30 @@ export default function PuzzleContent({
         {isShacklesPuzzle ? (
           <div className="my-4">
             <ShacklesPuzzle onSolve={() => {}} />
+          </div>
+        ) : null}
+
+        {isLockKeyPuzzle ? (
+          <div className="my-4">
+            <LockKeyPuzzle onSolve={() => {}} onSolutionGenerated={onSolutionGenerated} />
+          </div>
+        ) : null}
+
+        {isClockworkPuzzle ? (
+          <div className="my-4">
+            <ClockworkPuzzle onSolve={() => {}} />
+          </div>
+        ) : null}
+
+        {isAnagramSpicePuzzle ? (
+          <div className="my-4">
+            <AnagramSpicePuzzle onSolve={() => {}} />
+          </div>
+        ) : null}
+
+        {isMansionClockPuzzle ? (
+          <div className="my-4">
+            <MansionClockPuzzle onStepChange={onMansionClockStepChange} />
           </div>
         ) : null}
 
@@ -317,6 +366,13 @@ export default function PuzzleContent({
               handleJigsawComplete()
             }}
           />
+        </div>
+      ) : isMorseRatsPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <MorseRatsPuzzle onSolve={() => {}} />
         </div>
       ) : isCrocodileJigsawPuzzle ? (
         <div className="my-4">
@@ -468,7 +524,7 @@ export default function PuzzleContent({
             <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
           </div>
         </div>
-      ) : puzzle.description ? (
+      ) : !isFearYourDreamsPuzzle && !isLockKeyPuzzle && !isClockworkPuzzle && !isMorseRatsPuzzle && !isAnagramSpicePuzzle && !isMansionClockPuzzle && puzzle.description ? (
         <div className="text-gray-300 whitespace-pre-line font-mono text-sm bg-gray-950/50 p-4 rounded-lg border border-gray-800 shadow-inner">
           {puzzle.description}
         </div>

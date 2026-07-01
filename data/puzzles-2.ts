@@ -5,23 +5,24 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 11,
     question: "I am looking for a spice. Must be somewhere around here.",
-    description: "Tx1 Hx0 Ex1 M*0 A*2 N*1 S*1 I*1 O*1 N*1",
-    imageUrl: "/images/puzzle11.webp",
+    description: "",
+    imageUrl: "",
+    isAnagramSpicePuzzle: true,
     solution: "star anise",
     category: "pattern",
     hints: [
-      "The answer is an anagram. The colors indicate how many times a letter must be used.",
-      "Each letter must be used as many times as it appears in green (underline). Remove all other letters.",
+      "Drag spice jars onto the plate, two at a time. The hands react to what you place.",
+      "A still hand means neither spice belongs in the solution. A turning hand means one of them does. Pair an untested jar with one you already know is a dud to isolate the result.",
+      "Once you've confirmed which word a jar belongs to, rest it on that word's pedestal to keep track — the order on the pedestal doesn't matter, only the letters.",
       "The answer is formed by two words: the name of the spice and its shape.",
     ],
   },
   {
     level: 12,
-    question: "The butler presents you with an ornate clock, its face adorned with Roman numerals.",
-    description:
-      '"This timepiece has been in the master\'s family for generations," the butler explains, his gloved finger tracing the numerals on the clock\'s face. "The master was fond of creating sequences with these times. He left this particular sequence unfinished. Can you determine what comes next?"\n\nIII\nXII:IX\nXXI:XVIII\nVI:XXVII',
+    question: "The butler presents you with an ornate clock.",
+    description: "",
     imageUrl: "",
-    locationImage: "/images/mansion-clock.webp",
+    isMansionClockPuzzle: true,
     solution: "XV:XXXVI",
     category: "pattern",
     hints: [
@@ -32,7 +33,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 13,
-    question: "The butler presents you with a curious color palette.",
+    question: "",
     description: "",
     imageUrl: "",
     locationImage: "/images/color-palette/color_palette.webp",
@@ -65,8 +66,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 15,
     question: "The butler introduces the master's first love.",
-    description:
-      '"This is a portrait of Patricia, the master\'s first love," the butler explains with a hint of melancholy. "She was the daughter of a wealthy merchant from Florence. The master met her during his travels in Italy and was immediately captivated by her intelligence and beauty. Sadly, she died of fever at the young age of twenty-four, before they could be married. He commissioned this painting shortly before her untimely demise. The master claimed there was a message hidden within it—something only those with keen eyes would notice."',
+    description: "A portrait of Patricia, the master's first love. Examine it closely.",
     imageUrl: "/images/level15.webp",
     solution: "life and death",
     category: "riddle",
@@ -79,8 +79,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 16,
     question: "The butler shows some of the master's favourite readings.",
-    description:
-      "'These were some of the master's favorite books,' the butler explains, gesturing to the shelf. 'I myself was particularly fond of \"The Third Eye.\" The master said it provided a unique perspective on the other works.'",
+    description: "Some of the master's favorite books. The Third Eye provides a unique perspective on the others.",
     imageUrl: "/images/level16.webp",
     solution: "TEARS",
     category: "pattern",
@@ -108,8 +107,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 18,
     question: "The butler presents you with a mathematical puzzle involving the mansion's silverware.",
-    description:
-      "The butler adjusts his bow tie. 'I have a mathematical problem for you, if you would be so kind. The master was quite fond of these little brain teasers. Can you determine the value of knife + fork + spoon?'",
+    description: "Can you determine the value of knife + fork + spoon?",
     imageUrl: "/images/puzzle18.webp",
     solution: "135",
     category: "math",
@@ -123,8 +121,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 19,
-    question:
-      "This is Count Papagalul. He's quite the conversationalist, though his manners leave something to be desired. Be careful, he bites.",
+    question: "Count Papagalul awaits.",
     description: "",
     imageUrl: "",
     isParrotPuzzle: true,
@@ -140,7 +137,7 @@ export const puzzlesSet2: Puzzle[] = [
     level: 20,
     question:
       "Find the name of the heir.",
-    description: "I do hope you are prepared for a most intriguing challenge. I present you with the labyrinthine family tree of the House of Morvane, you shall uncover secrets shrouded in the very darkness that has haunted our noble lineage for generations. Your task, if you will, is to discover the identity of a forgotten heir who ruled with a brief yet most infamous reign. The answer, I dare say, lies within the dusty annals of our history and a cryptic prophecy that has plagued our house for centuries.",
+    description: "Discover the identity of a forgotten heir who ruled with a brief yet infamous reign.",
     imageUrl: "",
     isLibraryPuzzle: true,
     libraryData: {
@@ -150,49 +147,49 @@ export const puzzlesSet2: Puzzle[] = [
           title: "The Dark Legacy of Morvane",
           image: "/images/book-legacy-of-morvane.webp",
           content:
-            "The House of Morvane has long been shrouded in mystery and intrigue. Our ancestors built grand castles and forged alliances that endured for centuries, yet beneath this grandeur, discord brewed. It is said that one of our most infamous rulers, a Lady of noble birth, left an indelible mark on our history. Her reign, though brief, was marked by terror and despair. She never married and never accepted the title of Queen, even after her parents passed away.\n\nThe early days of our kingdom were marked by grandeur and power. Our rulers were known for their strength and diplomacy, often securing alliances through strategic marriages. However, these alliances sometimes came at a great cost, leading to internal strife and external threats that consistently challenged the stability of our realm.",
+            "They called her the Uncrowned, and the name outlived her by centuries. Her mother died of a wasting fever in the third week of the long rains; her father followed within the year, whether of grief or the same fever no one troubled to record. The High Septon climbed the seventy chapel steps himself, the circlet resting on a cushion of moth-eaten velvet, exactly as custom demanded when both crown-parents lay in the crypt. She looked at it the length of three candle-drips, then sent him back down the stairs.\n\nShe never let the priests set the circlet on her head, not that day nor any after. Three lords offered for her hand that first winter, with gifts of cattle, ships, and verse no one had asked for, and she turned away every one of them; she never took a husband. The old stewards still swear she kept the rejected betrothal rings in a drawer, if only to count them on bad nights.",
         },
         {
           id: "royal-intrigue",
           title: "Royal Intrigue",
           image: "/images/book-royal-intrigue.webp",
           content:
-            "In the House of Morvane, diplomacy has always been a delicate art. Marriages were often arranged to secure alliances, and the fate of entire kingdoms hung in the balance of these negotiations. Despite these efforts, internal strife and external threats have consistently challenged the stability of our realm. The balance between ambition and wisdom is a delicate one, and those who fail to find this balance often suffer dire consequences.\n\nOur history is a tale of a ruler who shared her first name with a powerful ancestor, for cyclical is the nature of fate. Her rise to power was as unexpected as it was short-lived, for she ruled for just about a year before succumbing to her own thirst for power.",
+            "Our histories rarely agree on much, but on this they do not quarrel: she shared her name with a woman three generations dead, a powerful ancestress whose portrait still hangs, cracked and smoke-stained, in the east gallery. Whether the naming was an honor or an omen, the maesters never settled, and the argument fills three volumes no one but archivists has read since.\n\nHer reign — if reign is the word for what she held — lasted a single year, no more, before it slipped from her hands entirely. She spent that year, by every account, quarrelling with cousins who thought the seat should have gone to them, and won not one of those quarrels.",
         },
         {
           id: "forgotten-chronicles",
           title: "Forgotten Chronicles",
           image: "/images/book-forgotten-chronicles.webp",
           content:
-            "Deep within our archives lies a tale of a monarch who ruled with an iron fist for a brief period. She was the daughter of Princess Aethera the Forgotten, a child whose existence was overshadowed by the grandeur of her parents. Her reign was marked by fear and terror, leaving behind only whispers and rumors.\n\nThe kingdom of Morvane has faced numerous challenges throughout its history, from wars with neighboring kingdoms to internal conflicts that have threatened to tear us apart. Despite these challenges, our people have always found a way to persevere, often through the leadership of strong and determined rulers.",
+            "She was the daughter of Princess Aethera, the Forgotten — a woman so thoroughly struck from the official record that even her own daughter appears in the ledgers only as 'issue, female, unnamed.' Whoever ordered that erasure did their work well; we know the daughter ruled, and little else of how she came to it.\n\nShe ruled with an iron fist, though her time at it was brief — brief enough that the court tailors never finished her second set of formal robes. Fear was her instrument, and she used it without apparent regret, for as long as it lasted, which by every surviving account was not very long at all.",
         },
         {
           id: "shadows-of-the-past",
           title: "Shadows of the Past",
           image: "/images/book-shadow-of-the-past.webp",
           content:
-            "The history of Morvane is filled with stories of great heroes and villains, each leaving their mark on our collective memory. From brave warriors to cunning politicians, our ancestors have shaped the course of our kingdom's destiny. However, it is often the lesser-known figures who have had the most profound impact on our history.\n\nIn the annals of our family, there is a tale of a ruler known by a nickname that struck fear into the hearts of our people: The Accursed. This monarch's downfall was as swift as their rise, leaving behind a legacy of darkness and despair.",
+            "They called her the Accursed, and not as a figure of speech. No one agrees on why; three separate chroniclers offer three separate catastrophes — a fire, a famine, a death no one would name aloud — and none of the three accounts agree on the year.\n\nOnly this much holds steady across all of them: the name stuck to her like pitch, and it never came loose, not in her lifetime, and not in the two centuries since.",
         },
         {
           id: "lost-heirs",
           title: "Lost Heirs",
           image: "/images/book-lost-heirs.webp",
           content:
-            'Prince Marcen the I, also known as "The Unseen," was a figure of great promise. Alas, his fate was sealed when he was kidnapped as a child and never found. Despite his title, he never ascended to power, leaving his ambitions unfulfilled. His mother, Princess Lirien the Deceiver was known for her cunning and manipulative nature, often using her charm to influence those around her.\n\nPrincess Lirien\'s marriage to Lord Ryker was a union of convenience and power. While she was known for her deceitful nature, her true intentions were often shrouded in mystery. This marriage, like many others in our history, highlights the complex web of alliances and rivalries that have shaped our kingdom.',
+            "Prince Marcen was stolen from his cradle one autumn night, by a hand the household guard never identified, and never recovered — not his body, not his bones, not so much as a scrap of the blanket he was wrapped in. They called him the Unseen before he was old enough to earn any other name, which in hindsight reads less like a nickname and more like a prophecy.\n\nHis mother, the Lady Lirien, was known at court as the Deceiver, a title she reportedly found more amusing than insulting. She is said to have laughed, once, when a visiting lord used it to her face, and asked him whether he'd ridden all this way just to flatter her.",
         },
         {
           id: "royal-deceit",
           title: "Royal Deceit",
           image: "/images/book-royal-deceit.webp",
           content:
-            "Throughout the centuries, the House of Morvane has been marked by both grand achievements and tragic failures. Our rulers have walked a thin line between glory and disaster, often leaving behind legacies that are as complex as they are fascinating. Understanding these complexities is key to unraveling the mysteries of our past.\n\nPrince Marcen remains a mystery, a prince lost to the shadows of history before he could ever claim his rightful place. His story serves as a reminder of the fragility of power and the unpredictability of fate.",
+            "Lord Ryker wed Lirien the Deceiver knowing full well what she was, or so he claimed afterward to anyone who would listen, which by the end of his life was mostly servants and a deaf hunting dog. Their son's disappearance was never solved, and the investigation — such as it was — closed within the season, for want of a single living witness.\n\nHe ruled nothing, in the end; he is a name in a ledger, a few lines in three of these very books, and little more. Some histories are not mysteries so much as wounds the family stopped bothering to dress.",
         },
         {
           id: "fractured-throne",
           title: "The Fractured Throne",
           image: "/images/book-the-fractured-throne.webp",
           content:
-            "One of our most powerful monarchs ruled with an iron fist, but her reign was cut short by a descent into madness. After the death of both her parents, her grip on reality faltered, and she became increasingly isolated, unable to make rational decisions. This led to a period of chaos and instability, as factions within the kingdom vied for control.\n\nDespite her initial strength, her downfall was swift and tragic, leaving behind a legacy of fear and confusion. The Lady took her own life the night before she was meant to be officially crowned, hence never officially becoming a Queen. This tale serves as a cautionary story about the dangers of unchecked power and the importance of mental fortitude in leadership.",
+            "Both her mother and her father were dead before the end came for her too, and something in her that had held steady through their funerals began, slowly, to give. She kept fewer counsellors, then none at all; she would not be seen for days at a stretch, and when she was seen, the household staff learned to agree with whatever she said, however little sense it made.\n\nThe crown was to be set on her head at dawn, in the same chapel, on the same seventy steps. She did not live to see the sunrise. She took her own life the night before, and so she never wore the circlet, and never answered to the title.",
         },
       ],
     },

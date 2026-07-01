@@ -5,8 +5,7 @@ export const puzzlesSet3: Puzzle[] = [
   {
     level: 21,
     question: "The gypsy woman invites you to answer some questions about yourself.",
-    description:
-      "The gypsy woman leans forward, her eyes gleaming with curiosity. 'Before I can read your future, I must understand your essence. Answer truthfully, for the cards see  'Before I can read your future, I must understand your essence. Answer truthfully, for the cards see through all deception.'",
+    description: "Answer truthfully — the cards see through all deception.",
     imageUrl: "",
     isQuestionnairePuzzle: true,
     solution: "RANDOM", // This will be overridden by the component
@@ -64,8 +63,7 @@ export const puzzlesSet3: Puzzle[] = [
   {
     level: 25,
     question: "The gypsy woman presents you with an ancient geometric puzzle.",
-    description:
-      '"These symbols were used by ancient mystics to encode their most powerful secrets," the gypsy woman explains, her eyes gleaming with excitement. "Each shape holds a specific value, and when combined, they reveal the key to unlocking hidden knowledge. Solve this puzzle, and you\'ll glimpse the numeric code that opens the door to the next realm."',
+    description: "Each shape holds a specific value. Solve the puzzle to glimpse the numeric code.",
     imageUrl: "/images/level25.webp",
     solution: "1052",
     category: "math",

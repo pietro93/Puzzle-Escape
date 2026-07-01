@@ -6,14 +6,14 @@ import Image from "next/image"
 import { useState, useRef, useEffect } from "react"
 import type { Puzzle } from "@/types/puzzle"
 import HintSystem from "./hint-system"
-import { Lightbulb, ChevronUp, ChevronDown, Volume2, VolumeX, Sparkles } from "lucide-react"
+import { Lightbulb, ChevronUp, ChevronDown, Volume2, VolumeX, Sparkles, RotateCcw } from "lucide-react"
 import DevilDialogue from "./devil-dialogue"
 import ElevatorPanel from "./elevator-panel"
 import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
-import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle } from "@/utils/dialogue-utils"
+import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle, getClockButlerLine } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
@@ -33,6 +33,7 @@ interface GameScreenProps {
   characterDialogues?: Record<string, string[]>
   onLevelComplete: () => void
   onTransition: (transitionId: string) => void
+  onRestartLevel?: () => void
 }
 
 // Helper functions
@@ -73,6 +74,7 @@ export default function GameScreen({
   characterDialogues,
   onLevelComplete,
   onTransition,
+  onRestartLevel,
 }: GameScreenProps) {
   const { playSound } = useAudio()
   const { vibrate } = useHaptics()
@@ -114,6 +116,7 @@ export default function GameScreen({
   const [lightsOn, setLightsOn] = useState(false)
   const [solved, setSolved] = useState(false)
   const [showCompassPopup, setShowCompassPopup] = useState(false) // State for the compass image popup
+  const [showRestartConfirm, setShowRestartConfirm] = useState(false)
 
   // State to manage interaction level for level 17: 'disabled', 'dim', 'active'
   const [lightSwitchInteractionState, setLightSwitchInteractionState] = useState<'disabled' | 'dim' | 'active'>('disabled')
@@ -121,6 +124,7 @@ export default function GameScreen({
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const questionnaireRef = useRef<any>(null)
   const [currentPyramidRoom, setCurrentPyramidRoom] = useState<string>("entrance")
+  const [clockStep, setClockStep] = useState(0)
   const [hasPyramidTorch, setHasPyramidTorch] = useState(false)
   const [showDevilDialogue, setShowDevilDialogue] = useState(false)
   const [currentElevatorFloor, setCurrentElevatorFloor] = useState(0)
@@ -521,6 +525,11 @@ export default function GameScreen({
     setCharacterDialogue("Are you a fan of rebuses? Hehe")
     setShowCharacterDialogue(true)
     }
+    // Special handling for level 12 (mansion clock puzzle) — reflects the clock's actual hand position, not random
+    else if (level === 12) {
+      setCharacterDialogue(getClockButlerLine(clockStep))
+      setShowCharacterDialogue(true)
+    }
     // Special handling for level 10 (guard puzzle)
     else if (level === 10) {
     // Rotate through guard dialog lines
@@ -727,6 +736,54 @@ export default function GameScreen({
         </button>
       </div>
 
+      {/* Restart level button */}
+      {onRestartLevel && (
+        <div className="absolute top-4 left-4 z-20">
+          <button
+            onClick={() => setShowRestartConfirm(true)}
+            aria-label="Restart level"
+            className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center border border-gray-700 hover:bg-gray-700/80 transition-colors"
+          >
+            <RotateCcw className="w-5 h-5 text-purple-300" />
+          </button>
+        </div>
+      )}
+
+      {/* Restart confirmation modal */}
+      {showRestartConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setShowRestartConfirm(false)}
+        >
+          <div
+            className="bg-gray-900 border border-gray-700 rounded-2xl p-6 max-w-xs w-full shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="font-pixel text-white text-lg mb-2">Restart Level?</h3>
+            <p className="text-sm text-gray-400 mb-6">
+              Your progress on this level will be lost and the intro scene will play again.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowRestartConfirm(false)}
+                className="flex-1 py-2 rounded-xl bg-gray-800 text-gray-300 font-pixel text-sm hover:bg-gray-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowRestartConfirm(false)
+                  onRestartLevel()
+                }}
+                className="flex-1 py-2 rounded-xl bg-red-900 text-white font-pixel text-sm hover:bg-red-800 transition-colors"
+              >
+                Restart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Level indicator */}
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm font-pixel text-purple-300 bg-gray-900/70 px-3 py-1 rounded-full border border-gray-800 shadow-lg flex items-center gap-1">
@@ -845,6 +902,7 @@ export default function GameScreen({
         questionnaireRef={questionnaireRef}
         onMurderMysteryLocationUpdate={handleMurderMysteryLocationUpdate}
           onMagicBoxSolved={handleMagicBoxSolved}
+        onMansionClockStepChange={setClockStep}
       />
 
       {/* Answer input section */}

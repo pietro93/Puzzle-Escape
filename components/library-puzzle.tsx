@@ -2,7 +2,31 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { X } from "lucide-react"
+import { X, Eraser } from "lucide-react"
+import FamilyTreeScroll from "@/components/family-tree-scroll"
+
+const HIGHLIGHTS_STORAGE_KEY = "puzzle-escape-library-highlights"
+
+const MIN_CLAUSE_WORDS = 4
+
+function splitIntoSentences(paragraph: string): string[] {
+  const sentenceChunks = paragraph.match(/[^.!?;]+[.!?;]+["']?\s*|[^.!?;]+$/g) ?? [paragraph]
+  const result: string[] = []
+
+  for (const chunk of sentenceChunks) {
+    const commaParts = chunk.match(/[^,]+,\s*|[^,]+$/g) ?? [chunk]
+    for (const part of commaParts) {
+      const wordCount = part.trim().split(/\s+/).filter(Boolean).length
+      if (wordCount < MIN_CLAUSE_WORDS && result.length > 0) {
+        result[result.length - 1] += part
+      } else {
+        result.push(part)
+      }
+    }
+  }
+
+  return result
+}
 
 interface Book {
   id: string
@@ -20,6 +44,7 @@ export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
   const [showFamilyTree, setShowFamilyTree] = useState(false)
   const [shuffledBooks, setShuffledBooks] = useState<Book[]>([])
   const [readBooks, setReadBooks] = useState<Set<string>>(new Set())
+  const [highlights, setHighlights] = useState<Set<string>>(new Set())
 
   // Shuffle books on initial load (except family tree scroll)
   useEffect(() => {
@@ -27,8 +52,39 @@ export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
     setShuffledBooks(shuffled)
   }, [books])
 
+  // Load persisted highlights on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(HIGHLIGHTS_STORAGE_KEY)
+      if (stored) setHighlights(new Set(JSON.parse(stored)))
+    } catch {
+      // ignore corrupt/missing storage
+    }
+  }, [])
+
+  const toggleHighlight = (key: string) => {
+    setHighlights((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      localStorage.setItem(HIGHLIGHTS_STORAGE_KEY, JSON.stringify(Array.from(next)))
+      return next
+    })
+  }
+
+  const clearHighlightsForActiveBook = () => {
+    setHighlights((prev) => {
+      const next = new Set(Array.from(prev).filter((key) => !key.startsWith(`${activeBook}-`)))
+      localStorage.setItem(HIGHLIGHTS_STORAGE_KEY, JSON.stringify(Array.from(next)))
+      return next
+    })
+  }
+
+  const [pageIndex, setPageIndex] = useState(0)
+
   const handleBookClick = (bookId: string) => {
     setActiveBook(bookId)
+    setPageIndex(0)
     setReadBooks((prev) => new Set(prev).add(bookId))
   }
 
@@ -112,12 +168,21 @@ export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
           <div className="bg-gray-900 rounded-lg border-2 border-gray-700 p-5 max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-pixel text-purple-300">{getBookById(activeBook)?.title}</h3>
-              <button
-                onClick={handleCloseBook}
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700"
-              >
-                <X className="w-4 h-4 text-gray-400" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={clearHighlightsForActiveBook}
+                  className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 opacity-50 hover:opacity-100 transition-opacity"
+                  aria-label="Clear highlights"
+                >
+                  <Eraser className="w-4 h-4 text-gray-400" />
+                </button>
+                <button
+                  onClick={handleCloseBook}
+                  className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700"
+                >
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              </div>
             </div>
             <div className="flex items-center justify-center mb-4">
               <div className="w-20 h-20 relative pixelated-container">
@@ -130,9 +195,54 @@ export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
                 />
               </div>
             </div>
-            <div className="text-gray-300 whitespace-pre-line font-mono text-sm">
-              {getBookById(activeBook)?.content}
-            </div>
+            {(() => {
+              const content = getBookById(activeBook)?.content ?? ""
+              const paragraphs = content.split(/\n\s*\n/)
+              const page = paragraphs[pageIndex] ?? ""
+              const sentences = splitIntoSentences(page)
+              return (
+                <>
+                  <div className="text-gray-300 font-mono text-sm leading-relaxed min-h-[6rem]">
+                    {sentences.map((sentence, sIdx) => {
+                      const key = `${activeBook}-${pageIndex}-${sIdx}`
+                      const isHighlighted = highlights.has(key)
+                      return (
+                        <span
+                          key={key}
+                          onClick={() => toggleHighlight(key)}
+                          className={`cursor-pointer rounded-sm transition-colors duration-150 ${
+                            isHighlighted ? "bg-yellow-400/40 text-yellow-100" : "hover:bg-yellow-400/15"
+                          }`}
+                        >
+                          {sentence}
+                        </span>
+                      )
+                    })}
+                  </div>
+                  {paragraphs.length > 1 && (
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-800">
+                      <button
+                        onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
+                        disabled={pageIndex === 0}
+                        className="text-xs font-pixel text-purple-300 disabled:opacity-30 disabled:cursor-not-allowed hover:text-purple-200 px-2 py-1"
+                      >
+                        ← Prev
+                      </button>
+                      <span className="text-xs font-pixel text-gray-500">
+                        {pageIndex + 1} / {paragraphs.length}
+                      </span>
+                      <button
+                        onClick={() => setPageIndex((p) => Math.min(paragraphs.length - 1, p + 1))}
+                        disabled={pageIndex === paragraphs.length - 1}
+                        className="text-xs font-pixel text-purple-300 disabled:opacity-30 disabled:cursor-not-allowed hover:text-purple-200 px-2 py-1"
+                      >
+                        Next →
+                      </button>
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </div>
         </div>
       )}
@@ -140,28 +250,7 @@ export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
       {/* Family Tree Modal */}
       {showFamilyTree && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-gray-900 rounded-lg border-2 border-gray-700 p-5 max-w-2xl w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-pixel text-purple-300">House of Morvane Family Tree</h3>
-              <button
-                onClick={handleCloseFamilyTree}
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700"
-              >
-                <X className="w-4 h-4 text-gray-400" />
-              </button>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-xl">
-                <Image
-                  src="/images/family-tree.webp"
-                  alt="Family Tree"
-                  width={800}
-                  height={600}
-                  className="pixelated w-full h-auto"
-                />
-              </div>
-            </div>
-          </div>
+          <FamilyTreeScroll onClose={handleCloseFamilyTree} />
         </div>
       )}
 

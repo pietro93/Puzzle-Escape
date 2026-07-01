@@ -4,9 +4,6 @@ import React, { useState, useEffect } from "react"
 
 interface DugBone {
   letter: string
-  x: number
-  y: number
-  rotation: number
 }
 
 interface ShacklesPuzzleProps {
@@ -39,8 +36,8 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
     setDraggedItem(null)
   }
 
-  const handleInputSubmit = () => {
-  const rawLetter = inputLetter
+  const handleInputSubmit = (overrideLetter?: string) => {
+  const rawLetter = overrideLetter !== undefined ? overrideLetter : inputLetter
   const letter = rawLetter.trim().toUpperCase()
   setInputLetter("")
   setShowInputPopup(false)
@@ -71,23 +68,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
         setTimeout(() => {
           setShacklesState("digging")
           setTombState("dig")
-          // Place bone in hole, ensuring minimum distance from existing bones
-          const minDistance = 50 // Minimum pixels between bones (increased)
-          let x: number, y: number, attempts = 0
-          const maxAttempts = 100 // More attempts to find valid position
-
-          do {
-            x = 30 + Math.random() * 140 // Wider area: 30 to 170
-            y = 130 + Math.random() * 100 // Taller area: 130 to 230
-            attempts++
-          } while (attempts < maxAttempts && dugBones.some(bone =>
-            Math.sqrt((bone.x - x) ** 2 + (bone.y - y) ** 2) < minDistance
-          ))
-
-
-
-          const rotation = Math.random() * 360
-          setDugBones(prev => [...prev, { letter: rawLetter || letter, x, y, rotation }])
+          setDugBones(prev => [...prev, { letter: inscribeSequence[inscribeIndex] }])
           setTimeout(() => {
             setShacklesState("resting")
             setCurrentIndex(prev => prev + 1)
@@ -120,6 +101,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
   const handleInputCancel = () => {
     setInputLetter("")
     setShowInputPopup(false)
+    handleInputSubmit("")
   }
 
   const handleShacklesClick = () => {
@@ -127,7 +109,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
 
     // Stop providing bones after puzzle is solved
     if (currentIndex >= solution.length) {
-      setDialogue("Shackles has already received all the bones needed. He contentedly chews on them.")
+      setDialogue("Shackles has all the bones he needs now. He just gnaws contentedly, ignoring you.")
       setTimeout(() => setDialogue(null), 3000)
       return
     }
@@ -245,11 +227,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
         setTimeout(() => {
           setShacklesState("digging")
           setTombState("dig")
-          // Place bone in hole
-          const x = 43.7 + Math.random() * 107.9
-          const y = 152 + Math.random() * 64.5
-          const rotation = Math.random() * 360
-          setDugBones(prev => [...prev, { letter: draggedItem, x, y, rotation }])
+          setDugBones(prev => [...prev, { letter: draggedItem }])
           setTimeout(() => {
             setShacklesState("resting")
             setCurrentIndex(prev => prev + 1)
@@ -269,6 +247,8 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
       }, 500)
     } else {
       // Wrong bone, return to inventory
+      setDialogue("Shackles sniffs the bone disapprovingly, then tosses it aside. Try again!")
+      setTimeout(() => setDialogue(null), 4000)
       setDraggedItem(null)
     }
     setDraggedItem(null)
@@ -291,6 +271,20 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
 
   return (
     <div className="flex flex-col">
+      {/* Buried Bones Trail - shows burial order so far */}
+      <div className="w-full max-w-md mx-auto bg-gray-800/50 p-3 rounded-md shadow-md mb-2 min-h-[5rem]">
+        <div className="flex flex-wrap gap-0 justify-center">
+          {dugBones.map((bone, index) => (
+            <img
+              key={index}
+              src={bone.letter === " " ? "/images/shackles-bone-empty.webp" : `/images/shackles-bone-${bone.letter.toLowerCase()}.webp`}
+              alt={`Bone ${bone.letter}`}
+              className="w-16 h-16 object-contain -mx-1"
+            />
+          ))}
+        </div>
+      </div>
+
       {/* Main Puzzle Area with Black Background */}
       <div className="bg-black w-full max-w-md mx-auto relative min-h-[400px] p-4">
         {/* Shackles - Higher z-index, moved towards center */}
@@ -309,20 +303,6 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
         <div className="absolute bottom-6 right-6 z-0">
           <div className="relative">
             <img src={getTombImage()} alt="Tomb" className="w-[220px] h-[270px] object-contain" />
-            {/* Dug bones */}
-            {dugBones.map((bone, index) => (
-              <img
-                key={index}
-                src={bone.letter === " " ? `/images/shackles-bone-empty.webp` : `/images/shackles-bone-${bone.letter.toLowerCase()}.webp`}
-                alt={`Bone ${bone.letter}`}
-                className="absolute w-16 h-16 object-contain"
-                style={{
-                  left: `${bone.x}px`,
-                  top: `${bone.y}px`,
-                  transform: `rotate(${bone.rotation}deg)`,
-                }}
-              />
-            ))}
           </div>
         </div>
       </div>
@@ -346,8 +326,8 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
 
       {/* Dialogue Display */}
       {dialogue && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-sm w-full">
-          <div className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 animate-fadeIn">
+        <div className="fixed inset-0 z-40 flex items-center justify-center px-4 pointer-events-none">
+          <div className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 animate-fadeIn max-w-sm w-full pointer-events-auto">
             <div className="flex items-start gap-3">
               {/* Shackles Image */}
               <div className="w-12 h-12 relative pixelated-container shrink-0">
@@ -406,7 +386,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
                     }
                   }}
                   className="w-full p-2 bg-gray-800 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none text-center text-xl font-bold font-pixel"
-                  placeholder="?"
+                  placeholder="_"
                   maxLength={1}
                   autoFocus
                 />
@@ -415,7 +395,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
               <div className="mt-4 text-center">
               <button
                 className="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel mr-2"
-                onClick={handleInputSubmit}
+                onClick={() => handleInputSubmit()}
               >
                 INSCRIBE
               </button>

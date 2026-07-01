@@ -2,60 +2,85 @@
 
 import { useState, useEffect } from "react"
 
-const ladders = [
-  ["BONE", "GONE", "GORE"],
-  ["BONE", "TONE", "TOME"],
-  ["BONE", "CONE", "CODE"],
-  ["BONE", "DONE", "DOME"],
-  ["BONE", "HONE", "HOLE"],
-  ["BONE", "NONE", "NOTE"],
-  ["BONE", "PONE", "POLE"]
+// Fixed alphabetical order (by the changed letter in the second word).
+// The slot for "L" (LONE) is deliberately left blank — that's the gap the player must fill.
+const sequence: (string | null)[] = [
+  "boneconecode",
+  "bonedonedope",
+  "bonegonegore",
+  "bonehonehole",
+  null, // missing rung — the player must derive BONE LONE ___
+  "bonenonenote",
+  "boneponepole",
+  "bonetonetome",
 ]
 
 export default function WordLadderCarouselPuzzle({ onSolve }: { onSolve: () => void }) {
-  const [shuffledLadders, setShuffledLadders] = useState<string[][]>([])
+  const [startIndex, setStartIndex] = useState<number | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    // Shuffle the ladders
-    const shuffled = [...ladders].sort(() => Math.random() - 0.5)
-    setShuffledLadders(shuffled)
+    const randomStart = Math.floor(Math.random() * sequence.length)
+    setStartIndex(randomStart)
+    setCurrentIndex(randomStart)
   }, [])
 
   const goLeft = () => {
-    setCurrentIndex((prev) => (prev - 1 + shuffledLadders.length) % shuffledLadders.length)
+    setCurrentIndex((prev) => (prev - 1 + sequence.length) % sequence.length)
   }
 
   const goRight = () => {
-    setCurrentIndex((prev) => (prev + 1) % shuffledLadders.length)
+    setCurrentIndex((prev) => (prev + 1) % sequence.length)
   }
 
-  if (shuffledLadders.length === 0) return null
+  if (startIndex === null) return null
 
-  const currentLadder = shuffledLadders[currentIndex]
+  const currentLadder = sequence[currentIndex]
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8">
-      <div className="flex items-center space-x-8">
+    <div className="flex flex-col items-center justify-center space-y-6">
+      <div className="flex items-center space-x-6">
         <button
           onClick={goLeft}
-          className="text-4xl p-4 hover:bg-gray-700 rounded"
+          aria-label="Previous scratching"
+          className="text-3xl text-stone-400 hover:text-stone-200 transition-colors px-2"
         >
           ‹
         </button>
-        <div className="text-center">
-          {currentLadder.map((word, wordIndex) => (
-            <div key={wordIndex} className="text-6xl font-mono mb-4">
-              {word}
-            </div>
-          ))}
+
+        <div
+          className="relative w-[220px] h-[280px] bg-cover bg-center rounded-sm overflow-hidden"
+          style={{ backgroundImage: "url('/images/word-ladder/wall.webp')" }}
+        >
+          {currentLadder && (
+            <img
+              src={`/images/word-ladder/${currentLadder}.webp`}
+              alt="Scratched word ladder"
+              className="absolute inset-0 w-full h-full object-contain p-4"
+            />
+          )}
         </div>
+
         <button
           onClick={goRight}
-          className="text-4xl p-4 hover:bg-gray-700 rounded"
+          aria-label="Next scratching"
+          className="text-3xl text-stone-400 hover:text-stone-200 transition-colors px-2"
         >
           ›
         </button>
+      </div>
+
+      {/* Tally marks scratched into the wall - one per ladder, current one fresher */}
+      <div className="flex gap-2">
+        {sequence.map((_, index) => (
+          <span
+            key={index}
+            className={index === currentIndex ? "text-stone-200" : "text-stone-600"}
+            style={{ fontSize: "1.1rem" }}
+          >
+            |
+          </span>
+        ))}
       </div>
     </div>
   )

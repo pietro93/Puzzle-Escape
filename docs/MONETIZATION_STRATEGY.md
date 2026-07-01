@@ -13,6 +13,7 @@ This document defines how **Puzzle Escape** generates revenue on mobile, and the
 | **Base game** | Free download, all 50 levels playable | Removes the install barrier; story is the retention hook, not a paywall. |
 | **Hints (free path)** | Watch a rewarded video ad to unlock a hint | Primary revenue stream. Low friction, opt-in, standard for puzzle games. |
 | **Hints (paid path)** | One-time IAP: "Remove Ads & Unlock Unlimited Hints" | Captures revenue from engaged/frustrated players who'd rather pay than watch ads. Flat purchase, not a subscription — this is a finite, 50-level narrative game, not a live-service title. |
+| **Bonus content pack** | One-time IAP: 10 extra non-canon levels (alien/space theme) | Extends monetization past the point where most players stop spending — i.e. after finishing the 50-level main story. Separate SKU; stacks independently of the hint unlock. |
 
 Desktop/Steam builds are unaffected by this strategy — ads and hint-gating are mobile-only. Desktop remains a premium, paid-upfront product (per [PROJECT_AUDIT.md](PROJECT_AUDIT.md) build pipeline roadmap).
 
@@ -45,7 +46,18 @@ The game's core value is atmospheric and emotional (see [NARRATIVE_DESIGN.md](NA
 
 ---
 
-## 5. Out of Scope (For Now)
+## 5. Bonus Content Pack (Post-Roadmap)
+
+A paid, non-canon 10-level pack introducing a space/alien theme, positioned as **post-game epilogue content** rather than a sixth numbered zone.
+
+- **Revenue purpose:** Most players stop spending once they finish the main 50-level story and see an ending. A bonus pack re-engages completers and captures additional revenue from the highest-LTV segment (players who finished the whole game) without altering the core 50-level pricing/ad model.
+- **Positioning:** Treated as separate, clearly-marked bonus content (own store listing/IAP, own entry point post-finale) rather than inserted into the main progression — keeps the five-zone judgment cosmology intact for players who don't buy it.
+- **Pricing:** One-time IAP, same flat-purchase logic as the hint unlock (no subscription).
+- **Status:** Sequencing and narrative framing (how/where it hooks into the existing endings) are a game-design question to be resolved later — this is explicitly **post-roadmap** content, scoped after audio, testing, and the build pipeline items in [PROJECT_AUDIT.md](PROJECT_AUDIT.md) are complete.
+
+---
+
+## 6. Out of Scope (For Now)
 
 - **Zone/chapter paywalls** (e.g. pay to unlock Mansion onward) — considered as an alternative primary model but not pursued; the ad+IAP hint model was chosen as the simpler path that doesn't require restructuring how zones are accessed.
 - **Subscriptions, season passes, cosmetic IAP** — not appropriate for a finite, single-playthrough narrative game.

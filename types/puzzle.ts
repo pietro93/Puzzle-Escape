@@ -56,4 +56,9 @@ export interface Puzzle {
   isWordLadderCarouselPuzzle?: boolean
   isBoneTileMazePuzzle?: boolean
   isShacklesPuzzle?: boolean
+  isLockKeyPuzzle?: boolean
+  isClockworkPuzzle?: boolean
+  isMorseRatsPuzzle?: boolean
+  isAnagramSpicePuzzle?: boolean
+  isMansionClockPuzzle?: boolean
 }

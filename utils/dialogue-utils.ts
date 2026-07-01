@@ -13,6 +13,46 @@ export const guardDialogLines = [
 // Add a specific sphinx riddle for level 38
 export const sphinxRiddle = "What has a bed, a mouth, banks, and a crystal clear body?"
 
+// Level 12 (Mansion Clock) — the time the butler reads out matches the clock's actual hand position, never random
+export const clockTimeSequence = ["III", "XII:IX", "XXI:XVIII", "VI:XXVII"]
+
+// A couple of remarks per step, so re-interacting at the same step before advancing doesn't
+// always show the identical line. The final entry is the "shuts down" state (clockStep 4),
+// where the hint is deliberately softer — noticing the pattern rather than stating it.
+const clockButlerRemarksByStep: string[][] = [
+  [
+    "One might say this puzzle requires a certain punctuality in thought.",
+    "Do take your time. It is, after all, the one thing I cannot polish back into existence.",
+  ],
+  [
+    "Roman numerals possess a dignity one does not often find today.",
+    "I have dusted this clock for longer than I care to admit. It has never once kept me waiting.",
+  ],
+  [
+    "Time reveals all, especially those who underestimate it, I assure you.",
+    "Tick by tick, kind guest. Some things in this house are far less patient than I am.",
+  ],
+  [
+    "Curious. It always seizes up at precisely this hour. Every single time.",
+  ],
+]
+
+// Tracks which remark to show next for each step, so repeated clicks cycle rather than repeat.
+const clockRemarkCycle: Record<number, number> = {}
+
+export const getClockButlerLine = (step: number): string => {
+  if (step <= 0) {
+    return "The mechanism awaits your hand upon the lever."
+  }
+  const index = Math.min(step, clockTimeSequence.length) - 1
+  const time = clockTimeSequence[index]
+  const options = clockButlerRemarksByStep[index]
+  const cycle = clockRemarkCycle[index] ?? 0
+  const remark = options[cycle % options.length]
+  clockRemarkCycle[index] = cycle + 1
+  return `${time}. ${remark}`
+}
+
 // Define random elevator messages
 export const getRandomElevatorMessage = (): string => {
   const messages = [
@@ -86,11 +126,11 @@ skeleton: {
     ],
 
     6: [
-    "Unscramble yer life next. Wait, too late.",
-    "Jumbled letters for that jumbled noggin o' yers.",
-
-    "Mphf. Jumbled letters. How very clever.",
-    "Unscramble all ya want. Yer still trapped."
+    "Meet Shackles. All bone, no flesh, just how I like company.",
+    "Tried eatin' him once. Too gristly. Kept him as a pet instead.",
+    "Feed him right and he might not tear yer hand off. Might.",
+    "Mphf. Shackles is pickier than I am about his meals.",
+    "Give him the wrong bone and he'll spit it right back at ya."
     ],
 
     7: [
@@ -113,12 +153,14 @@ skeleton: {
     ],
 
     9: [
-    "Primitive. Like a Neanderthal rattlin' his own tibia.",
-    "Silence is the only effective communication used here. Ya can try screamin', too.",
-    "The rhythm of yer distress is deeply annoyin' to my ears.",
-    "I wonder what sound *yer* bones will make when I finally get to play with them.",
+    "I skewer three of 'em at a time. Roast nicely over the brazier, they do.",
+    "Squeak all ya want. I've heard sweeter music from a rat on a spit.",
+    "Named that fat grey one after a warden I outlived. Tastes about the same too.",
+    "Mphf. Nothin' pairs better with stale bread than a well-charred tail.",
     "Oh, ya want my help? That's adorable. Tsk.",
-    "Dots and dashes. How primitive."
+    "Careful with the plump ones. They bite back right up till they're dinner.",
+    "I wonder what sound *yer* bones will make when I finally get to play with them.",
+    "Hah-hah-hah. Ya squirm just like they do, right before the skewer."
     ]
 
   }
@@ -131,20 +173,15 @@ butler: {
     "The Master's palate was exceptionally refined. A rare quality these days.",
     "A guest once mistook cumin for cinnamon. They were not invited back."
   ],
-  12: [ // Clock / Time Puzzle
-    "Each timepiece here ticks with unwavering precision, as the Master demanded.",
-    "Generations of this family have entrusted their hours to this particular clock.",
-    "The Master entertained curious theories about time’s passage, none conventional.",
-    "Roman numerals possess a dignity one does not often find today.",
-    "Time reveals all, especially those who underestimate it, I assure you.",
-    "One might say this puzzle requires a certain punctuality in thought."
-  ],
   13: [ // Color / Pigment Puzzle
     "I do hope your eyes serve you better than your instincts thus far.",
     "You would do well not to overlook the nuances of hue and tone.",
     "Tyrian purple, a color once reserved for emperors, was famously extracted from sea snails. Thousands for a single gram.",
     "I do hope you possess a basic grasp of color theory. It would be most unfortunate otherwise.",
-    "The Master believed colour could alter one's mood. This room is a testament to that."
+    "The Master believed colour could alter one's mood. This room is a testament to that.",
+    "The painter labeled every hue in French. A rather stubborn habit of his countrymen, I find.",
+    "Do not fret over the language, kind guest. Colour, unlike vocabulary, requires no translation.",
+    "I confess my own French extends little beyond ordering wine. This palette demands rather more of you."
   ],
   14: [ // Assembly Puzzle / Box
     "We find much depends on the patience invested versus mere trial and error.",

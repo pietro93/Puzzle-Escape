@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react" //Import useEffect
+import { useState } from "react"
 import CharacterDialoguePopup from "./character-dialogue-popup" // Import CharacterDialoguePopup component
 import Image from "next/image"
 import { SpeechIndicator } from "./character-location-display"
@@ -32,14 +32,8 @@ export default function InmatePuzzle({
   const [activeInmate, setActiveInmate] = useState<number | null>(null)
   const [dialogText, setDialogText] = useState<string>("")
   const [showGuardDialog, setShowGuardDialog] = useState(false) //Modified to false
-  const [showGuardPopup, setShowGuardPopup] = useState(false)
   // Keep track of the last statement index shown for each inmate
   const [lastStatementIndices, setLastStatementIndices] = useState<number[]>(inmates.map(() => -1))
-
-  useEffect(() => {
-    // Show the guard popup when the component mounts
-    setShowGuardPopup(true)
-  }, [])
 
   const handleInmateClick = (index: number) => {
     // Get the next statement for this inmate in rotation
@@ -60,12 +54,10 @@ export default function InmatePuzzle({
     // Set the active inmate and hide guard dialog
     setActiveInmate(index)
     setShowGuardDialog(false)
-    setShowGuardPopup(false)
   }
 
   const handleCloseDialog = () => {
     setActiveInmate(null)
-    setShowGuardPopup(false)
   }
 
   return (
@@ -110,37 +102,6 @@ export default function InmatePuzzle({
         ))}
       </div>
 
-      {/* Guard Dialog popup */}
-      {showGuardPopup && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-          onClick={handleCloseDialog}
-        >
-          <div
-            className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start gap-3">
-              <div className="w-16 h-16 relative pixelated-container shrink-0">
-                <Image src="/images/skeleton.webp" alt="Guard" width={64} height={64} className="pixelated" />
-              </div>
-              <div className="flex-1">
-                <p className="text-purple-300 font-pixel mb-2">Guard:</p>
-                <p className="text-gray-200 text-sm">"{guardStatement}"</p>
-              </div>
-            </div>
-            <div className="mt-4 text-center">
-              <button
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-xs text-gray-300 font-pixel"
-                onClick={handleCloseDialog}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Inmate Dialog popup */}
       {activeInmate !== null && dialogText && (
         <div
@@ -178,9 +139,6 @@ export default function InmatePuzzle({
         </div>
       )}
 
-      <div className="text-center text-xs text-gray-400 font-pixel mt-2 animate-pulse">
-        Tap on an inmate to hear their statement
-      </div>
     </div>
   )
 }
