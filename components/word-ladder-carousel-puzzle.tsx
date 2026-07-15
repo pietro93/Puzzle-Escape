@@ -18,19 +18,37 @@ const sequence: (string | null)[] = [
 export default function WordLadderCarouselPuzzle({ onSolve }: { onSolve: () => void }) {
   const [startIndex, setStartIndex] = useState<number | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
+  // Rungs the player has actually browsed to — unlocks the answer input once
+  // every rung of the ladder (including the missing one) has been viewed.
+  const [viewedIndices, setViewedIndices] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     const randomStart = Math.floor(Math.random() * sequence.length)
     setStartIndex(randomStart)
     setCurrentIndex(randomStart)
+    setViewedIndices(new Set([randomStart]))
   }, [])
 
+  useEffect(() => {
+    if (viewedIndices.size === sequence.length) {
+      onSolve()
+    }
+  }, [viewedIndices])
+
   const goLeft = () => {
-    setCurrentIndex((prev) => (prev - 1 + sequence.length) % sequence.length)
+    setCurrentIndex((prev) => {
+      const next = (prev - 1 + sequence.length) % sequence.length
+      setViewedIndices((v) => new Set(v).add(next))
+      return next
+    })
   }
 
   const goRight = () => {
-    setCurrentIndex((prev) => (prev + 1) % sequence.length)
+    setCurrentIndex((prev) => {
+      const next = (prev + 1) % sequence.length
+      setViewedIndices((v) => new Set(v).add(next))
+      return next
+    })
   }
 
   if (startIndex === null) return null

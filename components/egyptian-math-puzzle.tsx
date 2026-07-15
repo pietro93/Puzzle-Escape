@@ -153,6 +153,10 @@ export default function EgyptianMathPuzzle({ onSolve }: EgyptianMathPuzzleProps)
     setCarousels([group1, group2, group3])
   }, [])
 
+  // Papyri the player has actually viewed per carousel — unlocks the answer
+  // input once every scroll in every carousel has been read at least once.
+  const [viewedPapyri, setViewedPapyri] = useState<Set<number>[]>([new Set(), new Set(), new Set()])
+
   // Handle navigation in carousels
   const navigateCarousel = (carouselIndex: number, direction: "left" | "right") => {
     setCurrentPapyrus((prev) => {
@@ -168,6 +172,20 @@ export default function EgyptianMathPuzzle({ onSolve }: EgyptianMathPuzzleProps)
       return newIndices
     })
   }
+
+  // Mark the current scroll of every carousel as viewed, and unlock once
+  // every carousel has been fully browsed.
+  useEffect(() => {
+    if (carousels.every((c) => c.length === 0)) return
+    setViewedPapyri((prev) => {
+      const next = prev.map((set, i) => new Set(set).add(currentPapyrus[i]))
+      const allViewed = next.every((set, i) => carousels[i].length > 0 && set.size >= carousels[i].length)
+      if (allViewed) {
+        onSolve()
+      }
+      return next
+    })
+  }, [currentPapyrus, carousels])
 
   // Handle symbol icon click
   const handleSymbolClick = (fullSrc: string) => {

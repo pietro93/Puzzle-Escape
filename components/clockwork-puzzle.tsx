@@ -10,6 +10,7 @@ export default function ClockworkPuzzle({ onSolve }: ClockworkPuzzleProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const dragState = useRef<{ startAngle: number; startRotation: number } | null>(null)
   const [rotation, setRotation] = useState(0)
+  const hasSolvedRef = useRef(false)
 
   const angleFromCenter = (clientX: number, clientY: number) => {
     const rect = containerRef.current!.getBoundingClientRect()
@@ -34,6 +35,12 @@ export default function ClockworkPuzzle({ onSolve }: ClockworkPuzzleProps) {
     dragState.current = null
     window.removeEventListener("pointermove", handlePointerMove)
     window.removeEventListener("pointerup", handlePointerUp)
+
+    // First completed drag counts as having read the dial — unlocks the answer input.
+    if (!hasSolvedRef.current) {
+      hasSolvedRef.current = true
+      onSolve()
+    }
   }
 
   return (

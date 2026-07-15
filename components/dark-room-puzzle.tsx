@@ -12,10 +12,20 @@ export default function DarkRoomPuzzle({ onSolve }: DarkRoomPuzzleProps) {
   const [litTorches, setLitTorches] = useState<number[]>([])
   // State for tracking torch timers
   const [torchTimers, setTorchTimers] = useState<Record<number, NodeJS.Timeout>>({})
+  // Torches the player has lit at least once — unlocks the answer input once every torch has been read.
+  const [litOnceTorches, setLitOnceTorches] = useState<Set<number>>(new Set())
 
   // Handle torch click
   const handleTorchClick = (torchIndex: number) => {
     console.log("Torch clicked:", torchIndex)
+    setLitOnceTorches((prev) => {
+      if (prev.has(torchIndex)) return prev
+      const next = new Set(prev).add(torchIndex)
+      if (next.size === 4) {
+        onSolve?.()
+      }
+      return next
+    })
 
     // Turn off all torches first
     setLitTorches([])

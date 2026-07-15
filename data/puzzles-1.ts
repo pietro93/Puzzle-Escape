@@ -93,9 +93,9 @@ export const puzzlesSet1: Puzzle[] = [
     category: "interactive",
     isWordLadderCarouselPuzzle: true,
     hints: [
-      "Use the carousel to view different word ladders.",
-      "Observe how the words change from one to the next.",
-      "Find the pattern of letter changes and apply it to form the correct three-word sequence starting with BONE.",
+      "Use the carousel to view different word ladders. Observe how the words change from one to the next.",
+      "You have to find the missing word ladder: a sequence of three words starting with BONE.",
+      "The word ladders are displayed in alphabetical order. You have to find a combination that respects this order.",
     ],
   },
   {
@@ -105,10 +105,12 @@ export const puzzlesSet1: Puzzle[] = [
     solution: "bloodshot eyes",
     category: "logic",
     hints: [
-      "In a magic box, each row, column, and diagonal must sum to the same number. Use the provided symbols (a drop of blood, a shot of rum, and a block of ice, each appearing multiple times) exactly once to find this magic sum.",
-      "The magic sum for this puzzle is 9.",
-      "Consider strategically placing the three symbols that represent the number '3'. They might all fit perfectly on a single row or a single column.",
-      "A tip for solving rebuses: Try sounding the pictures out loud.",
+      "In a magic box, each row, column, and diagonal must sum to the same number. Arrange the numbered bones on the grid to find this magic sum.",
+      "The magic sum for this puzzle is 9. Start by placing the three bones with a value of 3 in a single row or column, that line is already solved.",
+      "The bones with values 1 and 5 are the tricky part, they can never sit in a corner. They only work placed opposite each other, in the same row or column as your line of 3s.",
+      "With 1 and 5 placed, you're left with two 4s and two 2s for the corners. Each diagonal needs one 4 and one 2, not two of the same, to reach 9.",
+      "Once the box balances, three cells reveal images in a row. Say what each one shows out loud, one right after another.",
+      "It's a rebus, so listen for the sounds when reading out loud rather than the image displayed. Solution is a two words, not three.",
     ],
     isMagicBoxPuzzle: true,
   },
@@ -120,9 +122,10 @@ export const puzzlesSet1: Puzzle[] = [
     category: "logic",
     isMorseRatsPuzzle: true,
     hints: [
-      "Look at how the skulls are arranged — five separate rows.",
+      "What could the rats and skulls represent?",
       "An empty skull is a dot. A rat sitting in a skull's spot is a dash.",
-      "Tap a rat to hop it to its next eligible spot, then read each row as Morse code.",
+      "The solution is a five-letter word, written in Morse code.",
+      "Each row represents a letter, and must be decoded when all eligible rats are in position in that row.",
     ],
   },
   {

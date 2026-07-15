@@ -96,7 +96,9 @@ export default function FearYourDreamsPuzzle({ onSolve }: { onSolve: () => void 
     )
     if (allCorrect && !isLocked) {
       setIsLocked(true)
-      // Don't call onSolve here, let the player type the answer
+      // Interaction complete — unlocks the answer input, but the player still
+      // has to type the solution themselves.
+      onSolve()
     }
   }, [carouselValues, isLocked])
 

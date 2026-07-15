@@ -21,6 +21,7 @@ interface CharacterLocationDisplayProps {
   onGuardClick: () => void; // Added semicolon here
   onLocationClick?: () => void
   onPyramidLocationImageClick?: () => void
+  onColorPaletteClick?: () => void
 }
 
 // Speech Indicator Component using the new image
@@ -75,6 +76,7 @@ export default function CharacterLocationDisplay({
   onGuardClick,
   onLocationClick,
   onPyramidLocationImageClick,
+  onColorPaletteClick,
 }: CharacterLocationDisplayProps) {
   // Helper function to get the correct brain lamp image based on correct combinations
   const getBrainLampImage = (correctCount: number) => {
@@ -187,6 +189,24 @@ export default function CharacterLocationDisplay({
               className="pixelated"
             />
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Special handling for level 13 (color palette puzzle) - tap the palette to view a larger, flippable version
+  if (level === 13) {
+    return (
+      <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+        <div className="flex justify-center items-center cursor-pointer" onClick={() => onColorPaletteClick?.()}>
+          <LocationImage
+            setting={setting}
+            customImage={puzzle.locationImage}
+            hintImage={puzzle.imageHint}
+            level={level}
+            murderMysteryLocation={murderMysteryLocation}
+          />
         </div>
       </div>
     )

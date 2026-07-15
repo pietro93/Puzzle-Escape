@@ -34,7 +34,7 @@ const LOCATION_CODES = {
 // The correct path as a string of location codes
 const CORRECT_PATH_CODE = "01234510"
 
-export default function GoldenScarabPuzzle() {
+export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }) {
   // Create a state for pedestal positions that will be randomized
   const [pedestalPositions, setPedestalPositions] = useState({ ...ORIGINAL_PEDESTAL_POSITIONS })
 
@@ -162,6 +162,7 @@ export default function GoldenScarabPuzzle() {
     // Check if the path matches the correct sequence
     if (currentPath === CORRECT_PATH_CODE) {
       setShowSuccess(true)
+      onSolve?.()
     } else {
       resetJourney()
     }

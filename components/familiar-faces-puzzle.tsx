@@ -32,6 +32,7 @@ interface FamiliarFacesPuzzleProps {
 
 export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: FamiliarFacesPuzzleProps) {
   const [activeCharacter, setActiveCharacter] = useState<string | null>(null)
+  const [talkedTo, setTalkedTo] = useState<Set<string>>(new Set())
   const [dialogGesture, setDialogGesture] = useState<string>("")
   const [dialogText, setDialogText] = useState<string>("")
   const [showDialog, setShowDialog] = useState(false)
@@ -739,6 +740,14 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
     setShowDialog(true)
     setDialogGesture("")
     setDialogText("")
+    setTalkedTo((prev) => {
+      if (prev.has(characterId)) return prev
+      const next = new Set(prev).add(characterId)
+      if (["guard", "butler", "gypsy", "sphinx"].every((c) => next.has(c))) {
+        onSolve()
+      }
+      return next
+    })
   }
 
   // Check if a dialogue option is available for the current character

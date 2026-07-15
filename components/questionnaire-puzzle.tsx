@@ -225,6 +225,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
         } else {
           // Final state - player needs to guess
           setReadingComplete(true)
+          onSolve()
           setGypsyComment(
             "I have seen enough. The spirits have revealed much about you. Now, what vision comes to your mind? What do you see in the mists between us?",
           )

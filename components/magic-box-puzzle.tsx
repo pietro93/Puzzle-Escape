@@ -237,6 +237,10 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
 
   // Check for solution and three 3s whenever the grid changes
   useEffect(() => {
+    // Already solved: skip re-running the reveal animation on unrelated re-renders
+    // (e.g. onSolve/onSolved identity changing when the parent re-renders on every keystroke)
+    if (isSolved) return
+
     // Only check if all cells are filled
     if (grid.some((cell) => cell === null)) return
 

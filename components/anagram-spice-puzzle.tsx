@@ -112,6 +112,13 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
     }
   }, [plate, letterOf])
 
+  // Unlock the answer input once every pedestal slot (both words) is filled.
+  React.useEffect(() => {
+    if (basketLeft.every(Boolean) && basketRight.every(Boolean)) {
+      onSolve()
+    }
+  }, [basketLeft, basketRight])
+
   const handleDragStart = (id: string, from: SlotRef) => {
     setDraggedId(id)
     setDraggedFrom(from)

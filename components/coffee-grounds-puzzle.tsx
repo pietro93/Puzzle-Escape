@@ -19,6 +19,9 @@ export default function CoffeeGroundsPuzzle({ onSolve }: CoffeeGroundsPuzzleProp
   const [isDragging, setIsDragging] = useState<boolean>(false)
   const [startAngle, setStartAngle] = useState<number>(0)
   const [startPosition, setStartPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+  // Cups the player has actually rotated — used to unlock the answer input
+  // once every cup has been examined, since there's no single "correct" angle.
+  const [rotatedCups, setRotatedCups] = useState<Set<number>>(new Set())
 
   // Coffee cup images
   const coffeeImages = [
@@ -99,6 +102,16 @@ export default function CoffeeGroundsPuzzle({ onSolve }: CoffeeGroundsPuzzleProp
   // Handle mouse/touch up
   const handleDragEnd = () => {
     setIsDragging(false)
+    if (isDragging) {
+      setRotatedCups((prev) => {
+        if (prev.has(currentCup)) return prev
+        const next = new Set(prev).add(currentCup)
+        if (next.size === coffeeImages.length) {
+          onSolve()
+        }
+        return next
+      })
+    }
   }
 
   return (

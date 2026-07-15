@@ -114,6 +114,9 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
   useEffect(() => {
     const allCorrect = cityPairs.every((pair) => pair.inputs.every((input) => input.isCorrect))
     setAllCitiesGuessed(allCorrect)
+    if (allCorrect) {
+      onSolve?.()
+    }
   }, [cityPairs])
 
   const handleInputChange = (pairIndex: number, inputIndex: number, value: string) => {

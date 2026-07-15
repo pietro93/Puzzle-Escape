@@ -1,9 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import ColorPalettePopup from "./color-palette-popup"
 
 interface ColorPalettePuzzleProps {
   onSolve?: () => void
+  showPopup?: boolean
+  onClosePopup?: () => void
 }
 
 interface ColorEntry {
@@ -14,7 +17,7 @@ interface ColorEntry {
   isInput: boolean
 }
 
-export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps) {
+export default function ColorPalettePuzzle({ onSolve, showPopup, onClosePopup }: ColorPalettePuzzleProps) {
   // Define the color entries with their values
   const colorEntries: ColorEntry[] = [
     {
@@ -160,13 +163,18 @@ export default function ColorPalettePuzzle({ onSolve }: ColorPalettePuzzleProps)
     }
   }
 
+  // Unlock the answer input once every color value has been solved.
+  useEffect(() => {
+    if (Object.values(correctInputs).every(Boolean)) {
+      onSolve?.()
+    }
+  }, [correctInputs])
+
   return (
-    <div className="p-4 bg-gray-900/80 rounded-lg border border-gray-700 shadow-lg max-w-md mx-auto">
+    <div className="relative p-4 bg-gray-900/80 rounded-lg border border-gray-700 shadow-lg max-w-md mx-auto">
+      {showPopup && <ColorPalettePopup onClose={() => onClosePopup?.()} />}
       <div className="mb-4 text-center">
         <h3 className="text-lg font-pixel text-purple-300 mb-2">La Palette du Maître</h3>
-        <p className="text-sm text-gray-300 font-pixel">
-          Les roses verte et rose cachent un secret. Entre les nombres, une île attend d'être découverte.
-        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

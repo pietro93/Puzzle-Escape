@@ -8,9 +8,10 @@ interface DugBone {
 
 interface ShacklesPuzzleProps {
   onSolve: () => void
+  onFirstBoneBuried?: () => void
 }
 
-const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
+const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBuried }) => {
   const solution = ["R", "A", "B", "I", "D", " ", "R", "E", "N", "D"]
   const preInscribedBones = ["R", "B", "D", "R", "N", "D"] // Available pre-inscribed bones
   const boneSequence = ["pre", "empty", "pre", "empty", "empty", "pre", "empty", "pre", "empty", "pre", "pre"] // What type Shackles provides
@@ -76,6 +77,10 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
 
             setDialogue("Shackles carefully buries your inscribed bone, then looks at you expectantly.")
             setTimeout(() => setDialogue(null), 4000)
+
+            if (currentIndex === 0) {
+              onFirstBoneBuried?.()
+            }
 
             // Check if solved
             if (currentIndex + 1 === solution.length) {
@@ -236,6 +241,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve }) => {
             if (currentIndex === 0) {
               setDialogue("Shackles buries the bone deep underground, then looks at you expectantly.")
               setTimeout(() => setDialogue(null), 4000)
+              onFirstBoneBuried?.()
             }
 
             // Check if solved

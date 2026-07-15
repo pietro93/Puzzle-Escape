@@ -155,7 +155,7 @@ const TRAIL_SPAWN_INTERVAL_MS = 50 // How often to spawn trail particles
 const TOUCHED_TILE_GLOW_DURATION_MS = 2000
 
 // ------------------ COMPONENT ------------------
-export default function InfernalChessPuzzle() {
+export default function InfernalChessPuzzle({ onSolve }: { onSolve?: () => void } = {}) {
   // Board initialization
   const initializeBoard = (): Tile[][] => {
     const board: Tile[][] = Array(BOARD_SIZE)
@@ -452,6 +452,7 @@ export default function InfernalChessPuzzle() {
     )
     if (allAtTarget && moveCount > 0) {
       setIsComplete(true)
+      onSolve?.()
     }
   }, [horsemen, moveCount, isComplete])
 

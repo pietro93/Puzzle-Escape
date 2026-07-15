@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Head from "next/head"
 
@@ -13,20 +13,32 @@ const SCREAMS = [
   '<span style="color: white;">radice</span><span style="color: white;">.</span>'
 ]
 
-export default function DamnedSoulsPuzzle() {
+export default function DamnedSoulsPuzzle({ onSolve }: { onSolve?: () => void } = {}) {
   const [selectedChest, setSelectedChest] = useState<number | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+  // Chests the player has opened — unlocks the answer input once every chest's word has been read.
+  const [openedChests, setOpenedChests] = useState<Set<number>>(new Set())
 
   const handleChestSelect = (chestIndex: number) => {
     if (selectedChest === chestIndex) {
       // Toggle open/close
-      setIsOpen(!isOpen)
+      const nextOpen = !isOpen
+      setIsOpen(nextOpen)
+      if (nextOpen) {
+        setOpenedChests((prev) => new Set(prev).add(chestIndex))
+      }
     } else {
       // Select new chest (closed)
       setSelectedChest(chestIndex)
       setIsOpen(false)
     }
   }
+
+  useEffect(() => {
+    if (openedChests.size === SCREAMS.length) {
+      onSolve?.()
+    }
+  }, [openedChests])
 
   return (
     <>

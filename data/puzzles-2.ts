@@ -46,6 +46,8 @@ export const puzzlesSet2: Puzzle[] = [
       "You can add or subtract colors to find the values that are missing.",
       "You can find pink by adding red and white together.",
       "To find green, first find the value for yellow by subtracting red from orange. Then find blue by adding azure and black. Finally, add blue to yellow to get green.",
+      "Examine the color palette to find a hidden message.",
+      "The message in French says: \"The green and pink hide a secret. Among the numbers, an island awaits discovery.\"",
       "The correct values of green and pink will give you the coordinates of an island in Australia. The name of the island is the solution for this level.",
     ],
   },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CharacterDialoguePopup from "@/components/character-dialogue-popup";
 
 interface PrisonCellPuzzleProps {
@@ -248,6 +248,13 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
     bathroom: "/images/prison-cell/bathroom.webp",
     bars: "/images/prison-cell/bars.webp",
   });
+
+  // Unlock the answer input once the mirror has fogged up (hot rag + running tap).
+  useEffect(() => {
+    if (isHeatOn && isTapOn) {
+      onSolve();
+    }
+  }, [isHeatOn, isTapOn]);
 
   const pixelToPercentage = (pixel: number, dimension: "width" | "height", baseDimension: number = 950) => {
     return `${(pixel / baseDimension) * 100}%`;

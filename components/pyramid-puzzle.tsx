@@ -27,6 +27,22 @@ export default function PyramidPuzzle({
     const [sphinxMessage, setSphinxMessage] = useState("The mural in the entrance room depicts some kind of bird.")
     // State for torch position
     const [torchPosition, setTorchPosition] = useState({ x: 50, y: 50 })
+    // Mural rooms visited while carrying the torch — unlocks the answer input
+    // once every mural has actually been read.
+    const [litMuralsVisited, setLitMuralsVisited] = useState<Set<string>>(new Set())
+
+    useEffect(() => {
+        if (!hasTorch) return
+        if (!["mural1", "mural2", "mural3", "mural4"].includes(currentRoom)) return
+        setLitMuralsVisited((prev) => {
+            if (prev.has(currentRoom)) return prev
+            const next = new Set(prev).add(currentRoom)
+            if (next.size === 4) {
+                onSolve()
+            }
+            return next
+        })
+    }, [currentRoom, hasTorch])
 
     // Map of available directions from each room
     const roomConnections: Record<Room, { left?: Room; right?: Room }> = {

@@ -37,9 +37,10 @@ interface Book {
 
 interface LibraryPuzzleProps {
   books: Book[]
+  onSolve?: () => void
 }
 
-export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
+export default function LibraryPuzzle({ books, onSolve }: LibraryPuzzleProps) {
   const [activeBook, setActiveBook] = useState<string | null>(null)
   const [showFamilyTree, setShowFamilyTree] = useState(false)
   const [shuffledBooks, setShuffledBooks] = useState<Book[]>([])
@@ -94,7 +95,15 @@ export default function LibraryPuzzle({ books }: LibraryPuzzleProps) {
 
   const handleFamilyTreeClick = () => {
     setShowFamilyTree(true)
+    setReadBooks((prev) => new Set(prev).add("family-tree"))
   }
+
+  // Unlock the answer input once every book (plus the family tree scroll) has been opened.
+  useEffect(() => {
+    if (readBooks.size >= books.length + 1) {
+      onSolve?.()
+    }
+  }, [readBooks, books.length])
 
   const handleCloseFamilyTree = () => {
     setShowFamilyTree(false)

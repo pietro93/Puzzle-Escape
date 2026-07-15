@@ -51,6 +51,22 @@ const getBrainLampImage = (correctCombinations: number): string => {
   return brainLampImages[correctCombinations] || "/images/brainlamp.webp"
 }
 
+// Levels whose interaction-complete signal is currently wired up. The answer
+// input stays locked until that signal fires. Levels not yet in this set are
+// unaffected (input behaves as before) until their gating is implemented.
+const GATED_LEVELS = new Set<number>([
+  1, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 17, 19, 20, 21, 22, 24, 27, 28, 30, 32, 33, 34, 36, 37, 39, 40, 41, 42,
+  43, 44, 45, 46, 47, 48, 49, 50,
+])
+
+// Levels that don't require any interaction to unlock, but still play the
+// gate's closed-to-open animation for atmosphere as soon as the level starts.
+const AUTO_OPEN_LEVELS = new Set<number>([2, 3])
+const AUTO_OPEN_DELAY_MS = 900
+
+// Number of clock times the player must step through in level 12 before the puzzle is "read".
+const MANSION_CLOCK_STEPS = 4
+
 // Define dialogue options for brain lamp
 const brainDialogueOptions = [
   "AAAGH! IT HURTS!",
@@ -116,6 +132,10 @@ export default function GameScreen({
   const [solved, setSolved] = useState(false)
   const [showCompassPopup, setShowCompassPopup] = useState(false) // State for the compass image popup
   const [showRestartConfirm, setShowRestartConfirm] = useState(false)
+  const [showColorPalettePopup, setShowColorPalettePopup] = useState(false)
+  // Answer input stays locked until the level's interactive mechanic is completed
+  // (or, for AUTO_OPEN_LEVELS, until the entrance animation finishes).
+  const [locked, setLocked] = useState(() => GATED_LEVELS.has(level) || AUTO_OPEN_LEVELS.has(level))
 
   // State to manage interaction level for level 17: 'disabled', 'dim', 'active'
   const [lightSwitchInteractionState, setLightSwitchInteractionState] = useState<'disabled' | 'dim' | 'active'>('disabled')
@@ -168,6 +188,20 @@ export default function GameScreen({
       setLightSwitchInteractionState('disabled')
     }
   }, [lightsOn, solved])
+
+  // Reset the answer-input lock whenever the level changes
+  useEffect(() => {
+    setLocked(GATED_LEVELS.has(level) || AUTO_OPEN_LEVELS.has(level))
+
+    if (AUTO_OPEN_LEVELS.has(level)) {
+      const timer = setTimeout(() => setLocked(false), AUTO_OPEN_DELAY_MS)
+      return () => clearTimeout(timer)
+    }
+  }, [level])
+
+  const handleInteractionComplete = () => {
+    setLocked(false)
+  }
 
   // Focus input when component mounts
   useEffect(() => {
@@ -554,10 +588,11 @@ export default function GameScreen({
 
   const handleJigsawComplete = () => {
     setJigsawComplete(true)
+    handleInteractionComplete()
   }
 
   const handleParrotSolve = () => {
-  
+    handleInteractionComplete()
   }
 
   const handleQuestionnaireRestart = () => {
@@ -572,7 +607,8 @@ export default function GameScreen({
   }
 
   const handleZodiacSolve = () => {
-    // Don't automatically solve, let the player type the answer
+    // Don't automatically solve, let the player type the answer — just unlock the input
+    handleInteractionComplete()
   }
 
   // Handle pyramid room changes
@@ -783,6 +819,7 @@ export default function GameScreen({
                     onLocationClick={handleLocationClick}
           onPyramidLocationImageClick={handlePyramidLocationImageClick}
           murderMysteryLocation={murderMysteryLocation}
+          onColorPaletteClick={() => setShowColorPalettePopup(true)}
         />
       )}
 
@@ -856,7 +893,15 @@ export default function GameScreen({
         questionnaireRef={questionnaireRef}
         onMurderMysteryLocationUpdate={handleMurderMysteryLocationUpdate}
           onMagicBoxSolved={handleMagicBoxSolved}
-        onMansionClockStepChange={setClockStep}
+        onMansionClockStepChange={(step) => {
+          setClockStep(step)
+          if (step >= MANSION_CLOCK_STEPS) {
+            handleInteractionComplete()
+          }
+        }}
+        showColorPalettePopup={showColorPalettePopup}
+        onCloseColorPalettePopup={() => setShowColorPalettePopup(false)}
+        onInteractionComplete={handleInteractionComplete}
       />
 
       {/* Answer input section */}
@@ -868,6 +913,7 @@ export default function GameScreen({
           isWrong={isWrong}
           checkAnswer={checkAnswer}
           level={level}
+          locked={locked}
           jigsawComplete={jigsawComplete}
           showElevator={showElevator}
           isSubmitButtonHovered={isSubmitButtonHovered}

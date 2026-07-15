@@ -517,9 +517,10 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
         setSongLines([])
         setShowParrotText(false)
         
-        // **TRIGGER ON SOLVE FOR THE PUZZLE**
+        // Song finished after the player reached the "solved" state — unlocks
+        // the answer input, but the player still has to type the solution.
         if (solutionState === "solved") {
-            //nothing
+            onSolve()
         }
         
         // --- KEY FIX: START IDLE TIMER ONLY AFTER SONG COMPLETES ---

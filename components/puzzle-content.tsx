@@ -72,6 +72,9 @@ interface PuzzleContentProps {
   onMurderMysteryLocationUpdate?: (location: string) => void
   onMagicBoxSolved?: () => void
   onMansionClockStepChange?: (step: number) => void
+  onInteractionComplete?: () => void
+  showColorPalettePopup?: boolean
+  onCloseColorPalettePopup?: () => void
 }
 
 export default function PuzzleContent({
@@ -98,6 +101,9 @@ export default function PuzzleContent({
   onMurderMysteryLocationUpdate,
   onMagicBoxSolved,
   onMansionClockStepChange,
+  onInteractionComplete,
+  showColorPalettePopup,
+  onCloseColorPalettePopup,
 }: PuzzleContentProps) {
   // Check if this puzzle has an image
   const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
@@ -268,14 +274,14 @@ export default function PuzzleContent({
       <div className="my-4">
       <PrisonCellPuzzle
       puzzle={puzzle}
-      onSolve={() => {}}
+      onSolve={() => onInteractionComplete?.()}
       />
       </div>
       ) : null}
 
        {isBoneCountingPuzzle ? (
        <div className="my-4">
-       <BoneCountingPuzzle onSolve={() => {}} />
+       <BoneCountingPuzzle onSolve={() => onInteractionComplete?.()} />
        </div>
        ) : null}
 
@@ -284,13 +290,13 @@ export default function PuzzleContent({
        {puzzle.description && (
          <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
        )}
-       <FearYourDreamsPuzzle onSolve={() => {}} />
+       <FearYourDreamsPuzzle onSolve={() => onInteractionComplete?.()} />
        </div>
        ) : null}
 
        {isWordLadderCarouselPuzzle ? (
        <div className="my-4">
-       <WordLadderCarouselPuzzle onSolve={() => {}} />
+       <WordLadderCarouselPuzzle onSolve={() => onInteractionComplete?.()} />
        </div>
        ) : null}
 
@@ -302,25 +308,25 @@ export default function PuzzleContent({
 
         {isShacklesPuzzle ? (
           <div className="my-4">
-            <ShacklesPuzzle onSolve={() => {}} />
+            <ShacklesPuzzle onSolve={() => {}} onFirstBoneBuried={() => onInteractionComplete?.()} />
           </div>
         ) : null}
 
         {isLockKeyPuzzle ? (
           <div className="my-4">
-            <LockKeyPuzzle onSolve={() => {}} onSolutionGenerated={onSolutionGenerated} />
+            <LockKeyPuzzle onSolve={() => onInteractionComplete?.()} onSolutionGenerated={onSolutionGenerated} />
           </div>
         ) : null}
 
         {isClockworkPuzzle ? (
           <div className="my-4">
-            <ClockworkPuzzle onSolve={() => {}} />
+            <ClockworkPuzzle onSolve={() => onInteractionComplete?.()} />
           </div>
         ) : null}
 
         {isAnagramSpicePuzzle ? (
           <div className="my-4">
-            <AnagramSpicePuzzle onSolve={() => {}} />
+            <AnagramSpicePuzzle onSolve={() => onInteractionComplete?.()} />
           </div>
         ) : null}
 
@@ -333,9 +339,7 @@ export default function PuzzleContent({
         {isMagicBoxPuzzle ? (
         <div className="my-4">
         <MagicBoxPuzzle
-        onSolve={() => {
-        // Don't automatically solve, let the player type the answer
-        }}
+        onSolve={() => onInteractionComplete?.()}
           onSolved={handleMagicBoxSolved}
           />
           </div>
@@ -343,17 +347,13 @@ export default function PuzzleContent({
 
       {isInfernalCasinoPuzzle ? (
         <div className="my-4">
-          <InfernalCasinoPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <InfernalCasinoPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 
-      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle />}
+      {puzzle.isInfernalChessPuzzle && <InfernalChessPuzzle onSolve={() => onInteractionComplete?.()} />}
 
-      {puzzle.isDamnedSoulsPuzzle && <DamnedSoulsPuzzle />}
+      {puzzle.isDamnedSoulsPuzzle && <DamnedSoulsPuzzle onSolve={() => onInteractionComplete?.()} />}
 
       {isCrystalJigsawPuzzle ? (
         <div className="my-4">
@@ -372,7 +372,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <MorseRatsPuzzle onSolve={() => {}} />
+          <MorseRatsPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : isCrocodileJigsawPuzzle ? (
         <div className="my-4">
@@ -454,7 +454,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <LibraryPuzzle books={puzzle.libraryData?.books || []} />
+          <LibraryPuzzle books={puzzle.libraryData?.books || []} onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : isInteractiveInmates ? (
         <div className="my-4">
@@ -474,7 +474,7 @@ export default function PuzzleContent({
           {level !== 17 && puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <LightSwitchPuzzle onSolve={() => {}} onUpdate={handleLightSwitchUpdate} onSolutionGenerated={onSolutionGenerated} />
+          <LightSwitchPuzzle onSolve={() => onInteractionComplete?.()} onUpdate={handleLightSwitchUpdate} onSolutionGenerated={onSolutionGenerated} />
         </div>
       ) : isPyramidPuzzle ? (
         <div className="my-4">
@@ -482,9 +482,7 @@ export default function PuzzleContent({
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
           <PyramidPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
+            onSolve={() => onInteractionComplete?.()}
             onRoomChange={handlePyramidRoomChange}
             onTorchAcquired={handlePyramidTorchAcquired}
             hasTorch={hasPyramidTorch}
@@ -538,9 +536,7 @@ export default function PuzzleContent({
           )}
           <FamiliarFacesPuzzle
             id="familiar-faces-puzzle"
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
+            onSolve={() => onInteractionComplete?.()}
             handleDevilClick={() => {}}
           />
         </div>
@@ -565,20 +561,14 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <CrystalSequencePuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <CrystalSequencePuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 
       {level === 50 ? (
         <div className="my-4" id="final-level-puzzle">
           <FinalLevelPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
+            onSolve={() => onInteractionComplete?.()}
             onDevilClick={() => {}}
             onAllPiecesRemoved={handleAllPiecesRemoved}
             onElevatorPanelOpen={handleElevatorPanelOpen}
@@ -593,11 +583,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <EgyptianPillarsPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <EgyptianPillarsPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 
@@ -606,11 +592,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <DarkRoomPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <DarkRoomPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 
@@ -619,11 +601,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <EgyptianMathPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <EgyptianMathPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 
@@ -632,11 +610,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <MouthOfTruthPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <MouthOfTruthPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 
@@ -646,9 +620,7 @@ export default function PuzzleContent({
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
           <BinarySwitchPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
+            onSolve={() => onInteractionComplete?.()}
             onCorrectCombinationsChange={setBinaryCorrectCombinations}
           />
         </div>
@@ -658,21 +630,21 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <PyramidOfHanoiPuzzle
-            onSolve={() => {
-              // Don't automatically solve, let the player type the answer
-            }}
-          />
+          <PyramidOfHanoiPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
       {puzzle.isFireMapPuzzle && <FireMapPuzzle onSolve={() => handleParrotSolve()} />}
       {puzzle.isColorPalettePuzzle && (
         <div className="mb-4">
-          <ColorPalettePuzzle onSolve={() => {}} />
+          <ColorPalettePuzzle
+            onSolve={() => onInteractionComplete?.()}
+            showPopup={showColorPalettePopup}
+            onClosePopup={onCloseColorPalettePopup}
+          />
         </div>
       )}
       {puzzle.isMurderMysteryPuzzle && <MurderMysteryPuzzle onSolve={handleParrotSolve} onLocationUpdate={onMurderMysteryLocationUpdate} />}
-      {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle />}
+      {puzzle.isGoldenScarabPuzzle && <GoldenScarabPuzzle onSolve={() => onInteractionComplete?.()} />}
     </div>
   )
 }

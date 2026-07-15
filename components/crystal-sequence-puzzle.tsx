@@ -140,6 +140,7 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
 
       if (isCorrect && !isPuzzleComplete) {
         setIsPuzzleComplete(true)
+        onSolve()
 
         // Find the Tiger's Eye crystal and make it glow
         const tigersEye = availableCrystals.find((crystal) => crystal.id === "tigers-eye")

@@ -37,6 +37,9 @@ const MorseRatsPuzzle: React.FC<MorseRatsPuzzleProps> = ({ onSolve }) => {
     black: 0,
   })
   const [hoppingRat, setHoppingRat] = useState<"brown" | "grey" | "black" | null>(null)
+  // Rats the player has actually moved — unlocks the answer input once every
+  // rat has been hopped at least once.
+  const [movedRats, setMovedRats] = useState<Set<"brown" | "grey" | "black">>(new Set())
 
   const handleRatClick = (color: "brown" | "grey" | "black") => {
     setHoppingRat(color)
@@ -44,6 +47,14 @@ const MorseRatsPuzzle: React.FC<MorseRatsPuzzleProps> = ({ onSolve }) => {
     setRatIndex((prev) => {
       const positions = ratEligiblePositions[color]
       return { ...prev, [color]: (prev[color] + 1) % positions.length }
+    })
+    setMovedRats((prev) => {
+      if (prev.has(color)) return prev
+      const next = new Set(prev).add(color)
+      if (next.size === 3) {
+        onSolve()
+      }
+      return next
     })
   }
 

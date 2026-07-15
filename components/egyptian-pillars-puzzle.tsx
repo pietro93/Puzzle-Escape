@@ -382,6 +382,14 @@ export default function EgyptianPillarsPuzzle({ onSolve }: EgyptianPillarsPuzzle
     }
   }
 
+  // Unlock the answer input once every pillar across every set has a word placed.
+  useEffect(() => {
+    const allFilled = pillarSets.every((set) => set.pillars.every((pillar) => pillar.placedWord !== null))
+    if (allFilled) {
+      onSolve?.()
+    }
+  }, [pillarSets])
+
   // Navigate between pillar sets
   const goToPreviousSet = () => {
     setActivePillarSetIndex((prev) => (prev === 0 ? pillarSets.length - 1 : prev - 1))

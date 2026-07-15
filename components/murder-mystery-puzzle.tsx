@@ -113,6 +113,13 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, onLocat
     dialogue.setIsTyping(true)
   }
 
+  // Unlock the answer input once the player has reviewed every piece of evidence.
+  useEffect(() => {
+    if (hasSeenPoliceReport && hasSeenPassport && hasSeenBody && hasSeenAutopsyReport) {
+      onSolve?.()
+    }
+  }, [hasSeenPoliceReport, hasSeenPassport, hasSeenBody, hasSeenAutopsyReport])
+
   // // // // // // DIALOGUE FUNCTIONS  // // // // // // // // // // // // // // // // // // // // // //
   // Custom filter for policewoman dialogue options
   const filterPoliceOptions = (options: any[]) => {

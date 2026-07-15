@@ -231,9 +231,10 @@ function LockIcon({
   )
 }
 
-export default function LockKeyPuzzle({ onSolutionGenerated }: LockKeyPuzzleProps) {
+export default function LockKeyPuzzle({ onSolve, onSolutionGenerated }: LockKeyPuzzleProps) {
   const [data, setData] = useState<PuzzleData | null>(null)
   const [states, setStates] = useState<Record<OccurrenceId, LockState>>({} as Record<OccurrenceId, LockState>)
+  const [solvedNotified, setSolvedNotified] = useState(false)
 
   useEffect(() => {
     const puzzle = generatePuzzle()
@@ -243,6 +244,20 @@ export default function LockKeyPuzzle({ onSolutionGenerated }: LockKeyPuzzleProp
     setStates(initialStates)
     onSolutionGenerated(String(puzzle.solutionSum))
   }, [])
+
+  // All three equations hit their unique target combination — the player can
+  // now read off the values needed for the (still player-computed) eq4 answer.
+  useEffect(() => {
+    if (!data || solvedNotified) return
+    const valueOf = (occ: Occurrence) => data.pairs[occ.type][states[occ.id]]
+    const sum1 = valueOf(EQ1[0]) + valueOf(EQ1[1])
+    const sum2 = valueOf(EQ2[0]) + valueOf(EQ2[1]) - valueOf(EQ2[2])
+    const sum3 = valueOf(EQ3[0]) * valueOf(EQ3[1]) + valueOf(EQ3[2])
+    if (sum1 === data.X && sum2 === data.Y && sum3 === data.Z) {
+      setSolvedNotified(true)
+      onSolve()
+    }
+  }, [data, states, solvedNotified])
 
   if (!data || Object.keys(states).length === 0) return null
 

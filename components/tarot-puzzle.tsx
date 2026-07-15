@@ -90,6 +90,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
         // Show decoder card and complete reading
         setShowDecoderCard(true)
         setReadingComplete(true)
+        onSolve()
       } else {
         setCurrentStep(currentStep + 1)
       }

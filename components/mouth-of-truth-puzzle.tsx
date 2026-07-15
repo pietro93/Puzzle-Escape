@@ -256,6 +256,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
 
         // Set puzzle as solved
         setPuzzleSolved(true)
+        onSolve()
 
         // Generate the revealed marbles and cherubs
         generateRevealedItems()

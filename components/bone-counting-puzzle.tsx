@@ -104,6 +104,7 @@ export default function BoneCountingPuzzle({ onSolve }: BoneCountingPuzzleProps)
 
   const handleDragEnd = () => {
     setDraggedBone(null)
+    onSolve?.()
   }
 
   const handleDragOver = (e: React.DragEvent) => {

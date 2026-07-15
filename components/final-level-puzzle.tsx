@@ -223,6 +223,7 @@ export default function FinalLevelPuzzle({
   // Handle puzzle completion
   const handlePuzzleComplete = () => {
     setIsPuzzleComplete(true)
+    onSolve()
   }
 
   // Handle piece removal
