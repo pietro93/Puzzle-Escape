@@ -68,9 +68,9 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 15,
-    question: "The butler introduces the master's first love.",
-    description: "A portrait of Patricia, the master's first love. Examine it closely.",
-    imageUrl: "/images/level15.webp",
+    question: "The butler leads you into a wing of the mansion lined with the master's art.",
+    description: "A gallery of paintings and statues. Explore the rooms.",
+    isMansionMapPuzzle: true,
     solution: "life and death",
     category: "riddle",
     hints: [

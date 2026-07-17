@@ -46,6 +46,9 @@ import ClockworkPuzzle from "./clockwork-puzzle"
 import MorseRatsPuzzle from "./morse-rats-puzzle"
 import AnagramSpicePuzzle from "./anagram-spice-puzzle"
 import MansionClockPuzzle from "./mansion-clock-puzzle"
+import MansionMapPuzzle from "./mansion-map-puzzle"
+import ConstellationPuzzle from "./constellation-puzzle"
+import MysticsGeometryPuzzle from "./mystics-geometry-puzzle"
 
 interface PuzzleContentProps {
   level: number
@@ -145,6 +148,9 @@ export default function PuzzleContent({
   // Check if this is a pyramid puzzle
   const isPyramidPuzzle = puzzle.isPyramidPuzzle
 
+  // Check if this is the mansion gallery map puzzle
+  const isMansionMapPuzzle = puzzle.isMansionMapPuzzle
+
   // Check if this is a familiar faces puzzle
   const isFamiliarFacesPuzzle = puzzle.isFamiliarFacesPuzzle
 
@@ -210,6 +216,12 @@ export default function PuzzleContent({
 
     // Check if this is the mansion clock puzzle
     const isMansionClockPuzzle = puzzle.isMansionClockPuzzle
+
+    // Check if this is the constellation puzzle
+    const isConstellationPuzzle = puzzle.isConstellationPuzzle
+
+    // Check if this is the mystics geometry puzzle
+    const isMysticsGeometryPuzzle = puzzle.isMysticsGeometryPuzzle
 
   const [binaryCorrectCombinations, setBinaryCorrectCombinationsState] = useState(0)
   const [magicBoxSolved, setMagicBoxSolved] = useState(false)
@@ -426,6 +438,20 @@ export default function PuzzleContent({
           )}
           <ZodiacPuzzle onSolve={handleZodiacSolve} />
         </div>
+      ) : isConstellationPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <ConstellationPuzzle onSolve={() => onInteractionComplete?.()} />
+        </div>
+      ) : isMysticsGeometryPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <MysticsGeometryPuzzle onSolve={() => onInteractionComplete?.()} />
+        </div>
       ) : puzzle.isAnimatedGif ? (
         <div className="my-4">
           {puzzle.description && (
@@ -488,6 +514,13 @@ export default function PuzzleContent({
             hasTorch={hasPyramidTorch}
             currentRoom={currentPyramidRoom}
           />
+        </div>
+      ) : isMansionMapPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <MansionMapPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : level === 31 ? (
         <div className="flex flex-col items-center justify-center my-4 bg-black p-4 rounded-lg">

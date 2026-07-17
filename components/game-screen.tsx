@@ -55,7 +55,7 @@ const getBrainLampImage = (correctCombinations: number): string => {
 // input stays locked until that signal fires. Levels not yet in this set are
 // unaffected (input behaves as before) until their gating is implemented.
 const GATED_LEVELS = new Set<number>([
-  1, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 17, 19, 20, 21, 22, 24, 27, 28, 30, 32, 33, 34, 36, 37, 39, 40, 41, 42,
+  1, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 19, 20, 21, 22, 24, 27, 28, 30, 32, 33, 34, 36, 37, 39, 40, 41, 42,
   43, 44, 45, 46, 47, 48, 49, 50,
 ])
 
@@ -202,6 +202,18 @@ export default function GameScreen({
   const handleInteractionComplete = () => {
     setLocked(false)
   }
+
+  // Debug shortcut: press "x" to force-unlock the answer input gate for the current level.
+  useEffect(() => {
+    const handleDebugUnlock = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== "x") return
+      const target = e.target as HTMLElement | null
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return
+      setLocked(false)
+    }
+    window.addEventListener("keydown", handleDebugUnlock)
+    return () => window.removeEventListener("keydown", handleDebugUnlock)
+  }, [])
 
   // Focus input when component mounts
   useEffect(() => {

@@ -28,6 +28,10 @@ export interface Puzzle {
   isHellJigsawPuzzle?: boolean
   isFamiliarFacesPuzzle?: boolean
   isAnimatedGifPuzzle?: boolean
+  isAnimatedGif?: boolean
+  isPuzzleImage?: boolean
+  videoUrl?: string
+  imageHint?: string
   isEgyptianMathPuzzle?: boolean
   isEgyptianPillarsPuzzle?: boolean
   isPyramidPuzzle?: boolean
@@ -61,4 +65,7 @@ export interface Puzzle {
   isMorseRatsPuzzle?: boolean
   isAnagramSpicePuzzle?: boolean
   isMansionClockPuzzle?: boolean
+  isMansionMapPuzzle?: boolean
+  isConstellationPuzzle?: boolean
+  isMysticsGeometryPuzzle?: boolean
 }

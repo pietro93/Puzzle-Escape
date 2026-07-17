@@ -63,32 +63,34 @@ export const puzzlesSet3: Puzzle[] = [
   {
     level: 25,
     question: "The gypsy woman presents you with an ancient geometric puzzle.",
-    description: "Each shape holds a specific value. Solve the puzzle to glimpse the numeric code.",
-    imageUrl: "/images/level25.webp",
+    description: "Each rune holds a specific value. Solve each equation and lock in the runes to reveal the final expression.",
+    imageUrl: "",
+    isMysticsGeometryPuzzle: true,
     solution: "1052",
     category: "math",
     hints: [
-      "Start by adding the values of the shapes together in each equation. See if this assumption helps you make sense of the puzzle.",
-      'Choose an equation that includes a "red circle" and see if you can use it to figure out the value of the "red circle."',
-      'Solve for the value of the "red triangle" using Red Circle + Red Triangle = 22 and the value of the "red circle" you found.',
-      'Use the relationship between "blue circle" and "red circle" to find the value of the "blue circle."',
-      'Use the values of the "blue circle," "blue triangle," and "blue square" to calculate the "red star."',
-      'The value of the "blue star" is equal to "red star" plus "red circle".',
+      "Start with the equation that only uses one shape, the red circle - solve it and lock it in.",
+      "Use the value of the red circle to solve for the red triangle.",
+      "The blue circle's equation uses both the red circle and the red triangle you already solved.",
+      "The blue triangle and the blue square each have their own simple equation - solve those independently.",
+      "Once blue circle, blue triangle, and blue square are locked in, use them to solve the red star.",
+      "The blue star is equal to the red star plus the red circle.",
+      "Once every rune glows, evaluate: Blue Triangle × Blue Star + Red Circle.",
     ],
   },
   {
     level: 26,
     question: "The gypsy woman invites you to look at the sky.",
     description:
-      "The gypsy woman leads you outside her wagon and points upward. 'The stars have much to tell us tonight,' she whispers. 'Look closely at the heavens. What do you see?'",
-    imageUrl:
-      "/images/constellation.gif",
-    locationImage: "/images/forest.webp", // Use default forest image
+      "The gypsy woman leads you outside her wagon and points upward. 'The stars have much to tell us tonight,' she whispers. 'Trace the shape hidden among them, and tell me what you see.'",
+    imageUrl: "",
+    locationImage: "/images/constellation.gif",
+    isConstellationPuzzle: true,
     solution: "CAPRICORN|CAPRICORNUS", // Accept both solutions
     category: "pattern",
     hints: [
-      "The sky is clear. You are definitely looking at stars.",
-      "Can you identify what constellation you are looking at?",
+      "Click two stars to draw a line between them. Not every star belongs to the shape.",
+      "Once the outline is fully traced, step back and look at what you've drawn.",
       "Many constellations share their names with Zodiac signs. If you can't identify it, try guessing.",
     ],
   },
