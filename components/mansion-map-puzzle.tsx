@@ -206,20 +206,21 @@ const FLORAL_HEAD_MESSAGES: Record<keyof typeof FLORAL_HEAD_HOTSPOTS, { before: 
 // size as the other, "241x165") — nudge if it doesn't sit on the windows.
 const FLORAL_WINDOW_HOTSPOT: Rect = { left: (173 / 572) * 100, top: (46 / 833) * 100, width: (241 / 572) * 100, height: (165 / 833) * 100 }
 
-// TEMPORARY placeholder pickup spot for the Garden Chisel — used to scrape
-// the softened gold resin off Mammon's painting once the Caustic Agent has
-// loosened it (see MAMMON_GOLD_HOTSPOT below). No overlay art yet, so it
-// renders as a bare dashed hotspot rather than a composited item image, same
-// convention as BANQUET_EWER_HOTSPOT below.
-const FLORAL_CHISEL_HOTSPOT: Rect = { left: (480 / 572) * 100, top: (740 / 833) * 100, width: (55 / 572) * 100, height: (70 / 833) * 100 }
+// The Garden Chisel, sitting in the flower room — used to scrape the
+// softened gold resin off Mammon's painting once the Caustic Agent has
+// loosened it (see MAMMON_GOLD_HOTSPOT below). Pixel-aligned to
+// flower_room.webp (572x833), same full-canvas-overlay convention as the
+// Ewer above.
+const FLORAL_CHISEL_OVERLAY = "/images/paintings/flower_room_garden_chisel.webp"
+const FLORAL_CHISEL_HOTSPOT: Rect = { left: (45 / 572) * 100, top: (718 / 833) * 100, width: (71 / 572) * 100, height: (32 / 833) * 100 }
 
-// TEMPORARY placeholder pickup spot for the Ewer, sitting in the banquet
-// hall alongside the Charcoal so the watering flow can be tested before the
-// item's real home (and its art) are decided. No overlay art yet, so it
-// renders as a bare dashed hotspot rather than a composited item image.
-// Pixel-aligned to banquet_hall.webp (558x771), clear of the Charcoal pickup
-// and the art/plaque hotspots.
-const BANQUET_EWER_HOTSPOT: Rect = { left: (60 / 558) * 100, top: (600 / 771) * 100, width: (70 / 558) * 100, height: (90 / 771) * 100 }
+// The Ewer, sitting in the banquet hall alongside the Charcoal. Rendered by
+// hand rather than through ROOM_ITEM_PICKUPS since that map only holds one
+// entry per room and saturn's is already spoken for by Charcoal — same
+// full-canvas-overlay convention otherwise. Pixel-aligned to
+// banquet_hall.webp (558x771).
+const BANQUET_EWER_OVERLAY = "/images/paintings/banquet_hall_ewer.webp"
+const BANQUET_EWER_HOTSPOT: Rect = { left: (247 / 558) * 100, top: (575 / 771) * 100, width: (62 / 558) * 100, height: (79 / 771) * 100 }
 
 // thesin's room ("ember room") has two states — its painting is hidden
 // (ember_room_shut) until the Ladder is dropped into the room, letting the
@@ -345,7 +346,7 @@ const ROOM_ITEM_PICKUPS: Partial<Record<Room, { item: string; overlaySrc: string
     item: "Caustic Agent",
     overlaySrc: "/images/paintings/ember_room_caustic_agent.webp",
     hotspot: { left: (58 / 495) * 100, top: (449 / 644) * 100, width: (32 / 495) * 100, height: (111 / 644) * 100 },
-    message: "A small glass vial, stopper crusted white. Whatever's left inside still fumes faintly when you tip it.",
+    message: "A bottle of caustic agent, a golden skull etched on the label slowly melting away in a puddle of acid.",
   },
 }
 
@@ -527,6 +528,9 @@ const ITEM_ICONS: Record<string, string> = {
   Loupe: "/images/paintings/loupe.webp",
   "Oil Lamp": "/images/paintings/oil_lamp.webp",
   Ladder: "/images/paintings/ladder.webp",
+  Ewer: "/images/paintings/ewer.webp",
+  "Caustic Agent": "/images/paintings/caustic_agent.webp",
+  "Garden Chisel": "/images/paintings/garden_chisel.webp",
 }
 const CALICHE_EMPTY_ICON = "/images/paintings/caliche.webp"
 const CALICHE_FILLED_ICON = "/images/paintings/caliche_salt.webp"
@@ -1403,43 +1407,56 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
               )
             })}
 
-          {/* TEMPORARY: placeholder Ewer pickup, no art yet — see the
-              constant's own comment. Dashed outline stands in for a
-              composited item overlay so the drop/watering flow can be
-              tested before the real pickup location is decided. */}
+          {/* The Ewer — rendered by hand rather than through the generic
+              ROOM_ITEM_PICKUPS overlay/button pair since saturn's one slot
+              in that map is already Charcoal's, see BANQUET_EWER_OVERLAY's
+              own comment. Same z-10 layering as that pattern. */}
+          {showBanquetEwer && banquetEwerHotspot && (
+            <img
+              src={BANQUET_EWER_OVERLAY}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
           {showBanquetEwer && banquetEwerHotspot && (
             <button
               onClick={() => pickupItem("Ewer", "A wide-mouthed ewer, sitting empty among the banquet ware. This one might hold enough to make a difference.")}
               aria-label="Pick up Ewer"
-              className="absolute rounded border-2 border-dashed border-amber-300/70 bg-amber-300/10 hover:bg-amber-300/20 transition-colors flex items-center justify-center"
+              className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors z-10"
               style={{
                 left: `${banquetEwerHotspot.left}%`,
                 top: `${banquetEwerHotspot.top}%`,
                 width: `${banquetEwerHotspot.width}%`,
                 height: `${banquetEwerHotspot.height}%`,
               }}
-            >
-              <span className="text-[9px] font-mono text-amber-200/90 leading-none px-0.5">Ewer</span>
-            </button>
+            />
           )}
 
-          {/* TEMPORARY: placeholder Garden Chisel pickup, no art yet — see
-              the constant's own comment. Same dashed-outline convention as
-              the Ewer above. */}
+          {/* The Garden Chisel — rendered by hand like the Ewer, same
+              full-canvas-overlay + hotspot-button pair. */}
+          {showFloralChisel && floralChiselHotspot && (
+            <img
+              src={FLORAL_CHISEL_OVERLAY}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
           {showFloralChisel && floralChiselHotspot && (
             <button
               onClick={() => pickupItem("Garden Chisel", "A small garden chisel, its edge still sharp despite the rust creeping up the handle.")}
               aria-label="Pick up Garden Chisel"
-              className="absolute rounded border-2 border-dashed border-amber-300/70 bg-amber-300/10 hover:bg-amber-300/20 transition-colors flex items-center justify-center"
+              className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors z-10"
               style={{
                 left: `${floralChiselHotspot.left}%`,
                 top: `${floralChiselHotspot.top}%`,
                 width: `${floralChiselHotspot.width}%`,
                 height: `${floralChiselHotspot.height}%`,
               }}
-            >
-              <span className="text-[9px] font-mono text-amber-200/90 leading-none px-0.5">Chisel</span>
-            </button>
+            />
           )}
 
           {(["north", "south", "east", "west"] as const).map((direction) => {
