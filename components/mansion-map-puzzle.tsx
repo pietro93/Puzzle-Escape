@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react"
 import PaintingInspector from "./painting-inspector"
@@ -10,6 +10,10 @@ import ItemDragTray from "./item-drag-tray"
 
 interface MansionMapPuzzleProps {
   onSolve: () => void
+  // Fires whenever the current room or examining state changes, so the
+  // butler's dialogue (driven from game-screen.tsx) can react to where the
+  // player actually is instead of showing generic level-wide lines.
+  onRoomStateChange?: (room: string, examining: boolean) => void
 }
 
 // foyer/gregory are each split across two screens (foyer + foyerAnnex,
@@ -27,6 +31,7 @@ type Room =
   | "desidia"
   | "saturn"
   | "mammon"
+  | "floral"
 type Direction = "north" | "south" | "east" | "west"
 
 // Most rooms are dead-end branches off the main loop — their only way out is
@@ -46,9 +51,10 @@ const ROOM_CONNECTIONS: Record<Room, Partial<Record<Direction, ConnectionTarget>
   ivan: { south: BACK },
   narcissus: { west: BACK },
   mammon: { south: BACK },
-  thesin: { east: "foyer", north: "invidia", west: "desidia" },
+  thesin: { east: "foyer", north: "invidia", west: "desidia", south: "floral" },
   desidia: { east: BACK },
   saturn: { south: BACK },
+  floral: { north: BACK },
 }
 
 const ROOM_LABELS: Record<Room, string> = {
@@ -63,67 +69,78 @@ const ROOM_LABELS: Record<Room, string> = {
   desidia: "Desidia",
   saturn: "Saturn Devouring His Son",
   mammon: "Mammon",
+  floral: "Flower Room",
 }
 
 // Title/artist/date are placeholders — final wall-plaque copy is still being
 // written (see redesign doc §7). Kept plain rather than inventing fake
 // specifics so nobody mistakes these for real content.
-const ROOM_ART: Partial<Record<Room, { src: string; alt: string; title: string; artist: string; date: string }>> = {
+const ROOM_ART: Partial<
+  Record<Room, { src: string; alt: string; title: string; artist: string; date: string; medium: string }>
+> = {
   gregory: {
     src: "/images/paintings/pope-gregory-i.webp",
     alt: "A statue of Pope Gregory I",
     title: "Pope Gregory I",
     artist: "Artist unknown",
     date: "Date unknown",
+    medium: "Marble Sculpture",
   },
   invidia: {
     src: "/images/paintings/invidia.webp",
     alt: "A fresco depicting Invidia",
-    title: "Invidia",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    title: "Invidia (Envy)",
+    artist: "Giotto di Bondone",
+    date: "c. 1305",
+    medium: "Fresco",
   },
   ivan: {
     src: "/images/paintings/ivan-the-terrible-and-his-son.webp",
     alt: "Ivan the Terrible and his son",
     title: "Ivan the Terrible and His Son",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    artist: "Ilya Repin",
+    date: "1885",
+    medium: "Oil on Canvas",
   },
   narcissus: {
     src: "/images/paintings/narcissus.webp",
     alt: "A marble statue of Narcissus",
     title: "Narcissus",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    artist: "John Gibson",
+    date: "1838",
+    medium: "Marble Sculpture",
   },
   thesin: {
     src: "/images/paintings/the-sin.webp",
     alt: "A painting titled The Sin",
     title: "The Sin",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    artist: "Franz von Stuck",
+    date: "1893",
+    medium: "Oil on Canvas",
   },
   desidia: {
     src: "/images/paintings/desidia.webp",
     alt: "An engraving depicting Desidia",
-    title: "Desidia",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    title: "Desidia (Sloth)",
+    artist: "Pieter Bruegel the Elder",
+    date: "1557",
+    medium: "Engraving",
   },
   saturn: {
     src: "/images/paintings/saturn-devouring-his-son.webp",
     alt: "Saturn Devouring His Son",
     title: "Saturn Devouring His Son",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    artist: "Francisco Goya",
+    date: "c. 1819–1823",
+    medium: "Oil on Plaster",
   },
   mammon: {
     src: "/images/paintings/mammon.webp",
     alt: "A painting depicting Mammon",
     title: "Mammon",
-    artist: "Artist unknown",
-    date: "Date unknown",
+    artist: "George Frederic Watts",
+    date: "1885",
+    medium: "Oil on Canvas",
   },
 }
 
@@ -131,8 +148,9 @@ const ROOM_ART: Partial<Record<Room, { src: string; alt: string; title: string; 
 // (and, for most, its plaque) composited into the scene at a small,
 // unzoomed scale. `aspect` is the source image's own width/height, used to
 // work out how much of it BOX_ASPECT crops away (see mapToBox below).
-// thesin's src is overridden dynamically below (see EMBER_ROOM_*) — the
-// value here is just the closed-door default.
+// thesin's and narcissus's src are overridden dynamically below (see
+// EMBER_ROOM_* and STILLWATER_STATUE_*) — the value here is just the default
+// (closed-door / undraped) state.
 const ROOM_BACKGROUNDS: Record<Room, { src: string; aspect: number }> = {
   foyer: { src: "/images/paintings/foyer_left.webp", aspect: 494 / 600 },
   foyerAnnex: { src: "/images/paintings/foyer_right.webp", aspect: 494 / 600 },
@@ -145,13 +163,100 @@ const ROOM_BACKGROUNDS: Record<Room, { src: string; aspect: number }> = {
   desidia: { src: "/images/paintings/drowsing_parlor.webp", aspect: 597 / 740 },
   saturn: { src: "/images/paintings/banquet_hall.webp", aspect: 558 / 771 },
   mammon: { src: "/images/paintings/golden_hall.webp", aspect: 592 / 913 },
+  floral: { src: "/images/paintings/flower_room.webp", aspect: 572 / 833 },
 }
 
+// The three snake-head fountains in the flower room, plus the fourth
+// (southwest) trunk that has no head of its own — it fills automatically
+// once the other three are flowing (see floralAllWet below), rather than
+// being a drop target. Each overlay is a full-canvas image, pixel-aligned to
+// flower_room.webp (572x833), transparent except for that one water channel.
+const FLORAL_WATER_NORTHWEST = "/images/paintings/flower_room_water_northwest.webp"
+const FLORAL_WATER_NORTHEAST = "/images/paintings/flower_room_water_northeast.webp"
+const FLORAL_WATER_SOUTHEAST = "/images/paintings/flower_room_water_southeast.webp"
+const FLORAL_WATER_SOUTHWEST = "/images/paintings/flower_room_water_southwest.webp"
+
+const FLORAL_HEAD_HOTSPOTS = {
+  northwest: { left: (193 / 572) * 100, top: (259 / 833) * 100, width: (76 / 572) * 100, height: (73 / 833) * 100 },
+  northeast: { left: (317 / 572) * 100, top: (315 / 833) * 100, width: (68 / 572) * 100, height: (70 / 833) * 100 },
+  southeast: { left: (348 / 572) * 100, top: (504 / 833) * 100, width: (111 / 572) * 100, height: (111 / 833) * 100 },
+} as const satisfies Record<string, Rect>
+
+// Before/after observation text for each snake head, and the line shown the
+// instant the Ewer sets one flowing — standalone per head, never naming or
+// comparing to the others, since the player has no reason to have seen them
+// in any particular order.
+const FLORAL_HEAD_MESSAGES: Record<keyof typeof FLORAL_HEAD_HOTSPOTS, { before: string; after: string }> = {
+  northwest: {
+    before: "A stone snake's head, jaws stretched wide. The stone beneath its mouth is bone-dry, stained faintly green where water once ran.",
+    after: "Water threads steadily from the stone jaws, down into the flowerbed below.",
+  },
+  northeast: {
+    before: "A stone snake's head, coiled toward the window, mouth cracked open. Dust has settled in the hollow of its throat.",
+    after: "A thin stream runs from the stone jaws now, tracing the worn channel beneath it.",
+  },
+  southeast: {
+    before: "A stone snake's head, wide-mouthed, half-sunk in dead flowers. The stone around its jaws is cracked and dry.",
+    after: "Water pours from the stone jaws in a steady rush, loud in the quiet of the room.",
+  },
+}
+
+// Description-only — the arched windows and the full moon beyond them.
+// TODO: position is a best guess (left/top read as one pair, "173x46", and
+// size as the other, "241x165") — nudge if it doesn't sit on the windows.
+const FLORAL_WINDOW_HOTSPOT: Rect = { left: (173 / 572) * 100, top: (46 / 833) * 100, width: (241 / 572) * 100, height: (165 / 833) * 100 }
+
+// TEMPORARY placeholder pickup spot for the Garden Chisel — used to scrape
+// the softened gold resin off Mammon's painting once the Caustic Agent has
+// loosened it (see MAMMON_GOLD_HOTSPOT below). No overlay art yet, so it
+// renders as a bare dashed hotspot rather than a composited item image, same
+// convention as BANQUET_EWER_HOTSPOT below.
+const FLORAL_CHISEL_HOTSPOT: Rect = { left: (480 / 572) * 100, top: (740 / 833) * 100, width: (55 / 572) * 100, height: (70 / 833) * 100 }
+
+// TEMPORARY placeholder pickup spot for the Ewer, sitting in the banquet
+// hall alongside the Charcoal so the watering flow can be tested before the
+// item's real home (and its art) are decided. No overlay art yet, so it
+// renders as a bare dashed hotspot rather than a composited item image.
+// Pixel-aligned to banquet_hall.webp (558x771), clear of the Charcoal pickup
+// and the art/plaque hotspots.
+const BANQUET_EWER_HOTSPOT: Rect = { left: (60 / 558) * 100, top: (600 / 771) * 100, width: (70 / 558) * 100, height: (90 / 771) * 100 }
+
 // thesin's room ("ember room") has two states — its painting is hidden
-// (ember_room_shut) until whatever future minor puzzle reveals it
-// (ember_room_open). Not wired to a trigger yet; defaults closed.
+// (ember_room_shut) until the Ladder is dropped into the room, letting the
+// player reach it (ember_room_open). See emberOpen below.
 const EMBER_ROOM_SHUT = "/images/paintings/ember_room_shut.webp"
 const EMBER_ROOM_OPEN = "/images/paintings/ember_room_open.webp"
+
+// The Ladder itself, once placed — a full-canvas overlay like the ones
+// above (the ladder art sits at pixel (134,215)-(251,572), transparent
+// elsewhere), same inset-0 + object-cover pattern.
+const EMBER_ROOM_LADDER = "/images/paintings/ember_room_ladder.webp"
+
+// The Caustic Agent, sitting in a cabinet revealed once the ember room
+// opens up — same full-canvas-overlay item-pickup convention as Charcoal/
+// Ladder above, pixel-aligned to ember_room_open.webp (495x644). Used to
+// soften the gold resin sealing the bottom half of Mammon's painting (see
+// MAMMON_GOLD_HOTSPOT below) before the Garden Chisel can scrape it away.
+
+// Ivan's bloodstain, three states over the same painting: fresh, salted
+// (mid-clean), then cleaned for good once Holy Water washes the salt away.
+const IVAN_ART_DEFAULT = "/images/paintings/ivan-the-terrible-and-his-son.webp"
+const IVAN_ART_SALTED = "/images/paintings/ivan-the-terrible-and-his-son_salted.webp"
+const IVAN_ART_CLEANED = "/images/paintings/ivan-the-terrible-and-his-son_cleaned.webp"
+
+// Narcissus's statue, three states — unlike Ivan's bloodstain these are NOT
+// baked into the room background. stillwater_room_layer.webp (the room minus
+// the statue) is rendered as an overlay ON TOP of a statue-only image, so the
+// arch's stonework/floor stays in front and masks the statue to the true
+// alcove opening rather than relying on a hand-tuned cutout matching it
+// exactly. undraped by default, Drape once applied, then Drape + the
+// charcoal rubbing once that's been started. All four images (the three
+// statue-only ones plus the layer) share the same 760x893 canvas/aspect and
+// are pixel-aligned to each other.
+const STILLWATER_STATUE_DEFAULT = "/images/paintings/stillwater_room_statue_default.webp"
+const STILLWATER_STATUE_DRAPED = "/images/paintings/stillwater_room_statue_draped.webp"
+const STILLWATER_STATUE_CHARCOAL = "/images/paintings/stillwater_room_statue_charcoal.webp"
+const STILLWATER_ROOM_LAYER = "/images/paintings/stillwater_room_layer.webp"
 
 // The room viewport is a single fixed aspect ratio across every room (so the
 // puzzle never resizes as the player moves), close to the images' own
@@ -175,6 +280,7 @@ const ROOM_FOCUS: Record<Room, { x: number; y: number }> = {
   desidia: { x: 70, y: 36 },
   saturn: { x: 52, y: 29 },
   mammon: { x: 48.5, y: 50 },
+  floral: { x: 50, y: 52 },
 }
 
 type Rect = { left: number; top: number; width: number; height: number }
@@ -209,6 +315,12 @@ const ROOM_ITEM_PICKUPS: Partial<Record<Room, { item: string; overlaySrc: string
     hotspot: { left: (276 / 494) * 100, top: (335 / 600) * 100, width: (19 / 494) * 100, height: (31 / 600) * 100 },
     message: "You ease the loupe free of the mannequin's staring eye.",
   },
+  gregoryAnnex: {
+    item: "Ladder",
+    overlaySrc: "/images/paintings/saint_alcove_right_ladder.webp",
+    hotspot: { left: (33 / 469) * 100, top: (72 / 600) * 100, width: (52 / 469) * 100, height: (150 / 600) * 100 },
+    message: "A short wooden ladder, propped against the wall. Might reach somewhere useful.",
+  },
   ivan: {
     item: "Oil Lamp",
     overlaySrc: "/images/paintings/crimson_study_oil_lamp.webp",
@@ -226,6 +338,14 @@ const ROOM_ITEM_PICKUPS: Partial<Record<Room, { item: string; overlaySrc: string
     overlaySrc: "/images/paintings/golden_hall_caliche.webp",
     hotspot: { left: (520 / 592) * 100, top: (637 / 913) * 100, width: (35 / 592) * 100, height: (58 / 913) * 100 },
     message: "A small clay caliche, empty and dusty.",
+  },
+  // Only shown once emberOpen — see the itemPickup gating in render below —
+  // since the cabinet it sits in isn't reachable until the room opens up.
+  thesin: {
+    item: "Caustic Agent",
+    overlaySrc: "/images/paintings/ember_room_caustic_agent.webp",
+    hotspot: { left: (58 / 495) * 100, top: (449 / 644) * 100, width: (32 / 495) * 100, height: (111 / 644) * 100 },
+    message: "A small glass vial, stopper crusted white. Whatever's left inside still fumes faintly when you tip it.",
   },
 }
 
@@ -247,6 +367,25 @@ const ART_ITEM_PICKUPS: Partial<Record<Room, { item: string; overlaySrc: string;
 // dialogue modal as the item pickups below, just without the collectItem
 // side effect. hotspot is percent of ROOM_BACKGROUNDS' source image.
 const ROOM_OBSERVATIONS: Partial<Record<Room, { hotspot: Rect; message: string }[]>> = {
+  gregory: [
+    {
+      hotspot: { left: (427 / 560) * 100, top: (323 / 596) * 100, width: (63 / 560) * 100, height: (43 / 596) * 100 },
+      message:
+        "Set into the stone, in tight Roman capitals. SEPTEM VITIA CAPITALIA: VANAGLORIA, INVIDIA, IRA, TRISTITIA, AVARITIA, GVLA, LVXVRIA.",
+    },
+  ],
+  foyer: [
+    {
+      hotspot: { left: (182 / 494) * 100, top: (185 / 600) * 100, width: (54 / 494) * 100, height: (119 / 600) * 100 },
+      message:
+        "A hunting tapestry, threadbare and moth-eaten. Every stitched hound has been unpicked from the same corner of the weave, as if someone tried to pull just them out of the scene.",
+    },
+    {
+      hotspot: { left: (428 / 494) * 100, top: (247 / 600) * 100, width: (48 / 494) * 100, height: (143 / 600) * 100 },
+      message:
+        "A suit of plate armor, stood at permanent attention beside the stairs. The visor is shut. Nothing about it suggests it's always been that way.",
+    },
+  ],
   foyerAnnex: [
     {
       hotspot: { left: (182 / 494) * 100, top: (354 / 600) * 100, width: (79 / 494) * 100, height: (56 / 600) * 100 },
@@ -255,6 +394,12 @@ const ROOM_OBSERVATIONS: Partial<Record<Room, { hotspot: Rect; message: string }
     {
       hotspot: { left: (256 / 494) * 100, top: (318 / 600) * 100, width: (33 / 494) * 100, height: (60 / 600) * 100 },
       message: "A featureless mannequin head, its expression locked in a permanent wince.",
+    },
+  ],
+  floral: [
+    {
+      hotspot: FLORAL_WINDOW_HOTSPOT,
+      message: "Three tall arched windows, hung with dead vines. Beyond the glass, a full moon sits low over the treeline.",
     },
   ],
 }
@@ -284,6 +429,50 @@ const MAMMON_FROG_HOTSPOT: Rect = {
   height: (45 / 600) * 100,
 }
 
+// Room-to-room navigation hotspots — phantom clickable regions laid over
+// architectural features (doors, stairways) in the source art, replacing the
+// generic compass-arrow buttons for rooms that have been mapped. Rooms/
+// directions with no entry here still fall back to NavArrow (see render).
+// thesin's three are pixel-aligned to ember_room_open.webp (495x644), which
+// shares its door/stairway positions with ember_room_shut.webp, so the same
+// rects work in both the shut and open states.
+const NAV_HOTSPOTS: Partial<Record<Room, Partial<Record<Direction, Rect>>>> = {
+  // gregory/gregoryAnnex and foyer/foyerAnnex are the same physical space
+  // split across two portrait frames (see the Room type comment above) —
+  // those east/west switches keep the plain compass arrows. Only gregory's
+  // south exit (back to the foyer proper) gets a phantom hotspot here, laid
+  // over the open floor at the bottom of the frame since there's no painted
+  // doorway to align it to.
+  gregory: {
+    south: { left: (-22 / 560) * 100, top: (522 / 596) * 100, width: (604 / 560) * 100, height: (148 / 596) * 100 },
+  },
+  // foyer's own east/west arrows stay put here too (see the comment above) —
+  // only the two real doors, to thesin and to saturn, get phantom hotspots.
+  // Pixel-aligned to foyer_left.webp (494x600).
+  foyer: {
+    west: { left: (58 / 494) * 100, top: (171 / 600) * 100, width: (63 / 494) * 100, height: (307 / 600) * 100 },
+    north: { left: (284 / 494) * 100, top: (198 / 600) * 100, width: (106 / 494) * 100, height: (187 / 600) * 100 },
+  },
+  thesin: {
+    // Plain wood door, left wall.
+    west: { left: (127 / 495) * 100, top: (432 / 644) * 100, width: (33 / 495) * 100, height: (138 / 644) * 100 },
+    // Grand spiral staircase, right side, leading up.
+    north: { left: (290 / 495) * 100, top: (393 / 644) * 100, width: (180 / 495) * 100, height: (237 / 644) * 100 },
+    // No painted doorway back to the foyer — the entire bottom edge of the
+    // frame stands in for "walk back the way you came," click anywhere along it.
+    east: { left: 0, top: (580 / 644) * 100, width: 100, height: (64 / 644) * 100 },
+    // The door into the flower room.
+    south: { left: (260 / 495) * 100, top: (454 / 644) * 100, width: (52 / 495) * 100, height: (86 / 644) * 100 },
+  },
+  // Pixel-aligned to flower_room.webp (572x833) — the door back to the
+  // ember room, at the south end of the room (the ROOM_CONNECTIONS entry
+  // is keyed "north" since that's the compass direction that resolves via
+  // BACK, not a claim about where the hotspot sits on screen).
+  floral: {
+    north: { left: (-2 / 572) * 100, top: (728 / 833) * 100, width: (580 / 572) * 100, height: (112 / 833) * 100 },
+  },
+}
+
 // Mammon's salt chest — pixel-aligned to golden_hall.webp (592x913). The
 // closed state is already baked into golden_hall.webp itself; clicking it
 // swaps in golden_hall_chest_open.webp, a full-canvas overlay showing the
@@ -297,6 +486,37 @@ const MAMMON_CHEST_HOTSPOT: Rect = {
   width: (82 / 592) * 100,
   height: (79 / 913) * 100,
 }
+
+// Mammon's painting, three states over the same canvas: sealed under a
+// hardened sheet of gold resin, softened once the Caustic Agent is applied,
+// then scraped bare once the Garden Chisel works the softened gold away —
+// same three-stage tool convention as Ivan's bloodstain (salt/holy water).
+// Pixel-aligned to mammon_golden_cover.webp/mammon_clear.webp (640x1106).
+const MAMMON_ART_GOLD = "/images/paintings/mammon_golden_cover.webp"
+const MAMMON_ART_SOFTENED = "/images/paintings/mammon_golden_cover_softened.webp"
+const MAMMON_ART_CLEAR = "/images/paintings/mammon_clear.webp"
+
+// The gold-sealed lower half of the canvas — both the click target for
+// observing it and the drop target for the Caustic Agent/Garden Chisel,
+// rendered inside PaintingInspector's own pan/zoom transform (see
+// secondaryHotspot) same as Ivan's bloodstain.
+const MAMMON_GOLD_HOTSPOT: Rect = {
+  left: (-24 / 640) * 100,
+  top: (550 / 1106) * 100,
+  width: (698 / 640) * 100,
+  height: (574 / 1106) * 100,
+}
+
+// Narcissus's pool — pixel-aligned to stillwater_room_layer.webp/
+// stillwater_room_statue_*.webp (760x893). Doubles as the click-to-examine
+// hotspot and the drop target for filling the Caliche or the Ewer.
+// TODO: eyeballed from the room art, nudge if it drifts off the basin.
+const NARCISSUS_POOL_HOTSPOT: Rect = {
+  left: (210 / 760) * 100,
+  top: (775 / 893) * 100,
+  width: (340 / 760) * 100,
+  height: (85 / 893) * 100,
+}
 // Inventory icons — same convention as prison-cell-puzzle.tsx's getItemImage:
 // items without an entry here fall back to a plain text pill in the
 // Inventory Display panel. Caliche swaps between these two depending on
@@ -306,31 +526,36 @@ const ITEM_ICONS: Record<string, string> = {
   Charcoal: "/images/paintings/charcoal.webp",
   Loupe: "/images/paintings/loupe.webp",
   "Oil Lamp": "/images/paintings/oil_lamp.webp",
+  Ladder: "/images/paintings/ladder.webp",
 }
 const CALICHE_EMPTY_ICON = "/images/paintings/caliche.webp"
 const CALICHE_FILLED_ICON = "/images/paintings/caliche_salt.webp"
 
 // Clickable hotspot rects (percent of the *source* image) over the art
 // itself and over its in-scene plaque, hand-placed to match each background.
-// thesin's is placed over ember_room_open — irrelevant while shut, since
-// no art hotspot renders until the room is opened (see render below).
+// thesin's is pixel-aligned to ember_room_open.webp (495x644) — irrelevant
+// while shut, since no art hotspot renders until the room is opened (see
+// render below).
 const ART_HOTSPOTS: Partial<Record<Room, Rect>> = {
-  gregory: { left: 33, top: 8, width: 45, height: 85 },
+  gregory: { left: (321 / 560) * 100, top: (156 / 596) * 100, width: (75 / 560) * 100, height: (220 / 596) * 100 },
   invidia: { left: 43, top: 20, width: 45, height: 21 },
   ivan: { left: (122 / 774) * 100, top: (71 / 797) * 100, width: (531 / 774) * 100, height: (390 / 797) * 100 },
   narcissus: { left: 30, top: 43, width: 33, height: 44 },
-  thesin: { left: 27, top: 5, width: 44, height: 31 },
+  thesin: { left: (215 / 495) * 100, top: (58 / 644) * 100, width: (98 / 495) * 100, height: (123 / 644) * 100 },
   desidia: { left: 53, top: 27, width: 35, height: 19 },
   saturn: { left: 33, top: 15, width: 38, height: 28 },
   mammon: { left: 19, top: 32, width: 59, height: 36 },
 }
 
+// thesin's plaque sits at the same spot in both ember_room_shut.webp and
+// ember_room_open.webp (495x644 either way) — visible in both states, but
+// only readable once the Ladder lets the player get close enough (see
+// emberOpen gating in render below).
 const PLAQUE_HOTSPOTS: Partial<Record<Room, Rect>> = {
-  gregory: { left: 38, top: 80, width: 20, height: 8 },
   invidia: { left: 47, top: 42, width: 33, height: 3 },
   ivan: { left: (324 / 774) * 100, top: (470 / 797) * 100, width: (131 / 774) * 100, height: (37 / 797) * 100 },
   narcissus: { left: 33, top: 87, width: 25, height: 4 },
-  thesin: { left: 40, top: 38, width: 20, height: 4 },
+  thesin: { left: (248 / 495) * 100, top: (257 / 644) * 100, width: (54 / 495) * 100, height: (21 / 644) * 100 },
   desidia: { left: 55, top: 47, width: 30, height: 6 },
   saturn: { left: 39, top: 50, width: 24, height: 4 },
   mammon: { left: 32, top: 68, width: 35, height: 3 },
@@ -378,7 +603,42 @@ function mapToBox(rect: Rect, imageAspect: number, focus: { x: number; y: number
   return rect
 }
 
-export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
+// Pixel-aligned to ivan-the-terrible-and-his-son.webp (2023x1589) — the
+// bloodstain sitting on top of the painting, not part of the brushwork
+// itself. This is both the click target for observing it and the drop
+// target for the Caliche/Holy Water, rendered inside PaintingInspector's
+// own pan/zoom transform (see secondaryHotspot) so it tracks the image
+// through zoom the same way itemPickup's hotspot does.
+const IVAN_BLOOD_HOTSPOT: Rect = {
+  left: (1051 / 2023) * 100,
+  top: (561 / 1589) * 100,
+  width: (87 / 2023) * 100,
+  height: (166 / 1589) * 100,
+}
+
+// Pixel-aligned to narcissus_statue.webp (760x1024) — the plate mounted on
+// the statue's pedestal, only legible up close in the inspector (unlike
+// every other room's plaque, which is readable from the small room-view
+// scene). Reuses the same title/artist/date popup as PLAQUE_HOTSPOTS via
+// showPlaqueInfo rather than a bespoke message.
+const NARCISSUS_PLAQUE_HOTSPOT: Rect = {
+  left: (281 / 760) * 100,
+  top: (959 / 1024) * 100,
+  width: (183 / 760) * 100,
+  height: (43 / 1024) * 100,
+}
+
+// Whether a client-space point falls inside an element's current bounding
+// box — shared by every drop target that needs to test a drop against a
+// specific on-screen hotspot rather than a whole container (the frog's
+// mouth, the salt chest, Ivan's bloodstain).
+function isPointInElement(el: HTMLElement | null, point: { x: number; y: number }) {
+  if (!el) return false
+  const rect = el.getBoundingClientRect()
+  return point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom
+}
+
+export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: MansionMapPuzzleProps) {
   const [currentRoom, setCurrentRoom] = useState<Room>("foyer")
   // Tracks the room navigated from, so BACK connections (dead-end rooms
   // reachable from more than one direction) return to wherever the player
@@ -388,16 +648,60 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
   // Mammon's salt chest: opened by a click (stays open permanently), then
   // the Caliche can be filled from it by dragging, any number of times.
   const [chestOpen, setChestOpen] = useState(false)
-  // Whether the Caliche currently holds a scoop of salt. Filled by dragging
-  // it onto the open chest, emptied by using it (see next session's Ivan/
-  // Saturn salt-then-holy-water wiring) — refillable indefinitely, unlike
-  // the Drape's one-shot consumption.
-  const [caliceFilled, setCaliceFilled] = useState(false)
+  // What the Caliche currently holds — salt (scooped from Mammon's chest) or
+  // water (dipped from Narcissus's pool), refillable indefinitely from
+  // either source, unlike the Drape's one-shot consumption. Dragging it onto
+  // a source it doesn't currently hold empties whatever it had and refills
+  // from that source instead — there's no separate "empty it out" step.
+  const [caliceContent, setCaliceContent] = useState<"empty" | "salt" | "water">("empty")
+  // Whether the Ewer currently holds water — filled at Narcissus's pool,
+  // emptied by pouring it onto a flower-room snake head. Unlike the
+  // Caliche, the Ewer only ever holds water, so this is a plain boolean.
+  const [ewerFilled, setEwerFilled] = useState(false)
+  // The three snake-head fountains in the flower room — each set once the
+  // Ewer (not the Caliche — see caliche-on-a-head handling below) is poured
+  // on it. The fourth, headless southwest trunk fills automatically once
+  // all three are true (see floralAllWet below), rather than being its own
+  // piece of state.
+  const [floralNorthwestWet, setFloralNorthwestWet] = useState(false)
+  const [floralNortheastWet, setFloralNortheastWet] = useState(false)
+  const [floralSoutheastWet, setFloralSoutheastWet] = useState(false)
+  // Guards the one-time "you hear a noise" dialogue that fires the instant
+  // all three heads are flowing, so it doesn't refire on every re-render.
+  const [floralNoiseHeard, setFloralNoiseHeard] = useState(false)
+  // Ivan's bloodstain: salt first (dries/lifts the blood), then Holy Water
+  // while salted washes it away for good. Two separate flags rather than a
+  // single enum so ivanSalted alone can gate the Holy Water drop without
+  // also implying ivanCleaned.
+  const [ivanSalted, setIvanSalted] = useState(false)
+  const [ivanCleaned, setIvanCleaned] = useState(false)
+  // Mammon's gold resin: the Caustic Agent softens it first, then the
+  // Garden Chisel scrapes it away for good — same two-flag convention as
+  // ivanSalted/ivanCleaned above.
+  const [mammonSoftened, setMammonSoftened] = useState(false)
+  const [mammonCleared, setMammonCleared] = useState(false)
   const [inspecting, setInspecting] = useState(false)
   const [showPlaqueInfo, setShowPlaqueInfo] = useState(false)
-  // Not wired to a trigger yet — Invidia's painting stays hidden until a
-  // future unlock mechanism sets this true.
+
+  // Notify the parent whenever the room or examining state changes, so the
+  // butler's dialogue can react to where the player actually is.
+  useEffect(() => {
+    onRoomStateChange?.(currentRoom, inspecting)
+    // onRoomStateChange intentionally excluded: game-screen.tsx passes an
+    // inline callback, and including it here would refire this effect (and
+    // the parent state update inside it) on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRoom, inspecting])
+  // The ember room's painting stays hidden until all three flower-room
+  // snake heads are flowing (see the floralAllWet effect below) — permanent
+  // once set, same as every other one-shot reveal in this puzzle. Reaching
+  // the painting itself for a close look is a separate step — see
+  // emberLadderPlaced.
   const [emberOpen, setEmberOpen] = useState(false)
+  // Whether the Ladder has been dropped into the now-open ember room —
+  // lets the player actually climb up to examine the painting, as opposed
+  // to just seeing it's there. See openInspector's "too far to reach" gate.
+  const [emberLadderPlaced, setEmberLadderPlaced] = useState(false)
   // Flat array of display-name strings, same convention as
   // prison-cell-puzzle.tsx's inventory ("Rag", "Rubbing Alcohol", ...).
   const [inventory, setInventory] = useState<string[]>([])
@@ -421,6 +725,20 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
   // (collect + show, one click, no separate confirm step) and on
   // non-pickable "observe" hotspots (shows repeatably, no side effect).
   const [dialogue, setDialogue] = useState<string | null>(null)
+  // The southwest trunk has no head of its own — it fills the instant the
+  // other three are all flowing. That same moment fires a one-time noise
+  // from elsewhere in the mansion, and opens up the ember room (see
+  // emberOpen) — an effect so it fires exactly once regardless of which
+  // head completed the set, rather than needing to be checked from inside
+  // three separate drop handlers.
+  const floralAllWet = floralNorthwestWet && floralNortheastWet && floralSoutheastWet
+  useEffect(() => {
+    if (floralAllWet && !floralNoiseHeard) {
+      setFloralNoiseHeard(true)
+      setEmberOpen(true)
+      setDialogue("Water rushes through the last trunk. Somewhere else in the house, you hear a noise, something heavy shifting.")
+    }
+  }, [floralAllWet, floralNoiseHeard])
   // Drop target for item-drag-tray: whichever art viewport is currently on
   // screen inside the inspector (bare statue / charcoal rubbing / painting
   // inspector all share this one ref so drop hit-testing works uniformly).
@@ -431,6 +749,32 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
   // artViewportRef since this drop happens in the room view, not inside the
   // art inspector modal.
   const frogRef = useRef<HTMLDivElement>(null)
+  // Drop target for the salt chest (mammon only) — doubles as the click
+  // hotspot for opening/examining it, so both live on the same element.
+  const chestRef = useRef<HTMLDivElement>(null)
+  // Drop target for Ivan's bloodstain — doubles as the click hotspot for
+  // observing it, so both live on the same element. Rendered by
+  // PaintingInspector (see secondaryHotspot), inside its own pan/zoom
+  // transform, so its bounding rect always matches where the stain is
+  // actually drawn on screen regardless of zoom level.
+  const ivanBloodRef = useRef<HTMLButtonElement>(null)
+  // Drop target for Mammon's gold-sealed canvas — same convention as
+  // ivanBloodRef above.
+  const mammonGoldRef = useRef<HTMLButtonElement>(null)
+  // The room-view scene box itself — drop target for the Ladder onto the
+  // ember room (thesin), as opposed to a specific hotspot within it.
+  const roomViewRef = useRef<HTMLDivElement>(null)
+  // Drop target for Narcissus's pool (fills the Caliche or the Ewer) —
+  // doubles as the click hotspot for observing it.
+  const poolRef = useRef<HTMLDivElement>(null)
+  // Drop targets for the three flower-room snake heads (Ewer waters them,
+  // Caliche is the red-herring "not enough" attempt) — doubles as the click
+  // hotspot for observing each one, before/after it's flowing.
+  const floralHeadRefs = {
+    northwest: useRef<HTMLDivElement>(null),
+    northeast: useRef<HTMLDivElement>(null),
+    southeast: useRef<HTMLDivElement>(null),
+  }
 
   const collectItem = (item: string) => {
     setInventory((prev) => (prev.includes(item) ? prev : [...prev, item]))
@@ -482,32 +826,177 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
     if (item === "Loupe" && !loupeUnlocked) {
       setLoupeUnlocked(true)
     }
+    if (item === "Caliche" && currentRoom === "ivan" && caliceContent === "salt" && !ivanSalted) {
+      if (isPointInElement(ivanBloodRef.current, point)) {
+        setIvanSalted(true)
+        // The Caliche itself stays in inventory — only its salt is spent —
+        // so it has to be refilled from Mammon's chest before it can be
+        // used again (on Saturn's bloodstain, or a second pass here).
+        setCaliceContent("empty")
+        setDialogue("You scatter the salt across the stain. It draws the red out of the canvas, drying to a crust.")
+      }
+    }
+    if (item === "Holy Water" && currentRoom === "ivan" && ivanSalted && !ivanCleaned) {
+      if (isPointInElement(ivanBloodRef.current, point)) {
+        setIvanCleaned(true)
+        setDialogue("The holy water dissolves the crusted salt, carrying the last of the stain away with it.")
+      }
+    }
+    if (item === "Caustic Agent" && currentRoom === "mammon" && !mammonSoftened) {
+      if (isPointInElement(mammonGoldRef.current, point)) {
+        setMammonSoftened(true)
+        // Consumed on use, unlike the Caliche's salt — there's only the one
+        // vial, and one application is all the resin needs to loosen.
+        setInventory((prev) => prev.filter((i) => i !== "Caustic Agent"))
+        setDialogue("You brush the caustic agent across the resin. It hisses faintly, softening to something like wax.")
+      }
+    }
+    if (item === "Garden Chisel" && currentRoom === "mammon" && mammonSoftened && !mammonCleared) {
+      if (isPointInElement(mammonGoldRef.current, point)) {
+        setMammonCleared(true)
+        setDialogue("You work the chisel under the softened gold, scraping it away in long curls until the canvas beneath lies bare.")
+      }
+    }
   }
 
   // Drop handler for the room-view tray (as opposed to handleItemDrop above,
-  // which is scoped to the art inspector modal) — currently only the frog's
-  // mouth in gregoryAnnex reacts to a drop.
+  // which is scoped to the art inspector modal) — the frog's mouth in
+  // gregoryAnnex, the salt chest in mammon, and the Ladder in thesin all
+  // react to a drop.
   const handleRoomItemDrop = (item: string, point: { x: number; y: number }) => {
-    if (item !== "Coin" || currentRoom !== "gregoryAnnex" || doorUnlocked) return
-    const el = frogRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    if (point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom) {
-      setDoorUnlocked(true)
-      setDialogue("The frog's jaw snaps shut around the coin. Somewhere inside the door, gears turn, and the golden door creaks open.")
+    if (item === "Coin" && currentRoom === "gregoryAnnex" && !doorUnlocked) {
+      if (isPointInElement(frogRef.current, point)) {
+        setDoorUnlocked(true)
+        setDialogue("The frog's jaw snaps shut around the coin. Somewhere inside the door, gears turn, and the golden door creaks open.")
+      }
+    }
+    if (item === "Caliche" && currentRoom === "mammon" && chestOpen && caliceContent !== "salt") {
+      if (isPointInElement(chestRef.current, point)) {
+        const hadWater = caliceContent === "water"
+        setCaliceContent("salt")
+        setDialogue(
+          hadWater
+            ? "You tip the water out and scoop a handful of coarse salt into the caliche instead."
+            : "You scoop a handful of coarse salt into the caliche.",
+        )
+      }
+    }
+    if (item === "Ladder" && currentRoom === "thesin" && emberOpen && !emberLadderPlaced) {
+      if (isPointInElement(roomViewRef.current, point)) {
+        setEmberLadderPlaced(true)
+        // One-shot: the Ladder is now a fixture of the scene, not something
+        // to carry around and place again.
+        setInventory((prev) => prev.filter((i) => i !== "Ladder"))
+        setDialogue("You lean the ladder against the wall. The painting is finally within reach.")
+      }
+    }
+    if ((item === "Caliche" || item === "Ewer") && currentRoom === "narcissus") {
+      if (isPointInElement(poolRef.current, point)) {
+        if (item === "Caliche" && caliceContent !== "water") {
+          const hadSalt = caliceContent === "salt"
+          setCaliceContent("water")
+          setDialogue(
+            hadSalt
+              ? "You tip out the salt and dip the caliche into the pool. It comes back barely full, the mouth is narrow, and most of it sloshes out before you can straighten up."
+              : "You dip the caliche into the pool. It comes back barely full, the mouth is narrow, and most of it sloshes out before you can straighten up.",
+          )
+        } else if (item === "Ewer" && !ewerFilled) {
+          setEwerFilled(true)
+          setDialogue("You lower the ewer into the pool. It comes up brimming.")
+        }
+      }
+    }
+    if (item === "Caliche" && caliceContent === "water" && currentRoom === "floral") {
+      const hit = (Object.keys(FLORAL_HEAD_HOTSPOTS) as (keyof typeof FLORAL_HEAD_HOTSPOTS)[]).find((head) =>
+        isPointInElement(floralHeadRefs[head].current, point),
+      )
+      if (hit) {
+        setCaliceContent("empty")
+        setDialogue(
+          "You empty the caliche into the snake's mouth. It's gone in an instant, swallowed by the stone, nowhere near enough to set anything flowing.",
+        )
+      }
+    }
+    if (item === "Ewer" && !ewerFilled && currentRoom === "floral") {
+      const hit = (Object.keys(FLORAL_HEAD_HOTSPOTS) as (keyof typeof FLORAL_HEAD_HOTSPOTS)[]).find((head) =>
+        isPointInElement(floralHeadRefs[head].current, point),
+      )
+      if (hit) {
+        setDialogue("The ewer is empty. There's nothing left in it to pour.")
+      }
+    }
+    if (item === "Holy Water" && currentRoom === "floral") {
+      const hit = (Object.keys(FLORAL_HEAD_HOTSPOTS) as (keyof typeof FLORAL_HEAD_HOTSPOTS)[]).find((head) =>
+        isPointInElement(floralHeadRefs[head].current, point),
+      )
+      if (hit) {
+        setDialogue("You pour the holy water into the stone jaws. It vanishes into the dry channel without a trace. Nothing here answers to it.")
+      }
+    }
+    if (item === "Ewer" && ewerFilled && currentRoom === "floral") {
+      const heads: Record<keyof typeof FLORAL_HEAD_HOTSPOTS, [boolean, (v: boolean) => void]> = {
+        northwest: [floralNorthwestWet, setFloralNorthwestWet],
+        northeast: [floralNortheastWet, setFloralNortheastWet],
+        southeast: [floralSoutheastWet, setFloralSoutheastWet],
+      }
+      const hit = (Object.keys(FLORAL_HEAD_HOTSPOTS) as (keyof typeof FLORAL_HEAD_HOTSPOTS)[]).find((head) =>
+        isPointInElement(floralHeadRefs[head].current, point),
+      )
+      if (hit) {
+        const [alreadyWet, setWet] = heads[hit]
+        setEwerFilled(false)
+        if (alreadyWet) {
+          setDialogue("Water spills over your hand. This one's already running.")
+        } else {
+          setWet(true)
+          setDialogue(FLORAL_HEAD_MESSAGES[hit].after)
+        }
+      }
     }
   }
 
   const connections = ROOM_CONNECTIONS[currentRoom]
-  const art = currentRoom === "thesin" && !emberOpen ? undefined : ROOM_ART[currentRoom]
+  const art =
+    currentRoom === "thesin" && !emberOpen
+      ? undefined
+      : currentRoom === "ivan"
+        ? {
+            ...ROOM_ART.ivan!,
+            src: ivanCleaned ? IVAN_ART_CLEANED : ivanSalted ? IVAN_ART_SALTED : IVAN_ART_DEFAULT,
+          }
+        : currentRoom === "mammon"
+          ? {
+              ...ROOM_ART.mammon!,
+              src: mammonCleared ? MAMMON_ART_CLEAR : mammonSoftened ? MAMMON_ART_SOFTENED : MAMMON_ART_GOLD,
+            }
+          : ROOM_ART[currentRoom]
   const background = ROOM_BACKGROUNDS[currentRoom]
-  const backgroundSrc = currentRoom === "thesin" ? (emberOpen ? EMBER_ROOM_OPEN : EMBER_ROOM_SHUT) : background.src
+  const backgroundSrc =
+    currentRoom === "thesin"
+      ? emberOpen
+        ? EMBER_ROOM_OPEN
+        : EMBER_ROOM_SHUT
+      : currentRoom === "narcissus"
+        ? narcissusScratchSnapshot
+          ? STILLWATER_STATUE_CHARCOAL
+          : narcissusDraped
+            ? STILLWATER_STATUE_DRAPED
+            : STILLWATER_STATUE_DEFAULT
+        : background.src
   const focus = ROOM_FOCUS[currentRoom]
   const artHotspotSrc = ART_HOTSPOTS[currentRoom]
   const plaqueHotspotSrc = PLAQUE_HOTSPOTS[currentRoom]
   const artHotspot = art && artHotspotSrc && mapToBox(artHotspotSrc, background.aspect, focus)
-  const plaqueHotspot = art && plaqueHotspotSrc && mapToBox(plaqueHotspotSrc, background.aspect, focus)
-  const itemPickup = ROOM_ITEM_PICKUPS[currentRoom]
+  // thesin's plaque is visible (though not readable — see render below) in
+  // both the shut and open states, so unlike every other room it doesn't
+  // wait on `art` to exist before showing its hotspot.
+  const plaqueHotspot =
+    (art || currentRoom === "thesin") && plaqueHotspotSrc && mapToBox(plaqueHotspotSrc, background.aspect, focus)
+  const showEmberRoomLadder = currentRoom === "thesin" && emberLadderPlaced
+  const showStillwaterLayer = currentRoom === "narcissus"
+  // thesin's Caustic Agent sits in a cabinet that isn't reachable until the
+  // room opens up — same gating as the painting itself, see EMBER_ROOM_* above.
+  const itemPickup = currentRoom === "thesin" && !emberOpen ? undefined : ROOM_ITEM_PICKUPS[currentRoom]
   const showItemPickup = itemPickup && !inventory.includes(itemPickup.item)
   const hasDrape = inventory.includes("Drape")
   const itemPickupHotspot = itemPickup && mapToBox(itemPickup.hotspot, background.aspect, focus)
@@ -518,6 +1007,47 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
     currentRoom === "gregoryAnnex" ? mapToBox(MAMMON_DOOR_HOTSPOT, background.aspect, focus) : null
   const mammonFrogHotspot =
     currentRoom === "gregoryAnnex" ? mapToBox(MAMMON_FROG_HOTSPOT, background.aspect, focus) : null
+  const mammonChestHotspot = currentRoom === "mammon" ? mapToBox(MAMMON_CHEST_HOTSPOT, background.aspect, focus) : null
+  const narcissusPoolHotspot =
+    currentRoom === "narcissus" ? mapToBox(NARCISSUS_POOL_HOTSPOT, background.aspect, focus) : null
+  const floralHeadHotspots =
+    currentRoom === "floral"
+      ? {
+          northwest: mapToBox(FLORAL_HEAD_HOTSPOTS.northwest, background.aspect, focus),
+          northeast: mapToBox(FLORAL_HEAD_HOTSPOTS.northeast, background.aspect, focus),
+          southeast: mapToBox(FLORAL_HEAD_HOTSPOTS.southeast, background.aspect, focus),
+        }
+      : null
+  const showBanquetEwer = currentRoom === "saturn" && !inventory.includes("Ewer")
+  const banquetEwerHotspot = showBanquetEwer ? mapToBox(BANQUET_EWER_HOTSPOT, background.aspect, focus) : null
+  const showFloralChisel = currentRoom === "floral" && !inventory.includes("Garden Chisel")
+  const floralChiselHotspot = showFloralChisel ? mapToBox(FLORAL_CHISEL_HOTSPOT, background.aspect, focus) : null
+  const navHotspotSrcs = NAV_HOTSPOTS[currentRoom]
+  const navHotspots: Partial<Record<Direction, Rect>> = {}
+  for (const direction of ["north", "south", "east", "west"] as const) {
+    const rect = navHotspotSrcs?.[direction]
+    if (rect) navHotspots[direction] = mapToBox(rect, background.aspect, focus)
+  }
+  // Caliche's icon swaps with its fill state — same tray/ghost image slot,
+  // no separate item name needed. TODO: water-filled reuses the salt icon
+  // for now — there's no dedicated water-caliche asset yet.
+  const itemIcons = { ...ITEM_ICONS, Caliche: caliceContent === "empty" ? CALICHE_EMPTY_ICON : CALICHE_FILLED_ICON }
+  // Observation text for clicking Ivan's bloodstain — the wording is the
+  // player's only signal that the "blood" is sitting on top of the
+  // painting rather than being part of the original artwork.
+  const ivanBloodMessage = ivanCleaned
+    ? "The canvas is bare there now, cleaned back to the weave. Whatever stained it is gone for good."
+    : ivanSalted
+      ? "A crust of dried salt clings to the canvas, drawn white against the dark oils."
+      : "A dark stain sits on top of the brushwork here, not blended into it, like something spilled after the painting was finished. It still smells faintly of copper."
+  // Observation text for clicking the gold-sealed lower half of Mammon's
+  // canvas — same "the covering isn't part of the art" signal as
+  // ivanBloodMessage above.
+  const mammonGoldMessage = mammonCleared
+    ? "The gold is gone here now, scraped back to the canvas. Whatever it was hiding is plain to see."
+    : mammonSoftened
+      ? "The resin has gone soft and tacky where you treated it, like wax left too long in the sun."
+      : "The lower half of the canvas lies beneath a hardened sheet of gold resin, sealed flat and opaque. Whatever's painted underneath is impossible to make out."
 
   const navigate = (direction: Direction) => {
     const target = connections[direction]
@@ -530,6 +1060,10 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
 
   const openInspector = () => {
     if (!art) return
+    if (currentRoom === "thesin" && !emberLadderPlaced) {
+      setDialogue("The painting hangs too high on the wall to make out from here. You'd need something to climb.")
+      return
+    }
     setInspecting(true)
     if (currentRoom === "gregory") onSolve()
   }
@@ -542,6 +1076,7 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
 
       <div className="relative bg-gradient-to-b from-gray-950 to-black p-2 rounded-lg border border-gray-800 mb-4">
         <div
+          ref={roomViewRef}
           className="relative w-full rounded-lg border border-gray-800 bg-black overflow-hidden"
           style={{ aspectRatio: BOX_ASPECT }}
         >
@@ -551,6 +1086,60 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
             className="absolute inset-0 w-full h-full object-cover"
             style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
           />
+
+          {/* The room's walls/arch/floor, minus the statue — rendered on top
+              of the statue-only backgroundSrc above so the stonework masks
+              the statue to the true alcove opening instead of relying on a
+              cutout that matches it exactly. */}
+          {showStillwaterLayer && (
+            <img
+              src={STILLWATER_ROOM_LAYER}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
+
+          {/* Each snake head's water channel, plus the headless southwest
+              trunk once all three are flowing — full-canvas overlays,
+              pixel-aligned to flower_room.webp. */}
+          {currentRoom === "floral" && floralNorthwestWet && (
+            <img
+              src={FLORAL_WATER_NORTHWEST}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
+          {currentRoom === "floral" && floralNortheastWet && (
+            <img
+              src={FLORAL_WATER_NORTHEAST}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
+          {currentRoom === "floral" && floralSoutheastWet && (
+            <img
+              src={FLORAL_WATER_SOUTHEAST}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
+          {currentRoom === "floral" && floralAllWet && (
+            <img
+              src={FLORAL_WATER_SOUTHWEST}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
 
           {art && artHotspot && (
             <button
@@ -586,12 +1175,35 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
             />
           )}
 
+          {currentRoom === "mammon" && chestOpen && (
+            <img
+              src={GOLDEN_HALL_CHEST_OPEN}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
+
+          {showEmberRoomLadder && (
+            <img
+              src={EMBER_ROOM_LADDER}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
+            />
+          )}
+
+          {/* z-10 keeps the Caliche pickup above the chest overlay/hotspot
+              below, since their hotspots overlap — the more specific, more
+              valuable target should win the click and stay visible. */}
           {showItemPickup && itemPickup && itemPickupHotspot && (
             <img
               src={itemPickup.overlaySrc}
               alt=""
               aria-hidden
-              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
               style={{ objectPosition: `${focus.x}% ${focus.y}%` }}
             />
           )}
@@ -641,7 +1253,7 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
             <button
               onClick={() => pickupItem(itemPickup.item, itemPickup.message)}
               aria-label={`Pick up ${itemPickup.item}`}
-              className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
+              className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors z-10"
               style={{
                 left: `${itemPickupHotspot.left}%`,
                 top: `${itemPickupHotspot.top}%`,
@@ -651,10 +1263,16 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
             />
           )}
 
-          {art && plaqueHotspot && (
+          {(art || currentRoom === "thesin") && plaqueHotspot && (
             <button
-              onClick={() => setShowPlaqueInfo(true)}
-              aria-label={`Read plaque for ${art.title}`}
+              onClick={() => {
+                if (currentRoom === "thesin" && !emberOpen) {
+                  setDialogue("There's a plate mounted below the frame, but it's too far away to make out from here.")
+                } else {
+                  setShowPlaqueInfo(true)
+                }
+              }}
+              aria-label={art ? `Read plaque for ${art.title}` : "Examine the plate"}
               className="absolute rounded-sm hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
               style={{
                 left: `${plaqueHotspot.left}%`,
@@ -713,58 +1331,338 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
             />
           )}
 
-          <NavArrow direction="north" available={!!connections.north} onClick={() => navigate("north")} />
-          <NavArrow direction="south" available={!!connections.south} onClick={() => navigate("south")} />
-          <NavArrow direction="east" available={!!connections.east} onClick={() => navigate("east")} />
-          <NavArrow direction="west" available={!!connections.west} onClick={() => navigate("west")} />
-
-          {/* Examine/plaque popups are scoped to this room-view box (not a
-              viewport-wide overlay) so they dim and center over just the
-              navigation area, leaving the room label above untouched — same
-              convention as prison-cell-puzzle.tsx's dialogue modal. */}
-          {showPlaqueInfo && art && (
+          {currentRoom === "mammon" && mammonChestHotspot && (
             <div
-              className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-              onClick={() => setShowPlaqueInfo(false)}
+              ref={chestRef}
+              className="absolute"
+              style={{
+                left: `${mammonChestHotspot.left}%`,
+                top: `${mammonChestHotspot.top}%`,
+                width: `${mammonChestHotspot.width}%`,
+                height: `${mammonChestHotspot.height}%`,
+              }}
             >
-              <div
-                className="bg-[#1a1410] border-2 border-[#4a3a20] rounded-lg p-5 max-w-xs w-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-amber-100/90 font-mono text-sm font-bold">{art.title}</h3>
-                  <button onClick={() => setShowPlaqueInfo(false)} aria-label="Close">
-                    <X className="w-4 h-4 text-gray-400" />
-                  </button>
-                </div>
-                <p className="text-gray-400 font-mono text-xs">{art.artist}</p>
-                <p className="text-gray-500 font-mono text-xs">{art.date}</p>
-              </div>
+              <button
+                onClick={() => {
+                  if (!chestOpen) {
+                    setChestOpen(true)
+                    setDialogue("The lid creaks open, revealing a heap of coarse rock salt.")
+                  } else {
+                    setDialogue("A chest brimming with rock salt.")
+                  }
+                }}
+                aria-label={chestOpen ? "Examine the chest of salt" : "Open the chest"}
+                className="absolute inset-0 rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
+              />
             </div>
           )}
 
-          {dialogue && (
+          {currentRoom === "narcissus" && narcissusPoolHotspot && (
             <div
-              className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-              onClick={() => setDialogue(null)}
+              ref={poolRef}
+              className="absolute"
+              style={{
+                left: `${narcissusPoolHotspot.left}%`,
+                top: `${narcissusPoolHotspot.top}%`,
+                width: `${narcissusPoolHotspot.width}%`,
+                height: `${narcissusPoolHotspot.height}%`,
+              }}
             >
-              <div
-                className="bg-[#1a1410] border-2 border-[#4a3a20] rounded-lg p-5 max-w-xs w-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <p className="text-gray-300 font-mono text-sm">{dialogue}</p>
-                <button
-                  onClick={() => setDialogue(null)}
-                  className="mt-4 w-full px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-mono border border-gray-700"
+              <button
+                onClick={() => setDialogue("The pool is still and cold, the surface unbroken. Something pale drifts just beneath it.")}
+                aria-label="Examine the pool"
+                className="absolute inset-0 rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
+              />
+            </div>
+          )}
+
+          {currentRoom === "floral" &&
+            floralHeadHotspots &&
+            (["northwest", "northeast", "southeast"] as const).map((head) => {
+              const hotspot = floralHeadHotspots[head]
+              const wet = head === "northwest" ? floralNorthwestWet : head === "northeast" ? floralNortheastWet : floralSoutheastWet
+              const messages = FLORAL_HEAD_MESSAGES[head]
+              return (
+                <div
+                  key={head}
+                  ref={floralHeadRefs[head]}
+                  className="absolute"
+                  style={{
+                    left: `${hotspot.left}%`,
+                    top: `${hotspot.top}%`,
+                    width: `${hotspot.width}%`,
+                    height: `${hotspot.height}%`,
+                  }}
                 >
-                  Close
-                </button>
-              </div>
+                  <button
+                    onClick={() => setDialogue(wet ? messages.after : messages.before)}
+                    aria-label="Examine the snake head"
+                    className="absolute inset-0 rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
+                  />
+                </div>
+              )
+            })}
+
+          {/* TEMPORARY: placeholder Ewer pickup, no art yet — see the
+              constant's own comment. Dashed outline stands in for a
+              composited item overlay so the drop/watering flow can be
+              tested before the real pickup location is decided. */}
+          {showBanquetEwer && banquetEwerHotspot && (
+            <button
+              onClick={() => pickupItem("Ewer", "A wide-mouthed ewer, sitting empty among the banquet ware. This one might hold enough to make a difference.")}
+              aria-label="Pick up Ewer"
+              className="absolute rounded border-2 border-dashed border-amber-300/70 bg-amber-300/10 hover:bg-amber-300/20 transition-colors flex items-center justify-center"
+              style={{
+                left: `${banquetEwerHotspot.left}%`,
+                top: `${banquetEwerHotspot.top}%`,
+                width: `${banquetEwerHotspot.width}%`,
+                height: `${banquetEwerHotspot.height}%`,
+              }}
+            >
+              <span className="text-[9px] font-mono text-amber-200/90 leading-none px-0.5">Ewer</span>
+            </button>
+          )}
+
+          {/* TEMPORARY: placeholder Garden Chisel pickup, no art yet — see
+              the constant's own comment. Same dashed-outline convention as
+              the Ewer above. */}
+          {showFloralChisel && floralChiselHotspot && (
+            <button
+              onClick={() => pickupItem("Garden Chisel", "A small garden chisel, its edge still sharp despite the rust creeping up the handle.")}
+              aria-label="Pick up Garden Chisel"
+              className="absolute rounded border-2 border-dashed border-amber-300/70 bg-amber-300/10 hover:bg-amber-300/20 transition-colors flex items-center justify-center"
+              style={{
+                left: `${floralChiselHotspot.left}%`,
+                top: `${floralChiselHotspot.top}%`,
+                width: `${floralChiselHotspot.width}%`,
+                height: `${floralChiselHotspot.height}%`,
+              }}
+            >
+              <span className="text-[9px] font-mono text-amber-200/90 leading-none px-0.5">Chisel</span>
+            </button>
+          )}
+
+          {(["north", "south", "east", "west"] as const).map((direction) => {
+            const hotspot = navHotspots[direction]
+            if (hotspot) {
+              return (
+                <button
+                  key={direction}
+                  onClick={() => navigate(direction)}
+                  aria-label={`Go ${direction}`}
+                  className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
+                  style={{
+                    left: `${hotspot.left}%`,
+                    top: `${hotspot.top}%`,
+                    width: `${hotspot.width}%`,
+                    height: `${hotspot.height}%`,
+                  }}
+                />
+              )
+            }
+            return (
+              <NavArrow
+                key={direction}
+                direction={direction}
+                available={!!connections[direction]}
+                onClick={() => navigate(direction)}
+              />
+            )
+          })}
+
+          {/* Art inspector: scoped to this room-view box (not a
+              viewport-wide overlay) so it dims and clips to just the
+              mansion image, same convention as showPlaqueInfo above. */}
+          {inspecting && art && (
+            <div className="absolute inset-0 bg-black/95 z-50 flex flex-col p-2">
+              <button
+                onClick={() => setInspecting(false)}
+                aria-label="Close"
+                className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center border border-gray-700"
+              >
+                <X className="w-4 h-4 text-gray-300" />
+              </button>
+              {currentRoom === "narcissus" ? (
+                narcissusDraped ? (
+                  <div ref={artViewportRef} className="w-full flex-1 min-h-0">
+                    <CharcoalRubbing
+                      ref={charcoalRubbingRef}
+                      cleanSrc="/images/paintings/narcissus_statue_draped.webp"
+                      revealedSrc="/images/paintings/narcissus_statue_draped_charcoal.webp"
+                      alt={art.alt}
+                      className="w-full h-full"
+                      zoomEnabled={loupeUnlocked}
+                      initialSnapshot={narcissusScratchSnapshot ?? undefined}
+                      onStrokeEnd={setNarcissusScratchSnapshot}
+                    />
+                  </div>
+                ) : (
+                  <div ref={artViewportRef} className="w-full flex-1 min-h-0">
+                    <PaintingInspector
+                      src="/images/paintings/narcissus_statue.webp"
+                      alt={art.alt}
+                      className="w-full h-full"
+                      zoomEnabled={loupeUnlocked}
+                      secondaryHotspot={{
+                        rect: NARCISSUS_PLAQUE_HOTSPOT,
+                        ariaLabel: `Read plaque for ${art.title}`,
+                        onClick: () => setShowPlaqueInfo(true),
+                      }}
+                    />
+                  </div>
+                )
+              ) : currentRoom === "thesin" ? (
+                <div ref={artViewportRef} className="w-full flex-1 min-h-0">
+                  <LampReveal
+                    ref={lampRevealRef}
+                    cleanSrc="/images/paintings/the-sin.webp"
+                    revealedSrc="/images/paintings/the-sin_exposed.webp"
+                    alt={art.alt}
+                    className="w-full h-full"
+                    zoomEnabled={loupeUnlocked}
+                  />
+                </div>
+              ) : (
+                <div ref={artViewportRef} className="w-full flex-1 min-h-0">
+                  <PaintingInspector
+                    src={art.src}
+                    alt={art.alt}
+                    className="w-full h-full"
+                    zoomEnabled={loupeUnlocked}
+                    extraScale={currentRoom === "ivan" ? 2 : 1}
+                    itemPickup={
+                      showArtItemPickup && artItemPickup
+                        ? {
+                            overlaySrc: artItemPickup.overlaySrc,
+                            hotspot: artItemPickup.hotspot,
+                            label: artItemPickup.item,
+                            onCollect: () => pickupItem(artItemPickup.item, artItemPickup.message),
+                          }
+                        : undefined
+                    }
+                    secondaryHotspot={
+                      currentRoom === "ivan"
+                        ? {
+                            rect: IVAN_BLOOD_HOTSPOT,
+                            ariaLabel: "Examine the stain",
+                            onClick: () => setDialogue(ivanBloodMessage),
+                            hotspotRef: ivanBloodRef,
+                          }
+                        : currentRoom === "mammon"
+                          ? {
+                              rect: MAMMON_GOLD_HOTSPOT,
+                              ariaLabel: "Examine the sealed canvas",
+                              onClick: () => setDialogue(mammonGoldMessage),
+                              hotspotRef: mammonGoldRef,
+                            }
+                          : undefined
+                    }
+                  />
+                </div>
+              )}
+
+              {/* Oil Lamp glow: a warm light that follows the lamp while
+                  it's dragged over the art viewport, as if the player were
+                  holding it up to the painting. Purely cosmetic — z-40 keeps
+                  it above the art but below the dragged lamp icon itself
+                  (z-60). */}
+              {lampGlowPoint &&
+                createPortal(
+                  // Portaled to <body> for the same reason as
+                  // item-drag-tray's ghost: this screen sits inside a
+                  // backdrop-blur-sm ancestor, which becomes the containing
+                  // block for `position: fixed` descendants and would
+                  // otherwise offset the glow far from the actual cursor.
+                  <div
+                    aria-hidden
+                    className="fixed z-40 pointer-events-none rounded-full"
+                    style={{
+                      left: lampGlowPoint.x,
+                      top: lampGlowPoint.y,
+                      width: 280,
+                      height: 280,
+                      transform: "translate(-50%, -50%)",
+                      background:
+                        "radial-gradient(circle, rgba(255,200,120,0.4) 0%, rgba(255,170,80,0.18) 45%, transparent 72%)",
+                      mixBlendMode: "screen",
+                    }}
+                  />,
+                  document.body,
+                )}
+
+              {inventory.length > 0 && (
+                <ItemDragTray
+                  items={inventory}
+                  icons={itemIcons}
+                  onDragMove={handleItemDragMove}
+                  onDrop={handleItemDrop}
+                  className="absolute bottom-2 left-0 right-0 px-2"
+                />
+              )}
             </div>
           )}
+
         </div>
 
       </div>
+
+      {/* Portaled to <body>, same reason as the Oil Lamp glow below: hotspots
+          that fire setDialogue can be clicked from inside the art inspector
+          (a fixed, z-50 fullscreen overlay), and this screen also sits
+          inside a backdrop-blur-sm ancestor that becomes the containing
+          block for `position: fixed` descendants — so a non-portaled,
+          non-fixed popup scoped to the room-view box renders invisibly
+          underneath the inspector instead of on top of it. z-[60] clears
+          the inspector's z-50. */}
+      {dialogue &&
+        createPortal(
+          <div
+            className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"
+            onClick={() => setDialogue(null)}
+          >
+            <div
+              className="bg-[#1a1410] border-2 border-[#4a3a20] rounded-lg p-5 max-w-xs w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="text-gray-300 font-mono text-sm">{dialogue}</p>
+              <button
+                onClick={() => setDialogue(null)}
+                className="mt-4 w-full px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-xs text-gray-200 font-mono border border-gray-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
+
+      {/* Portaled for the same reason as dialogue above — narcissus's plate
+          is only reachable from inside the fullscreen inspector, so this
+          can't be scoped to the room-view box or it'd render underneath it. */}
+      {showPlaqueInfo &&
+        art &&
+        createPortal(
+          <div
+            className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"
+            onClick={() => setShowPlaqueInfo(false)}
+          >
+            <div
+              className="bg-[#1a1410] border-2 border-[#4a3a20] rounded-lg p-5 max-w-xs w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-amber-100/90 font-mono text-sm font-bold">{art.title}</h3>
+                <button onClick={() => setShowPlaqueInfo(false)} aria-label="Close">
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              </div>
+              <p className="text-gray-400 font-mono text-xs">{art.artist}</p>
+              <p className="text-gray-500 font-mono text-xs">{art.date}</p>
+              <p className="text-gray-500 font-mono text-xs">{art.medium}</p>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       {/* Inventory tray — draggable so items can be dropped onto room-view
           hotspots (e.g. the Coin onto gregoryAnnex's frog), not just onto
@@ -772,113 +1670,7 @@ export default function MansionMapPuzzle({ onSolve }: MansionMapPuzzleProps) {
           plain text pill, same convention as prison-cell-puzzle.tsx. */}
       {inventory.length > 0 && (
         <div className="bg-gray-800/50 p-2 rounded-md shadow-md mb-4">
-          <ItemDragTray items={inventory} icons={ITEM_ICONS} onDrop={handleRoomItemDrop} />
-        </div>
-      )}
-
-      {inspecting && art && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4">
-          <button
-            onClick={() => setInspecting(false)}
-            aria-label="Close"
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center border border-gray-700"
-          >
-            <X className="w-5 h-5 text-gray-300" />
-          </button>
-          <p className="text-gray-300 font-mono text-sm mb-3">{art.title}</p>
-          {currentRoom === "narcissus" ? (
-            narcissusDraped ? (
-              <div ref={artViewportRef} className="w-full max-w-lg h-[60vh]">
-                <CharcoalRubbing
-                  ref={charcoalRubbingRef}
-                  cleanSrc="/images/paintings/narcissus_statue_draped.webp"
-                  revealedSrc="/images/paintings/narcissus_statue_draped_charcoal.webp"
-                  alt={art.alt}
-                  className="w-full h-full"
-                  zoomEnabled={loupeUnlocked}
-                  initialSnapshot={narcissusScratchSnapshot ?? undefined}
-                  onStrokeEnd={setNarcissusScratchSnapshot}
-                />
-              </div>
-            ) : (
-              <div ref={artViewportRef} className="w-full max-w-lg h-[60vh]">
-                <PaintingInspector
-                  src="/images/paintings/narcissus_statue.webp"
-                  alt={art.alt}
-                  className="w-full h-full"
-                  zoomEnabled={loupeUnlocked}
-                />
-              </div>
-            )
-          ) : currentRoom === "thesin" ? (
-            <div ref={artViewportRef} className="w-full max-w-lg h-[60vh]">
-              <LampReveal
-                ref={lampRevealRef}
-                cleanSrc="/images/paintings/the-sin.webp"
-                revealedSrc="/images/paintings/the-sin_exposed.webp"
-                alt={art.alt}
-                className="w-full h-full"
-                zoomEnabled={loupeUnlocked}
-              />
-            </div>
-          ) : (
-            <div ref={artViewportRef} className="w-full max-w-lg h-[60vh]">
-              <PaintingInspector
-                src={art.src}
-                alt={art.alt}
-                className="w-full h-full"
-                zoomEnabled={loupeUnlocked}
-                itemPickup={
-                  showArtItemPickup && artItemPickup
-                    ? {
-                        overlaySrc: artItemPickup.overlaySrc,
-                        hotspot: artItemPickup.hotspot,
-                        label: artItemPickup.item,
-                        onCollect: () => pickupItem(artItemPickup.item, artItemPickup.message),
-                      }
-                    : undefined
-                }
-              />
-            </div>
-          )}
-
-          {/* Oil Lamp glow: a warm light that follows the lamp while it's
-              dragged over the art viewport, as if the player were holding it
-              up to the painting. Purely cosmetic — z-40 keeps it above the
-              art but below the dragged lamp icon itself (z-60). */}
-          {lampGlowPoint &&
-            createPortal(
-              // Portaled to <body> for the same reason as item-drag-tray's
-              // ghost: this screen sits inside a backdrop-blur-sm ancestor,
-              // which becomes the containing block for `position: fixed`
-              // descendants and would otherwise offset the glow far from
-              // the actual cursor.
-              <div
-                aria-hidden
-                className="fixed z-40 pointer-events-none rounded-full"
-                style={{
-                  left: lampGlowPoint.x,
-                  top: lampGlowPoint.y,
-                  width: 280,
-                  height: 280,
-                  transform: "translate(-50%, -50%)",
-                  background:
-                    "radial-gradient(circle, rgba(255,200,120,0.4) 0%, rgba(255,170,80,0.18) 45%, transparent 72%)",
-                  mixBlendMode: "screen",
-                }}
-              />,
-              document.body,
-            )}
-
-          {inventory.length > 0 && (
-            <ItemDragTray
-              items={inventory}
-              icons={ITEM_ICONS}
-              onDragMove={handleItemDragMove}
-              onDrop={handleItemDrop}
-              className="absolute bottom-4 left-0 right-0 px-4"
-            />
-          )}
+          <ItemDragTray items={inventory} icons={itemIcons} onDrop={handleRoomItemDrop} />
         </div>
       )}
 

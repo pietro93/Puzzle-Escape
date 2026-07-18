@@ -21,6 +21,9 @@ Welcome to the official game design and development documentation index for **Pu
 4. ### 🎨 [Art & Audio Style Guide](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/ART_AUDIO.md)
    - Aesthetic style requirements (glassmorphism, dark themes), visual asset list, soundscape directives, and voice-over specs.
 
+4a. ### 🔊 [Audio Design & Sourcing Guide](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/AUDIO_DESIGN.md)
+   - Detailed audio design doc: per-sound rationale, in-game trigger points, and open-source (OpenGameArt/Freesound) sourcing suggestions for every SFX/BGM category.
+
 5. ### 📋 [Kanban Progress Tracker](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/KANBAN.md)
    - Current implementation status checklist for all 50 levels, audio assets, localization, platform wrappers, and QA testing cycles.
 
@@ -29,6 +32,9 @@ Welcome to the official game design and development documentation index for **Pu
 
 7. ### 🔍 [UX Research & Visual Audit](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/UX_RESEARCH_AUDIT.md)
    - A visual breakdown of the player journey, analyzing key screens, narrative transitions, and puzzle mechanics with embedded game assets.
+
+7a. ### 📝 [Text, Narrative & Character Dialogue Audit](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/TEXT_AUDIT.md)
+   - Line-by-line audit of all dialogue, transitions, level intros, puzzle text, and lore against the narrative style rules, plus per-character voice consistency findings.
 
 8. ### 💰 [Monetization Strategy](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/MONETIZATION_STRATEGY.md)
    - Mobile monetization model (rewarded-ad hints + one-time IAP unlock), hint economy, and narrative-protection guardrails.

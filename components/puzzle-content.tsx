@@ -75,6 +75,7 @@ interface PuzzleContentProps {
   onMurderMysteryLocationUpdate?: (location: string) => void
   onMagicBoxSolved?: () => void
   onMansionClockStepChange?: (step: number) => void
+  onMansionRoomStateChange?: (room: string, examining: boolean) => void
   onInteractionComplete?: () => void
   showColorPalettePopup?: boolean
   onCloseColorPalettePopup?: () => void
@@ -104,6 +105,7 @@ export default function PuzzleContent({
   onMurderMysteryLocationUpdate,
   onMagicBoxSolved,
   onMansionClockStepChange,
+  onMansionRoomStateChange,
   onInteractionComplete,
   showColorPalettePopup,
   onCloseColorPalettePopup,
@@ -520,7 +522,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <MansionMapPuzzle onSolve={() => onInteractionComplete?.()} />
+          <MansionMapPuzzle onSolve={() => onInteractionComplete?.()} onRoomStateChange={onMansionRoomStateChange} />
         </div>
       ) : level === 31 ? (
         <div className="flex flex-col items-center justify-center my-4 bg-black p-4 rounded-lg">

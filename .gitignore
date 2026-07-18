@@ -9,6 +9,8 @@
 
 # production
 /build
+/electron-dist
+/out-forge
 
 # debug
 npm-debug.log*

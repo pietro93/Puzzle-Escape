@@ -7,6 +7,7 @@ import GameScreen from "./game-screen"
 import TransitionScreen from "./transition-screen"
 import OutroScreen from "./outro-screen"
 import LevelIntroSceneView from "./level-intro-scene"
+import LevelMapScreen from "./level-map-screen"
 import { puzzleData } from "@/data/puzzles"
 import { transitions } from "@/data/transitions"
 import { levelIntroScenes } from "@/data/level-intro-scenes"
@@ -34,6 +35,7 @@ export default function GameContainer() {
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [seenIntroLevels, setSeenIntroLevels] = useState<number[]>([])
   const [showLevelIntro, setShowLevelIntro] = useState(false)
+  const [showLevelMap, setShowLevelMap] = useState(false)
   const [levelRestartNonce, setLevelRestartNonce] = useState(0)
 
   // Audio references
@@ -397,6 +399,10 @@ export default function GameContainer() {
 
       {showCongrats && <OutroScreen onRestart={resetGame} soundEnabled={soundEnabled} toggleSound={toggleMute} />}
 
+      {gameStarted && showLevelMap && (
+        <LevelMapScreen currentLevel={currentLevel} onClose={() => setShowLevelMap(false)} />
+      )}
+
       {gameStarted && !showTransition && !showCongrats && showLevelIntro && levelIntroScenes[currentLevel] && (
         <LevelIntroSceneView scene={levelIntroScenes[currentLevel]} onContinue={handleIntroContinue} />
       )}
@@ -437,6 +443,10 @@ export default function GameContainer() {
               onJumpToLevel={jumpToLevel}
               onSolutionGenerated={handleSolutionGenerated}
               onRestartLevel={restartLevel}
+              onOpenMap={() => {
+                playButtonSound()
+                setShowLevelMap(true)
+              }}
             />
           )
         })()}

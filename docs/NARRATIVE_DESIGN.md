@@ -42,6 +42,27 @@ To maintain quality and immersion, all writers and AI developers must adhere to 
 - **Communication Voice:** Articulate, eloquent, and precise. Randomly capitalizes key words for emphasis (`MINE`, `ETERNITY`, `FUN`, `FORTUNATE`). Instantly switches between mock sympathy and terrifying malice.
 - **Key Phrase:** *"Ah, well... do not fear. We have all of ETERNITY to explore. Ha!"*
 
+### 👮 Policewoman (Zone 5 — Murder Mystery, Level 49)
+- **Role:** The bored, corrupt cop guarding the murder scene.
+- **Traits:** Lazy, dismissive, and openly uninterested in her job. Insists "there was no murder" no matter what evidence contradicts her. Casually unprofessional (eats donuts collected as evidence), a little flirtatious about the (dead) victim, condescending toward the player.
+- **Communication Voice:** Sarcastic, deadpan, modern slang ("ya know?", "gramps"). Deflects real questions with dismissiveness or a joke rather than lying outright.
+- **Key Phrase:** *"Murder? What murder? There was no murder. Just an accident, really. Happens all the time, ya know?"*
+
+### ⚰️ Mortician — "Psychopompus" / Psycho (Zone 5 — Murder Mystery, Level 49)
+- **Role:** The keeper of the body, found by the lake.
+- **Traits:** Antisocial, prefers corpses to living company ("they don't complain"), morbidly comfortable with death, has zero patience for small talk or friendliness.
+- **Communication Voice:** Extremely terse, often one or two words ("It's dead. Obviously." / "Anemia." / "No."). Dry, deadpan delivery; softens only under repeated pestering.
+- **Key Phrase:** *"I enjoy the company. They're not demanding conversationalists."*
+
+### 📚 Librarian (Zone 5 — Murder Mystery, Level 49)
+- **Role:** Guardian of the archive the player must search for case-relevant reading.
+- **Traits:** Fiercely protective of silence and her books, contemptuous of the player's "case," dryly judgmental of whatever the player asks for.
+- **Communication Voice:** Clipped, often just "Shhhhhhhhh!!!" Answers land as backhanded book recommendations — the "gift" is itself the insult.
+- **Key Phrase:** *"I think this is appropriate for your mental age."*
+
+> [!NOTE]
+> Unlike the five zone mentors above, these three do not appear across a full zone — they're one-off NPCs local to the Level 49 murder mystery (`components/murder-mystery/dialogue-data.ts`). Their personas were reconstructed from existing dialogue during the [TEXT_AUDIT](file:///c:/Users/Pietro/Desktop/Puzzle%20Escape/docs/TEXT_AUDIT.md) pass and are now canonical — keep new lines for them consistent with the voices above.
+
 ---
 
 ## 3. Horizontal Plot & Player Identity

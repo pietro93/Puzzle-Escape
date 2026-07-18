@@ -77,10 +77,9 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   15: {
     character: "butler",
     lines: [
-      `"This is a portrait of Patricia, the master's first love," the butler says, a hint of melancholy in his voice.`,
-      `"The daughter of a wealthy merchant from Florence. He met her abroad, in Italy, and was captivated at once — by her intelligence as much as her beauty."`,
-      `"She died of fever at twenty-four, before they could marry. He commissioned this painting shortly before her death."`,
-      `"He always claimed there was a message hidden within it. Something only those with keen eyes would ever notice."`,
+      `"This wing was sealed for years," the butler says, unlocking a door you hadn't noticed before.`,
+      `"The master gathered these pieces over a long and curious life. Each has its own history, if you care to ask."`,
+      `"Wander as you please. I will be nearby, should you have questions about what you find."`,
     ],
   },
   16: {

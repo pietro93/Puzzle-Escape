@@ -12,6 +12,15 @@ interface ItemPickup {
   onCollect: () => void
 }
 
+interface SecondaryHotspot {
+  /** Clickable/drop-target area, percent of `src`'s own natural size. No overlay image — for detail already baked into `src` (e.g. a stain painted into one of several state variants of the same asset). */
+  rect: { left: number; top: number; width: number; height: number }
+  ariaLabel: string
+  onClick: () => void
+  /** Exposed so callers can hit-test drops (e.g. dragged inventory items) against this hotspot's real on-screen position, which tracks pan/zoom since it's rendered inside the same transformed box as the image. */
+  hotspotRef?: React.RefObject<HTMLButtonElement>
+}
+
 interface PaintingInspectorProps {
   src: string
   alt: string
@@ -20,6 +29,10 @@ interface PaintingInspectorProps {
   zoomEnabled?: boolean
   /** An item sitting on this painting/statue the player can still collect — hotspot stays aligned through pan/zoom since it's rendered inside the same transformed box as the image. */
   itemPickup?: ItemPickup
+  /** A non-pickup hotspot over a detail of the painting — click for an observation line, and/or a drop target for other inventory items. */
+  secondaryHotspot?: SecondaryHotspot
+  /** Renders more zoomed-in than the advertised 100%-400% range (see useZoomPan) — for paintings with detail too fine to read at the normal ceiling. */
+  extraScale?: number
 }
 
 /**
@@ -37,12 +50,15 @@ export default function PaintingInspector({
   className = "",
   zoomEnabled = true,
   itemPickup,
+  secondaryHotspot,
+  extraScale = 1,
 }: PaintingInspectorProps) {
   const {
     viewportRef,
     baseSize,
     setBaseSizeFromNatural,
     zoom,
+    effectiveZoom,
     offset,
     isDragging,
     handlePointerDown,
@@ -50,7 +66,7 @@ export default function PaintingInspector({
     MIN_ZOOM,
     MAX_ZOOM,
     ZOOM_STEP,
-  } = useZoomPan(zoomEnabled)
+  } = useZoomPan(zoomEnabled, extraScale)
 
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget
@@ -58,11 +74,11 @@ export default function PaintingInspector({
   }
 
   return (
-    <div className={className}>
+    <div className={`${className} flex flex-col`}>
       <div
         ref={viewportRef}
         onPointerDown={handlePointerDown}
-        className={`relative w-full h-full overflow-hidden rounded-lg border border-gray-800 bg-black touch-none select-none ${
+        className={`relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-gray-800 bg-black touch-none select-none ${
           zoom > MIN_ZOOM ? (isDragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
         }`}
       >
@@ -71,7 +87,7 @@ export default function PaintingInspector({
           style={{
             width: baseSize.width,
             height: baseSize.height,
-            transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+            transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${effectiveZoom})`,
           }}
         >
           <img
@@ -102,6 +118,20 @@ export default function PaintingInspector({
                 }}
               />
             </>
+          )}
+          {secondaryHotspot && (
+            <button
+              ref={secondaryHotspot.hotspotRef}
+              onClick={secondaryHotspot.onClick}
+              aria-label={secondaryHotspot.ariaLabel}
+              className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
+              style={{
+                left: `${secondaryHotspot.rect.left}%`,
+                top: `${secondaryHotspot.rect.top}%`,
+                width: `${secondaryHotspot.rect.width}%`,
+                height: `${secondaryHotspot.rect.height}%`,
+              }}
+            />
           )}
         </div>
 
@@ -144,11 +174,7 @@ export default function PaintingInspector({
             <ZoomIn className="w-4 h-4 text-gray-300" />
           </button>
         </div>
-      ) : (
-        <p className="text-gray-500 font-mono text-xs text-center mt-3 italic">
-          The detail is too fine to make out. You'd need something to magnify it.
-        </p>
-      )}
+      ) : null}
     </div>
   )
 }

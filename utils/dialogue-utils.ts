@@ -53,6 +53,129 @@ export const getClockButlerLine = (step: number): string => {
   return `${time}. ${remark}`
 }
 
+// Level 15 (Mansion Gallery) — butler commentary keyed by room, not level.
+// Two separate pools per room: "ambient" fires while the player is merely
+// standing in the room, "examining" fires only once the player has opened
+// a piece's full inspector view. Never overlap the two — ambient lines must
+// stay pure scene-setting (no story, no theme) so they can't be mistaken for
+// hints about what's hidden in the art; examining lines carry the real
+// art-historical content once the player has actually chosen to look closer.
+const mansionAmbientLines: Record<string, string[]> = {
+  foyer: [
+    "That compass rose worked into the rug has guided guests since before my time here.",
+    "The suit of armor by the stairs has not moved in decades, though I still greet it out of habit.",
+  ],
+  foyerAnnex: [
+    "This end of the hall catches rather less light than the other.",
+    "The staircase from here always feels steeper than it looks.",
+  ],
+  gregory: [
+    "That wolf carved into the sconce has watched over this alcove longer than any butler has.",
+    "The stonework in this alcove took the masons the better part of a year, or so the master claimed.",
+    "The tablet's reckoning of sin is older than the one you'd hear preached today. A few of those names have drifted rather far from their origins.",
+    "Tristitia, the tablet calls it there. What we now call sloth was once mourned as a species of sorrow, or so I understand.",
+  ],
+  gregoryAnnex: [
+    "That archway leads nowhere pleasant, as far as I am concerned.",
+    "The little stone angel on the banister has lost most of her nose to the years.",
+  ],
+  invidia: [
+    "The wolves carved into this paneling were the master's own touch, added long after the house was built.",
+    "That lamp above the frame has never once gone out, to my knowledge.",
+  ],
+  ivan: [
+    "The desk in this study has not been used for correspondence in longer than I can say.",
+    "That candle on the desk burns rather low. I really ought to replace it.",
+  ],
+  narcissus: [
+    "That pool at your feet has never once frozen, even in the coldest months.",
+    "The ironwork on these walls took a blacksmith the better part of a decade, or so I am told.",
+  ],
+  thesin: [
+    "Those carved serpents in the panel doors have unsettled more guests than I can count.",
+    "The staircase through that door leads down further than most care to explore.",
+  ],
+  desidia: [
+    "That chair has held up rather better than most of the furniture in this house.",
+    "The window here looks out over the grounds, on the rare clear night.",
+  ],
+  saturn: [
+    "This hall has not hosted a proper dinner in longer than I care to admit.",
+    "That fireplace has sat cold for years, though the chairs remain set as if for guests.",
+  ],
+  mammon: [
+    "Every surface in this room was gilded by hand, guest and gold leaf both, or so the master liked to say.",
+    "Those carved heads flanking the frame have watched this room longer than anyone currently living.",
+  ],
+}
+
+const mansionExaminingLines: Record<string, string[]> = {
+  gregory: [
+    "Pope Gregory established the definitive order of the seven deadly sins with pride at the very forefront to ensure a remarkably tidy piece of moral accounting.",
+    "The master chose to leave the natural cracks in this alabaster sculpture of Pope Gregory completely exposed to demonstrate a rather questionable sense of interior design.",
+    "Gregorian chant takes its name directly from Pope Gregory and provides a vastly superior auditory experience compared to the usual clamor of this household.",
+    "Pope Gregory authored the strict religious doctrines concerning human pride to offer a splendid layer of irony for anyone employed in service to the elite.",
+  ],
+  narcissus: [
+    "John Gibson carved the Narcissus sculpture from solid marble to celebrate an entirely pure and classical interpretation of beauty.",
+    "The British art establishment strictly preferred the cold white stone of the Narcissus statue to the painted works of antiquity.",
+    "A classical education reveals the rather prominent homoerotic traditions celebrated by the Narcissus sculpture.",
+    "One observes Narcissus pining over his own reflection with a dedication frequently mirrored by the guests of this estate.",
+  ],
+  invidia: [
+    "Giotto di Bondone painted Envy with a serpent biting her face to demonstrate the literal poison of malicious speech.",
+    "Enrico Scrovegni funded the chapel housing the Envy fresco to purchase his father a comfortable seat in paradise.",
+    "The clutching claw of Envy grasps permanently at the air in a gesture quite common among the aristocracy.",
+    "Giotto forced Western painting into three-dimensional realism specifically to capture the agonizing grip of true greed.",
+  ],
+  ivan: [
+    "Ilya Repin captured the precise moment Tsar Ivan the Fourth secured his legacy with a heavy metal staff.",
+    "Vandals have violently attacked the Ivan the Terrible canvas on two separate occasions out of sheer political fervor.",
+    "Ilya Repin painted Ivan the Terrible as a direct condemnation of the unchecked autocracy dominating nineteenth-century Russia.",
+    "Repin temporarily lost the use of his right hand from the psychological torment of painting such a brutal tableau.",
+  ],
+  desidia: [
+    "Pieter Bruegel the Elder manufactured the grotesque demonic hellscape of Desidia because nightmares sold exceptionally well in sixteenth-century Antwerp.",
+    "The giant hand in Desidia points directly at the eleventh hour to signify the rapid approach of the final judgment.",
+    "Pieter Bruegel demonstrates the virtue of hard work by profiting immensely from this detailed sketch of utter laziness.",
+    "The sleepy woman in Desidia rests on her sluggish donkey with an apathy I frequently observe during the morning hours in this household.",
+  ],
+  mammon: [
+    "George Frederic Watts crowned Mammon with the ears of a donkey to explicitly equate wealth worship with absolute foolishness.",
+    "Mammon crushes a young man and a girl under his weight with the cold indifference entirely characteristic of the industrial era.",
+    "George Frederic Watts painted Mammon as a heavy beast in scarlet and gold to effectively shame the wealthy elites of London.",
+    "The sheer apathy in the gaze of Mammon captures the essence of modern capitalism with flawless precision.",
+  ],
+  saturn: [
+    "Francisco Goya chose to decorate his own dining room wall with Saturn Devouring His Son as a charming piece of home decor.",
+    "The Titan Cronus in Saturn Devouring His Son consumes a fully grown adult in a desperate attempt to maintain his authority over the household.",
+    "The bulging eyes of Saturn display a horrific mix of panic and madness typical of a cornered beast.",
+    "A period of complete deafness allowed Goya to focus entirely on painting the darkest reaches of human paranoia in Saturn Devouring His Son.",
+  ],
+  thesin: [
+    "Franz von Stuck constructed the heavy gilded frame of The Sin himself to serve as a literal altar for his provocative painting.",
+    "The luminous eyes of Eve in The Sin stare outward from the heavy shadows with a deeply predatory intent.",
+    "Franz von Stuck utilized extreme chiaroscuro in The Sin to highlight the terrifying weight of the python.",
+    "The heavy python wraps around the subject of The Sin to symbolize transgression in the most confrontational manner possible.",
+  ],
+}
+
+// Cycles through a room's pool so repeated clicks don't repeat the same line
+// twice in a row, same convention as clockRemarkCycle above.
+const mansionLineCycle: Record<string, number> = {}
+
+export const getMansionButlerLine = (room: string, examining: boolean): string => {
+  const pool = (examining ? mansionExaminingLines[room] : mansionAmbientLines[room]) ?? mansionAmbientLines[room]
+  if (!pool || pool.length === 0) {
+    return "Nothing of note here, I'm afraid."
+  }
+  const key = `${examining ? "examining" : "ambient"}:${room}`
+  const cycle = mansionLineCycle[key] ?? 0
+  const line = pool[cycle % pool.length]
+  mansionLineCycle[key] = cycle + 1
+  return line
+}
+
 // Define random elevator messages
 export const getRandomElevatorMessage = (): string => {
   const messages = [
@@ -189,13 +312,6 @@ butler: {
     "Assembly is a matter of order, a concept apparently elusive to some.",
     "Some things are more valuable when taken apart. It reveals their inner workings.",
     "Kintsugi is the Japanese art of repairing broken pottery with gold. It treats breakage as part of an object's history."
-  ],
-  15: [ // Portrait Puzzle (Patricia)
-    "Ah, Lady Patricia. Her demise left a shadow the Master never quite shook off.",
-    "The Master would stare at this portrait for hours. Most unsettling at times.",
-    "The artist, a rather renowned Italian, insisted on using a 'chiaroscuro' technique. Dramatic lighting.",
-    "A striking likeness. The artist captured her spirit perfectly. Perhaps too perfectly.",
-    "Her eyes are said to follow you. A common trick of perspective, I am told."
   ],
   16: [ // Library / Book Puzzle
     "I dust these shelves daily. The Master was most particular about the preservation of knowledge.",

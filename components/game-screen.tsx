@@ -3,7 +3,7 @@
 import type React from "react"
 import Image from "next/image"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import type { Puzzle } from "@/types/puzzle"
 import HintSystem from "./hint-system"
 import { Lightbulb, Volume2, VolumeX, Sparkles, RotateCcw } from "lucide-react"
@@ -13,7 +13,7 @@ import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
-import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle, getClockButlerLine } from "@/utils/dialogue-utils"
+import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle, getClockButlerLine, getMansionButlerLine } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
@@ -34,6 +34,7 @@ interface GameScreenProps {
   onLevelComplete: () => void
   onTransition: (transitionId: string) => void
   onRestartLevel?: () => void
+  onOpenMap?: () => void
 }
 
 // Helper functions
@@ -91,6 +92,7 @@ export default function GameScreen({
   onLevelComplete,
   onTransition,
   onRestartLevel,
+  onOpenMap,
 }: GameScreenProps) {
   const { playSound } = useAudio()
   const { vibrate } = useHaptics()
@@ -144,6 +146,7 @@ export default function GameScreen({
   const questionnaireRef = useRef<any>(null)
   const [currentPyramidRoom, setCurrentPyramidRoom] = useState<string>("entrance")
   const [clockStep, setClockStep] = useState(0)
+  const [mansionRoom, setMansionRoom] = useState<{ room: string; examining: boolean }>({ room: "foyer", examining: false })
   const [hasPyramidTorch, setHasPyramidTorch] = useState(false)
   const [showDevilDialogue, setShowDevilDialogue] = useState(false)
   const [currentElevatorFloor, setCurrentElevatorFloor] = useState(0)
@@ -571,6 +574,13 @@ export default function GameScreen({
       setCharacterDialogue(getClockButlerLine(clockStep))
       setShowCharacterDialogue(true)
     }
+    // Special handling for level 15 (mansion gallery) — the butler's line
+    // depends on the room the player is in and whether they're actively
+    // examining that room's art, not on a level-wide random pool.
+    else if (level === 15) {
+      setCharacterDialogue(getMansionButlerLine(mansionRoom.room, mansionRoom.examining))
+      setShowCharacterDialogue(true)
+    }
     // Special handling for level 10 (guard puzzle)
     else if (level === 10) {
     // Rotate through guard dialog lines
@@ -632,6 +642,13 @@ export default function GameScreen({
   const handlePyramidTorchAcquired = () => {
     setHasPyramidTorch(true)
   }
+
+  // Handle mansion gallery (level 15) room/examining changes. Memoized so
+  // the identity stays stable across renders — mansion-map-puzzle.tsx
+  // fires this from a useEffect keyed on room/examining state alone.
+  const handleMansionRoomStateChange = useCallback((room: string, examining: boolean) => {
+    setMansionRoom({ room, examining })
+  }, [])
 
   // Handle elevator floor change for level 50
   const handleElevatorFloorChange = (floor: any) => {
@@ -802,9 +819,13 @@ export default function GameScreen({
 
       {/* Level indicator */}
       <div className="flex justify-between items-center mb-4">
-        <div className="text-sm font-pixel text-purple-300 bg-gray-900/70 px-3 py-1 rounded-full border border-gray-800 shadow-lg flex items-center gap-1">
+        <button
+          onClick={onOpenMap}
+          aria-label={`Level ${level} — open map`}
+          className="text-sm font-pixel text-purple-300 bg-gray-900/70 px-3 py-1 rounded-full border border-gray-800 shadow-lg flex items-center gap-1 hover:border-purple-800 hover:bg-gray-800/80 transition-colors cursor-pointer"
+        >
           <Sparkles className="w-3 h-3 text-yellow-400" /> Level {level}
-        </div>
+        </button>
         {level === 47 && (
           <div className="text-sm font-pixel text-purple-300 bg-gray-900/70 px-3 py-1 rounded-full border border-gray-800 shadow-lg flex items-center gap-1">
             The Brain
@@ -911,6 +932,7 @@ export default function GameScreen({
             handleInteractionComplete()
           }
         }}
+        onMansionRoomStateChange={handleMansionRoomStateChange}
         showColorPalettePopup={showColorPalettePopup}
         onCloseColorPalettePopup={() => setShowColorPalettePopup(false)}
         onInteractionComplete={handleInteractionComplete}

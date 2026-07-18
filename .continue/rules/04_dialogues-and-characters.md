@@ -118,3 +118,55 @@ Tone Shifts: Switches instantly between velvety charm and bone-chilling menace. 
 * "I find such irony delicious! Ha!"
 * "Ah, well... do not fear. We have all of ETERNITY to explore."
 
+### Policewoman (Level 49 Murder Mystery)
+
+*   **Core Personality Traits:**
+    *   **Lazy & Dismissive:** Guards the crime scene without any real interest in doing her job. Insists "there was no murder" regardless of what the player uncovers.
+    *   **Casually Unprofessional:** Eats donuts collected as evidence, admits she hasn't bothered to learn basic facts about the victim.
+    *   **Mildly Condescending:** Treats the player as a nuisance amateur detective ("some make-believe detective").
+
+*   **Communication & Mannerisms:**
+    *   **Speech:** Modern, sarcastic, casual slang ("ya know?", "gramps", "D'huh").
+    *   **Deflection:** Never lies outright about the cover-up — she deflects with dismissiveness, boredom, or a joke instead.
+    *   **Tone:** Bored throughout; visibly perks up only when the subject is donuts or the (dead) victim's looks.
+
+*   **Example Phrases:**
+    *   "Murder? What murder? There was no murder. Just an accident, really. Happens all the time, ya know?"
+    *   "Some tourist who was here on vacation by himself. Short man, kinda cute. Slightly too dead for my taste, I like 'em still warm."
+    *   "It's about as thrilling as watching paint dry."
+
+### Mortician — "Psychopompus" / Psycho (Level 49 Murder Mystery)
+
+*   **Core Personality Traits:**
+    *   **Antisocial:** Actively prefers corpses to living people — "they're not demanding conversationalists."
+    *   **Morbidly Comfortable:** Discusses death and autopsy details with total flatness, no unease or drama.
+    *   **Reluctant, Not Cruel:** Will help if pestered enough, grudgingly.
+
+*   **Communication & Mannerisms:**
+    *   **Speech:** Extremely terse. Frequently answers in one or two words ("It's dead. Obviously." / "Anemia." / "No.").
+    *   **Tone:** Deadpan throughout; softens only slightly once the player wears them down.
+    *   **Language Use:** Short, declarative sentences. No embellishment, no metaphor — a contrast to every other character's flourish.
+
+*   **Example Phrases:**
+    *   "Name's Psychopompus. Psycho for short."
+    *   "I enjoy the company. They're not demanding conversationalists."
+    *   "Fine. But don't touch anything. And don't tell anyone I showed you this. I'd rather not have to explain myself to the living."
+
+### Librarian (Level 49 Murder Mystery)
+
+*   **Core Personality Traits:**
+    *   **Fiercely Protective:** Of both silence and her books; treats the investigation itself as an intrusion.
+    *   **Dryly Contemptuous:** Every book "recommendation" doubles as a judgment of the player's taste or intelligence.
+
+*   **Communication & Mannerisms:**
+    *   **Speech:** Clipped and short. Opens with silence or a flat "Shhhhhhhhh!!!"
+    *   **Humor:** Backhanded — the joke is always at the player's expense, delivered as if it were a genuine answer.
+
+*   **Example Phrases:**
+    *   "This is a library!"
+    *   "I think this is appropriate for your mental age."
+    *   "Oh, another creep. Don't get *too* inspired. Serialized murder is a respectful art."
+
+> [!NOTE]
+> These three are one-off NPCs local to the Level 49 murder mystery (`components/murder-mystery/dialogue-data.ts`), not full zone mentors. Personas reconstructed from existing dialogue during the text audit (see `docs/TEXT_AUDIT.md`) and are now canonical for future lines.
+

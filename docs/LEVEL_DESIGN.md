@@ -410,10 +410,12 @@ This document details the mechanics, visual setup, player interactions, step-by-
 - **Answer:** `eureka`
 
 ### Level 48: Mouth of Truth Marbles
-- **What it Consists of:** An ancient stone face and sin marbles (Lust, Gluttony, Pride, Wrath, Greed, Envy, Sloth).
+- **What it Consists of:** An ancient stone face with four marble slots (top-left, top-right, bottom-left, bottom-right) and six colors of draggable marble (black, white, gold, red, green, blue). This is a Mastermind/codebreaker mechanic, not a sin-themed puzzle — there is no in-game mapping of marbles to the seven deadly sins.
 - **How to Solve (Player Journey):**
-  1. Place the sin marbles into the mouth openings in the correct order.
-  2. Align the marbles based on their matching divine symbols.
+  1. Drag marbles into all four slots and insert your hand into the mouth to submit a guess.
+  2. Read the cherub feedback icons: each represents one slot's result (exact match, right color/wrong slot, or no match), shuffled so their order doesn't reveal which slot they refer to.
+  3. Refine guesses using the feedback until all four slots match the randomly generated correct combination.
+  4. On solve, the correct marbles' colors and a hidden letter-pairing puzzle (marble letters vs. cherub letters) reveal the answer.
 - **Answer:** `chaplain`
 
 ### Level 49: Murder Mystery Botany

@@ -69,7 +69,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 15,
     question: "The butler leads you into a wing of the mansion lined with the master's art.",
-    description: "A gallery of paintings and statues. Explore the rooms.",
+    description: "",
     isMansionMapPuzzle: true,
     solution: "life and death",
     category: "riddle",

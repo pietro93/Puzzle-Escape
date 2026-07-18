@@ -61,7 +61,7 @@ ipcMain.handle("save-game", async (event, gameData) => {
     return { success: true }
   } catch (error) {
     console.error("Failed to save game:", error)
-    return { success: false, error: error.message }
+    return { success: false, error: error instanceof Error ? error.message : String(error) }
   }
 })
 
@@ -78,6 +78,6 @@ ipcMain.handle("load-game", async () => {
     return { success: false, error: "No save file found" }
   } catch (error) {
     console.error("Failed to load game:", error)
-    return { success: false, error: error.message }
+    return { success: false, error: error instanceof Error ? error.message : String(error) }
   }
 })

@@ -12,8 +12,16 @@ const ZOOM_STEP = 0.75
  * dragging pans, clamped so the player can't drag past the content edges.
  * Used by both PaintingInspector (image) and CharcoalRubbing's statue view
  * (canvas) so the Loupe-gated zoom behaves identically across both.
+ *
+ * `extraScale` stretches the zoomed-in range beyond the advertised 100%-400%
+ * (for paintings with detail too fine to read at the normal ceiling) without
+ * changing what the player sees on the zoom label or +/- buttons — `zoom`
+ * stays the advertised value, `effectiveZoom` is what actually gets applied
+ * to the transform and pan clamping. It's anchored at MIN_ZOOM (the extra
+ * multiplier only applies to zoom *above* 1) so the base, lens-off view
+ * stays a normal contain-fit image rather than starting pre-zoomed.
  */
-export function useZoomPan(zoomEnabled: boolean) {
+export function useZoomPan(zoomEnabled: boolean, extraScale = 1) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const dragState = useRef<{ startX: number; startY: number; startOffsetX: number; startOffsetY: number } | null>(
     null,
@@ -23,18 +31,24 @@ export function useZoomPan(zoomEnabled: boolean) {
   const [offset, setOffset] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
 
+  const toEffectiveZoom = useCallback((atZoom: number) => MIN_ZOOM + (atZoom - MIN_ZOOM) * extraScale, [extraScale])
+
+  // atZoom is the advertised zoom value; clamping itself always works off
+  // the effective (rendered) size so the player can't drag past what's
+  // actually on screen.
   const clampOffset = useCallback(
     (x: number, y: number, atZoom: number) => {
       const viewport = viewportRef.current
       if (!viewport) return { x: 0, y: 0 }
-      const maxX = Math.max(0, (baseSize.width * atZoom - viewport.clientWidth) / 2)
-      const maxY = Math.max(0, (baseSize.height * atZoom - viewport.clientHeight) / 2)
+      const atEffectiveZoom = toEffectiveZoom(atZoom)
+      const maxX = Math.max(0, (baseSize.width * atEffectiveZoom - viewport.clientWidth) / 2)
+      const maxY = Math.max(0, (baseSize.height * atEffectiveZoom - viewport.clientHeight) / 2)
       return {
         x: Math.min(maxX, Math.max(-maxX, x)),
         y: Math.min(maxY, Math.max(-maxY, y)),
       }
     },
-    [baseSize],
+    [baseSize, toEffectiveZoom],
   )
 
   const setBaseSizeFromNatural = useCallback((naturalWidth: number, naturalHeight: number) => {
@@ -86,6 +100,7 @@ export function useZoomPan(zoomEnabled: boolean) {
     baseSize,
     setBaseSizeFromNatural,
     zoom,
+    effectiveZoom: toEffectiveZoom(zoom),
     offset,
     isDragging,
     handlePointerDown,

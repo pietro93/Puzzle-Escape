@@ -4,8 +4,16 @@
     "icon": "./assets/icon",
     "name": "Riddle Escape",
     "executableName": "riddle-escape",
-    "appBundleId": "com.yourdomain.riddleescape"
+    "appBundleId": "com.yourdomain.riddleescape",
+    "ignore": [
+      "^[\\\\/]?(app|components|data|docs|hooks|lib|public|styles|types|utils|electron|android|ios|steam|rules)([\\\\/]|$)",
+      "^[\\\\/]?\\.(continue|github|git|claude|playwright-mcp|next)([\\\\/]|$)",
+      "^[\\\\/]?(next\\.config\\.mjs|next-env\\.d\\.ts|tsconfig(\\.tsbuildinfo)?|tsconfig\\.json|tailwind\\.config\\.ts|postcss\\.config\\.mjs|components\\.json|capacitor\\.config\\.ts|pnpm-lock\\.yaml|package-lock\\.json|\\.gitignore)$",
+      "^[\\\\/]?(EXTERNAL_DEPENDENCIES_DOWNLOAD_LIST|EXTERNAL_URL_UPDATE_SUMMARY|MISSING_IMAGES_REPORT|@INDEX|privacy-policy|terms-of-service)\\.(md)$",
+      "^[\\\\/]?(level5-step\\d+|splash1|step\\d+)\\.png$"
+    ]
   },
+  "outDir": "out-forge",
   "rebuildConfig": {},
   "makers": [
     {

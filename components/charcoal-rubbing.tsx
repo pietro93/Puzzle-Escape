@@ -112,11 +112,11 @@ const CharcoalRubbing = forwardRef<CharcoalRubbingHandle, CharcoalRubbingProps>(
   }))
 
   return (
-    <div className={className}>
+    <div className={`${className} flex flex-col`}>
       <div
         ref={viewportRef}
         onPointerDown={handlePointerDown}
-        className={`relative w-full h-full overflow-hidden rounded-lg border border-gray-800 bg-black touch-none select-none ${
+        className={`relative w-full flex-1 min-h-0 overflow-hidden rounded-lg border border-gray-800 bg-black touch-none select-none ${
           zoom > MIN_ZOOM ? (isDragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
         }`}
       >
@@ -170,11 +170,7 @@ const CharcoalRubbing = forwardRef<CharcoalRubbingHandle, CharcoalRubbingProps>(
             <ZoomIn className="w-4 h-4 text-gray-300" />
           </button>
         </div>
-      ) : (
-        <p className="text-gray-500 font-mono text-xs text-center mt-3 italic">
-          The detail is too fine to make out. You'd need something to magnify it.
-        </p>
-      )}
+      ) : null}
     </div>
   )
 })

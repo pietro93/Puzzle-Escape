@@ -10,6 +10,10 @@
 
 ## 2. Audio Design Directives
 
+> [!NOTE]
+> For per-sound rationale, in-game trigger points, and open-source sourcing suggestions
+> (OpenGameArt/Freesound search terms, licensing guidance), see `docs/AUDIO_DESIGN.md`.
+
 ### Background Soundtracks (BGM)
 - **Zone 1 (Prison):** Muted water droplets, distant metal echoing, and low cello hums to create a claustrophobic feel.
 - **Zone 2 (Mansion):** Quiet, slightly detuned harpsichord or classical grand piano melody playing in a minor key.
