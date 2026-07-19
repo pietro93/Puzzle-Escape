@@ -18,6 +18,7 @@ import PyramidPuzzle from "./pyramid-puzzle"
 import FamiliarFacesPuzzle from "./familiar-faces-puzzle"
 import HellJigsawPuzzle from "./hell-jigsaw-puzzle"
 import CrystalSequencePuzzle from "./crystal-sequence-puzzle"
+import BookshelfChronologyPuzzle from "./bookshelf-chronology-puzzle"
 import FinalLevelPuzzle from "./final-level-puzzle"
 import InfernalCasinoPuzzle from "./infernal-casino-puzzle"
 import EgyptianPillarsPuzzle from "./egyptian-pillars-puzzle"
@@ -161,6 +162,9 @@ export default function PuzzleContent({
 
   // Check if this is a crystal sequence puzzle
   const isCrystalSequencePuzzle = puzzle.isCrystalSequencePuzzle
+
+  // Check if this is the bookshelf chronology puzzle
+  const isBookshelfChronologyPuzzle = puzzle.isBookshelfChronologyPuzzle
 
   // Check if this is an infernal casino puzzle
   const isInfernalCasinoPuzzle = puzzle.isInfernalCasinoPuzzle
@@ -597,6 +601,15 @@ export default function PuzzleContent({
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
           <CrystalSequencePuzzle onSolve={() => onInteractionComplete?.()} />
+        </div>
+      ) : null}
+
+      {isBookshelfChronologyPuzzle ? (
+        <div className="my-4">
+          {puzzle.description && (
+            <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
+          )}
+          <BookshelfChronologyPuzzle onSolve={() => onInteractionComplete?.()} />
         </div>
       ) : null}
 

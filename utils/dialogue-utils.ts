@@ -53,7 +53,7 @@ export const getClockButlerLine = (step: number): string => {
   return `${time}. ${remark}`
 }
 
-// Level 15 (Mansion Gallery) — butler commentary keyed by room, not level.
+// Level 20 (Mansion Gallery) — butler commentary keyed by room, not level.
 // Two separate pools per room: "ambient" fires while the player is merely
 // standing in the room, "examining" fires only once the player has opened
 // a piece's full inspector view. Never overlap the two — ambient lines must

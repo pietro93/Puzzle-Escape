@@ -68,4 +68,5 @@ export interface Puzzle {
   isMansionMapPuzzle?: boolean
   isConstellationPuzzle?: boolean
   isMysticsGeometryPuzzle?: boolean
+  isBookshelfChronologyPuzzle?: boolean
 }

@@ -66,10 +66,15 @@ const config: Config = {
           "60%": { transform: "translateX(-4px)" },
           "80%": { transform: "translateX(4px)" },
         },
+        goldFleck: {
+          "0%": { transform: "translate(0, 0) scale(1)", opacity: "1" },
+          "100%": { transform: "translate(var(--tx), var(--ty)) scale(0.3)", opacity: "0" },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-out forwards",
         shake: "shake 0.4s ease-in-out",
+        goldFleck: "goldFleck 550ms ease-out forwards",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -29,20 +29,42 @@ export const transitions: Transition[] = [
   {
     title: "Beyond the Mansion's Walls",
     paragraphs: [
-      'As you solve the butler\'s final challenge, his composed demeanor cracks. "Most impressive, if I may say so," he murmurs, straightening his bow tie with nervous precision.',
+      '"..."',
 
-      '"I daresay you are in what one might call a transitional phase," he says, his voice softening to a conspiratorial tone. "Between what was and what shall be. Your soul requires... processing, as it were. That is why you find yourself in our humble establishment."',
+      '"MORS ET VITA IN MANIBUS AURIGAE TEMERARII!" The shriek tears loose like something that has been trapped in him for years.',
 
-      'The mansion begins to tremble, dust falling from the ornate ceiling. "I\'m afraid I cannot divulge further details," the butler says with a slight bow. "The master would be most displeased. But do know that your journey is quite necessary. What you did... well, there are consequences, as any proper gentleman would understand."',
+      "A chill runs through you that has nothing to do with the room. For a moment you're somewhere else, foot pressed to a pedal that isn't there.",
+
+      '"I daresay you find yourself in what one might call a transitional phase," he says, his voice settling back into that same conspiratorial politeness, as though screaming were merely another courtesy.',
+
+      '"Between what was and what shall be. Your soul requires a certain amount of processing, as it were, hence your presence in our humble establishment."',
+
+      'The mansion begins to tremble, dust falling from the ornate ceiling. "I\'m afraid I cannot divulge further details," the butler says with a slight bow.',
+
+      '"The master would be most displeased. What you did carries consequences. A proper gentleman would already know that much."',
 
       "You race through the mansion's twisting corridors, dodging falling debris. Bursting through the garden doors, you run until the sounds of destruction fade behind you.",
 
       "The path leads you deep into a dense, mist-shrouded forest unlike any you've seen before. Strange lights flicker between the trunks, and whispers seem to follow your every step.",
 
-      "Just as you begin to fear you're hopelessly lost, you stumble upon a small clearing. In its center sits a colorful wagon, smoke curling from its chimney. An elderly woman emerges, her clothes a riot of patterns and her fingers adorned with rings that catch what little light filters through the canopy.",
+      "Just as you begin to fear you're hopelessly lost, you stumble upon a small clearing. In its center sits a colorful wagon, smoke curling from its chimney. An elderly woman emerges from within.",
 
-      '"Ah, the wanderer arrives!" she exclaims in a thick accent, rolling her r\'s dramatically. "The cards have foretold your coming. Your past haunts you, and your future... it waits to be read."',
+      '"Ah, the wanderer arrives!" she exclaims, her accent thick, her r\'s rolling dramatically. "The cards have foretold your coming. Your past haunts you, and your future waits to be read."',
     ],
+    // The reveal beat: silence on the ordinary butler, then the scream lands
+    // right as his portrait swaps to the undead version. Unlike a jump
+    // scare, the mask doesn't go back on — he stays undead through the
+    // rest of his lines, since the mansion is visibly falling apart around
+    // him by paragraph 5 anyway.
+    paragraphImages: {
+      0: "/images/butler.webp",
+      1: "/images/butler-undead.webp",
+      2: "/images/butler-undead.webp",
+      3: "/images/butler-undead.webp",
+      4: "/images/butler-undead.webp",
+      5: "/images/butler-undead.webp",
+      6: "/images/butler-undead.webp",
+    },
     characterImage: "/images/gypsy.webp",
     characterName: "Fortune Teller",
     backgroundImage:

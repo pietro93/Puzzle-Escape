@@ -13,56 +13,56 @@ export default function DevilDialogue({ onClose, currentFloor }: DevilDialoguePr
     switch (currentFloor) {
       // Hot hells
       case -1: // Samjiva
-        return "Ah, Samjiva - the Hell of Reviving. I find this one particularly amusing. These souls die over and over, only to be revived for more torment. Quite the endless cycle, wouldn't you say? The look on their faces when they realize they'll never truly die... priceless."
+        return "How precious, the mind's little trick of shutting off before the terror finishes its work. I forbid it here. The heart restarts the instant the brain tries to sever the connection, so a man who spent his life claiming he'd never hurt anyone gets to stay awake for every second of what he actually did."
 
       case -2: // Kalasutra
-        return "Kalasutra - the Hell of Black Threads. I designed this one myself. The precision of those blades following the black lines... it's like watching artists at work. Some souls have been dismembered millions of times. They never get used to it."
+        return "I drew every line myself, and if that impresses you, I won't stop you. The blade follows the charcoal a hair's width at a time, slow enough to feel deliberate. He spent thirty years insisting his mistakes were accidents. Down here, nothing is."
 
       case -3: // Samghata
-        return "Samghata - the Crushing Hell. Listen closely... can you hear that? The sound of mountains smashing together, with souls caught between them. The crunch of bones is quite musical after a few millennia of listening."
+        return "That sound is two mountains finally agreeing on something, with a soul caught in the middle of the argument. She spent her life certain that words could never really wound anyone. I'm teaching her the difference between an opinion and a weight."
 
       case -4: // Raurava
-        return "Raurava - the Hell of Screaming. I come here when I need to relax. The cacophony of wails has a certain... harmony to it. Some souls have been screaming for so long they've forgotten why they're screaming at all."
+        return "I come here to relax. Every voice in this valley insists it never wanted to be heard, which I find touching, coming from a woman who spent forty years deciding who got to speak and when. The screaming usually stops meaning anything after a while. Hers hasn't yet. I admire the stamina."
 
       case -5: // Maharaurava
-        return "Maharaurava - the Hell of Great Screaming. An upgrade from Raurava, if you will. The molten metal adds a certain... sizzle to the experience. I find it pairs well with the screams. Like wine and cheese."
+        return "An upgrade on the last room. Molten metal, poured slow enough to enjoy properly. He spent decades lecturing his congregation about restraint, then helped himself to whatever he liked first. Poetic, that his portions were finally decided for him."
 
       case -6: // Tapana
-        return "Tapana - the Heating Hell. Those stakes are quite the innovation. They enter through the feet and exit through the crown of the head. The souls cook from the inside out. Efficient, don't you think?"
+        return "One stake, heel to crown, and the body finishes the job itself from the inside. Elegant, I think. He built three towers on foundations he knew wouldn't hold and called the collapse an act of god. Something is finishing what he started too."
 
       case -7: // Pratapana
-        return "Pratapana - the Great Heating Hell. Those cauldrons are the size of mountains. Some souls have been boiling in there since before your civilization began. The bubbling sound is rather soothing."
+        return "A proper reduction takes centuries. Nobody down here is counting anymore. She used to call patience a virtue, usually right before using it to outlast anyone who disagreed with her. Seems only fair she has more of it now than she knows what to do with."
 
       case -8: // Avici
-        return "Avici - the Hell Without Interruption. My masterpiece. No respite, not even for a moment. Souls burn in isolation, forever. Some say it's cruel, but I prefer to think of it as... thorough."
+        return "My masterpiece, and I don't say that often. Not one pause, not one second of relief, ever. He spent his whole life insisting there was no excuse for rest. I happen to agree with him completely."
 
       // Cold hells
       case -9: // Arbuda
-        return "Arbuda - the Hell of Blisters. The first of the cold hells. Those blisters grow to the size of melons before they freeze solid. The souls here long for the fires of the hot hells. Ironic, isn't it?"
+        return "The first cold room, and already its newest guest is begging for the flames she was so glad to leave behind. The blisters swell like ripened fruit before the frost seals them shut. She built a career telling people pain was weakness if you let it show. Hers is on full display now, whether she likes it or not."
 
       case -10: // Nirarbuda
-        return "Nirarbuda - the Hell of Burst Blisters. When those frozen blisters burst, the ice crystals tear through flesh like glass. Some souls have been here so long they're more ice than flesh now."
+        return "When the blisters finally burst, the ice inside tears through the muscle like broken glass leaving the room. He spent his life bragging that nothing could break him. I'd say the argument is settled."
 
       case -11: // Atata
-        return "Atata - named for the sound of chattering teeth. Listen... 'at-at-at'... that's all they can say now. Their muscles tear from the violent shivering, only to freeze and tear again. Quite the rhythm."
+        return "Named for the sound the teeth make against the frost. At-at-at, over and over, which is more than she ever let anyone else get a word in edgewise while she was alive. The muscle tears, the cold seals it, then it tears again. A rhythm, if you're patient. I have nothing but time."
 
       case -12: // Hahava
-        return "Hahava - where souls can only cry 'ha-ha-va' as they freeze. Their breath crystallizes in the air, creating beautiful patterns before it falls and shatters. I find it rather artistic."
+        return "All that's left of his voice is 'ha-ha-va,' which strikes me as fitting, since he spent his life laughing at people for considerably less. The breath freezes into little shapes on the way out. I've kept a few of the prettier ones, if you'd like to see."
 
       case -13: // Huhuva
-        return "Huhuva - the blue hell. Their blood freezes in their veins, you know. The sound it makes as it cracks the vessels... like breaking thin glass. Quite delicate, really."
+        return "The blue room. Blood freezes in the vein and cracks it from the inside, a sound not unlike a windowpane going. She used to pride herself on never letting anything get under her skin. Now nothing can get out."
 
       case -14: // Utpala
-        return "Utpala - the Blue Lotus Hell. Named for the color the flesh turns. Blue like the deepest ice. Their eyeballs freeze solid in their sockets. They can still see, of course. I made sure of that."
+        return "Named for the color the skin turns on its way out. The eyes freeze solid in their sockets and keep working regardless. He spent a long career insisting he never saw what was happening right in front of him. I've made sure that excuse won't hold up much longer."
 
       case -15: // Padma
-        return "Padma - the Lotus Hell. Their skin cracks in patterns like lotus flowers. Some find beauty in suffering, don't you think? The blood freezes as it seeps out, creating crimson ice sculptures."
+        return "The skin splits into patterns like lotus petals as it freezes, and the blood that escapes hardens into small red sculptures. She spent her career calling suffering beautiful whenever it wasn't hers. I've simply given her an exhibit of her own."
 
       case -16: // Pundarika
-        return "Pundarika - the Great Lotus Hell. The coldest of all. Even thought itself begins to freeze here. Souls exist in a state of semi-conscious agony for eons. A fitting end to our little tour, wouldn't you say?"
+        return "The coldest of them, where even thought slows and eventually stops. What's left just sits, half aware, for longer than your calendars have numbers for. He used to say nothing ever got to him. I'd call this a fair test of that claim, and a fitting place to end the tour."
 
       default:
-        return "This realm is... special. I've crafted it with particular attention to detail. The suffering here is... exquisite. I do hope you're taking notes."
+        return "This particular pit requires total darkness to do its work properly. What shape the flesh takes down there is a private matter between the architecture and whoever earned it. Everyone discovers something different about themselves in the dark. Rarely something worth knowing."
     }
   }
 

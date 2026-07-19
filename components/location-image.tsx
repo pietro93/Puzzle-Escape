@@ -18,8 +18,8 @@ export default function LocationImage({ setting, customImage, hintImage, level, 
       return customImage
     }
 
-    // Special case for level 13 color palette
-    if (setting === "mansion" && level === 13) {
+    // Special case for level 15 color palette
+    if (setting === "mansion" && level === 15) {
       return "/images/color-palette/color_palette.webp"
     }
 
@@ -59,7 +59,7 @@ export default function LocationImage({ setting, customImage, hintImage, level, 
   const isGif = imageUrl?.endsWith(".gif")
 
   // Special styling for the color palette image
-  const isColorPalette = setting === "mansion" && level === 13
+  const isColorPalette = setting === "mansion" && level === 15
 
   return (
     <div className="w-40 h-40 relative pixelated-container">

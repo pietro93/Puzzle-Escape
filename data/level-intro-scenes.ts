@@ -54,37 +54,33 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   // Zone 2: Mansion - The Butler
   11: {
     character: "butler",
-    lines: [`"I am looking for a spice," the butler murmurs, scanning the shelves.`, `"Must be somewhere around here."`],
+    lines: [`"These were some of the master's favorite books," the butler explains, gesturing to the shelf.`, `"I myself was particularly fond of 'The Third Eye.' The master said it provided a unique perspective on the other works."`],
   },
   12: {
+    character: "butler",
+    lines: [`"This belonged to the master's collection of culinary curiosities," the butler explains with a slight bow.`, `"Assemble the pieces to reveal the hidden message."`],
+  },
+  13: {
+    character: "butler",
+    lines: [`"I am looking for a spice," the butler murmurs, scanning the shelves.`, `"Must be somewhere around here."`],
+  },
+  14: {
     character: "butler",
     lines: [
       `"This timepiece has been in the master's family for generations," the butler explains, his gloved finger tracing the numerals on the clock's face.`,
       `"The master was fond of creating sequences with these times. He left this particular sequence unfinished. Can you determine what comes next?"`,
     ],
   },
-  13: {
+  15: {
     character: "butler",
     lines: [
       `"This palette belonged to a rather renowned French painter," the butler explains, presenting a curious arrangement of colors.`,
       `"The labels remain in his native tongue. I trust that will not prove an insurmountable obstacle."`,
     ],
   },
-  14: {
-    character: "butler",
-    lines: [`"This belonged to the master's collection of culinary curiosities," the butler explains with a slight bow.`, `"Assemble the pieces to reveal the hidden message."`],
-  },
-  15: {
-    character: "butler",
-    lines: [
-      `"This wing was sealed for years," the butler says, unlocking a door you hadn't noticed before.`,
-      `"The master gathered these pieces over a long and curious life. Each has its own history, if you care to ask."`,
-      `"Wander as you please. I will be nearby, should you have questions about what you find."`,
-    ],
-  },
   16: {
     character: "butler",
-    lines: [`"These were some of the master's favorite books," the butler explains, gesturing to the shelf.`, `"I myself was particularly fond of 'The Third Eye.' The master said it provided a unique perspective on the other works."`],
+    lines: [`The butler adjusts his bow tie.`, `"I have a mathematical problem for you, if you would be so kind."`, `"The master was quite fond of these little brain teasers. Can you determine the value of knife plus fork plus spoon?"`],
   },
   17: {
     character: "butler",
@@ -92,19 +88,23 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   18: {
     character: "butler",
-    lines: [`The butler adjusts his bow tie.`, `"I have a mathematical problem for you, if you would be so kind."`, `"The master was quite fond of these little brain teasers. Can you determine the value of knife plus fork plus spoon?"`],
-  },
-  19: {
-    character: "butler",
     lines: [`"This is Count Papagalul," the butler says, gesturing to the parrot's cage.`, `"He's quite the conversationalist, though his manners leave something to be desired. Be careful, he bites."`],
   },
-  20: {
+  19: {
     character: "butler",
     lines: [
       `"I do hope you are prepared for a challenge," the butler says, gesturing toward the library archive.`,
       `"Before you lies the family tree of the House of Morvane — and its secrets."`,
       `"Somewhere in these records is a forgotten heir. One who ruled briefly, and infamously."`,
       `"The answer lies in the books, and in the tree itself. I trust you have a keen eye for genealogy."`,
+    ],
+  },
+  20: {
+    character: "butler",
+    lines: [
+      `"This wing was sealed for years," the butler says, unlocking a door you hadn't noticed before.`,
+      `"The master gathered these pieces over a long and curious life. Each has its own history, if you care to ask."`,
+      `"Wander as you please. I will be nearby, should you have questions about what you find."`,
     ],
   },
 

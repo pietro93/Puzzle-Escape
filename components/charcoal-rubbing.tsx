@@ -26,6 +26,13 @@ interface CharcoalRubbingProps {
   onStrokeEnd?: (snapshot: string) => void
   /** Whether the player has unlocked zoom (the Loupe) — same gate as PaintingInspector, so every statue/painting view behaves identically. */
   zoomEnabled?: boolean
+  /**
+   * Fired on every scratchAt call that actually lands on the canvas, with
+   * both the raw client point (for positioning a screen-space effect) and
+   * the point normalized to 0-1 canvas-space (for gating the effect to a
+   * specific region of the image, independent of zoom/pan).
+   */
+  onScratch?: (client: { x: number; y: number }, normalized: { x: number; y: number }) => void
 }
 
 /**
@@ -36,7 +43,17 @@ interface CharcoalRubbingProps {
  * so the reveal only progresses while that specific drag is in flight.
  */
 const CharcoalRubbing = forwardRef<CharcoalRubbingHandle, CharcoalRubbingProps>(function CharcoalRubbing(
-  { cleanSrc, revealedSrc, alt, className = "", brushRadius = 22, initialSnapshot, onStrokeEnd, zoomEnabled = true },
+  {
+    cleanSrc,
+    revealedSrc,
+    alt,
+    className = "",
+    brushRadius = 22,
+    initialSnapshot,
+    onStrokeEnd,
+    zoomEnabled = true,
+    onScratch,
+  },
   ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -93,6 +110,7 @@ const CharcoalRubbing = forwardRef<CharcoalRubbingHandle, CharcoalRubbingProps>(
         x: ((clientPoint.x - rect.left) / rect.width) * canvas.width,
         y: ((clientPoint.y - rect.top) / rect.height) * canvas.height,
       }
+      onScratch?.(clientPoint, { x: point.x / canvas.width, y: point.y / canvas.height })
       ctx.globalCompositeOperation = "destination-out"
       ctx.lineCap = "round"
       ctx.lineJoin = "round"

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "book_a",
+    "width": 69,
+    "height": 285,
+    "x": 793,
+    "y": 547,
+    "centerX": 827.5
+  },
+  {
+    "name": "book_b",
+    "width": 77,
+    "height": 285,
+    "x": 697,
+    "y": 548,
+    "centerX": 735.5
+  },
+  {
+    "name": "book_c",
+    "width": 76,
+    "height": 286,
+    "x": 608,
+    "y": 548,
+    "centerX": 646.0
+  },
+  {
+    "name": "book_d",
+    "width": 76,
+    "height": 285,
+    "x": 516,
+    "y": 546,
+    "centerX": 554.0
+  },
+  {
+    "name": "book_e",
+    "width": 75,
+    "height": 287,
+    "x": 422,
+    "y": 546,
+    "centerX": 459.5
+  },
+  {
+    "name": "book_f",
+    "width": 78,
+    "height": 288,
+    "x": 328,
+    "y": 546,
+    "centerX": 367.0
+  },
+  {
+    "name": "book_g",
+    "width": 70,
+    "height": 279,
+    "x": 242,
+    "y": 552,
+    "centerX": 277.0
+  },
+  {
+    "name": "book_h",
+    "width": 75,
+    "height": 287,
+    "x": 146,
+    "y": 548,
+    "centerX": 183.5
+  },
+  {
+    "name": "book_i",
+    "width": 75,
+    "height": 286,
+    "x": 54,
+    "y": 546,
+    "centerX": 91.5
+  }
+]

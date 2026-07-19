@@ -10,6 +10,8 @@ interface ItemDragTrayProps {
   onDragMove?: (item: string, point: { x: number; y: number } | null) => void
   /** Fires once when the drag ends, with the client-space release point. */
   onDrop: (item: string, point: { x: number; y: number }) => void
+  /** Items whose tray tile should show a persistent glow — for permanent, one-shot unlocks (e.g. the Loupe) where the tile itself is the only lasting sign the effect is active. */
+  activeItems?: string[]
   className?: string
 }
 
@@ -22,7 +24,7 @@ interface ItemDragTrayProps {
  * continuous tools (e.g. the charcoal), act on every onDragMove point while
  * the drag is in progress.
  */
-export default function ItemDragTray({ items, icons, onDragMove, onDrop, className = "" }: ItemDragTrayProps) {
+export default function ItemDragTray({ items, icons, onDragMove, onDrop, activeItems = [], className = "" }: ItemDragTrayProps) {
   const [dragItem, setDragItem] = useState<string | null>(null)
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null)
   const draggingRef = useRef<string | null>(null)
@@ -72,7 +74,11 @@ export default function ItemDragTray({ items, icons, onDragMove, onDrop, classNa
             onPointerMove={handlePointerMove}
             onPointerUp={endDrag}
             onPointerCancel={endDrag}
-            className="w-14 h-14 flex items-center justify-center bg-gray-800/80 hover:bg-gray-700 rounded-lg border border-gray-700 touch-none"
+            className={`w-14 h-14 flex items-center justify-center bg-gray-800/80 hover:bg-gray-700 rounded-lg border touch-none ${
+              activeItems.includes(item)
+                ? "border-amber-400/70 shadow-[0_0_10px_2px_rgba(217,180,100,0.5)]"
+                : "border-gray-700"
+            }`}
             aria-label={`Drag ${item}`}
           >
             {icons[item] ? (

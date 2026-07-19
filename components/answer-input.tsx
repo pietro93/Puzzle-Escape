@@ -50,7 +50,7 @@ export default function AnswerInput({
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           placeholder="Enter your answer..."
-          className={`w-full px-4 py-3 bg-gray-900/80 border-2 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-600 font-mono text-center ${
+          className={`w-full pl-4 pr-20 py-3 bg-gray-900/80 border-2 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-600 font-mono text-center text-sm sm:text-base ${
             isCorrect
               ? "border-green-600 focus:ring-green-600"
               : isWrong

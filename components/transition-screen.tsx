@@ -59,6 +59,16 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
   }
 
   const updateImageForParagraph = (paragraphIndex: number, transition: Transition) => {
+    const override = transition.paragraphImages?.[paragraphIndex]
+    if (override) {
+      setCurrentImage(override)
+      setFadeIn(false)
+      setTimeout(() => {
+        setFadeIn(true)
+      }, 50)
+      return
+    }
+
     const totalParagraphs = transition.paragraphs.length
 
     if (paragraphIndex < Math.floor(totalParagraphs / 4)) {

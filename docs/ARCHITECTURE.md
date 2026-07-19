@@ -140,6 +140,9 @@ auditing any dialogue line.
   Don't assume missing feedback = bug without checking whether the win condition is
   even meant to live in that component.
 - `docs/LEVEL_DESIGN.md` entries can drift behind the actual shipped mechanic when a
-  puzzle gets reworked (this happened with Level 11) — treat it as a design intent
-  doc that needs occasional reconciliation against `data/puzzles-N.ts` and the real
-  component, not as ground truth on its own.
+  puzzle gets reworked (this happened with the mansion spice anagram puzzle, now
+  Level 13) — treat it as a design intent doc that needs occasional reconciliation
+  against `data/puzzles-N.ts` and the real component, not as ground truth on its own.
+  Mansion levels (11-20) were reordered 2026-07 for difficulty pacing — check the
+  `level:` field in `data/puzzles-2.ts` before trusting any level number cited
+  elsewhere, including in older docs.

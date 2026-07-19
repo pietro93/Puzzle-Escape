@@ -100,53 +100,7 @@ This document details the mechanics, visual setup, player interactions, step-by-
 - **Character Mentor:** The Butler
 - **Aesthetic:** Polished mahogany libraries, bookshelves, Victorian wallpapers, and gold clock faces.
 
-### Level 11: Anagram Spice
-- **What it Consists of:** A pantry of 21 draggable spice jars (two scrollable carousels), a plate flanked by two hands, and two pedestal "arches" of glowing slots curving out from the plate — the left arch already holds a fixed S, the right arch already holds a fixed A.
-- **How to Solve (Player Journey):**
-  1. Drag any two jars onto the plate. Each hand turns independently if the jar pair contains a letter belonging to its word: the left hand reacts to T/R/A (completing `S _ _ _` into STAR), the right hand reacts to N/I/E/S (completing `A _ _ _ _` into ANISE). A jar with no relevant letter leaves both hands still.
-  2. Use a jar you've already proven is a dud as a "control" partner to isolate the effect of each new jar you test.
-  3. Optionally rest confirmed jars on the matching pedestal to keep track — pedestal slot order is cosmetic, only the letters tested on the plate matter.
-  4. Once all relevant letters are identified, combine them into the spice's name (ANISE) and the shape its pods are known for (STAR) to form the final two-word answer.
-- **Answer:** `star anise`
-
-### Level 12: Clock Roman Numerals
-- **What it Consists of:** A sequence of clock times represented in Roman numerals: `III`, `XII:IX`, `XXI:XVIII`, `VI:XXVII`.
-- **How to Solve (Player Journey):**
-  1. Convert the Roman numerals to standard numbers:
-     - `III` $\rightarrow$ 3:00
-     - `XII:IX` $\rightarrow$ 12:09
-     - `XXI:XVIII` $\rightarrow$ 21:18
-     - `VI:XXVII` $\rightarrow$ 6:27
-  2. Analyze the mathematical increments: the hour adds 9 hours (looping on a 12-hour clock), and the minutes add 9 minutes.
-  3. Calculate the next step: `6 + 9 = 15` (XV) for hours, and `27 + 9 = 36` (XXXVI) for minutes.
-- **Answer:** `XV:XXXVI`
-
-### Level 13: Color Palette GPS
-- **What it Consists of:** A mixing palette UI containing primary and secondary color values.
-- **How to Solve (Player Journey):**
-  1. Add and subtract color values to solve the missing slots.
-  2. Find Pink by adding Red and White together.
-  3. Find Green by subtracting Red from Orange to get Yellow, then adding Azure and Black to get Blue, and mixing Yellow and Blue.
-  4. The color values provide numerical coordinates pointing to a specific island off the coast of Australia.
-- **Answer:** `Vampire Island`
-
-### Level 14: Curious Jigsaw
-- **What it Consists of:** A scrambled 3x3 sliding tile puzzle box.
-- **How to Solve (Player Journey):**
-  1. Slide the puzzle blocks to reassemble the full image.
-  2. The completed image reveals a spiral shell.
-  3. The hint "EAT ME" reveals it is a French culinary delicacy.
-- **Answer:** `escargot`
-
-### Level 15: Patricia's Portrait
-- **What it Consists of:** A dark portrait painting of the Master's first love, Patricia.
-- **How to Solve (Player Journey):**
-  1. Examine the canvas under close focus.
-  2. Detect the upside-down Latin text written in faint brushstrokes above her head: `"Vita et Mors"`.
-  3. Translate the Latin phrase to English.
-- **Answer:** `life and death`
-
-### Level 16: Third Eye Readings
+### Level 11: Third Eye Readings
 - **What it Consists of:** A bookshelf containing five book titles: "The Third Eye", "The Great Gatsby", "Moby Dick", "Hamlet", "Frankenstein".
 - **How to Solve (Player Journey):**
   1. Focus on the clue "The Third Eye provides a unique perspective".
@@ -158,6 +112,56 @@ This document details the mechanics, visual setup, player interactions, step-by-
      - (And others depending on specific book files in data)
   3. Rearrange or spell the extracted letters to form the answer.
 - **Answer:** `TEARS`
+- *Slated for a redesign to be more interactive — currently a static read.*
+
+### Level 12: Curious Jigsaw
+- **What it Consists of:** A scrambled 3x3 sliding tile puzzle box.
+- **How to Solve (Player Journey):**
+  1. Slide the puzzle blocks to reassemble the full image.
+  2. The completed image reveals a spiral shell.
+  3. The hint "EAT ME" reveals it is a French culinary delicacy.
+- **Answer:** `escargot`
+
+### Level 13: Anagram Spice
+- **What it Consists of:** A pantry of 21 draggable spice jars (two scrollable carousels), a plate flanked by two hands, and two pedestal "arches" of glowing slots curving out from the plate — the left arch already holds a fixed S, the right arch already holds a fixed A.
+- **How to Solve (Player Journey):**
+  1. Drag any two jars onto the plate. Each hand turns independently if the jar pair contains a letter belonging to its word: the left hand reacts to T/R/A (completing `S _ _ _` into STAR), the right hand reacts to N/I/E/S (completing `A _ _ _ _` into ANISE). A jar with no relevant letter leaves both hands still.
+  2. Use a jar you've already proven is a dud as a "control" partner to isolate the effect of each new jar you test.
+  3. Optionally rest confirmed jars on the matching pedestal to keep track — pedestal slot order is cosmetic, only the letters tested on the plate matter.
+  4. Once all relevant letters are identified, combine them into the spice's name (ANISE) and the shape its pods are known for (STAR) to form the final two-word answer.
+- **Answer:** `star anise`
+
+### Level 14: Clock Roman Numerals
+- **What it Consists of:** A sequence of clock times represented in Roman numerals: `III`, `XII:IX`, `XXI:XVIII`, `VI:XXVII`.
+- **How to Solve (Player Journey):**
+  1. Convert the Roman numerals to standard numbers:
+     - `III` $\rightarrow$ 3:00
+     - `XII:IX` $\rightarrow$ 12:09
+     - `XXI:XVIII` $\rightarrow$ 21:18
+     - `VI:XXVII` $\rightarrow$ 6:27
+  2. Analyze the mathematical increments: the hour adds 9 hours (looping on a 12-hour clock), and the minutes add 9 minutes.
+  3. Calculate the next step: `6 + 9 = 15` (XV) for hours, and `27 + 9 = 36` (XXXVI) for minutes.
+- **Answer:** `XV:XXXVI`
+
+### Level 15: Color Palette GPS
+- **What it Consists of:** A mixing palette UI containing primary and secondary color values.
+- **How to Solve (Player Journey):**
+  1. Add and subtract color values to solve the missing slots.
+  2. Find Pink by adding Red and White together.
+  3. Find Green by subtracting Red from Orange to get Yellow, then adding Azure and Black to get Blue, and mixing Yellow and Blue.
+  4. The color values provide numerical coordinates pointing to a specific island off the coast of Australia.
+- **Answer:** `Vampire Island`
+
+### Level 16: Silverware Math
+- **What it Consists of:** A set of algebraic equations containing spoons, knives, and forks. *[Update: Transforming into an interactive "Table Setting" UI where players arrange the Master's silverware on a dining table to balance values.]*
+- **How to Solve (Player Journey):**
+  1. Arrange 4 spoons on the table to balance the first equation to find `Spoon = 10`.
+  2. Arrange forks and knives visually to deduce the remaining values:
+     - `Fork = 25`
+     - `Knife = 100`
+  3. Sum the values of the final table setting: `Knife + Fork + Spoon = 100 + 25 + 10 = 135`.
+- **Answer:** `135`
+- *Slated for a redesign to be more interactive, math to be tuned slightly harder.*
 
 ### Level 17: Pitch Dark Switches
 - **What it Consists of:** A pitch-black screen with six toggleable light switches and a compass.
@@ -167,17 +171,7 @@ This document details the mechanics, visual setup, player interactions, step-by-
   3. Read the letter sequence illuminated by the active bulbs.
 - **Answer:** `RANDOM` (Dynamically matches the randomly generated letter sequence)
 
-### Level 18: Silverware Math
-- **What it Consists of:** A set of algebraic equations containing spoons, knives, and forks. *[Update: Transforming into an interactive "Table Setting" UI where players arrange the Master's silverware on a dining table to balance values.]*
-- **How to Solve (Player Journey):**
-  1. Arrange 4 spoons on the table to balance the first equation to find `Spoon = 10`.
-  2. Arrange forks and knives visually to deduce the remaining values:
-     - `Fork = 25`
-     - `Knife = 100`
-  3. Sum the values of the final table setting: `Knife + Fork + Spoon = 100 + 25 + 10 = 135`.
-- **Answer:** `135`
-
-### Level 19: Count Papagalul
+### Level 18: Count Papagalul
 - **What it Consists of:** A talking parrot in a cage that repeats words.
 - **How to Solve (Player Journey):**
   1. Type specific voice prompts to the parrot.
@@ -185,7 +179,7 @@ This document details the mechanics, visual setup, player interactions, step-by-
   3. Identify the musical group behind the song.
 - **Answer:** `daft punk`
 
-### Level 20: Mansion Genealogy
+### Level 19: Mansion Genealogy
 - **What it Consists of:** An interactive library drawer with multiple historical text scrolls detailing the House of Morvane.
 - **How to Solve (Player Journey):**
   1. Open and read each book in the archive to find clues about the rulers.
@@ -195,6 +189,16 @@ This document details the mechanics, visual setup, player interactions, step-by-
      - Ruled for only one year.
      - Had the nickname "The Accursed".
 - **Answer:** `Lady Niamh the Accursed`
+
+### Level 20: The Mansion Gallery (finale)
+- **What it Consists of:** A multi-room wing of the mansion housing the Master's art collection, plus Pope Gregory's alcove (statue + stone tablet listing the Seven Deadly Sins in order), and eight collectible items scattered across the Foyer, Banquet Hall, Stillwater Room, Drowsing Parlor, Golden Hall, Crimson Room, and Ember Room.
+- **How to Solve (Player Journey):**
+  1. Collect the Loupe (Foyer), Coin (Stillwater Room), Ewer + Charcoal (Banquet Hall), Drape (Drowsing Parlor), Holy Water (Gregory's Statue), Ladder (Gregory's Alcove), Caliche filled with salt (Golden Hall chest), and Oil Lamp (Crimson Room).
+  2. Use items on specific rooms/objects to reveal hidden art or clues: the Ladder unlocks the Ember Room's high point, the Drape + Charcoal produce a rubbing on the Stillwater statue, the Caliche's salt purifies a blood stain, the Loupe zooms in on paintings in the Green Room and Drowsing Parlor, and restoring the Flower Room's watering system (via a large water container from the fountain) unlocks another room.
+  3. Note Gregory's tablet order for the Seven Deadly Sins, then match each piece of art (via its title, the Butler's commentary, imagery, and room decor) to one of the sins.
+  4. Assemble the sin-ordered fragments into the final Latin phrase.
+- **Answer:** `mors et vita in manibus aurigae temerarii` (also accepts the version with a trailing period)
+- The largest and most involved puzzle in the game — the intended capstone of the Mansion zone (formerly Level 15, moved here in the 2026-07 level reorder for difficulty pacing).
 
 ---
 

@@ -45,8 +45,8 @@ type ConnectionTarget = Room | typeof BACK
 const ROOM_CONNECTIONS: Record<Room, Partial<Record<Direction, ConnectionTarget>>> = {
   foyer: { north: "saturn", east: "foyerAnnex", west: "thesin" },
   foyerAnnex: { west: "foyer", east: "narcissus", north: "gregory" },
-  gregory: { south: "foyer", east: "gregoryAnnex", north: "ivan" },
-  gregoryAnnex: { west: "gregory", north: "ivan", south: BACK },
+  gregory: { south: "foyer", east: "gregoryAnnex" },
+  gregoryAnnex: { west: "gregory", north: "ivan" },
   invidia: { south: BACK },
   ivan: { south: BACK },
   narcissus: { west: BACK },
@@ -340,13 +340,11 @@ const ROOM_ITEM_PICKUPS: Partial<Record<Room, { item: string; overlaySrc: string
     hotspot: { left: (520 / 592) * 100, top: (637 / 913) * 100, width: (35 / 592) * 100, height: (58 / 913) * 100 },
     message: "A small clay caliche, empty and dusty.",
   },
-  // Only shown once emberOpen — see the itemPickup gating in render below —
-  // since the cabinet it sits in isn't reachable until the room opens up.
   thesin: {
     item: "Caustic Agent",
     overlaySrc: "/images/paintings/ember_room_caustic_agent.webp",
     hotspot: { left: (58 / 495) * 100, top: (449 / 644) * 100, width: (32 / 495) * 100, height: (111 / 644) * 100 },
-    message: "A bottle of caustic agent, a golden skull etched on the label slowly melting away in a puddle of acid.",
+    message: "The cabinet door swings open on a single bottle, tucked away like it wasn't meant to be found. A golden skull is etched on the label, slowly melting away in a puddle of acid.",
   },
 }
 
@@ -367,12 +365,17 @@ const ART_ITEM_PICKUPS: Partial<Record<Room, { item: string; overlaySrc: string;
 // else (no inventory change), repeatable indefinitely. Same generic
 // dialogue modal as the item pickups below, just without the collectItem
 // side effect. hotspot is percent of ROOM_BACKGROUNDS' source image.
-const ROOM_OBSERVATIONS: Partial<Record<Room, { hotspot: Rect; message: string }[]>> = {
+// unlocksSolution: reading this is the interaction that ungates the
+// answer-input panel (see onSolve wiring in the observations render below) —
+// only the gregory stone tablet has this, since it's the clue that lets the
+// player start piecing the rest of the puzzle together.
+const ROOM_OBSERVATIONS: Partial<Record<Room, { hotspot: Rect; message: string; unlocksSolution?: boolean }[]>> = {
   gregory: [
     {
       hotspot: { left: (427 / 560) * 100, top: (323 / 596) * 100, width: (63 / 560) * 100, height: (43 / 596) * 100 },
       message:
         "Set into the stone, in tight Roman capitals. SEPTEM VITIA CAPITALIA: VANAGLORIA, INVIDIA, IRA, TRISTITIA, AVARITIA, GVLA, LVXVRIA.",
+      unlocksSolution: true,
     },
   ],
   foyer: [
@@ -447,12 +450,22 @@ const NAV_HOTSPOTS: Partial<Record<Room, Partial<Record<Direction, Rect>>>> = {
   gregory: {
     south: { left: (-22 / 560) * 100, top: (522 / 596) * 100, width: (604 / 560) * 100, height: (148 / 596) * 100 },
   },
+  // The spiral stairway up to the crimson study, right wall. Pixel-aligned
+  // to saint_alcove_right.webp (469x600).
+  gregoryAnnex: {
+    north: { left: (-21 / 469) * 100, top: (225 / 600) * 100, width: (130 / 469) * 100, height: (202 / 600) * 100 },
+  },
   // foyer's own east/west arrows stay put here too (see the comment above) —
   // only the two real doors, to thesin and to saturn, get phantom hotspots.
   // Pixel-aligned to foyer_left.webp (494x600).
   foyer: {
     west: { left: (58 / 494) * 100, top: (171 / 600) * 100, width: (63 / 494) * 100, height: (307 / 600) * 100 },
     north: { left: (284 / 494) * 100, top: (198 / 600) * 100, width: (106 / 494) * 100, height: (187 / 600) * 100 },
+  },
+  // The stairway up to the saint's alcove, right wall. Pixel-aligned to
+  // foyer_right.webp (494x600).
+  foyerAnnex: {
+    north: { left: (-5 / 494) * 100, top: (60 / 600) * 100, width: (188 / 494) * 100, height: (218 / 600) * 100 },
   },
   thesin: {
     // Plain wood door, left wall.
@@ -470,7 +483,7 @@ const NAV_HOTSPOTS: Partial<Record<Room, Partial<Record<Direction, Rect>>>> = {
   // is keyed "north" since that's the compass direction that resolves via
   // BACK, not a claim about where the hotspot sits on screen).
   floral: {
-    north: { left: (-2 / 572) * 100, top: (728 / 833) * 100, width: (580 / 572) * 100, height: (112 / 833) * 100 },
+    north: { left: (-27 / 572) * 100, top: (819 / 833) * 100, width: (845 / 572) * 100, height: (108 / 833) * 100 },
   },
 }
 
@@ -531,6 +544,9 @@ const ITEM_ICONS: Record<string, string> = {
   Ewer: "/images/paintings/ewer.webp",
   "Caustic Agent": "/images/paintings/caustic_agent.webp",
   "Garden Chisel": "/images/paintings/garden_chisel.webp",
+  Drape: "/images/paintings/drape.webp",
+  Coin: "/images/paintings/coin.webp",
+  "Holy Water": "/images/paintings/holy_water.webp",
 }
 const CALICHE_EMPTY_ICON = "/images/paintings/caliche.webp"
 const CALICHE_FILLED_ICON = "/images/paintings/caliche_salt.webp"
@@ -542,13 +558,13 @@ const CALICHE_FILLED_ICON = "/images/paintings/caliche_salt.webp"
 // render below).
 const ART_HOTSPOTS: Partial<Record<Room, Rect>> = {
   gregory: { left: (321 / 560) * 100, top: (156 / 596) * 100, width: (75 / 560) * 100, height: (220 / 596) * 100 },
-  invidia: { left: 43, top: 20, width: 45, height: 21 },
+  invidia: { left: (226 / 704) * 100, top: (309 / 893) * 100, width: (255 / 704) * 100, height: (382 / 893) * 100 },
   ivan: { left: (122 / 774) * 100, top: (71 / 797) * 100, width: (531 / 774) * 100, height: (390 / 797) * 100 },
   narcissus: { left: 30, top: 43, width: 33, height: 44 },
   thesin: { left: (215 / 495) * 100, top: (58 / 644) * 100, width: (98 / 495) * 100, height: (123 / 644) * 100 },
   desidia: { left: 53, top: 27, width: 35, height: 19 },
-  saturn: { left: 33, top: 15, width: 38, height: 28 },
-  mammon: { left: 19, top: 32, width: 59, height: 36 },
+  saturn: { left: (205 / 558) * 100, top: (142 / 771) * 100, width: (144 / 558) * 100, height: (226 / 771) * 100 },
+  mammon: { left: (162 / 592) * 100, top: (270 / 913) * 100, width: (194 / 592) * 100, height: (302 / 913) * 100 },
 }
 
 // thesin's plaque sits at the same spot in both ember_room_shut.webp and
@@ -556,13 +572,16 @@ const ART_HOTSPOTS: Partial<Record<Room, Rect>> = {
 // only readable once the Ladder lets the player get close enough (see
 // emberOpen gating in render below).
 const PLAQUE_HOTSPOTS: Partial<Record<Room, Rect>> = {
-  invidia: { left: 47, top: 42, width: 33, height: 3 },
+  // Placeholder rect, pending calibration against saint_alcove_left.webp —
+  // see the ghost-div-placement cleanup pass tracked for all rooms.
+  gregory: { left: 45, top: 68, width: 25, height: 5 },
+  invidia: { left: (292 / 704) * 100, top: (760 / 893) * 100, width: (123 / 704) * 100, height: (26 / 893) * 100 },
   ivan: { left: (324 / 774) * 100, top: (470 / 797) * 100, width: (131 / 774) * 100, height: (37 / 797) * 100 },
   narcissus: { left: 33, top: 87, width: 25, height: 4 },
   thesin: { left: (248 / 495) * 100, top: (257 / 644) * 100, width: (54 / 495) * 100, height: (21 / 644) * 100 },
   desidia: { left: 55, top: 47, width: 30, height: 6 },
-  saturn: { left: 39, top: 50, width: 24, height: 4 },
-  mammon: { left: 32, top: 68, width: 35, height: 3 },
+  saturn: { left: (246 / 558) * 100, top: (400 / 771) * 100, width: (70 / 558) * 100, height: (24 / 771) * 100 },
+  mammon: { left: (212 / 592) * 100, top: (614 / 913) * 100, width: (96 / 592) * 100, height: (40 / 913) * 100 },
 }
 
 // Reprojects a hotspot rect defined in source-image percent onto the
@@ -680,10 +699,13 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
   const [ivanSalted, setIvanSalted] = useState(false)
   const [ivanCleaned, setIvanCleaned] = useState(false)
   // Mammon's gold resin: the Caustic Agent softens it first, then the
-  // Garden Chisel scrapes it away for good — same two-flag convention as
-  // ivanSalted/ivanCleaned above.
+  // Garden Chisel scrapes it away — a continuous drag-scratch reveal, same
+  // mechanism (and same snapshot-persistence reasoning) as
+  // narcissusScratchSnapshot below. "Cleared" is derived from whether any
+  // scratching has happened yet, not tracked as its own flag.
   const [mammonSoftened, setMammonSoftened] = useState(false)
-  const [mammonCleared, setMammonCleared] = useState(false)
+  const [mammonScratchSnapshot, setMammonScratchSnapshot] = useState<string | null>(null)
+  const mammonCleared = !!mammonScratchSnapshot
   const [inspecting, setInspecting] = useState(false)
   const [showPlaqueInfo, setShowPlaqueInfo] = useState(false)
 
@@ -724,6 +746,15 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
   // the art viewport — null the rest of the time (not dragging it, or
   // dragging it somewhere else). Purely cosmetic, unlike loupeUnlocked.
   const [lampGlowPoint, setLampGlowPoint] = useState<{ x: number; y: number } | null>(null)
+  // Gold flecks kicked up by the Garden Chisel, purely cosmetic — spawned in
+  // handleGoldScratch (only for scratches landing in the bottom half of
+  // Mammon's canvas) and self-removed after their animation finishes. Same
+  // client-space/portal reasoning as lampGlowPoint above.
+  const [goldParticles, setGoldParticles] = useState<
+    { id: number; x: number; y: number; tx: number; ty: number }[]
+  >([])
+  const goldParticleId = useRef(0)
+  const lastGoldScratchAt = useRef(0)
   // A single dialogue line shown in a dismissible modal — same generic
   // pattern as prison-cell-puzzle.tsx (level 1): fires on every item pickup
   // (collect + show, one click, no separate confirm step) and on
@@ -753,6 +784,7 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
   // artViewportRef since this drop happens in the room view, not inside the
   // art inspector modal.
   const frogRef = useRef<HTMLDivElement>(null)
+  const mammonDoorRef = useRef<HTMLButtonElement>(null)
   // Drop target for the salt chest (mammon only) — doubles as the click
   // hotspot for opening/examining it, so both live on the same element.
   const chestRef = useRef<HTMLDivElement>(null)
@@ -798,6 +830,35 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
     return point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom
   }
 
+  // Spawns a small burst of gold flecks at a scratch point, but only when
+  // that point falls in the bottom half of the canvas — the chisel is only
+  // supposed to be turning up gold resin down there, not everywhere the
+  // player happens to drag it. Throttled since scratchAt (and therefore
+  // this) fires on every pointermove while dragging.
+  const handleGoldScratch = (client: { x: number; y: number }, normalized: { x: number; y: number }) => {
+    if (normalized.y < 0.5) return
+    const now = Date.now()
+    if (now - lastGoldScratchAt.current < 40) return
+    lastGoldScratchAt.current = now
+    const burst = Array.from({ length: 3 }, () => {
+      goldParticleId.current += 1
+      const angle = Math.random() * Math.PI * 2
+      const distance = 14 + Math.random() * 18
+      return {
+        id: goldParticleId.current,
+        x: client.x,
+        y: client.y,
+        tx: Math.cos(angle) * distance,
+        ty: Math.sin(angle) * distance - 10,
+      }
+    })
+    setGoldParticles((prev) => [...prev, ...burst])
+    const ids = burst.map((p) => p.id)
+    setTimeout(() => {
+      setGoldParticles((prev) => prev.filter((p) => !ids.includes(p.id)))
+    }, 550)
+  }
+
   // Charcoal is a continuous tool: every point along the drag scratches a
   // stroke, as long as the drag stays over the Narcissus rubbing and the
   // drape has already been applied. The Oil Lamp is a continuous tool too,
@@ -811,9 +872,16 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
         charcoalRubbingRef.current?.endStroke()
       }
     }
+    if (item === "Garden Chisel" && currentRoom === "mammon" && mammonSoftened) {
+      if (point) {
+        charcoalRubbingRef.current?.scratchAt(point)
+      } else {
+        charcoalRubbingRef.current?.endStroke()
+      }
+    }
     if (item === "Oil Lamp") {
       setLampGlowPoint(point && isOverArtViewport(point) ? point : null)
-      if (currentRoom === "thesin") {
+      if (currentRoom === "thesin" || currentRoom === "saturn") {
         lampRevealRef.current?.revealAt(point)
       }
     }
@@ -826,9 +894,17 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
     if (item === "Drape" && currentRoom === "narcissus" && !narcissusDraped) {
       setNarcissusDraped(true)
       setInventory((prev) => prev.filter((i) => i !== "Drape"))
+      setDialogue("You settle the drape over the statue's hips. Whatever Narcissus was so vain about, it's decently covered now.")
+    }
+    if (item === "Drape" && currentRoom === "gregory") {
+      setDialogue("You hold the drape up against the statue, but there's no reason to cover Gregory. Whatever this is for, it isn't here.")
+    }
+    if (item === "Charcoal" && currentRoom === "narcissus" && !narcissusDraped) {
+      setDialogue("There's nothing but bare, smooth marble to catch the charcoal. It needs something to press the paper against first.")
     }
     if (item === "Loupe" && !loupeUnlocked) {
       setLoupeUnlocked(true)
+      setDialogue("You hold the loupe up to the canvas. Details leap out that were invisible to the naked eye.")
     }
     if (item === "Caliche" && currentRoom === "ivan" && caliceContent === "salt" && !ivanSalted) {
       if (isPointInElement(ivanBloodRef.current, point)) {
@@ -846,6 +922,47 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
         setDialogue("The holy water dissolves the crusted salt, carrying the last of the stain away with it.")
       }
     }
+    // Plain water (Caliche or Ewer) reacts but doesn't finish the job — the
+    // salt visibly softens, then hardens right back, nudging the player
+    // toward something more than water without naming Holy Water outright.
+    if (
+      ((item === "Caliche" && caliceContent === "water") || (item === "Ewer" && ewerFilled)) &&
+      currentRoom === "ivan" &&
+      ivanSalted &&
+      !ivanCleaned
+    ) {
+      if (isPointInElement(ivanBloodRef.current, point)) {
+        setDialogue(
+          "The salt darkens and softens under the water, then dries again within moments, the stain untouched. Cleaning this properly may take something with more than water in it.",
+        )
+      }
+    }
+    // Holy Water or plain water tried before the salt crust exists — the
+    // stain is still fresh, not the "dried and lifted" state either tool
+    // actually works on.
+    if (
+      (item === "Holy Water" || (item === "Caliche" && caliceContent === "water") || (item === "Ewer" && ewerFilled)) &&
+      currentRoom === "ivan" &&
+      !ivanSalted
+    ) {
+      if (isPointInElement(ivanBloodRef.current, point)) {
+        setDialogue("The stain is still fresh and wet. Whatever this is just beads on the surface without lifting any of it.")
+      }
+    }
+    // Caustic Agent and the Garden Chisel could plausibly be tried on the
+    // bloodstain, but the player stops short before risking the painting.
+    if (item === "Caustic Agent" && currentRoom === "ivan" && !ivanCleaned) {
+      if (isPointInElement(ivanBloodRef.current, point)) {
+        setDialogue(
+          "You catch yourself before pouring it out. Whatever this agent would do to old, dried blood, it would do just as readily to the paint underneath it.",
+        )
+      }
+    }
+    if (item === "Garden Chisel" && currentRoom === "ivan" && !ivanCleaned) {
+      if (isPointInElement(ivanBloodRef.current, point)) {
+        setDialogue("You catch yourself before scraping. Enough force to lift dried blood off canvas would just as easily gouge through it.")
+      }
+    }
     if (item === "Caustic Agent" && currentRoom === "mammon" && !mammonSoftened) {
       if (isPointInElement(mammonGoldRef.current, point)) {
         setMammonSoftened(true)
@@ -855,10 +972,31 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
         setDialogue("You brush the caustic agent across the resin. It hisses faintly, softening to something like wax.")
       }
     }
-    if (item === "Garden Chisel" && currentRoom === "mammon" && mammonSoftened && !mammonCleared) {
+    // Water (Caliche or Ewer) or Holy Water tried on the sealed resin — a
+    // few drops rather than the whole container, so nothing is spent.
+    if (
+      (item === "Caliche" || item === "Holy Water" || item === "Ewer") &&
+      currentRoom === "mammon" &&
+      !mammonSoftened
+    ) {
       if (isPointInElement(mammonGoldRef.current, point)) {
-        setMammonCleared(true)
-        setDialogue("You work the chisel under the softened gold, scraping it away in long curls until the canvas beneath lies bare.")
+        setDialogue("You flick a few drops onto the resin. They bead and roll straight off, sealed too tight to reach anything underneath.")
+      }
+    }
+    if (item === "Garden Chisel" && currentRoom === "mammon" && !mammonSoftened) {
+      if (isPointInElement(mammonGoldRef.current, point)) {
+        setDialogue("The chisel does its best, but it's old and rusty, and the resin is hard and unyielding. It might need some help first.")
+      }
+    }
+    // Same water items, tried again once the resin's already soft — still
+    // the wrong approach, just for a different reason.
+    if (
+      (item === "Caliche" || item === "Holy Water" || item === "Ewer") &&
+      currentRoom === "mammon" &&
+      mammonSoftened
+    ) {
+      if (isPointInElement(mammonGoldRef.current, point)) {
+        setDialogue("A few drops land on the tacky resin and do nothing. It needs to be worked loose, not rinsed.")
       }
     }
   }
@@ -868,10 +1006,21 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
   // gregoryAnnex, the salt chest in mammon, and the Ladder in thesin all
   // react to a drop.
   const handleRoomItemDrop = (item: string, point: { x: number; y: number }) => {
+    if (item === "Loupe" && !loupeUnlocked && isPointInElement(roomViewRef.current, point)) {
+      setDialogue("Too small and far away to make anything out from here. You'd need to be looking at it up close.")
+    }
     if (item === "Coin" && currentRoom === "gregoryAnnex" && !doorUnlocked) {
       if (isPointInElement(frogRef.current, point)) {
         setDoorUnlocked(true)
         setDialogue("The frog's jaw snaps shut around the coin. Somewhere inside the door, gears turn, and the golden door creaks open.")
+      }
+    }
+    // The agent's known to eat through Mammon's gold resin, so it's a
+    // reasonable thing to try on a gold door — just not strong enough
+    // (or applied for long enough) to actually force it.
+    if (item === "Caustic Agent" && currentRoom === "gregoryAnnex" && !doorUnlocked) {
+      if (isPointInElement(frogRef.current, point) || isPointInElement(mammonDoorRef.current, point)) {
+        setDialogue("The agent could probably eat into the door's gilding, given enough time. Not enough to force it open today.")
       }
     }
     if (item === "Caliche" && currentRoom === "mammon" && chestOpen && caliceContent !== "salt") {
@@ -892,6 +1041,11 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
         // to carry around and place again.
         setInventory((prev) => prev.filter((i) => i !== "Ladder"))
         setDialogue("You lean the ladder against the wall. The painting is finally within reach.")
+      }
+    }
+    if (item === "Coin" && currentRoom === "narcissus") {
+      if (isPointInElement(poolRef.current, point)) {
+        setDialogue("You turn the coin over, thinking about tossing it in and making a wish. Then think better of it, and put it back in your pocket.")
       }
     }
     if ((item === "Caliche" || item === "Ewer") && currentRoom === "narcissus") {
@@ -998,9 +1152,7 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
     (art || currentRoom === "thesin") && plaqueHotspotSrc && mapToBox(plaqueHotspotSrc, background.aspect, focus)
   const showEmberRoomLadder = currentRoom === "thesin" && emberLadderPlaced
   const showStillwaterLayer = currentRoom === "narcissus"
-  // thesin's Caustic Agent sits in a cabinet that isn't reachable until the
-  // room opens up — same gating as the painting itself, see EMBER_ROOM_* above.
-  const itemPickup = currentRoom === "thesin" && !emberOpen ? undefined : ROOM_ITEM_PICKUPS[currentRoom]
+  const itemPickup = ROOM_ITEM_PICKUPS[currentRoom]
   const showItemPickup = itemPickup && !inventory.includes(itemPickup.item)
   const hasDrape = inventory.includes("Drape")
   const itemPickupHotspot = itemPickup && mapToBox(itemPickup.hotspot, background.aspect, focus)
@@ -1046,12 +1198,12 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
       : "A dark stain sits on top of the brushwork here, not blended into it, like something spilled after the painting was finished. It still smells faintly of copper."
   // Observation text for clicking the gold-sealed lower half of Mammon's
   // canvas — same "the covering isn't part of the art" signal as
-  // ivanBloodMessage above.
-  const mammonGoldMessage = mammonCleared
-    ? "The gold is gone here now, scraped back to the canvas. Whatever it was hiding is plain to see."
-    : mammonSoftened
-      ? "The resin has gone soft and tacky where you treated it, like wax left too long in the sun."
-      : "The lower half of the canvas lies beneath a hardened sheet of gold resin, sealed flat and opaque. Whatever's painted underneath is impossible to make out."
+  // ivanBloodMessage above. Only reachable before the Caustic Agent is
+  // applied: once softened, the view switches to the chisel's scratch
+  // reveal (see the mammon branch in the art-inspector render below), which
+  // doesn't have a click-to-observe hotspot.
+  const mammonGoldMessage =
+    "The lower half of the canvas lies beneath a hardened sheet of gold resin, sealed flat and opaque. Whatever's painted underneath is impossible to make out."
 
   const navigate = (direction: Direction) => {
     const target = connections[direction]
@@ -1069,7 +1221,6 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
       return
     }
     setInspecting(true)
-    if (currentRoom === "gregory") onSolve()
   }
 
   return (
@@ -1240,7 +1391,10 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
             return (
               <button
                 key={i}
-                onClick={() => setDialogue(obs.message)}
+                onClick={() => {
+                  setDialogue(obs.message)
+                  if (obs.unlocksSolution) onSolve()
+                }}
                 aria-label="Examine"
                 className="absolute rounded hover:bg-white/10 hover:ring-1 hover:ring-white/30 transition-colors"
                 style={{
@@ -1289,6 +1443,7 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
 
           {currentRoom === "gregoryAnnex" && !doorUnlocked && mammonDoorHotspot && (
             <button
+              ref={mammonDoorRef}
               onClick={() => setDialogue("A heavy golden door, sealed shut. The handles won't budge, no keyhole in sight.")}
               aria-label="Examine the door"
               className="absolute"
@@ -1539,10 +1694,51 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
                     zoomEnabled={loupeUnlocked}
                   />
                 </div>
+              ) : currentRoom === "saturn" ? (
+                <div ref={artViewportRef} className="w-full flex-1 min-h-0">
+                  <LampReveal
+                    ref={lampRevealRef}
+                    cleanSrc="/images/paintings/saturn-devouring-his-son.webp"
+                    revealedSrc="/images/paintings/saturn-devouring-his-son_reveal.webp"
+                    alt={art.alt}
+                    className="w-full h-full"
+                    zoomEnabled={loupeUnlocked}
+                  />
+                </div>
+              ) : currentRoom === "mammon" && mammonSoftened ? (
+                <div ref={artViewportRef} className="w-full flex-1 min-h-0">
+                  <CharcoalRubbing
+                    ref={charcoalRubbingRef}
+                    cleanSrc={MAMMON_ART_SOFTENED}
+                    revealedSrc={MAMMON_ART_CLEAR}
+                    alt={art.alt}
+                    className="w-full h-full"
+                    zoomEnabled={loupeUnlocked}
+                    initialSnapshot={mammonScratchSnapshot ?? undefined}
+                    onStrokeEnd={(snapshot) => {
+                      if (!mammonScratchSnapshot) {
+                        setDialogue(
+                          "You work the chisel under the softened gold, scraping it away in long curls.",
+                        )
+                      }
+                      setMammonScratchSnapshot(snapshot)
+                    }}
+                    onScratch={handleGoldScratch}
+                  />
+                </div>
               ) : (
                 <div ref={artViewportRef} className="w-full flex-1 min-h-0">
                   <PaintingInspector
-                    src={art.src}
+                    src={
+                      // Invidia and Desidia's hidden lettering is loupe-gated
+                      // (no separate item) — swap to the pre-existing `_x`
+                      // asset once the Loupe is unlocked, per docs/level-15-mansion-redesign.md §9.3.
+                      currentRoom === "invidia" && loupeUnlocked
+                        ? "/images/paintings/invidia_x.webp"
+                        : currentRoom === "desidia" && loupeUnlocked
+                          ? "/images/paintings/desidia_x.webp"
+                          : art.src
+                    }
                     alt={art.alt}
                     className="w-full h-full"
                     zoomEnabled={loupeUnlocked}
@@ -1607,15 +1803,36 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
                   document.body,
                 )}
 
-              {inventory.length > 0 && (
-                <ItemDragTray
-                  items={inventory}
-                  icons={itemIcons}
-                  onDragMove={handleItemDragMove}
-                  onDrop={handleItemDrop}
-                  className="absolute bottom-2 left-0 right-0 px-2"
-                />
-              )}
+              {/* Gold flecks kicked up by the Garden Chisel — same portal
+                  reasoning as the lamp glow above. z-40 keeps them above the
+                  art but below the dragged chisel icon (z-60). */}
+              {goldParticles.length > 0 &&
+                createPortal(
+                  <>
+                    {goldParticles.map((p) => (
+                      <div
+                        key={p.id}
+                        aria-hidden
+                        className="fixed z-40 pointer-events-none rounded-full animate-goldFleck"
+                        style={
+                          {
+                            left: p.x,
+                            top: p.y,
+                            width: 4,
+                            height: 4,
+                            background:
+                              "radial-gradient(circle, rgba(255,231,163,0.95) 0%, rgba(217,180,100,0.9) 55%, rgba(180,140,60,0) 100%)",
+                            boxShadow: "0 0 4px 1px rgba(255,215,130,0.6)",
+                            "--tx": `${p.tx}px`,
+                            "--ty": `${p.ty}px`,
+                          } as React.CSSProperties
+                        }
+                      />
+                    ))}
+                  </>,
+                  document.body,
+                )}
+
             </div>
           )}
 
@@ -1681,13 +1898,27 @@ export default function MansionMapPuzzle({ onSolve, onRoomStateChange }: Mansion
           document.body,
         )}
 
-      {/* Inventory tray — draggable so items can be dropped onto room-view
-          hotspots (e.g. the Coin onto gregoryAnnex's frog), not just onto
-          the art inspector. Icon tile if ITEM_ICONS has one, otherwise a
-          plain text pill, same convention as prison-cell-puzzle.tsx. */}
+      {/* Inventory tray — a single instance, always visible (including while
+          the art inspector is open on top of the room view), same as level
+          1's prison-cell-puzzle.tsx: drag from here onto whatever's
+          currently on screen. onDrop tries the art-viewport handler first
+          (a no-op unless the inspector is open and the drop lands on it,
+          via isOverArtViewport) then the room-view handler (a no-op unless
+          its own refs are mounted, which only happens while the inspector
+          is closed) — the two target sets never overlap. Icon tile if
+          ITEM_ICONS has one, otherwise a plain text pill. */}
       {inventory.length > 0 && (
         <div className="bg-gray-800/50 p-2 rounded-md shadow-md mb-4">
-          <ItemDragTray items={inventory} icons={itemIcons} onDrop={handleRoomItemDrop} />
+          <ItemDragTray
+            items={inventory}
+            icons={itemIcons}
+            activeItems={loupeUnlocked ? ["Loupe"] : []}
+            onDragMove={handleItemDragMove}
+            onDrop={(item, point) => {
+              handleItemDrop(item, point)
+              handleRoomItemDrop(item, point)
+            }}
+          />
         </div>
       )}
 

@@ -194,8 +194,8 @@ export default function CharacterLocationDisplay({
     )
   }
 
-  // Special handling for level 13 (color palette puzzle) - tap the palette to view a larger, flippable version
-  if (level === 13) {
+  // Special handling for level 15 (color palette puzzle) - tap the palette to view a larger, flippable version
+  if (level === 15) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />

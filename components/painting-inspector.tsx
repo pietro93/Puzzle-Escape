@@ -135,14 +135,16 @@ export default function PaintingInspector({
           )}
         </div>
 
-        {/* Loupe frame: a decorative ring reminding the player they're viewing
-            through the Loupe, shown for as long as zoom stays unlocked. */}
+        {/* Loupe vignette: a round, lens-shaped darkening reminding the player
+            they're viewing through the Loupe (a round handheld lens, not a
+            rectangular frame), shown for as long as zoom stays unlocked. */}
         {zoomEnabled && (
           <div
             aria-hidden
             className="absolute inset-0 pointer-events-none rounded-lg"
             style={{
-              boxShadow: "inset 0 0 0 3px rgba(217, 180, 100, 0.35), inset 0 0 40px 10px rgba(0, 0, 0, 0.6)",
+              boxShadow: "inset 0 0 0 3px rgba(217, 180, 100, 0.35)",
+              background: "radial-gradient(circle, transparent 58%, rgba(0, 0, 0, 0.65) 100%)",
             }}
           />
         )}

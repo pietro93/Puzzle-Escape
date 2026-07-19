@@ -569,15 +569,15 @@ export default function GameScreen({
     setCharacterDialogue("Are you a fan of rebuses? Hehe")
     setShowCharacterDialogue(true)
     }
-    // Special handling for level 12 (mansion clock puzzle) — reflects the clock's actual hand position, not random
-    else if (level === 12) {
+    // Special handling for level 14 (mansion clock puzzle) — reflects the clock's actual hand position, not random
+    else if (level === 14) {
       setCharacterDialogue(getClockButlerLine(clockStep))
       setShowCharacterDialogue(true)
     }
-    // Special handling for level 15 (mansion gallery) — the butler's line
+    // Special handling for level 20 (mansion gallery) — the butler's line
     // depends on the room the player is in and whether they're actively
     // examining that room's art, not on a level-wide random pool.
-    else if (level === 15) {
+    else if (level === 20) {
       setCharacterDialogue(getMansionButlerLine(mansionRoom.room, mansionRoom.examining))
       setShowCharacterDialogue(true)
     }
