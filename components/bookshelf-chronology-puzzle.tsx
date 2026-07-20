@@ -46,30 +46,27 @@ const CORRECT_ORDER = [
 ]
 
 const SLOT_CENTERS_X = [90.2, 180.9, 273.1, 361.8, 453.0, 546.2, 636.9, 725.1, 815.8]
-const SLOT_TOP = 556
-const SLOT_BOTTOM = 1074
+const SLOT_TOP = 558
+const SLOT_BOTTOM = 1028
+const BEAM_TOP = 545
 const CANVAS_WIDTH = 906
-const CANVAS_HEIGHT = 1286
+const CANVAS_HEIGHT = 1174
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
-function randomStartOrder(): string[] {
-  let order = shuffle(CORRECT_ORDER)
-  while (order.every((id, i) => id === CORRECT_ORDER[i])) {
-    order = shuffle(CORRECT_ORDER)
-  }
-  return order
-}
+// Starting arrangement: shortest to tallest spine, left to right.
+const START_ORDER = [
+  "ghoststory",
+  "barrenground",
+  "carrie",
+  "thethirdeye",
+  "dracula",
+  "empireofthesun",
+  "greatexpectations",
+  "wutheringheights",
+  "andthentherewerenone",
+]
 
 export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronologyPuzzleProps) {
-  const [slotOrder, setSlotOrder] = useState<string[]>(randomStartOrder)
+  const [slotOrder, setSlotOrder] = useState<string[]>(START_ORDER)
   const [draggedSlot, setDraggedSlot] = useState<number | null>(null)
   const [revealed, setRevealed] = useState(false)
 
@@ -77,12 +74,14 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
   const isSolved = slotOrder.every((id, i) => id === CORRECT_ORDER[i])
 
   useEffect(() => {
-    if (isSolved && !revealed) {
-      setRevealed(true)
-      const timer = setTimeout(() => onSolve(), 2200)
-      return () => clearTimeout(timer)
-    }
-  }, [isSolved, revealed, onSolve])
+    if (isSolved) setRevealed(true)
+  }, [isSolved])
+
+  useEffect(() => {
+    if (!isSolved) return
+    const timer = setTimeout(() => onSolve(), 2200)
+    return () => clearTimeout(timer)
+  }, [isSolved, onSolve])
 
   function handleDrop(targetIndex: number) {
     if (revealed || draggedSlot === null || draggedSlot === targetIndex) return
@@ -97,15 +96,14 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
   return (
     <div className="my-4 flex flex-col items-center gap-2">
       <div
-        className="relative w-full transition-[filter] duration-1000"
+        className="relative w-full"
         style={{
           maxWidth: 480,
           aspectRatio: `${CANVAS_WIDTH} / ${CANVAS_HEIGHT}`,
-          filter: revealed ? "brightness(0.55)" : "none",
         }}
       >
         <img
-          src="/images/bookshelf/bookshelf.webp"
+          src={revealed ? "/images/bookshelf/bookshelf_dark.webp" : "/images/bookshelf/bookshelf.webp"}
           alt="Bookshelf"
           className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
           style={{ zIndex: 0 }}
@@ -118,12 +116,12 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
           className="absolute pointer-events-none"
           style={{
             left: `${(SLOT_CENTERS_X[4] / CANVAS_WIDTH) * 100}%`,
-            top: 0,
+            top: `${(BEAM_TOP / CANVAS_HEIGHT) * 100}%`,
             width: "26%",
-            height: `${(SLOT_BOTTOM / CANVAS_HEIGHT) * 100}%`,
+            height: `${((SLOT_BOTTOM - BEAM_TOP) / CANVAS_HEIGHT) * 100}%`,
             transform: "translateX(-50%)",
             clipPath: "polygon(44% 0%, 56% 0%, 100% 100%, 0% 100%)",
-            background: "linear-gradient(to bottom, rgba(255,235,205,0) 0%, rgba(255,225,190,0.14) 100%)",
+            background: "linear-gradient(to bottom, rgba(190,150,220,0) 0%, rgba(190,140,215,0.07) 100%)",
             mixBlendMode: "screen",
             zIndex: 20,
           }}
@@ -136,7 +134,7 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
             width: "16%",
             height: `${((SLOT_BOTTOM - SLOT_TOP) / CANVAS_HEIGHT) * 100}%`,
             transform: "translate(-50%, -8%)",
-            background: "radial-gradient(ellipse at 50% 15%, rgba(255,200,160,0.22) 0%, transparent 65%)",
+            background: "radial-gradient(ellipse at 50% 15%, rgba(190,130,210,0.10) 0%, transparent 65%)",
             mixBlendMode: "screen",
             zIndex: 21,
           }}
@@ -179,13 +177,25 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
         })}
 
         {revealed && (
-          <img
-            src="/images/bookshelf/light.webp"
-            alt=""
-            className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none animate-in fade-in duration-[1500ms]"
-            style={{ zIndex: 50, mixBlendMode: "screen" }}
-            draggable={false}
-          />
+          <div
+            className="absolute pointer-events-none animate-in fade-in duration-[1500ms]"
+            style={{
+              left: `${(SLOT_CENTERS_X[4] / CANVAS_WIDTH) * 100}%`,
+              top: `${(BEAM_TOP / CANVAS_HEIGHT) * 100}%`,
+              width: "16%",
+              height: `${((SLOT_BOTTOM - BEAM_TOP) / CANVAS_HEIGHT) * 100}%`,
+              transform: "translateX(-50%)",
+              zIndex: 50,
+            }}
+          >
+            <img
+              src="/images/bookshelf/light-cropped.webp"
+              alt=""
+              className="w-full h-full object-contain pointer-events-none select-none"
+              style={{ objectPosition: "center top", mixBlendMode: "screen" }}
+              draggable={false}
+            />
+          </div>
         )}
       </div>
       {revealed && (
