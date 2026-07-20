@@ -289,14 +289,29 @@ skeleton: {
   }
 ,
 butler: {
-  11: [ // Exotic Spices Puzzle
+  11: [ // Bookshelf Chronology Puzzle
+    "I dust these shelves daily. The Master was most particular about the preservation of knowledge.",
+    "Please refrain from bending the spines. It is an act of barbarism. You are a guest here, after all.",
+    "The Master's library contains over ten thousand volumes. Have you read any books at all?",
+    "The stories preserved here far outlast the fleeting lives they recount.",
+    "Fascinating. Your taste in literature appears... unrefined."
+  ],
+  12: [ // Assembly Puzzle / Box (escargot)
+    "We find much depends on the patience invested versus mere trial and error.",
+    "I have polished these pieces weekly for thirty years. I trust you will handle them with care.",
+    "Assembly is a matter of order, a concept apparently elusive to some.",
+    "Some things are more valuable when taken apart. It reveals their inner workings.",
+    "Kintsugi is the Japanese art of repairing broken pottery with gold. It treats breakage as part of an object's history."
+  ],
+  13: [ // Exotic Spices Puzzle
     "The Master did enjoy a hint of the exotic in every meal. One must have standards.",
     "Lessons in flavour, like this puzzle, require patience and discernment.",
     "The pungent aroma of these spices was once worth more than gold. Quite the investment.",
     "The Master's palate was exceptionally refined. A rare quality these days.",
     "A guest once mistook cumin for cinnamon. They were not invited back."
   ],
-  13: [ // Color / Pigment Puzzle
+  // 14 (Mansion Clock Puzzle) uses getClockButlerLine / clockButlerRemarksByStep above, not this table.
+  15: [ // Color / Pigment Puzzle
     "I do hope your eyes serve you better than your instincts thus far.",
     "You would do well not to overlook the nuances of hue and tone.",
     "Tyrian purple, a color once reserved for emperors, was famously extracted from sea snails. Thousands for a single gram.",
@@ -306,19 +321,12 @@ butler: {
     "Do not fret over the language, kind guest. Colour, unlike vocabulary, requires no translation.",
     "I confess my own French extends little beyond ordering wine. This palette demands rather more of you."
   ],
-  14: [ // Assembly Puzzle / Box
-    "We find much depends on the patience invested versus mere trial and error.",
-    "I have polished these pieces weekly for thirty years. I trust you will handle them with care.",
-    "Assembly is a matter of order, a concept apparently elusive to some.",
-    "Some things are more valuable when taken apart. It reveals their inner workings.",
-    "Kintsugi is the Japanese art of repairing broken pottery with gold. It treats breakage as part of an object's history."
-  ],
-  16: [ // Library / Book Puzzle
-    "I dust these shelves daily. The Master was most particular about the preservation of knowledge.",
-    "Please refrain from bending the spines. It is an act of barbarism. You are a guest here, after all.",
-    "The Master's library contains over ten thousand volumes. Have you read any books at all?",
-    "The stories preserved here far outlast the fleeting lives they recount.",
-    "Fascinating. Your taste in literature appears... unrefined."
+  16: [ // Silverware / Math Puzzle
+    "The family silverware is solid sterling. Polished daily, of course.",
+    "Do be careful. The tarnish of a single fingerprint takes ages to buff out.",
+    "The Master was fastidious about place settings, as etiquette demanded. Thankfully for you, they are not around.",
+    "Table manners may escape you, but they are quite important to me.",
+    "One cannot underestimate the silent conversation of a well-laid table."
   ],
   17: [ // Light Switch & Compass Puzzle
     "Ah, light. A considerable improvement. Your fumbling in the dark was quite audible.",
@@ -327,28 +335,22 @@ butler: {
     "Fascinating, isn't it? The first magnetic compass was invented in China during the Han Dynasty.",
     "Are you lost, kind guest? Perhaps this compass will help you find the way."
   ],
-  18: [ // Silverware / Math Puzzle
-    "The family silverware is solid sterling. Polished daily, of course.",
-    "Do be careful. The tarnish of a single fingerprint takes ages to buff out.",
-    "The Master was fastidious about place settings, as etiquette demanded. Thankfully for you, they are not around.",
-    "Table manners may escape you, but they are quite important to me.",
-    "One cannot underestimate the silent conversation of a well-laid table."
-  ],
-  19: [ // Parrot Puzzle
+  18: [ // Parrot Puzzle
     "Count Papagalul has endured through generations with unusual vitality.",
     "The Count possesses a rather colorful vocabulary. The Master found it endlessly amusing. Myself, not so much.",
     "Kind guest, please exercise extreme caution in his presence. His bite lacks discretion.",
     "He tends to repeat things he overhears. I would be mindful of what you say.",
     "He seems to have taken a dislike to you. How curious."
   ],
-  20: [ // Family Tree Puzzle
+  19: [ // Library / Family Tree (heir) Puzzle
     "The family records are a meticulously woven tapestry of facts and fabrications.",
-    "The Master devoted countless hours untangling the family’s intricate roots.",
+    "The Master devoted countless hours untangling the family's intricate roots.",
     "One must admire the care taken to conceal certain family affairs.",
     "Some branches of the family tree were deliberately pruned. For the health of the whole.",
     "Genealogy is a fascinating pursuit. It reveals how the past is never truly past.",
     "Be careful where you pry. Some ancestors are best left undisturbed."
   ]
+  // 20 (Mansion Gallery Puzzle) uses getMansionButlerLine / mansionAmbientLines / mansionExaminingLines above, not this table.
 },
   gypsy: {
     21: [

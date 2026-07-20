@@ -561,7 +561,7 @@ export default function PuzzleContent({
             <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
           </div>
         </div>
-      ) : !isFearYourDreamsPuzzle && !isLockKeyPuzzle && !isClockworkPuzzle && !isMorseRatsPuzzle && !isAnagramSpicePuzzle && !isMansionClockPuzzle && puzzle.description ? (
+      ) : !isFearYourDreamsPuzzle && !isLockKeyPuzzle && !isClockworkPuzzle && !isMorseRatsPuzzle && !isAnagramSpicePuzzle && !isMansionClockPuzzle && !isBookshelfChronologyPuzzle && puzzle.description ? (
         <div className="text-gray-300 whitespace-pre-line font-mono text-sm bg-gray-950/50 p-4 rounded-lg border border-gray-800 shadow-inner">
           {puzzle.description}
         </div>

@@ -5,8 +5,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 11,
     question: "The butler shows some of the master's favourite readings.",
-    description:
-      "The master's library has been left out of order. Drag the books into their proper chronological slots. The Third Eye anchors the timeline at its center.",
+    description: "The master's library has fallen into disarray. It once told a story, in order.",
     solution: "TEARDROP|TEAR DROP",
     category: "pattern",
     isBookshelfChronologyPuzzle: true,

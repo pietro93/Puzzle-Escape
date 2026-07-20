@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useLayoutEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 interface BookshelfChronologyPuzzleProps {
   onSolve: () => void
@@ -11,36 +11,45 @@ interface BookDef {
   title: string
   width: number
   height: number
-  textColor: string
 }
 
-// book_e is the Third Eye — it sits in the shelf's center slot (1956), between
-// Barren Ground (1925) and And Then There Were None (1939) by row position,
-// even though 1956 is chronologically later than 1939. It's the fixed anchor,
-// not part of the ascending sequence.
-// textColor is varied per book so titles stay legible against similarly-toned
-// spines and are easier to tell apart at a glance while dragging.
+// thethirdeye sits in the shelf's center slot (1956), between Barren Ground
+// (1925) and And Then There Were None (1939) by row position, even though
+// 1956 is chronologically later than 1939. It's the fixed anchor, not part
+// of the ascending sequence. Titles are now baked directly into the art
+// (no CSS text overlay), so width/height come straight from each cropped
+// image's real pixel dimensions.
 const BOOKS: BookDef[] = [
-  { id: "book_a", title: "Wuthering Heights", width: 92, height: 378, textColor: "#f2e2c4" },
-  { id: "book_b", title: "Great Expectations", width: 102, height: 378, textColor: "#e8f0d8" },
-  { id: "book_c", title: "Dracula", width: 100, height: 378, textColor: "#ffe1c2" },
-  { id: "book_d", title: "Barren Ground", width: 101, height: 378, textColor: "#fbf3d0" },
-  { id: "book_e", title: "The Third Eye", width: 99, height: 378, textColor: "#ffd9a8" },
-  { id: "book_f", title: "And Then There Were None", width: 102, height: 378, textColor: "#dbe9ff" },
-  { id: "book_g", title: "Carrie", width: 95, height: 378, textColor: "#d8fff0" },
-  { id: "book_h", title: "Ghost Story", width: 99, height: 378, textColor: "#fdfdfd" },
-  { id: "book_i", title: "Empire of the Sun", width: 99, height: 378, textColor: "#ffe9c7" },
+  { id: "wutheringheights", title: "Wuthering Heights", width: 75, height: 394 },
+  { id: "greatexpectations", title: "Great Expectations", width: 71, height: 400 },
+  { id: "dracula", title: "Dracula", width: 79, height: 346 },
+  { id: "barrenground", title: "Barren Ground", width: 76, height: 319 },
+  { id: "thethirdeye", title: "The Third Eye", width: 77, height: 337 },
+  { id: "andthentherewerenone", title: "And Then There Were None", width: 77, height: 476 },
+  { id: "carrie", title: "Carrie", width: 78, height: 321 },
+  { id: "ghoststory", title: "Ghost Story", width: 77, height: 305 },
+  { id: "empireofthesun", title: "Empire of the Sun", width: 76, height: 399 },
 ]
 
 // Correct left-to-right slot order, matching the plaques baked into bookshelf.webp:
 // 1847, 1861, 1897, 1925, 1956, 1939, 1974, 1979, 1984
-const CORRECT_ORDER = ["book_a", "book_b", "book_c", "book_d", "book_e", "book_f", "book_g", "book_h", "book_i"]
+const CORRECT_ORDER = [
+  "wutheringheights",
+  "greatexpectations",
+  "dracula",
+  "barrenground",
+  "thethirdeye",
+  "andthentherewerenone",
+  "carrie",
+  "ghoststory",
+  "empireofthesun",
+]
 
-const SLOT_CENTERS_X = [91.5, 183.5, 277, 367, 459.5, 554, 646, 735.5, 827.5]
-const SLOT_TOP = 487
-const SLOT_BOTTOM = 865
-const CANVAS_WIDTH = 919
-const CANVAS_HEIGHT = 1004
+const SLOT_CENTERS_X = [90.2, 180.9, 273.1, 361.8, 453.0, 546.2, 636.9, 725.1, 815.8]
+const SLOT_TOP = 556
+const SLOT_BOTTOM = 1074
+const CANVAS_WIDTH = 906
+const CANVAS_HEIGHT = 1286
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -57,85 +66,6 @@ function randomStartOrder(): string[] {
     order = shuffle(CORRECT_ORDER)
   }
   return order
-}
-
-// Measures its own container's real rendered height and sizes the vertical
-// spine text to actually fit — a fixed length->px table breaks once the
-// canvas is scaled down (text wraps into a second column and bleeds into
-// the neighboring spine), so this reacts to the true pixel height instead.
-function SpineLabel({
-  title,
-  textColor,
-  cipherLetterIndex,
-  highlightCipherLetter,
-}: {
-  title: string
-  textColor: string
-  cipherLetterIndex: number
-  highlightCipherLetter: boolean
-}) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const spanRef = useRef<HTMLSpanElement>(null)
-  const [fontSize, setFontSize] = useState(14)
-
-  useLayoutEffect(() => {
-    const container = containerRef.current
-    const span = spanRef.current
-    if (!container || !span) return
-
-    const measure = () => {
-      const containerHeight = container.clientHeight
-      if (!containerHeight) return
-
-      // Font metrics/letter-spacing overhead are hard to predict reliably, so
-      // measure the actual rendered extent at a fixed baseline size and scale
-      // from that — this can never overflow regardless of font quirks.
-      const BASELINE = 100
-      span.style.fontSize = `${BASELINE}px`
-      const naturalHeight = span.getBoundingClientRect().height
-      if (!naturalHeight) return
-
-      const fitted = (containerHeight * 0.92 * BASELINE) / naturalHeight
-      const finalSize = Math.max(5, Math.min(16, fitted))
-      span.style.fontSize = `${finalSize}px`
-      setFontSize(finalSize)
-    }
-
-    measure()
-    const observer = new ResizeObserver(measure)
-    observer.observe(container)
-    return () => observer.disconnect()
-  }, [title])
-
-  return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
-      style={{ writingMode: "vertical-rl", textOrientation: "upright" }}
-    >
-      <span
-        ref={spanRef}
-        className="font-parchment text-center leading-none"
-        style={{
-          fontSize,
-          color: textColor,
-          letterSpacing: "0.015em",
-          whiteSpace: "nowrap",
-          textShadow: "0 0 2px black, 0 0 3px black",
-        }}
-      >
-        {title.split("").map((ch, i) =>
-          highlightCipherLetter && i === cipherLetterIndex ? (
-            <span key={i} className="text-yellow-200" style={{ textShadow: "0 0 6px #fff59d, 0 0 12px #ffee58" }}>
-              {ch}
-            </span>
-          ) : (
-            ch
-          ),
-        )}
-      </span>
-    </div>
-  )
 }
 
 export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronologyPuzzleProps) {
@@ -178,24 +108,39 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
           src="/images/bookshelf/bookshelf.webp"
           alt="Bookshelf"
           className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+          style={{ zIndex: 0 }}
           draggable={false}
         />
 
-        {revealed && (
-          <div
-            className="absolute pointer-events-none animate-in fade-in duration-[1500ms]"
-            style={{
-              left: `${(SLOT_CENTERS_X[4] / CANVAS_WIDTH) * 100}%`,
-              top: 0,
-              width: "60%",
-              height: "58%",
-              transform: "translateX(-50%)",
-              background:
-                "radial-gradient(ellipse at 50% 100%, rgba(255,80,60,0.55) 0%, rgba(255,80,60,0.25) 35%, transparent 70%)",
-              mixBlendMode: "screen",
-            }}
-          />
-        )}
+        {/* Ambient light falling from the window onto the shelf's physical center
+            slot — present from the start, independent of which book sits there. */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: `${(SLOT_CENTERS_X[4] / CANVAS_WIDTH) * 100}%`,
+            top: 0,
+            width: "26%",
+            height: `${(SLOT_BOTTOM / CANVAS_HEIGHT) * 100}%`,
+            transform: "translateX(-50%)",
+            clipPath: "polygon(44% 0%, 56% 0%, 100% 100%, 0% 100%)",
+            background: "linear-gradient(to bottom, rgba(255,235,205,0) 0%, rgba(255,225,190,0.14) 100%)",
+            mixBlendMode: "screen",
+            zIndex: 20,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: `${(SLOT_CENTERS_X[4] / CANVAS_WIDTH) * 100}%`,
+            top: `${(SLOT_TOP / CANVAS_HEIGHT) * 100}%`,
+            width: "16%",
+            height: `${((SLOT_BOTTOM - SLOT_TOP) / CANVAS_HEIGHT) * 100}%`,
+            transform: "translate(-50%, -8%)",
+            background: "radial-gradient(ellipse at 50% 15%, rgba(255,200,160,0.22) 0%, transparent 65%)",
+            mixBlendMode: "screen",
+            zIndex: 21,
+          }}
+        />
 
         {slotOrder.map((bookId, slotIndex) => {
           const book = bookById[bookId]
@@ -203,8 +148,6 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
           const topPct = (SLOT_TOP / CANVAS_HEIGHT) * 100
           const heightPct = ((SLOT_BOTTOM - SLOT_TOP) / CANVAS_HEIGHT) * 100
           const widthPct = (book.width / CANVAS_WIDTH) * 100
-          const isThirdEye = bookId === "book_e"
-          const cipherLetterIndex = 2
 
           return (
             <div
@@ -221,22 +164,15 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
                 height: `${heightPct}%`,
                 transform: "translateX(-50%)",
                 opacity: draggedSlot === slotIndex ? 0.4 : 1,
+                zIndex: 10,
               }}
             >
               <img
                 src={`/images/bookshelf/cropped/${bookId}.webp`}
                 alt={book.title}
                 className="w-full h-full object-contain pointer-events-none select-none"
+                style={{ objectPosition: "center bottom" }}
                 draggable={false}
-                style={{
-                  filter: revealed && isThirdEye ? "drop-shadow(0 0 8px rgba(255,90,60,0.9))" : undefined,
-                }}
-              />
-              <SpineLabel
-                title={book.title}
-                textColor={book.textColor}
-                cipherLetterIndex={cipherLetterIndex}
-                highlightCipherLetter={revealed && !isThirdEye}
               />
             </div>
           )
@@ -254,7 +190,7 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
       </div>
       {revealed && (
         <p className="text-amber-200 font-medieval text-sm animate-in fade-in duration-1000">
-          The light through the glass picks out a word.
+          The light through the glass settles across the shelf.
         </p>
       )}
     </div>
