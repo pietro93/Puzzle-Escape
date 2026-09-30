@@ -1,0 +1,45 @@
+- generic [ref=f15e1]:
+  - main [ref=f15e2]:
+    - generic [ref=f15e194]:
+      - button "Level 13 — open map" [ref=f15e196] [cursor=pointer]: Level 13
+      - generic [ref=f15e199]:
+        - generic [ref=f15e201] [cursor=pointer]:
+          - img "butler character" [ref=f15e204]
+          - img "Speech Icon" [ref=f15e207]
+        - img "mansion location" [ref=f15e211]
+      - generic [ref=f15e213]:
+        - paragraph [ref=f15e215]: I am looking for a spice. Must be somewhere around here.
+        - generic [ref=f15e217]:
+          - generic [ref=f15e218]:
+            - generic [ref=f15e219]:
+              - button "Previous spices" [ref=f15e220] [cursor=pointer]: ‹
+              - generic [ref=f15e221]:
+                - img "O" [ref=f15e222]
+                - img "E" [ref=f15e223]
+                - img "D" [ref=f15e224]
+                - img "O" [ref=f15e225]
+              - button "Next spices" [ref=f15e226] [cursor=pointer]: ›
+            - generic [ref=f15e227]:
+              - button "Previous spices" [ref=f15e228] [cursor=pointer]: ‹
+              - generic [ref=f15e229]:
+                - img "M" [ref=f15e230]
+                - img "A" [ref=f15e231]
+                - img "R" [ref=f15e232]
+                - img "P" [ref=f15e233]
+              - button "Next spices" [ref=f15e234] [cursor=pointer]: ›
+          - generic [ref=f15e235]:
+            - img "Left hand" [ref=f15e236]
+            - img "Right hand" [ref=f15e237]
+            - img "Plate" [ref=f15e238]
+            - img "S" [ref=f15e246]
+            - img "A" [ref=f15e248]
+      - generic [ref=f15e260]:
+        - generic [ref=f15e261]:
+          - textbox "Enter your answer..." [active] [ref=f15e263]
+          - button [disabled] [ref=f15e278]
+        - generic [ref=f15e264]:
+          - button "Show Hints" [ref=f15e265] [cursor=pointer]
+          - generic [ref=f15e268]:
+            - button "Restart level" [ref=f15e269] [cursor=pointer]
+            - button "Toggle sound" [ref=f15e273] [cursor=pointer]
+  - alert [ref=f15e27]

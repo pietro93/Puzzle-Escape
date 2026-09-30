@@ -13,7 +13,7 @@ import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
-import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle, getClockButlerLine, getMansionButlerLine } from "@/utils/dialogue-utils"
+import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle, getClockButlerLine, getMansionButlerLine, getBookshelfButlerLine, getGuardBoneLine } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
@@ -56,13 +56,13 @@ const getBrainLampImage = (correctCombinations: number): string => {
 // input stays locked until that signal fires. Levels not yet in this set are
 // unaffected (input behaves as before) until their gating is implemented.
 const GATED_LEVELS = new Set<number>([
-  1, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 19, 20, 21, 22, 24, 27, 28, 30, 32, 33, 34, 36, 37, 39, 40, 41, 42,
+  1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 19, 20, 21, 22, 24, 27, 28, 30, 32, 33, 34, 36, 37, 39, 40, 41, 42,
   43, 44, 45, 46, 47, 48, 49, 50,
 ])
 
 // Levels that don't require any interaction to unlock, but still play the
 // gate's closed-to-open animation for atmosphere as soon as the level starts.
-const AUTO_OPEN_LEVELS = new Set<number>([2, 3])
+const AUTO_OPEN_LEVELS = new Set<number>([3])
 const AUTO_OPEN_DELAY_MS = 900
 
 // Number of clock times the player must step through in level 12 before the puzzle is "read".
@@ -124,6 +124,8 @@ export default function GameScreen({
   const [isCorrect, setIsCorrect] = useState(false)
   const [showHints, setShowHints] = useState(false)
   const [isWrong, setIsWrong] = useState(false)
+  // Last wrong submission, for puzzles that give per-part feedback (level 2's skulls)
+  const [lastWrongAnswer, setLastWrongAnswer] = useState<{ text: string; nonce: number } | null>(null)
   const [touchStartY, setTouchStartY] = useState(0)
   const [touchEndY, setTouchEndY] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
@@ -147,6 +149,7 @@ export default function GameScreen({
   const [currentPyramidRoom, setCurrentPyramidRoom] = useState<string>("entrance")
   const [clockStep, setClockStep] = useState(0)
   const [mansionRoom, setMansionRoom] = useState<{ room: string; examining: boolean }>({ room: "foyer", examining: false })
+  const [bookshelfRevealed, setBookshelfRevealed] = useState(false)
   const [hasPyramidTorch, setHasPyramidTorch] = useState(false)
   const [showDevilDialogue, setShowDevilDialogue] = useState(false)
   const [currentElevatorFloor, setCurrentElevatorFloor] = useState(0)
@@ -319,6 +322,7 @@ export default function GameScreen({
     } else {
       setFeedback("That's not quite right. Try again.")
       setIsWrong(true)
+      setLastWrongAnswer((prev) => ({ text: normalizedUserAnswer, nonce: (prev?.nonce ?? 0) + 1 }))
 
       onWrong() // Trigger wrong answer sound
 
@@ -579,6 +583,13 @@ export default function GameScreen({
     // examining that room's art, not on a level-wide random pool.
     else if (level === 20) {
       setCharacterDialogue(getMansionButlerLine(mansionRoom.room, mansionRoom.examining))
+      setShowCharacterDialogue(true)
+    }
+    // Special handling for level 12 (bookshelf chronology) — the butler's line
+    // depends on whether the shelf order is solved and the window light has
+    // revealed itself yet, not on a level-wide random pool.
+    else if (level === 12) {
+      setCharacterDialogue(getBookshelfButlerLine(bookshelfRevealed))
       setShowCharacterDialogue(true)
     }
     // Special handling for level 10 (guard puzzle)
@@ -853,6 +864,9 @@ export default function GameScreen({
           onPyramidLocationImageClick={handlePyramidLocationImageClick}
           murderMysteryLocation={murderMysteryLocation}
           onColorPaletteClick={() => setShowColorPalettePopup(true)}
+          speech={
+            showCharacterDialogue ? characterDialogue : showGuardPopup ? guardDialogLines[guardDialogIndex] : null
+          }
         />
       )}
 
@@ -933,9 +947,15 @@ export default function GameScreen({
           }
         }}
         onMansionRoomStateChange={handleMansionRoomStateChange}
+        onBookshelfRevealedChange={setBookshelfRevealed}
         showColorPalettePopup={showColorPalettePopup}
         onCloseColorPalettePopup={() => setShowColorPalettePopup(false)}
         onInteractionComplete={handleInteractionComplete}
+        onBoneOfferedToGuard={(color, rustReturned, rustTotal) => {
+          setCharacterDialogue(getGuardBoneLine(color, rustReturned, rustTotal))
+          setShowCharacterDialogue(true)
+        }}
+        lastWrongAnswer={lastWrongAnswer}
       />
 
       {/* Answer input section */}

@@ -1,6 +1,7 @@
 "use client"
-import Image from "next/image"
-import { parseDialogueForItalics, characterImageMap } from "@/utils/dialogue-utils"
+import TalkingPortrait from "./talking-portrait"
+import { characterImageMap } from "@/utils/dialogue-utils"
+import { DialogueText } from "@/components/dialogue-text"
 
 interface CharacterDialoguePopupProps {
   character: string
@@ -45,12 +46,12 @@ export default function CharacterDialoguePopup({
           ) : (
             // General logic for all other characters using characterImageMap
             <div className="w-16 h-16 relative pixelated-container shrink-0">
-              <Image
+              <TalkingPortrait
+                character={character}
                 src={characterImageMap[character] || "/placeholder.svg"} // Use map, fallback to placeholder
                 alt={character}
-                width={64}
-                height={64}
-                className="pixelated"
+                speech={dialogue}
+                className="pixelated w-16 h-16"
               />
             </div>
           )}
@@ -60,10 +61,9 @@ export default function CharacterDialoguePopup({
             <p className="text-purple-300 font-pixel mb-2">
               {character.charAt(0).toUpperCase() + character.slice(1)}:
             </p>
-            <p
-              className="text-gray-200 text-sm whitespace-pre-line font-pixel"
-              dangerouslySetInnerHTML={{ __html: parseDialogueForItalics(dialogue) }}
-            />
+            <p className="text-gray-200 text-sm whitespace-pre-line font-pixel">
+              <DialogueText text={dialogue} />
+            </p>
           </div>
         </div>
         <div className="mt-4 text-center">

@@ -4,19 +4,6 @@ import type { Puzzle } from "@/types/puzzle"
 export const puzzlesSet2: Puzzle[] = [
   {
     level: 11,
-    question: "The butler shows some of the master's favourite readings.",
-    description: "The master's library has fallen into disarray. It once told a story, in order.",
-    solution: "TEARDROP|TEAR DROP",
-    category: "pattern",
-    isBookshelfChronologyPuzzle: true,
-    hints: [
-      'Why was "The Third Eye" highlighted?',
-      "Try arranging the books by their publication year. The plaques beneath the shelf tell you where each one belongs.",
-      "Once every book finds its year, the light through the window will show you the rest.",
-    ],
-  },
-  {
-    level: 12,
     question:
       "The butler presents you with a peculiar puzzle box. 'This belonged to the master's collection of culinary curiosities,' he explains with a slight bow.",
     description: "Assemble the pieces to reveal the hidden message.",
@@ -28,6 +15,20 @@ export const puzzlesSet2: Puzzle[] = [
       "The image shows a delicacy popular in French cuisine.",
       "The message 'EAT ME' suggests it's something edible.",
       "The spiral shape in the image is a clue to what creature this dish is made from.",
+    ],
+  },
+  {
+    level: 12,
+    question: "The butler shows some of the master's favourite readings.",
+    description: "The master's library has fallen into disarray. It once told a story, in order.",
+    solution: "TEARDROP|TEAR DROP",
+    category: "pattern",
+    isBookshelfChronologyPuzzle: true,
+    hints: [
+      "The plaques beneath the shelf mark the years in order, left to right. Match each book to the year it was truly published.",
+      "One plaque, reading 1956, breaks the ascending sequence. It is not a mistake for you to fix.",
+      "The Third Eye sits apart from the rest for a reason. Its title may provide a clue.",
+      "Try reading the third letter of each title, excluding The Third Eye, in the order the shelf provides.",
     ],
   },
   {

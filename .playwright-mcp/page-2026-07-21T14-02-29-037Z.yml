@@ -1,0 +1,12 @@
+- generic [active] [ref=f3e1]:
+  - main [ref=f3e5]:
+    - generic [ref=f3e31]:
+      - button [ref=f3e33] [cursor=pointer]
+      - button "Skip" [ref=f3e39] [cursor=pointer]
+      - generic [ref=f3e42]:
+        - heading "Puzzle Escape" [level=1] [ref=f3e43]
+        - img "Prison Cell" [ref=f3e51]
+        - generic [ref=f3e53]:
+          - paragraph [ref=f3e54]: "|"
+          - paragraph [ref=f3e56]: Tap anywhere to continue...
+  - alert [ref=f3e30]

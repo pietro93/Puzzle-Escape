@@ -27,6 +27,17 @@ const nextConfig = {
   },
   // Recommended setting for modern React applications
   reactStrictMode: true,
+
+  // TEMP (trailer capture session): stop the dev-server watcher from
+  // rebuilding/resetting app state every time a screenshot is saved
+  // into the project tree. Revert after capture is done.
+  webpack: (config) => {
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/.tmp-trailer-shots/**', '**/.playwright-mcp/**'],
+    }
+    return config
+  },
 }
 
 export default nextConfig

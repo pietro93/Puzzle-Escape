@@ -1,0 +1,23 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - generic [ref=f15e42]:
+      - button "Level 1 — open map" [ref=f15e44] [cursor=pointer]: Level 1
+      - generic [ref=f15e47]:
+        - generic [ref=f15e49] [cursor=pointer]:
+          - img "skeleton character" [ref=f15e52]
+          - img "Speech Icon" [ref=f15e55]
+        - img "prison location" [ref=f15e59]
+      - generic [ref=f15e61]:
+        - paragraph [ref=f15e63]: There's a secret message hidden somewhere.
+        - generic [ref=f15e66]:
+          - img "Cell Bars" [ref=f15e67]
+          - button "←" [ref=f15e73] [cursor=pointer]
+          - button "→" [ref=f15e74] [cursor=pointer]
+      - generic [ref=f15e76]:
+        - textbox "Enter your answer..." [disabled] [ref=f15e79]
+        - generic [ref=f15e80]:
+          - button "Show Hints" [ref=f15e81] [cursor=pointer]
+          - generic [ref=f15e84]:
+            - button "Restart level" [ref=f15e85] [cursor=pointer]
+            - button "Toggle sound" [ref=f15e89] [cursor=pointer]
+  - alert [ref=f15e27]

@@ -1,13 +1,15 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import Image from "next/image"
+import TalkingPortrait from "@/components/talking-portrait"
 import type { DialogueOption } from "./types"
 import { cn } from "@/lib/utils"
 
 interface DialogueInterfaceProps {
   character: string | null
   typedText: string
+  // True while typedText is still typing out; drives the portrait's mouth
+  isTyping?: boolean
   dialogueOptions: DialogueOption[]
   askedQuestions: Set<string>
   dialoguePath: DialogueOption[]
@@ -18,6 +20,7 @@ interface DialogueInterfaceProps {
 export function DialogueInterface({
   character,
   typedText,
+  isTyping,
   dialogueOptions,
   askedQuestions,
   dialoguePath,
@@ -29,7 +32,9 @@ export function DialogueInterface({
       {/* Character Portrait and Speech Bubble */}
       <div className="flex flex-col items-center mb-2 p-6 pt-0 bg-black">
         <div className="w-40 h-40 relative pixelated-container bg-black p-0">
-          <Image
+          <TalkingPortrait
+            character={character ?? ""}
+            talking={isTyping}
             src={
               character === "policewoman"
                 ? "/images/murder-mystery/policewoman.webp"
@@ -38,9 +43,7 @@ export function DialogueInterface({
                   : "/images/murder-mystery/librarian.webp"
             }
             alt={character || ""}
-            width={160}
-            height={160}
-            className="pixelated"
+            className="pixelated w-full h-full"
           />
         </div>
 

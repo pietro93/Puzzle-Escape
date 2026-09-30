@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import SplashScreen from "./splash-screen"
 import IntroScreen from "./intro-screen"
+import PlayerGenderScreen from "./player-gender-screen"
 import GameScreen from "./game-screen"
 import TransitionScreen from "./transition-screen"
 import OutroScreen from "./outro-screen"
@@ -20,6 +21,7 @@ export default function GameContainer() {
   const [showSplash, setShowSplash] = useState(true)
   const [gameStarted, setGameStarted] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
+  const [showGenderChoice, setShowGenderChoice] = useState(false)
   const [currentLevel, setCurrentLevel] = useState(1)
   const [showCongrats, setShowCongrats] = useState(false)
   const [showTransition, setShowTransition] = useState(false)
@@ -211,6 +213,12 @@ export default function GameContainer() {
   const startNewGame = () => {
     playButtonSound()
     setShowSplash(false)
+    setShowGenderChoice(true)
+  }
+
+  const handleGenderChosen = () => {
+    playButtonSound()
+    setShowGenderChoice(false)
     setShowIntro(true)
   }
 
@@ -237,7 +245,7 @@ export default function GameContainer() {
     setCurrentLevel(1)
     setShowCongrats(false)
     setShowSplash(false)
-    setShowIntro(true)
+    setShowGenderChoice(true)
   }
 
   const startGameAfterIntro = () => {
@@ -384,6 +392,10 @@ export default function GameContainer() {
           soundEnabled={soundEnabled}
           toggleSound={toggleMute}
         />
+      )}
+
+      {showGenderChoice && (
+        <PlayerGenderScreen onChoose={handleGenderChosen} soundEnabled={soundEnabled} toggleSound={toggleMute} />
       )}
 
       {showIntro && <IntroScreen onStart={startGameAfterIntro} soundEnabled={soundEnabled} toggleSound={toggleMute} />}

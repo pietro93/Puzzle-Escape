@@ -4,6 +4,7 @@
 2.  **Short Dialogue Lines:** Dialogue should not be verbose. Each interaction should display a single, complete but not overly complex line of dialogue. 
 3.  **Character-Specific Speech:** Each character possesses a distinct personality, way of speaking, and unique vocabulary. This is defined in their specific sections below.
 4.  **Only Positive Statements:** Avoid stating what things aren't and then correcting yourself. No sentences that follow the structure "x is not... x is", "it's not about x, it's about y" or anything of the sort. Just state what the thing IS about.
+5.  **Prose Outside Dialogue:** Narration, lore/books, tarot readings, hints and UI text follow the prose guidelines in `docs/NARRATIVE_DESIGN.md` §1b (AI-vocabulary bans, no closing morals, no throat-clearing openers, no em dash pile-ups). Inside a character's spoken line, the persona below wins over those bans.
 
 ---
 
@@ -80,8 +81,10 @@
     *   **Coffee Aversion:** Does not drink coffee; it causes an upset stomach and frequent bowel movements. She is naturally hyper-caffeinated.
     *   **Foreshadowing:** Subtly hints at the broader plot, player history, or future events/characters when referencing the player's fate.
 
+*   **Voice spec (canonical):** grammar rules, her five moves, joke budgets and foreign-word markup are in `docs/NARRATIVE_DESIGN.md` under "Gypsy voice spec". Follow it for every new line. Wrap all Romanian/Romani words in `~tildes~` (renders italic amber).
+
 *   **Example Romani Proverbs/Phrases:**
-    *   "The road to hell is paved with good intentions... but shortcuts lead to blisters!"
+    *   "The road to hell is paved with good intentions. But shortcuts, they lead to blisters!"
     *   "Ghicitul în cafea" (Coffee leaf reading)
     *   "Duende" (Spirited fate)
     *   "Drabardi" (Personal destiny path)
@@ -116,7 +119,7 @@ Tone Shifts: Switches instantly between velvety charm and bone-chilling menace. 
 * "Should this soul burn in torment?"
 * "Your judgment has sealed your path."
 * "I find such irony delicious! Ha!"
-* "Ah, well... do not fear. We have all of ETERNITY to explore."
+* "Ah, well. Do not fear. We have all of ETERNITY to explore."
 
 ### Policewoman (Level 49 Murder Mystery)
 
@@ -170,3 +173,9 @@ Tone Shifts: Switches instantly between velvety charm and bone-chilling menace. 
 > [!NOTE]
 > These three are one-off NPCs local to the Level 49 murder mystery (`components/murder-mystery/dialogue-data.ts`), not full zone mentors. Personas reconstructed from existing dialogue during the text audit (see `docs/TEXT_AUDIT.md`) and are now canonical for future lines.
 
+
+## Player Gender
+
+The player picks Male / Female / Other at the start of each new game (`components/player-gender-screen.tsx`). Never hardcode a gendered word for the player ("sir", "gentleman", "he", "Daddy"). Write an inline `{{male|female|other}}` token instead, e.g. `"We've been expecting you, {{sir|madam|guest}}."` or `"No{{, sir|, madam|}}."` (an empty variant drops the word).
+
+Tokens are resolved by `genderize()` in `utils/player-gender.ts`. It must run on the full line *before* any typewriter slicing. It currently runs in `transition-screen.tsx` and the Level 11 dialogue in `familiar-faces-puzzle.tsx`, so a new display path needs its own `genderize()` call. Characters may reference the player's gender now and then, in their own voice, but it stays flavor and never affects a puzzle.

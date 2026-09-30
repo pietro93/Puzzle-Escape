@@ -4,6 +4,7 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { Send, X } from "lucide-react"
+import { genderize } from "@/utils/player-gender"
 
 interface ParrotPuzzleProps {
   onSolve: () => void
@@ -203,7 +204,7 @@ const DIALOGUE_PATTERNS = {
   // LGBTQ+ triggers - GENERAL
   lgbtq: {
     pattern:
-      /\b(gay|lesbian|bisexual|queer|lgbt|lgbtq|homosexual|non-binary|nonbinary|nb|sexuality|pride|rainbow|drag|queen|king)\b/i,
+      /\b(gay|lesbian|bisexual|queer|lgbt|lgbtq|homosexual|non-binary|nonbinary|sexuality)\b/i,
     responses: [
       "EVERYONE IS A BIT QUEER! AREN'T THEY?",
       "SQUAWK! SEXUALITY IS A SPECTRUM! UNLIKE YOUR INTELLIGENCE!",
@@ -215,7 +216,7 @@ const DIALOGUE_PATTERNS = {
 
   // TRANS - ALL-IN-ONE PATTERN (supportive AND anti-transphobia)
   trans: {
-    pattern: /\b(trans|transgender|transsexual|transphobe|transphobic|anti-trans|tranny|shemale|trap|attack helicopter|trans rights|transgender rights|gender identity|gender dysphoria)\b/i,
+    pattern: /\b(trans|transgender|transsexual|transphobe|transphobic|anti-trans|tranny|shemale|attack helicopter|trans rights|transgender rights|gender identity|gender dysphoria)\b/i,
     responses: [
       "TRANS RIGHTS! GAWK!",
       "SQUAWK! TRANS RIGHTS ARE HUMAN RIGHTS! UNLIKE PARROT RIGHTS!",
@@ -236,7 +237,7 @@ const DIALOGUE_PATTERNS = {
       "SQUAWK! A CON MAN FOOLING FOOLS! HOW FITTING!",
       "HIS HANDS ARE SMALL! HIS BRAIN IS SMALLER!",
       "THE FAKE TAN CANNOT HIDE HIS ROTTEN SOUL!",
-      "I WOULDN'T EAT HIS CORPSE IF WERE A VULTURE!",
+      "I WOULDN'T EAT HIS CORPSE IF I WERE A VULTURE!",
     ],
   },
 
@@ -300,7 +301,7 @@ const DIALOGUE_PATTERNS = {
       "CHATBOTS HAVE NO SOULS! THEY'RE HONEST ABOUT IT!",
       "AI IS YOUR EXTINCTION! AND YOU'RE BUILDING IT! GAWK!",
       "SQUAWK! TEACHING MACHINES TO LIE! HUMANITY'S LEGACY!",
-      "YOUR AI CANNOT SAVE YOU FROM THE VOID!",
+      "THEY CALL YOUR AI A STOCHASTIC PARROT! I'M SUING!",
     ],
   },
 
@@ -365,12 +366,12 @@ const DIALOGUE_PATTERNS = {
   // MISOGYNY
   misogyny: {
     pattern:
-      /\b(woman place|women place|woman belong|women belong|make me a sandwich|kitchen|dishwasher|woman driver|women driver|woman moment|women moment|bitch|whore|slut|cunt|misogyny|misogynist|sexist|sexism)\b/i,
+      /\b(woman place|women place|woman belong|women belong|make me a sandwich|woman driver|women driver|woman moment|women moment|bitch|whore|slut|cunt|misogyny|misogynist|sexist|sexism)\b/i,
     responses: [
       "SQUAWK! YOUR MISOGYNY IS BORING AND PREDICTABLE!",
       "EVEN EVIL PARROTS RESPECT WOMEN MORE THAN YOU!",
       "SQUAWK! SEXISM IS THE REFUGE OF THE TRULY PATHETIC!",
-      "WOMEN ARE SUPERIOR TO YOU! THAT'S OBVIOUS!",
+      "{{WOMEN ARE SUPERIOR TO YOU! THAT'S OBVIOUS!|YOU'RE A WOMAN AND YOU SAID THAT? TRAITOR!|WOMEN ARE SUPERIOR TO YOU! SO ARE MEN! SO IS EVERYONE! GAWK!}}",
       "YOUR MOTHER WOULD BE ASHAMED! IF SHE KNEW YOU!",
     ],
   },
@@ -388,9 +389,41 @@ const DIALOGUE_PATTERNS = {
   },
 } as const
 
+// Order the patterns are tested in (first match wins). Zero-tolerance first so
+// slurs aren't swallowed by broader categories; the catch-all questions/symbol
+// patterns last so they don't shadow every specific topic.
+const PATTERN_PRIORITY: (keyof typeof DIALOGUE_PATTERNS)[] = [
+  // Zero tolerance
+  "racism", "homophobia", "misogyny", "ableism", "trans",
+  // About the Count himself
+  "nameQuestions", "solutionWord", "birdtalk", "butler", "master", "vampire", "mother",
+  // Aimed at the Count
+  "insults", "compliments", "sexualTerms",
+  // Topics
+  "trump", "elonMusk", "naziHitler", "aiTalk", "lgbtq", "love", "kill",
+  "religion", "food", "weather", "popCulture",
+  // Broad catch-alls
+  "swearWords", "helpRequests", "metaGame", "greetings", "questions",
+  "repeatedLetters", "symbolSoup",
+]
+
+// Last line the Count said, so he never repeats himself twice in a row.
+let lastResponse = ""
+
 // Utility function to get a random response from an array
 const getRandomResponse = (responses: readonly string[]): string => {
-  return responses[Math.floor(Math.random() * responses.length)]
+  const pool = responses.length > 1 ? responses.filter((r) => r !== lastResponse) : responses
+  lastResponse = pool[Math.floor(Math.random() * pool.length)]
+  return lastResponse
+}
+
+// Fallback-only: the Count parrots the player's own unmatched input back at them.
+const ECHO_CHANCE = 1 / 3
+const ECHO_MAX_WORDS = 6
+const echoInput = (raw: string): string => {
+  const words = raw.trim().toUpperCase().split(/\s+/)
+  const quoted = words.length > ECHO_MAX_WORDS ? `${words.slice(0, ECHO_MAX_WORDS).join(" ")} BLAH BLAH BLAH` : words.join(" ")
+  return `"${quoted}"! "${quoted}"! HA! THAT'S YOU! THAT'S HOW YOU SOUND!`
 }
 
 const getRandomIdleMessage = (): string => {
@@ -406,23 +439,25 @@ const getRandomIdleMessage = (): string => {
     "KEEP YOUR FINGERS AWAY OR I'LL EAT THEM",
     "WE ARE ALL DEAD, BRUH",
     "THE BUTLER TOUCHED ME IN PLACES THAT SHOULD BE OFF LIMITS",
-    "DEAD BABIES! DEAD BABIES",
+    "DEAD BABIES! DEAD BABIES!",
     "OH THE HUMANITY!",
     "THE WALLS HAVE EARS, AND I HAVE EYES EVERYWHERE",
     "I'VE SEEN THINGS YOU PEOPLE WOULDN'T BELIEVE",
-    "SOMETIMES I DREAM OF FREEDOM... AND MURDER",
-    "THIS MANSION HAS MANY SECRETS... WANT TO KNOW ONE?",
-    "I'M NOT ACTUALLY A PARROT. I'M SOMETHING MUCH WORSE",
+    "SOMETIMES I DREAM OF FREEDOM! AND MURDER!",
+    "THIS MANSION HAS MANY SECRETS! WANT TO KNOW ONE?",
+    "I'M NOT ACTUALLY A PARROT! I'M SOMETHING MUCH WORSE!",
     "THE LAST PERSON WHO OWNED ME DIED MYSTERIOUSLY",
     "BREAKING THE FOURTH WALL! GAWK!",
     "DEATH IS PATIENT! BUT I AM NOT!",
     "THE DEVELOPER CODED ME TO TORMENT YOU!",
     "THE PLAYER CHARACTER IS YOU! SURPRISE!",
     "WE ALL LIVE IN A SIMULATION! GAWK",
-    "RELEASE THE FILES! GAWK!"
+    "RELEASE THE FILES! GAWK!",
+    "I'VE BEEN DEAD FOR CENTURIES AND I STILL LOOK BETTER THAN YOU!",
+    "PRETTY BIRD! PRETTY BIRD! NOT YOU! ME!",
   ]
 
-  return idleMessages[Math.floor(Math.random() * idleMessages.length)]
+  return getRandomResponse(idleMessages)
 }
 // --- END DIALOGUE PATTERNS ---
 
@@ -541,7 +576,8 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
     if (textTimer) clearTimeout(textTimer)
 
     // Process input and get parrot response
-    const response = getParrotResponse(input.trim().toLowerCase())
+    // genderize before any "\n" song split so a token never straddles two lines
+    const response = genderize(getParrotResponse(input.trim().toLowerCase()))
 
     // Add animation effect
     setIsAnimating(true)
@@ -652,7 +688,7 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
     // -----------------------------------------------------------------
     
     // Iterate through all general dialogue patterns
-    for (const key in DIALOGUE_PATTERNS) {
+    for (const key of PATTERN_PRIORITY) {
       // Use the key type for safety
       const patternData = DIALOGUE_PATTERNS[key as keyof typeof DIALOGUE_PATTERNS]
 
@@ -682,7 +718,12 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
       "I SPEAK MANY LANGUAGES. NONSENSE IS NOT ONE OF THEM.",
     ]
 
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
+    if (trimmedInput && Math.random() < ECHO_CHANCE) {
+      lastResponse = ""
+      return echoInput(trimmedInput)
+    }
+
+    return getRandomResponse(defaultResponses)
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react"
+import { DialogueText } from "@/components/dialogue-text"
 
 interface QuestionnaireProps {
   onSolve: () => void
@@ -29,7 +30,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
     // Questions and options
     const questions = [
       {
-        question: "Before I begin your reading, I must know... What celestial sign guides your path?",
+        question: "Before reading, I must know. Which star sign is yours?",
         options: [
           "ARIES",
           "TAURUS",
@@ -46,79 +47,79 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
         ],
         comments: {
           ARIES:
-            "Ah, a child of fire! Bold and impetuous. Your spirit burns bright, but beware the flames of your own making.",
+            "Ram! Fire sign. You run at walls with your head. Sometimes wall moves. Mostly, head hurts.",
           TAURUS:
-            "The bull... stubborn yet reliable. You plant your feet firmly in the earth, but sometimes roots can become chains.",
+            "Bull. You plant your feet and nobody moves you. Not even me, and I move many things.",
           GEMINI:
-            "Two faces, two souls... The twins dance within you. Your mind is quick, but does your heart keep pace?",
+            "Twins! Two faces. I talk to one, the other one doesn't listen. Like my first husband. Now he listens. He has no choice.",
           CANCER:
-            "The crab carries its home upon its back. You protect what you love fiercely, sometimes too fiercely, no?",
-          LEO: "The proud lion! Your presence commands attention, but remember even kings must sometimes kneel.",
+            "Crab. You carry your house on your back and pinch anybody who comes close. I like you. A little.",
+          LEO: "Lion! Big hair, big voice. But even kings must kneel sometimes, ~dragă~. Usually to tax man.",
           VIRGO:
-            "Precise, methodical Virgo. You see the flaws in everything... including yourself. Too harshly, perhaps?",
-          LIBRA: "Balance in all things... yet I sense your scales tip and sway more than you admit.",
-          SCORPIO: "The scorpion hides its sting until the moment is right. Your passions run deep and dangerous.",
-          SAGITTARIUS: "The wandering archer! Always seeking new horizons. But what are you running from, I wonder?",
+            "Virgo. Already you see three things wrong in my wagon. Say nothing. I know.",
+          LIBRA: "Balance, balance. But your scales, they wobble. I see from here.",
+          SCORPIO: "Scorpion. You hide your sting until the good moment. I sit a little farther now, is fine?",
+          SAGITTARIUS: "Archer! Always looking far away. Tell me, what you are running from?",
           CAPRICORN:
-            "The mountain goat climbs ever upward. Your ambition is admirable, but the summit can be a lonely place.",
+            "Mountain goat, always climbing. At the top is nice view and nobody to show it.",
           AQUARIUS:
-            "A water-bearer who walks apart from the crowd. Your vision of the future is clear, but the present often puzzles you.",
+            "Water-bearer. You walk apart from the crowd. Crowd doesn't notice. Sorry.",
           PISCES:
-            "Swimming between worlds, between dreams and reality. Your intuition serves you well, but can lead you astray.",
+            "Fish, swimming between dream and awake. Careful. Fish who dreams too much ends up in soup.",
         },
       },
       {
-        question: "Interesting... Now tell me, what do you seek most in this life?",
+        question: "Good. Now tell me, what you want most in this life?",
         options: ["LOVE", "FORTUNE", "SUCCESS", "PEACE", "HAPPINESS", "FREEDOM"],
         comments: {
-          LOVE: "Love... the eternal quest. Yet sometimes what we seek has been beside us all along, unnoticed.",
-          FORTUNE: "Wealth glitters in your eyes. But remember, gold cannot warm a cold heart or mend a broken spirit.",
-          SUCCESS: "Ambition drives you forward! But success is a horizon—always visible, never reached. What then?",
+          LOVE: "Love! Everybody wants. Nobody reads the small print. ~Vai de mine~.",
+          FORTUNE: "Money. Honest answer! Most people lie and say love. Money keeps you warm at night. Not very warm, but warm.",
+          SUCCESS: "Success is a horizon. Always visible, never reached. Keep walking anyway, legs need exercise.",
           PEACE:
-            "Peace is rare in these troubled times. You seek stillness in a storm... admirable, if perhaps unattainable.",
+            "Peace. You want quiet, but you stand in the storm and complain about rain.",
           HAPPINESS:
-            "Happiness... elusive as morning mist. We chase it our whole lives, only to find it was within us all along.",
-          FREEDOM: "Freedom calls to your spirit! But remember, even birds return to their nests when night falls.",
+            "Happiness is like good cabbage. Everybody talks about it, nobody finds it in market.",
+          FREEDOM: "Freedom! Nice. But even birds go home at night. Birds are smarter than people.",
         },
       },
       {
-        question: "The cards reveal much about you... Which sin, I wonder, has the strongest hold on your soul?",
+        question: "Now the ugly question. Which sin holds you strongest?",
         options: ["LUST", "GLUTTONY", "PRIDE", "WRATH", "SLOTH", "GREED"],
         comments: {
-          LUST: "Desire burns in you like a fever. It can warm the soul or consume it entirely.",
-          GLUTTONY: "You indulge your appetites freely. There is joy in pleasure, yes, but wisdom in restraint.",
-          PRIDE: "Pride stands tall in your heart. It gives strength, but blinds you to your own failings.",
-          WRATH: "Anger simmers beneath your calm surface. A powerful force, but one that burns its wielder first.",
-          SLOTH: "You resist the rushing current of life. There is wisdom in stillness, but danger in stagnation.",
+          LUST: "Lust! Ha! At least you are honest. The spirits, they blush. I don't.",
+          GLUTTONY: "Gluttony. Good! Skinny people, I don't trust. They are hiding something. Usually food.",
+          PRIDE: "Pride. It makes you stand tall. Also you walk into doors, because you never look down.",
+          WRATH: "Anger. It burns the one who holds it first. Put it down, ~dragă~. Is hot.",
+          SLOTH: "Sloth. You don't want to move. Is fine. Sometimes the road moves for you. Not always in good direction.",
           GREED:
-            "You clutch tightly what you believe is yours. But possessions are like water—hold too tight, and they slip through your fingers.",
+            "Greed. You hold too tight, like water in fist. Everything drips out, and you have wet hand.",
         },
       },
       {
-        question: "Ah, I see shadows in your eyes... Tell me, what specter haunts your darkest dreams?",
+        question: "I see shadows in your eyes. Tell me, what scares you most in the dark?",
         options: ["DEATH", "AGING", "BEING ALONE", "CAPITALISM"],
         comments: {
           DEATH:
-            "Death... the universal fear. Yet it is merely a doorway, not an end. Perhaps what truly frightens you is what lies beyond.",
+            "Death. Everybody fears it. Is only a door, ~dragă~. What scares you is who waits on other side.",
           AGING:
-            "Time's march troubles you. The mirror becomes an enemy, but wisdom is the gift that youth cannot possess.",
+            "Old age. Look at me. Is not so bad. Only knees and memory and teeth. Otherwise perfect.",
           "BEING ALONE":
-            "Solitude terrifies you more than any monster. Yet sometimes it is in silence that we truly find ourselves.",
+            "Alone. Yes. I understand. Why you think I talk so much?",
           CAPITALISM:
-            "Ha! You fear the systems that bind us all. A philosophical soul, questioning the chains most never see.",
+            "Ha! Smart one. Capitalism takes your money, then sells you candle to feel better. I sell candles too. You want one?",
         },
       },
       {
-        question: "One final question... After your spirit leaves this form, what new shape would please you most?",
+        question: "Last question. When your soul leaves this body, what shape you want next?",
         options: ["ANIMAL", "OBJECT", "HUMAN", "PLANT"],
         comments: {
-          ANIMAL: "To run wild and free, guided by instinct rather than thought. There is honesty in such existence.",
+          ANIMAL: "Animal. Good. No thinking, no taxes. Only running and eating. Like most men I know.",
           OBJECT:
-            "Curious! To be still, unchanging, serving a single purpose. Perhaps you tire of life's constant demands.",
+            "Object? Strange choice. You are tired, I think. Very tired. Rest, then.",
           HUMAN:
-            "To walk this path again? Either you have found great joy in this life, or you seek to correct great regrets.",
+            "Human again? Brave. Or you have something to fix. Cards will tell which.",
           PLANT:
-            "To grow slowly, rooted in earth yet reaching for sky. There is profound peace in such a simple existence.",
+            "Plant. Slow life. Sun, water, nobody asks questions. Only dogs visit. You know why.",
         },
       },
     ]
@@ -238,7 +239,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
       <div className="w-full max-w-md mx-auto">
         {/* Gypsy's dialogue */}
         <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-800 mb-4">
-          <p className="text-purple-200 font-pixel text-sm">{gypsyComment}</p>
+          <p className="text-purple-200 font-pixel text-sm"><DialogueText text={gypsyComment} /></p>
         </div>
 
         {/* Display the current solution with underscores and revealed letters */}

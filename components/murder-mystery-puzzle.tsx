@@ -339,6 +339,7 @@ export default function MurderMysteryPuzzle({ onSolve, onLocationChange, onLocat
               <DialogueInterface
                 character={dialogue.currentCharacter}
                 typedText={dialogue.typedText}
+                isTyping={dialogue.isTyping}
                 dialogueOptions={dialogue.currentDialogueOptions}
                 askedQuestions={dialogue.askedQuestions}
                 dialoguePath={dialogue.dialoguePath}

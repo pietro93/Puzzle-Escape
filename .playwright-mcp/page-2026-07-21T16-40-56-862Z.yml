@@ -1,0 +1,30 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - generic [ref=f15e287]:
+      - button "Level 18 — open map" [ref=f15e289] [cursor=pointer]: Level 18
+      - generic [ref=f15e292]:
+        - generic [ref=f15e294] [cursor=pointer]:
+          - img "butler character" [ref=f15e297]
+          - img "Speech Icon" [ref=f15e300]
+        - img "mansion location" [ref=f15e304]
+      - generic [ref=f15e306]:
+        - paragraph [ref=f15e308]: Count Papagalul awaits.
+        - generic [ref=f15e310]:
+          - paragraph [ref=f15e312]: DEAD BABIES! DEAD BABIES
+          - img "Count Papagalul" [ref=f15e314]
+          - generic [ref=f15e316]:
+            - textbox "Talk to Count Papagalul..." [ref=f15e317]: tiengviet20
+            - button [ref=f15e348] [cursor=pointer]
+            - button [ref=f15e318] [cursor=pointer]
+      - generic [ref=f15e322]:
+        - generic [ref=f15e323]:
+          - textbox "Enter your answer..." [disabled] [ref=f15e325]: tiengviet20
+          - button [ref=f15e353] [cursor=pointer]
+          - button [disabled] [ref=f15e326]
+        - generic [ref=f15e357]: Jumping to level 20...
+        - generic [ref=f15e330]:
+          - button "Show Hints" [ref=f15e331] [cursor=pointer]
+          - generic [ref=f15e334]:
+            - button "Restart level" [ref=f15e335] [cursor=pointer]
+            - button "Toggle sound" [ref=f15e339] [cursor=pointer]
+  - alert [ref=f15e27]

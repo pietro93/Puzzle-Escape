@@ -217,7 +217,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
               key={index}
               src={connection || "/placeholder.svg"}
               alt="Connection line"
-              className="absolute inset-0 w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-contain animate-fireRoute motion-reduce:animate-none"
               style={{ zIndex: 2 }}
             />
           ))}

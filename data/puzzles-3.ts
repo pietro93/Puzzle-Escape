@@ -5,7 +5,7 @@ export const puzzlesSet3: Puzzle[] = [
   {
     level: 21,
     question: "The gypsy woman invites you to answer some questions about yourself.",
-    description: "Answer truthfully — the cards see through all deception.",
+    description: "Answer truthfully. The cards see through all deception.",
     imageUrl: "",
     isQuestionnairePuzzle: true,
     solution: "RANDOM", // This will be overridden by the component

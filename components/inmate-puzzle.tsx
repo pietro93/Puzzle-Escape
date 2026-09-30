@@ -4,6 +4,9 @@ import { useState } from "react"
 import CharacterDialoguePopup from "./character-dialogue-popup" // Import CharacterDialoguePopup component
 import Image from "next/image"
 import { SpeechIndicator } from "./character-location-display"
+import TalkingPortrait from "./talking-portrait"
+import { DialogueText } from "@/components/dialogue-text"
+import { genderize } from "@/utils/player-gender"
 
 
 interface InmateStatement {
@@ -21,6 +24,8 @@ interface InmatePuzzleProps {
   guardStatement?: string
   level?: number
   onGuardClick?: () => void
+  // Fires once the player has spoken to every inmate at least once (unlocks the answer box).
+  onSolve?: () => void
 }
 
 export default function InmatePuzzle({
@@ -28,12 +33,14 @@ export default function InmatePuzzle({
   guardStatement = "An inmate has been murdered, and one of these four inmates did it. Who is the killer?",
   level = 0,
   onGuardClick,
+  onSolve,
 }: InmatePuzzleProps) {
   const [activeInmate, setActiveInmate] = useState<number | null>(null)
   const [dialogText, setDialogText] = useState<string>("")
   const [showGuardDialog, setShowGuardDialog] = useState(false) //Modified to false
   // Keep track of the last statement index shown for each inmate
   const [lastStatementIndices, setLastStatementIndices] = useState<number[]>(inmates.map(() => -1))
+  const [solveFired, setSolveFired] = useState(false)
 
   const handleInmateClick = (index: number) => {
     // Get the next statement for this inmate in rotation
@@ -41,12 +48,17 @@ export default function InmatePuzzle({
     if (inmate && inmate.statements.length > 0) {
       // Get the next statement index in rotation
       const nextIndex = (lastStatementIndices[index] + 1) % inmate.statements.length
-      const statement = inmate.statements[nextIndex].text
+      const statement = genderize(inmate.statements[nextIndex].text)
 
       // Update the last statement index for this inmate
       const newIndices = [...lastStatementIndices]
       newIndices[index] = nextIndex
       setLastStatementIndices(newIndices)
+
+      if (!solveFired && newIndices.every((i) => i >= 0)) {
+        setSolveFired(true)
+        onSolve?.()
+      }
 
       setDialogText(statement)
     }
@@ -88,12 +100,12 @@ export default function InmatePuzzle({
             onClick={() => handleInmateClick(index)}
           >
             <div className="w-32 h-32 relative pixelated-container mb-2 border-2 border-gray-800 hover:border-purple-600 transition-colors">
-              <Image
+              <TalkingPortrait
+                character={inmate.name}
                 src={inmate.image || "/placeholder.svg"}
                 alt={`Inmate ${inmate.name}`}
-                width={128}
-                height={128}
-                className="pixelated"
+                speech={activeInmate === index ? dialogText : null}
+                className="pixelated w-full h-auto"
               />
             <SpeechIndicator />
             </div>
@@ -114,17 +126,17 @@ export default function InmatePuzzle({
           >
             <div className="flex items-start gap-3">
               <div className="w-16 h-16 relative pixelated-container shrink-0">
-                <Image
+                <TalkingPortrait
+                  character={inmates[activeInmate].name}
                   src={inmates[activeInmate].image || "/placeholder.svg"}
                   alt={inmates[activeInmate].name}
-                  width={64}
-                  height={64}
-                  className="pixelated"
+                  speech={dialogText}
+                  className="pixelated w-full h-auto"
                 />
               </div>
               <div className="flex-1">
                 <p className="text-purple-300 font-pixel mb-2">{inmates[activeInmate].name}:</p>
-                <p className="text-gray-200 text-sm">"{dialogText}"</p>
+                <p className="text-gray-200 text-sm">"<DialogueText text={dialogText} />"</p>
               </div>
             </div>
             <div className="mt-4 text-center">

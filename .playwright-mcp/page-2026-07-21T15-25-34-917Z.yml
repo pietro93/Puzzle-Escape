@@ -1,0 +1,10 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - generic [ref=f15e28]:
+      - button [ref=f15e30] [cursor=pointer]
+      - generic [ref=f15e35]:
+        - heading "Puzzle Escape" [level=1] [ref=f15e36]
+        - generic [ref=f15e38]:
+          - paragraph [ref=f15e39]: "|"
+          - paragraph [ref=f15e41]: Tap anywhere to continue...
+  - alert [ref=f15e27]

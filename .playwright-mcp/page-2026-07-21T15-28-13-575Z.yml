@@ -1,0 +1,46 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - generic [ref=f15e117]:
+      - button "Level 10 — open map" [ref=f15e119] [cursor=pointer]: Level 10
+      - generic [ref=f15e122]:
+        - generic [ref=f15e124] [cursor=pointer]:
+          - img "skeleton character" [ref=f15e127]
+          - img "Speech Icon" [ref=f15e130]
+        - img "prison location" [ref=f15e134]
+      - generic [ref=f15e136]:
+        - paragraph [ref=f15e138]: Whodunit? Find the culprit.
+        - generic [ref=f15e139]:
+          - paragraph [ref=f15e140]: The guard claims one of the inmates is the murderer. Speak with each inmate to hear their statements. Beware - only one of them is saying the truth.
+          - generic [ref=f15e142]:
+            - generic [ref=f15e143] [cursor=pointer]:
+              - generic [ref=f15e144]:
+                - img "Inmate Caine" [ref=f15e145]
+                - img "Speech Icon" [ref=f15e147]
+              - paragraph [ref=f15e148]: Caine
+            - generic [ref=f15e149] [cursor=pointer]:
+              - generic [ref=f15e150]:
+                - img "Inmate Ronan" [ref=f15e151]
+                - img "Speech Icon" [ref=f15e153]
+              - paragraph [ref=f15e154]: Ronan
+            - generic [ref=f15e155] [cursor=pointer]:
+              - generic [ref=f15e156]:
+                - img "Inmate Lyra" [ref=f15e157]
+                - img "Speech Icon" [ref=f15e159]
+              - paragraph [ref=f15e160]: Lyra
+            - generic [ref=f15e161] [cursor=pointer]:
+              - generic [ref=f15e162]:
+                - img "Inmate Silas" [ref=f15e163]
+                - img "Speech Icon" [ref=f15e165]
+              - paragraph [ref=f15e166]: Silas
+      - generic [ref=f15e167]:
+        - generic [ref=f15e168]:
+          - textbox "Enter your answer..." [disabled] [ref=f15e170]: tiengviet13
+          - button [ref=f15e189] [cursor=pointer]
+          - button [disabled] [ref=f15e171]
+        - generic [ref=f15e193]: Jumping to level 13...
+        - generic [ref=f15e175]:
+          - button "Show Hints" [ref=f15e176] [cursor=pointer]
+          - generic [ref=f15e179]:
+            - button "Restart level" [ref=f15e180] [cursor=pointer]
+            - button "Toggle sound" [ref=f15e184] [cursor=pointer]
+  - alert [ref=f15e27]

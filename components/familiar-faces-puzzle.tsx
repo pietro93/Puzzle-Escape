@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
+import TalkingPortrait from "./talking-portrait"
 import { SpeechIndicator } from "./character-location-display"
+import { genderize } from "@/utils/player-gender"
 
 interface DialogueOption {
   id: string
@@ -327,7 +329,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         who: [
           {
             gesture: "The butler adjusts his bow tie with meticulous precision",
-            text: "Good day, sir. I think we have met before.",
+            text: "Good day, {{sir|madam|guest}}. I think we have met before.",
           },
         ],
         why: [
@@ -345,7 +347,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         "lost-soul": [
           {
             gesture: "The butler's eyes betray a hint of knowledge",
-            text: "Ah, yes. If I may direct your attention to the library, sir. There is a particular volume on Italian literature of the Middle Ages that might prove illuminating.",
+            text: "Ah, yes. If I may direct your attention to the library{{, sir|, madam|}}. There is a particular volume on Italian literature of the Middle Ages that might prove illuminating.",
           },
         ],
         storyteller: [
@@ -357,13 +359,13 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         poet: [
           {
             gesture: "The butler's tone is measured and precise",
-            text: "If you would consult the third volume on the eastern bookshelf, sir, you would find that this poet was born in Florence circa 1265. His work revolutionized literature by using the vernacular rather than Latin.",
+            text: "If you would consult the third volume on the eastern bookshelf{{, sir|, madam|}}, you would find that this poet was born in Florence circa 1265. His work revolutionized literature by using the vernacular rather than Latin.",
           },
         ],
         city: [
           {
             gesture: "The butler straightens his already impeccable posture",
-            text: "The birthplace of the Renaissance, sir. A city of merchants and bankers that became a cradle of art and literature.",
+            text: "The birthplace of the Renaissance{{, sir|, madam|}}. A city of merchants and bankers that became a cradle of art and literature.",
           },
         ],
         italy: [
@@ -387,7 +389,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         muse: [
           {
             gesture: "The butler's tone is educational",
-            text: "According to the Master's collection of literary criticism, sir, this particular muse was a woman the poet saw only twice in his life. Yet she became the central figure in his work, representing divine love and guidance.",
+            text: "According to the Master's collection of literary criticism{{, sir|, madam|}}, this particular muse was a woman the poet saw only twice in his life. Yet she became the central figure in his work, representing divine love and guidance.",
           },
         ],
         count: [
@@ -399,7 +401,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         "guard-painter": [
           {
             gesture: "The butler's lips press into a thin line",
-            text: "A painter? No, sir. The guard is... confused. Or deliberately misleading you. The Master's biographical dictionary clearly states that the individual we seek was a poet, not a painter.",
+            text: "A painter? No{{, sir|, madam|}}. The guard is... confused. Or deliberately misleading you. The Master's biographical dictionary clearly states that the individual we seek was a poet, not a painter.",
           },
         ],
         "guard-venice": [
@@ -417,25 +419,25 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         "guard-russia": [
           {
             gesture: "The butler's expression becomes carefully neutral",
-            text: "Russia? Sir, the historical atlas in the Master's study clearly places our subject in Italy, not Russia. The guard appears to be... fabricating information.",
+            text: "Russia? {{Sir|Madam|My dear guest}}, the historical atlas in the Master's study clearly places our subject in Italy, not Russia. The guard appears to be... fabricating information.",
           },
         ],
         "guard-trust": [
           {
             gesture: "The butler's expression becomes carefully neutral",
-            text: "The guard has been here a very long time, sir. Perhaps too long. His memory and motivations are not always... reliable. I would suggest consulting more... scholarly sources.",
+            text: "The guard has been here a very long time{{, sir|, madam|}}. Perhaps too long. His memory and motivations are not always... reliable. I would suggest consulting more... scholarly sources.",
           },
         ],
         "middle-ages": [
           {
             gesture: "The butler consults an imaginary pocket watch",
-            text: "The Master's historical chronicles place our poet in the late 13th and early 14th centuries, sir. A tumultuous time in Florence, with much political strife between the Guelphs and Ghibellines.",
+            text: "The Master's historical chronicles place our poet in the late 13th and early 14th centuries{{, sir|, madam|}}. A tumultuous time in Florence, with much political strife between the Guelphs and Ghibellines.",
           },
         ],
         default: [
           {
             gesture: "The butler maintains his perfect composure",
-            text: "I'm afraid I cannot be of assistance with that particular inquiry, sir. Perhaps another line of questioning would be more productive?",
+            text: "I'm afraid I cannot be of assistance with that particular inquiry{{, sir|, madam|}}. Perhaps another line of questioning would be more productive?",
           },
         ],
       },
@@ -851,7 +853,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
       // Use default response if available, otherwise generic message
       if (character.dialogues.default && character.dialogues.default.length > 0) {
         setDialogGesture(character.dialogues.default[0].gesture)
-        setDialogText(character.dialogues.default[0].text)
+        setDialogText(genderize(character.dialogues.default[0].text))
       } else {
         setDialogGesture("")
         setDialogText("I have nothing to say about that.")
@@ -875,7 +877,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
 
     // Set the dialogue text and gesture
     setDialogGesture(dialogue.gesture)
-    setDialogText(dialogue.text)
+    setDialogText(genderize(dialogue.text))
 
     // Handle special unlocks based on dialogue
     handleSpecialUnlocks(optionId, dialogue.text, character.id)
@@ -995,12 +997,12 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
           >
             <div className="w-24 h-24 relative pixelated-container mb-2">
               <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>
-              <Image
+              <TalkingPortrait
+                character={character.id}
                 src={character.image || "/placeholder.svg"}
                 alt={character.name}
-                width={96}
-                height={96}
-                className="pixelated z-10 relative"
+                speech={showDialog && activeCharacter === character.id ? dialogText : null}
+                className="pixelated z-10 relative w-full h-full"
               />
               <SpeechIndicator />
             <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none"></div>
@@ -1024,7 +1026,9 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
             {/* Character portrait and name header */}
             <div className="bg-gray-800 p-3 border-b border-gray-700 flex items-center gap-3">
               <div className="w-12 h-12 relative pixelated-container shrink-0">
-                <Image
+                <TalkingPortrait
+                  character={activeCharacter ?? ""}
+                  speech={dialogText}
                   src={
                     activeCharacter === "devil"
                       ? "/images/devil.webp"
@@ -1035,9 +1039,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
                       ? "The Devil"
                       : characters.find((c) => c.id === activeCharacter)?.name || ""
                   }
-                  width={48}
-                  height={48}
-                  className="pixelated"
+                  className="pixelated w-full h-full"
                 />
               </div>
               <p className="text-purple-300 font-pixel">

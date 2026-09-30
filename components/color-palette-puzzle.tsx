@@ -184,7 +184,11 @@ export default function ColorPalettePuzzle({ onSolve, showPopup, onClosePopup }:
               <img
                 src={entry.imagePath || "/placeholder.svg"}
                 alt={entry.name}
-                className="w-full h-full object-contain pixelated"
+                className={`w-full h-full object-contain pixelated ${
+                  correctInputs[entry.name]
+                    ? "animate-pop motion-reduce:animate-none drop-shadow-[0_0_6px_rgba(216,180,254,0.7)]"
+                    : ""
+                }`}
               />
             </div>
             <div className="flex-1">

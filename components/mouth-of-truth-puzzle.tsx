@@ -48,6 +48,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
 
   // State for tracking if the puzzle is solved
   const [puzzleSolved, setPuzzleSolved] = useState(false)
+  const [wrongGuesses, setWrongGuesses] = useState(0)
 
   // State for the revealed marbles after solving
   const [revealedMarbles, setRevealedMarbles] = useState<Array<{ color: MarbleType; letter: string }>>([])
@@ -271,6 +272,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
       } else {
         // Play wrong sound
         if (playSound) playSound("/audio/wrong.mp3")
+        setWrongGuesses((n) => n + 1)
       }
     }
   }
@@ -409,7 +411,13 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
       )}
 
       {/* Mouth of Truth image - arranged in a grid with no spacing */}
-      <div className="relative w-[300px] h-[300px] grid grid-cols-3 grid-rows-2 gap-0">
+      <div
+        // Remount on each wrong guess so the whole face shakes again
+        key={`face-${wrongGuesses}`}
+        className={`relative w-[300px] h-[300px] grid grid-cols-3 grid-rows-2 gap-0 ${
+          wrongGuesses > 0 ? "animate-shake motion-reduce:animate-none" : ""
+        }`}
+      >
         {/* Top Left */}
         <div
           className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
+import { DialogueText } from "@/components/dialogue-text"
 
 interface TarotPuzzleProps {
   onSolve: () => void
@@ -24,7 +25,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
       name: "The Tower",
       image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-tower-oMGGoAM5EyK5uRozTQwIRVGRAsFXLO.webp",
       description:
-        "Ah, The Tower... a powerful omen from your past. I see destruction, chaos, a sudden and violent change that shattered the foundations of your life. The lightning strikes, the crown falls, and those who once dwelled in false security are cast down. This card speaks of a moment when everything you believed to be solid crumbled beneath you.",
+        "Ah, The Tower. From your past. Lightning hits, crown falls. One moment everything is solid, next moment noise and glass and falling. Something broke in your life, all at once.",
       position: "Past",
     },
     {
@@ -32,7 +33,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
       name: "Death (Reversed)",
       image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-death-q4CUzCuQkIcICz5umh922SunC7de4h.webp",
       description:
-        "Death reversed in your present... most interesting. The great transformation is being resisted. Something is preventing you from fully releasing the past and embracing necessary change. You stand at a threshold but refuse to cross it. The scythe is dull, the harvest delayed. Perhaps you cling to old patterns, old habits... or perhaps something external blocks your path forward.",
+        "Death, but reversed, upside down. In your present! Relax your face, Death card means change. Upside down means you fight it. You stand at the door and won't walk through. Why you hold on so tight, eh?",
       position: "Present",
       isReversed: true,
     },
@@ -42,7 +43,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-devil-card-jbUOfPq9O11r05SnRDPanCMeEUMqM4.webp",
       description:
-        "The Devil awaits in your future... a troubling sign. I see entrapment, addiction, the chains we forge ourselves yet blame on fate. Tell me, do you have a history with substances that cloud the mind? Or perhaps your bondage is of another nature—a relationship, a belief, a fear that holds you captive? The Devil offers power and pleasure but demands your freedom as payment.",
+        "The Devil, in your future. Bad sign, very bad. Chains you make yourself, then blame on fate. Tell me, you like things that make the head cloudy? The bottle, maybe? The Devil gives pleasure first. Then he sends the bill.",
       position: "Future",
     },
     {
@@ -51,7 +52,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
       image:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-hanged-man-lfRUkpx4fBO2LaBKp6PYretlisTMHo.webp",
       description:
-        "The Hanged Man reversed represents your challenge. You resist the suspension, the surrender, the sacrifice needed for enlightenment. In your right position, this figure gains wisdom through stillness and seeing the world from a different perspective. But reversed, I see impatience, an unwillingness to pause and reflect. You struggle against necessary delays, fighting the very stillness that would grant you insight.",
+        "The Hanged Man, also reversed. Your challenge. Right way up, he hangs by one foot and he is happy, he sees world from new angle. Upside down, he kicks and kicks. This is you. The road says wait, and you press the pedal anyway.",
       position: "Challenge",
       isReversed: true,
     },
@@ -60,7 +61,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
       name: "The Fool",
       image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/the-fool-zIJkNTtQTZ72JEe3OEifaAsNqZs4CU.webp",
       description:
-        "And finally, The Fool offers guidance. The divine innocent, stepping joyfully into the unknown. This card encourages you to embrace new beginnings with faith and optimism. Release your fear of appearing foolish. Take that first step, even when you cannot see the entire path. Trust in the journey. The little dog at The Fool's heels represents instinct and loyalty—listen to your intuition, but do not let fear hold you back.",
+        "The Fool! He walks off cliff smiling like baby. Stupid? Maybe. But he walks. You, you stand at the edge too long. See little dog at his feet? Dog knows. Listen to dog.",
       position: "Guidance",
     },
   ]
@@ -71,7 +72,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
     name: "Tarot Decoder",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tarot-decoder-ArWhfze9wYYvng3iPHW6CItDve6wQZ.webp",
     description:
-      "My eyes grow wide as I reveal this final card. The spirits have spoken clearly tonight. This key will unlock the path forward, but only for those with the wisdom to interpret its meaning. I have faith in you, traveler. Solve this riddle and continue your journey.",
+      "Ooh, my eyes, they go big. Last card is a key, ~dragă~. The spirits want you to work for it. I have faith in you. Little bit. Solve, then go.",
   }
 
   // Handle card click during the reading
@@ -121,19 +122,19 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
   // Get the gypsy's dialogue based on current step
   const getGypsyDialogue = () => {
     if (currentStep === 0) {
-      return "The cards have been whispering your name, traveler. I will now give you a tarot reading using the Major Arcana—the most powerful cards in my deck. These ancient symbols will reveal what has been, what is, and what may yet come to pass. Draw your first card to reveal your past."
+      return "Cards say your name all morning, traveler. Very rude, they don't let me sleep. Sit. Big cards only today, Major Arcana. Draw first one, your past."
     } else if (currentStep === 1) {
-      return "The past reveals itself. Now, let us see what forces shape your present. Draw the next card."
+      return "So, that was before. Now, what shapes you today? Draw."
     } else if (currentStep === 2) {
-      return "Your present stands exposed. Now we must peer into the mists of what is yet to come. Draw the card of your future."
+      return "Now the future. Draw, draw, I don't bite."
     } else if (currentStep === 3) {
-      return "The future casts its shadow. Now we must understand what obstacles stand in your path. Draw the card that reveals your challenge."
+      return "Now what stands in your way. Next card."
     } else if (currentStep === 4) {
-      return "Your challenge is clear. Finally, we seek wisdom on how to move forward. Draw the card that will provide guidance."
+      return "Last one tells you what to do about it. Draw."
     } else if (currentStep === 5) {
-      return "The reading is complete, but the spirits have one final message. This last card holds the key to continuing your journey."
+      return "Reading is done. But spirits, they are greedy. They want one more card. This last one is a key. Keep it close."
     } else {
-      return "Study these cards carefully, traveler. The answer lies within them. The spirits have spoken—it is now up to you to understand their message."
+      return "Look at the cards good, traveler. The answer is in them. Spirits talked, now you do the thinking."
     }
   }
 
@@ -151,7 +152,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
     <div className="w-full max-w-md mx-auto">
       {/* Gypsy's dialogue */}
       <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-800 mb-4">
-        <p className="text-purple-200 font-pixel text-sm">{getGypsyDialogue()}</p>
+        <p className="text-purple-200 font-pixel text-sm"><DialogueText text={getGypsyDialogue()} /></p>
       </div>
 
       {/* Reading in progress */}
@@ -179,7 +180,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
               <p className="text-purple-300 font-pixel text-sm mb-1">
                 {getCurrentCard().name} - {getCurrentCard().position}
               </p>
-              <p className="text-gray-300 text-xs">{getCurrentCard().description}</p>
+              <p className="text-gray-300 text-xs"><DialogueText text={getCurrentCard().description} /></p>
             </div>
           )}
 
@@ -264,14 +265,14 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
                 <p className="text-purple-300 font-pixel text-sm mb-1">
                   {cards[showFullCard].name} - {cards[showFullCard].position}
                 </p>
-                <p className="text-gray-300 text-xs">{cards[showFullCard].description}</p>
+                <p className="text-gray-300 text-xs"><DialogueText text={cards[showFullCard].description} /></p>
               </div>
             )}
 
             {showFullCard === 5 && (
               <div className="mt-4 bg-gray-900/90 p-3 rounded-lg border border-gray-800">
                 <p className="text-purple-300 font-pixel text-sm mb-1">{decoderCard.name}</p>
-                <p className="text-gray-300 text-xs">{decoderCard.description}</p>
+                <p className="text-gray-300 text-xs"><DialogueText text={decoderCard.description} /></p>
               </div>
             )}
           </div>

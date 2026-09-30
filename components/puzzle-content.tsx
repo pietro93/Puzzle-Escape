@@ -37,7 +37,7 @@ import MagicBoxPuzzle from "./magic-box-puzzle"
 import InfernalChessPuzzle from "./infernal-chess-puzzle"
 import DamnedSoulsPuzzle from "./damned-souls-puzzle"
 import PrisonCellPuzzle from "./prison-cell-puzzle"
-import BoneCountingPuzzle from "./bone-counting-puzzle"
+import BoneCountingPuzzle, { type BoneColor } from "./bone-counting-puzzle"
 import FearYourDreamsPuzzle from "./fear-your-dreams-puzzle"
 import WordLadderCarouselPuzzle from "./word-ladder-carousel-puzzle"
 import BoneTileMazePuzzle from "./bone-tile-maze-puzzle"
@@ -77,9 +77,12 @@ interface PuzzleContentProps {
   onMagicBoxSolved?: () => void
   onMansionClockStepChange?: (step: number) => void
   onMansionRoomStateChange?: (room: string, examining: boolean) => void
+  onBookshelfRevealedChange?: (revealed: boolean) => void
   onInteractionComplete?: () => void
   showColorPalettePopup?: boolean
   onCloseColorPalettePopup?: () => void
+  onBoneOfferedToGuard?: (color: BoneColor, rustReturned: number, rustTotal: number) => void
+  lastWrongAnswer?: { text: string; nonce: number } | null
 }
 
 export default function PuzzleContent({
@@ -107,9 +110,12 @@ export default function PuzzleContent({
   onMagicBoxSolved,
   onMansionClockStepChange,
   onMansionRoomStateChange,
+  onBookshelfRevealedChange,
   onInteractionComplete,
   showColorPalettePopup,
   onCloseColorPalettePopup,
+  onBoneOfferedToGuard,
+  lastWrongAnswer,
 }: PuzzleContentProps) {
   // Check if this puzzle has an image
   const hasImage = puzzle.imageUrl && puzzle.imageUrl.trim() !== ""
@@ -299,7 +305,11 @@ export default function PuzzleContent({
 
        {isBoneCountingPuzzle ? (
        <div className="my-4">
-       <BoneCountingPuzzle onSolve={() => onInteractionComplete?.()} />
+       <BoneCountingPuzzle
+         onSolve={() => onInteractionComplete?.()}
+         onBoneOfferedToGuard={onBoneOfferedToGuard}
+         lastWrongAnswer={lastWrongAnswer}
+       />
        </div>
        ) : null}
 
@@ -498,6 +508,7 @@ export default function PuzzleContent({
             guardStatement={puzzle.guardStatement || guardDialogLines[guardDialogIndex]}
             level={level}
             onGuardClick={handleGuardClick}
+            onSolve={() => onInteractionComplete?.()}
           />
         </div>
       ) : isLightSwitchPuzzle ? (
@@ -609,7 +620,10 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <BookshelfChronologyPuzzle onSolve={() => onInteractionComplete?.()} />
+          <BookshelfChronologyPuzzle
+            onSolve={() => onInteractionComplete?.()}
+            onRevealedChange={onBookshelfRevealedChange}
+          />
         </div>
       ) : null}
 

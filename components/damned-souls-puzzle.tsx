@@ -20,6 +20,7 @@ export default function DamnedSoulsPuzzle({ onSolve }: { onSolve?: () => void } 
   const [openedChests, setOpenedChests] = useState<Set<number>>(new Set())
 
   const handleChestSelect = (chestIndex: number) => {
+    if (chestBusy) return
     if (selectedChest === chestIndex) {
       // Toggle open/close
       const nextOpen = !isOpen
@@ -32,6 +33,37 @@ export default function DamnedSoulsPuzzle({ onSolve }: { onSolve?: () => void } 
       setSelectedChest(chestIndex)
       setIsOpen(false)
     }
+  }
+
+  // Big chest: rattles before the lid pops open, thuds when closed.
+  const [chestAnim, setChestAnim] = useState<{ kind: "rattle" | "pop" | "squash"; n: number } | null>(null)
+  const [chestBusy, setChestBusy] = useState(false)
+  const playChest = (kind: "rattle" | "pop" | "squash") => setChestAnim((a) => ({ kind, n: (a?.n ?? 0) + 1 }))
+
+  const toggleBigChest = () => {
+    if (selectedChest === null || chestBusy) return
+    if (isOpen) {
+      setIsOpen(false)
+      playChest("squash")
+      return
+    }
+    const open = () => {
+      setIsOpen(true)
+      // Opening the big chest counts as reading it (previously only re-clicking
+      // the small chest did, so opening all five here never unlocked the answer).
+      setOpenedChests((prev) => new Set(prev).add(selectedChest))
+    }
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      open()
+      return
+    }
+    setChestBusy(true)
+    playChest("rattle")
+    setTimeout(() => {
+      open()
+      playChest("pop")
+      setChestBusy(false)
+    }, 500)
   }
 
   useEffect(() => {
@@ -55,7 +87,7 @@ export default function DamnedSoulsPuzzle({ onSolve }: { onSolve?: () => void } 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             className="mb-4 relative cursor-pointer flex flex-col items-center"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={toggleBigChest}
           >
             {isOpen && (
               <motion.div
@@ -76,9 +108,12 @@ export default function DamnedSoulsPuzzle({ onSolve }: { onSolve?: () => void } 
               </motion.div>
             )}
             <img
+              key={chestAnim?.n ?? 0}
               src={`/images/chest-${selectedChest + 1}-${isOpen ? 'open' : 'closed'}.webp`}
               alt={`Chest ${selectedChest + 1}`}
-              className="w-64 md:w-80 h-auto"
+              className={`w-64 md:w-80 h-auto origin-bottom ${
+                chestAnim ? { rattle: "animate-rattle", pop: "animate-pop", squash: "animate-squash" }[chestAnim.kind] : ""
+              }`}
             />
           </motion.div>
         )}

@@ -12,15 +12,15 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   // Zone 1: Prison Cell - Skeleton Guard
   1: {
     character: "skeleton",
-    lines: [`"There's a secret message hidden somewhere in this cell," the guard rasps.`, `"Find it, if you can."`],
+    lines: [`"There's a secret message hidden somewhere in this cell," the guard rasps.`, `"Find it, if ya can."`],
   },
   2: {
     character: "skeleton",
-    lines: [`"Fine, let's see if you figure out what to do next," the guard mutters.`, `"Tsk."`],
+    lines: [`"Fine, let's see if ya figure out what to do next," the guard mutters.`, `"Tsk."`],
   },
   3: {
     character: "skeleton",
-    lines: [`"Mphf. Let's test your math," the guard grunts, nodding toward the three locks.`],
+    lines: [`"Mphf. Let's test yer math," the guard grunts, nodding toward the three locks.`],
   },
   4: {
     character: "skeleton",
@@ -28,27 +28,27 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   5: {
     character: "skeleton",
-    lines: [`"Like clockwork," the guard mutters, nodding at the circular markings.`, `"Clockwise. That's the only hint you're getting."`],
+    lines: [`"Like clockwork," the guard mutters, nodding at the circular markings.`, `"Clockwise. That's the only hint yer gettin'."`],
   },
   6: {
     character: "skeleton",
-    lines: [`"This is Shackles," the guard grunts, nodding at the spectral dog blocking your path.`, `"Feed him right, and he'll let you through."`],
+    lines: [`"This is Shackles," the guard grunts, nodding at the spectral dog blocking your path.`, `"Feed him right, and he'll let ya through."`],
   },
   7: {
     character: "skeleton",
-    lines: [`"Mphf. I can't let you go," the guard taunts.`, `"You won't solve this one!"`],
+    lines: [`"Mphf. I can't let ya go," the guard taunts.`, `"Ya won't solve this one!"`],
   },
   8: {
     character: "skeleton",
-    lines: [`"You think these puzzles are easy? Ha!"`, `"I present you: the magic box."`],
+    lines: [`"Ya think these puzzles are easy? Hah-hah-hah."`, `"I present to ya: the magic box."`],
   },
   9: {
     character: "skeleton",
-    lines: [`"Heh. Rats," the guard snorts, watching them skitter between the skulls in the dark.`, `"Good luck making sense of that."`],
+    lines: [`"Heh. Rats," the guard snorts, watching them skitter between the skulls in the dark.`, `"Good luck makin' sense of that."`],
   },
   10: {
     character: "skeleton",
-    lines: [`"An inmate has been murdered, and one of these four did it," the guard says.`, `"Find out who, if you're clever enough."`],
+    lines: [`"An inmate's been murdered, and one of these four did it," the guard says.`, `"Find out who, if yer clever enough."`],
   },
 
   // Zone 2: Mansion - The Butler
@@ -94,7 +94,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
     character: "butler",
     lines: [
       `"I do hope you are prepared for a challenge," the butler says, gesturing toward the library archive.`,
-      `"Before you lies the family tree of the House of Morvane — and its secrets."`,
+      `"Before you lies the family tree of the House of Morvane, and all its secrets."`,
       `"Somewhere in these records is a forgotten heir. One who ruled briefly, and infamously."`,
       `"The answer lies in the books, and in the tree itself. I trust you have a keen eye for genealogy."`,
     ],
@@ -113,33 +113,33 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
     character: "gypsy",
     lines: [
       `The gypsy woman leans forward, her eyes gleaming with curiosity.`,
-      `"Before I can read your future, I must understand your essence."`,
-      `"Answer truthfully — for the cards see through all deception."`,
+      `"Before I read your future, I must know what you are made of."`,
+      `"Answer true. Cards see through lies. Also I do."`,
     ],
   },
   22: {
     character: "gypsy",
-    lines: [`She presents you with three cups, each containing mysterious patterns in the coffee residue.`, `"The grounds never lie," she whispers.`],
+    lines: [`She presents you with three cups, each containing mysterious patterns in the coffee residue.`, `"Grounds never lie," she whispers. "People lie. Grounds only gossip."`],
   },
   23: {
     character: "gypsy",
-    lines: [`The crystal ball clouds over, then clears to reveal shifting patterns of light.`, `"I see a distant culture, an ancient zodiac cycle," the gypsy whispers.`, `"Tell me the year and animal I'm seeing."`],
+    lines: [`The crystal ball clouds over, then clears to reveal shifting patterns of light.`, `"I see faraway land. Very old zodiac," the gypsy whispers.`, `"Tell me year and animal I see."`],
   },
   24: {
     character: "gypsy",
-    lines: [`The gypsy woman presents you with fragments of a crystal mosaic.`, `"Reassemble the pieces to reveal the name of a precious stone with mystical properties."`],
+    lines: [`The gypsy woman presents you with fragments of a crystal mosaic.`, `"Put pieces back together. Is precious stone, very magic. You tell me its name."`],
   },
   25: {
     character: "gypsy",
     lines: [
-      `"These symbols were used by ancient mystics to encode their most powerful secrets," the gypsy explains, her eyes gleaming with excitement.`,
-      `"Each shape holds a specific value. Combined, they reveal the key to hidden knowledge."`,
-      `"Solve this, and you'll glimpse the numeric code that opens the door to the next realm."`,
+      `"Old mystics hide their secrets in these symbols," the gypsy says, eyes gleaming. "Very clever people. Very bad handwriting."`,
+      `"Each shape has its own value. Put together, they make key to hidden knowledge."`,
+      `"Solve, and you see number code that opens door to next place."`,
     ],
   },
   26: {
     character: "gypsy",
-    lines: [`The gypsy woman leads you outside her wagon and points upward.`, `"The stars have much to tell us tonight," she whispers.`, `"Look closely at the heavens. What do you see?"`],
+    lines: [`The gypsy woman leads you outside her wagon and points upward.`, `"Stars are talking tonight," she whispers. "Inside wagon I cannot hear them."`, `"Look close at the sky. What you see?"`],
   },
   27: {
     character: "gypsy",
@@ -147,7 +147,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   28: {
     character: "gypsy",
-    lines: [`The gypsy woman presents you with magical crystals and a compendium.`, `"Arrange the seven crystals in their proper sequence, starting from the top and moving clockwise."`],
+    lines: [`The gypsy woman presents you with magical crystals and a compendium.`, `"Seven crystals. Put them in proper order. Start from top, go clockwise."`],
   },
   29: {
     character: "gypsy",
@@ -155,7 +155,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   30: {
     character: "gypsy",
-    lines: [`The gypsy woman prepares to give you a tarot reading using the Major Arcana cards.`, `"The final card reveals your destiny," she says.`],
+    lines: [`The gypsy woman prepares to give you a tarot reading using the Major Arcana cards.`, `"Last card shows your destiny," she says. "No refunds."`],
   },
 
   // Zone 4: Desert - The Sphinx

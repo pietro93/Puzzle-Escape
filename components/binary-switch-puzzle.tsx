@@ -37,6 +37,8 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
   const [correctCombinations, setCorrectCombinations] = useState(0)
   // State to track if puzzle is solved
   const [isSolved, setIsSolved] = useState(false)
+  // Switches the player has flipped at least once (only those play the squash)
+  const [flipped, setFlipped] = useState<Set<string>>(new Set())
 
   // Function to get opacity based on correct combinations
   const getOpacity = (switchIndex: number) => {
@@ -77,6 +79,7 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
     const newSwitches = [...switches]
     // Toggle the switch (0 to 1 or 1 to 0)
     newSwitches[rowIndex][switchIndex] = newSwitches[rowIndex][switchIndex] === 0 ? 1 : 0
+    setFlipped((prev) => (prev.has(`${rowIndex}-${switchIndex}`) ? prev : new Set(prev).add(`${rowIndex}-${switchIndex}`)))
     // Update the state
     setSwitches(newSwitches)
   }
@@ -134,13 +137,18 @@ export default function BinarySwitchPuzzle({ onSolve, onCorrectCombinationsChang
                   className={`w-10 h-14 flex items-center justify-center ${switchIndex < 3 ? "cursor-not-allowed" : "cursor-pointer"} ${isSolved ? "cursor-not-allowed" : ""}`}
                 >
                   <img
+                    // Remount on flip so the squash replays; the fixed first
+                    // three switches never flip, so they never animate.
+                    key={value}
                     src={
                       value === 1
                         ? "/images/flipswitch_1.webp"
                         : "/images/flipswitch_0.webp"
                     }
                     alt={value === 1 ? "Switch On" : "Switch Off"}
-                    className="w-full h-full object-contain pixelated"
+                    className={`w-full h-full object-contain pixelated origin-bottom ${
+                      flipped.has(`${rowIndex}-${switchIndex}`) ? "animate-squash motion-reduce:animate-none" : ""
+                    }`}
                     style={{ opacity: getOpacity(switchIndex) }}
                   />
                 </button>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useLayoutEffect } from "react"
 import Image from "next/image"
 
 interface Pedestal {
@@ -131,6 +131,34 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
   const containerRef = useRef<HTMLDivElement>(null)
   const [pathSegments, setPathSegments] = useState<{ from: string; to: string }[]>([])
 
+  // The scarab is re-rendered at its new spot on every move; to make it hop
+  // instead of teleport, remember where it was and animate from there in an arc.
+  const scarabRef = useRef<HTMLDivElement>(null)
+  const scarabFromRef = useRef<DOMRect | null>(null)
+  const moveScarabTo = (destinationId: string) => {
+    scarabFromRef.current = scarabRef.current?.getBoundingClientRect() ?? null
+    setScarabPosition(destinationId)
+  }
+  useLayoutEffect(() => {
+    const from = scarabFromRef.current
+    const el = scarabRef.current
+    scarabFromRef.current = null
+    if (!from || !el || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return
+    const to = el.getBoundingClientRect()
+    const dx = from.left - to.left
+    const dy = from.top - to.top
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return
+    const lift = Math.min(dy, 0) - 50
+    el.animate(
+      [
+        { transform: `translate(${dx}px, ${dy}px)` },
+        { transform: `translate(${dx / 2}px, ${dy / 2 + lift}px) rotate(${dx < 0 ? 12 : -12}deg)` },
+        { transform: "translate(0, 0)" },
+      ],
+      { duration: 520, easing: "ease-in-out" },
+    )
+  }, [scarabPosition])
+
   const handlePedestalClick = (pedestal: Pedestal) => {
     setSelectedPedestal(pedestal)
   }
@@ -144,7 +172,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
     setPathSegments((prev) => [...prev, { from: scarabPosition, to: destinationId }])
 
     // Move scarab
-    setScarabPosition(destinationId)
+    moveScarabTo(destinationId)
 
     // Close pedestal info
     setSelectedPedestal(null)
@@ -169,7 +197,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
   }
 
   const resetJourney = () => {
-    setScarabPosition("center")
+    moveScarabTo("center")
     setPathCode(LOCATION_CODES.center)
     setPathSegments([])
     setShowHint(true)
@@ -214,7 +242,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
           onClick={() => scarabPosition !== "center" && handleScarabMove("center")}
         >
           {scarabPosition === "center" && (
-            <div className="relative w-16 h-16 flex items-center justify-center">
+            <div ref={scarabRef} className="relative w-16 h-16 flex items-center justify-center">
               <Image
                 src={scarabImageUrl || "/placeholder.svg"}
                 alt="Golden Scarab"
@@ -250,13 +278,15 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
               {/* Scarab on top of pedestal */}
               {scarabPosition === pedestal.id && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <Image
-                    src={scarabImageUrl || "/placeholder.svg"}
-                    alt="Golden Scarab"
-                    width={64}
-                    height={64}
-                    className="object-contain"
-                  />
+                  <div ref={scarabRef}>
+                    <Image
+                      src={scarabImageUrl || "/placeholder.svg"}
+                      alt="Golden Scarab"
+                      width={64}
+                      height={64}
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
               )}
             </div>

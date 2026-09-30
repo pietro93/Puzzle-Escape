@@ -62,17 +62,17 @@ const HELL_ENDING = [
 
   '"Welcome home. We are going to have so much FUN together."',
 
-  "You plummet through layers of fire and darkness, each level more terrifying than the last. The screams of the damned rise to meet you, a cacophony of eternal suffering that will soon include your own voice.",
+  "You plummet through layers of fire and darkness, each level more terrifying than the last. The screams of the damned rise to meet you, and soon your own voice will be among them.",
 
-  "As you descend deeper, you catch glimpses of torments beyond imagination—souls trapped in personal hells tailored to their specific sins. A gambler forever reaching for cards that turn to ash in his hands. A glutton surrounded by feasts that turn rancid at first bite.",
+  "As you descend deeper, you catch glimpses of souls trapped in personal hells tailored to their specific sins. A gambler forever reaching for cards that turn to ash in his hands. A glutton surrounded by feasts that turn rancid at first bite.",
 
-  "Your fall slows as you approach your own personal hell. A twisted version of that rain-soaked highway stretches before you, the moment of impact playing on endless loop. Each time, you feel the full force of the crash, the terror, the guilt, the pain—only to be reset and forced to experience it again.",
+  "Your fall slows as you approach your own personal hell. A twisted version of that rain-soaked highway stretches before you, the moment of impact playing on endless loop. Each time, you feel the full force of the crash, the guilt, the pain, only to be reset and forced to experience it again.",
 
   "The Devil's voice surrounds you, no longer charming but raw with malevolent glee: \"You chose this fate for others and now for yourself. Poetic, is it not? I do so love when souls condemn themselves.\"",
 
   "And so begins your eternity—trapped in the moment of your greatest failure, your greatest sin, with no hope of redemption or escape. Just as you judged, so have you been judged.",
 
-  "The Devil was right about one thing: there will be puzzles here. The puzzle of maintaining your sanity through endless torment. The puzzle of remembering who you were before this became your reality. And the cruelest puzzle of all, the knowledge that you could have chosen differently. That this eternal torment exists because YOU believed you deserved it. You brought this upon yourself.",
+  "The Devil was right about one thing: there will be puzzles here. The puzzle of maintaining your sanity through endless torment. The puzzle of remembering who you were before this became your reality. And the cruelest puzzle of all, the knowledge that you could have chosen differently.",
 ]
 
 const HEAVEN_ENDING = [
@@ -104,15 +104,13 @@ const HEAVEN_ENDING = [
 
   "The mist envelops you completely, and you feel yourself drifting, untethered from physical form. The Devil's realm fades away, but so does any sense of direction or purpose. You are nowhere and everywhere, suspended in a gray limbo of your own making.",
 
-  "Time loses all meaning. You might have been floating for minutes or millennia—there's no way to tell. Occasionally, you catch glimpses of both realms you've been denied: flashes of heavenly light from above, echoes of hellish screams from below. Both equally unreachable.",
+  "You might have been floating for minutes or for centuries. Occasionally, you catch glimpses of both realms you've been denied: flashes of heavenly light from above, echoes of hellish screams from below. Both equally unreachable.",
 
   "Your only companions are your memories and regrets. The life you lived plays before you in fragments—moments of kindness and generosity that now seem hollow against the weight of your final mistake. The face of the person whose life you ended haunts you, their unfinished story a constant accusation.",
 
   "Sometimes, you feel yourself drawn toward a new beginning—the pull of reincarnation, the promise of another chance. But each time, at the threshold of rebirth, you hesitate, paralyzed by the fear of making the same mistakes again.",
 
-  "This is your purgatory—not a place of cleansing and redemption, but a state of eternal indecision and regret. Neither damned nor saved, neither punished nor forgiven. Just forgotten.",
-
-  "In rare moments of clarity, you wonder if this was the Devil's cruelest trick of all—letting you believe you could judge your own fate, only to ensure you would choose the one path that would leave you forever adrift, forever alone with the knowledge of what you've done and what you've lost.",
+  "Your purgatory has no fire and no cleansing. Only the same hesitation, forever. Neither punished nor forgiven. Just forgotten.",
 
   "And somewhere in the darkness between worlds, you can still hear the faint echo of the Devil's laughter.",
 ]
@@ -148,17 +146,17 @@ const NEITHER_ENDING = [
 
   "Before you stretches a gallery of lives—countless possible futures, each a different path your soul might take. You see yourself as a teacher, guiding troubled youth away from the mistakes you made. You see yourself as a doctor, saving lives to balance the one you took. You see yourself as a simple gardener, finding redemption in nurturing life in all its forms.",
 
-  'A gentle voice—neither male nor female, neither young nor old—speaks from the mist: "Choose wisely. Your judgment of yourself shows wisdom beyond what most souls possess. You understand that actions have consequences, but also that a single mistake need not define an entire existence."',
+  '"Choose," says a voice from the mist. It sounds like no one in particular.',
 
-  "You move among the possible lives, feeling drawn to some more than others. Each represents not just a future, but a form of atonement, a way to make amends for the life you ended through your recklessness.",
+  "You move among the possible lives, feeling drawn to some more than others. Each one is a way to pay back the life you took.",
 
-  '"The soul you harmed has continued its journey," the voice tells you. "In your new life, your paths may cross again—not as victim and perpetrator, but perhaps as teacher and student, healer and patient, friend and friend. The universe has a way of bringing souls together to resolve what remains unfinished."',
+  '"The one you killed went on ahead," the voice says. "You may meet again. Neither of you will know it. Be kind to strangers."',
 
-  "As you reach toward your chosen future, you feel a profound sense of gratitude mixed with determination. This is not forgiveness—not yet—but it is opportunity. A chance to prove that your one terrible mistake is not the sum total of who you are or who you can become.",
+  "You reach toward the life you've chosen. Forgiveness will have to be earned there, one ordinary day at a time.",
 
-  "The mist swirls around you, and you feel yourself beginning to change, to diminish, to be reborn. Your memories of this place will fade like a dream upon waking, but the lessons—those will remain, buried deep in your new consciousness, guiding you toward better choices.",
+  "The mist swirls around you, and you feel yourself beginning to change, to diminish, to be reborn. You'll forget this place the way you forget a dream by breakfast. Years from now, a stranger will wonder why you always hand someone else the car keys.",
 
-  "And as you slip into your new beginning, you carry with you both the weight of what you've done and the hope of what you might yet do. Neither damned nor saved—just human, with all the terrible and wonderful potential that entails.",
+  "Somewhere, a newborn takes its first breath and starts to cry.",
 ]
 
 interface OutroScreenProps {

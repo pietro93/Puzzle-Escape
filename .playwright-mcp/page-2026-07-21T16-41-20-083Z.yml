@@ -1,0 +1,28 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - generic [ref=f15e372]:
+      - button "Level 20 — open map" [ref=f15e374] [cursor=pointer]: Level 20
+      - generic [ref=f15e377]:
+        - generic [ref=f15e379] [cursor=pointer]:
+          - img "butler character" [ref=f15e382]
+          - img "Speech Icon" [ref=f15e385]
+        - img "mansion location" [ref=f15e389]
+      - generic [ref=f15e391]:
+        - paragraph [ref=f15e393]: The butler leads you into a wing of the mansion lined with the master's art.
+        - generic [ref=f15e395]:
+          - paragraph [ref=f15e397]: Foyer
+          - generic [ref=f15e399]:
+            - img "Foyer" [ref=f15e400]
+            - button "Examine" [ref=f15e401] [cursor=pointer]
+            - button "Examine" [ref=f15e402] [cursor=pointer]
+            - button "Go north" [ref=f15e403] [cursor=pointer]
+            - button "Go east" [ref=f15e404] [cursor=pointer]
+            - button "Go west" [ref=f15e407] [cursor=pointer]
+      - generic [ref=f15e408]:
+        - textbox "Enter your answer..." [disabled] [ref=f15e411]
+        - generic [ref=f15e412]:
+          - button "Show Hints" [ref=f15e413] [cursor=pointer]
+          - generic [ref=f15e416]:
+            - button "Restart level" [ref=f15e417] [cursor=pointer]
+            - button "Toggle sound" [ref=f15e421] [cursor=pointer]
+  - alert [ref=f15e27]

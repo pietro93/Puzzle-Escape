@@ -65,6 +65,11 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
   const [plate, setPlate] = useState<(string | null)[]>([null, null])
   const [draggedId, setDraggedId] = useState<string | null>(null)
   const [draggedFrom, setDraggedFrom] = useState<SlotRef | null>(null)
+  // Jar that just landed on a plate (clacks) or just went back to the pantry (pops).
+  const [jarAnim, setJarAnim] = useState<{ landed: string | null; returned: string | null }>({
+    landed: null,
+    returned: null,
+  })
   const [carouselStartA, setCarouselStartA] = useState(0)
   const [carouselStartB, setCarouselStartB] = useState(0)
 
@@ -170,6 +175,11 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
     if (draggedFrom.type !== "pantry") {
       setSlotValue(draggedFrom, occupant)
     }
+    setJarAnim(
+      to.type === "pantry"
+        ? { landed: null, returned: draggedId }
+        : { landed: draggedId, returned: occupant && draggedFrom.type === "pantry" ? occupant : null },
+    )
     setDraggedId(null)
     setDraggedFrom(null)
   }
@@ -182,7 +192,16 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
       draggable
       onDragStart={() => handleDragStart(id, from)}
       onDragEnd={handleDragEnd}
-      className="object-contain pixelated cursor-move select-none"
+      onAnimationEnd={() =>
+        setJarAnim((a) => (from.type === "pantry" ? { ...a, returned: null } : { ...a, landed: null }))
+      }
+      className={`object-contain pixelated cursor-move select-none motion-reduce:animate-none ${
+        from.type !== "pantry" && jarAnim.landed === id
+          ? "animate-clack"
+          : from.type === "pantry" && jarAnim.returned === id
+            ? "animate-pop"
+            : ""
+      }`}
       style={{ width: size, height: size }}
     />
   )

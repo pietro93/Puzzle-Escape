@@ -1,13 +1,13 @@
 // Define guard dialog lines for level 10 only
 export const guardDialogLines = [
-  "An inmate has been murdered, and one of these four inmates did it. Who is the killer?",
-  "Oh, you think *you're* going to figure this out? Cute.",
-  "Don't bother looking at me. I wouldn't know the first thing about what happened... even if I did see it, which I didn't.",
-  "Go on, ask them your questions. I'm sure these honest law-abiding folks will be nothing but thrilled to help you.",
-  "Don't worry, I'm on your side. Hehehe!",
-  "Hurry up. I haven't got all eternity, unlike you.",
-  "The victim? Let's just say they won't be needing their kneecaps anymore. Or anything else, for that matter. Hahaha!",
-  "I would give you a hand, but I already ate it. Hehehe!"
+  "An inmate's been murdered, and one of these four did it. Who's the killer?",
+  "Oh, *ya* think yer gonna figure this out? Cute.",
+  "Don't bother lookin' at me. I wouldn't know a thing about it. Even if I did see it. Which I didn't.",
+  "Go on, ask 'em yer questions. Honest, law-abidin' folk, the lot of 'em. Hah-hah-hah.",
+  "Don't worry, I'm on yer side. Hah-hah-hah.",
+  "Hurry up. I've got all eternity. Ya don't.",
+  "The victim? Won't be needin' their kneecaps anymore. Or anythin' else. Hah-hah-hah.",
+  "I'd give ya a hand, but I already ate it. Went straight through me. Hah-hah-hah."
 ]
 
 // Add a specific sphinx riddle for level 38
@@ -176,6 +176,80 @@ export const getMansionButlerLine = (room: string, examining: boolean): string =
   return line
 }
 
+// Level 12 (Bookshelf Chronology Puzzle) — the butler's line depends on
+// whether the shelf order is still unsolved or the window light has already
+// revealed itself, not on a single level-wide pool.
+const bookshelfButlerLinesBefore: string[] = [
+  "I dust these shelves daily. The Master was most particular about the order of things.",
+  "Do mind the spines, kind guest. Bending them is nothing short of barbarism.",
+  "Every volume knows its place, if one bothers to consult the plaques below.",
+  "First editions once bore their year plainly on the spine. This shelf extends you no such courtesy.",
+  "Fascinating. Your taste in literature appears rather unrefined.",
+]
+
+const bookshelfButlerLinesAfter: string[] = [
+  "The third eye, in certain traditions, sees what the other two cannot. Make of that what you will.",
+  "The answer was never hidden, kind guest. It merely waited for you to look properly.",
+  "Every title holds more than its story, should one read closely enough.",
+]
+
+const bookshelfLineCycle: Record<string, number> = {}
+
+export const getBookshelfButlerLine = (revealed: boolean): string => {
+  const pool = revealed ? bookshelfButlerLinesAfter : bookshelfButlerLinesBefore
+  const key = revealed ? "after" : "before"
+  const cycle = bookshelfLineCycle[key] ?? 0
+  const line = pool[cycle % pool.length]
+  bookshelfLineCycle[key] = cycle + 1
+  return line
+}
+
+// Level 2 (Bone Counting Puzzle) — optional, undiscoverable-by-UI interaction:
+// dropping a bone on the guard's portrait. Rust bones are his own and he keeps
+// them; any skull colour gets a colour-specific brush-off and stays in the pile.
+const guardRustBoneLines: string[] = [
+  "Mphf. Mine now.",
+  "Rusty. Just how I like 'em.",
+  "Ya found the ones nobody wanted. Fittin'.",
+  "Don't expect a thank ya.",
+  "Into the collection. Yers are next.",
+  "Hah-hah-hah. Ya fetch like a dog.",
+]
+
+const guardRustBoneFinalLine = "That's all of 'em. Now go count, before I start collectin' yers."
+
+const guardWrongBoneLines: Record<string, string[]> = {
+  white: [
+    "White? Do I look like I've got any shine left?",
+    "Put it back. Yer as colour-blind as ya are slow.",
+  ],
+  purple: [
+    "Purple's not mine. Use yer eyes.",
+    "Tsk. Does that look like it came off me?",
+  ],
+  orange: [
+    "Orange. Not mine. Not ever.",
+    "Mphf. Wrong bone. Keep tryin', I'm enjoyin' this.",
+  ],
+  black: [
+    "Black's not mine either. Keep guessin'.",
+    "Hah-hah-hah. Ya think I'd take any old bone?",
+  ],
+}
+
+const guardWrongBoneCycle: Record<string, number> = {}
+
+export const getGuardBoneLine = (color: string, rustReturned: number, rustTotal: number): string => {
+  if (color === "rust") {
+    if (rustReturned >= rustTotal) return guardRustBoneFinalLine
+    return guardRustBoneLines[(rustReturned - 1) % guardRustBoneLines.length]
+  }
+  const pool = guardWrongBoneLines[color] ?? guardWrongBoneLines.white
+  const cycle = guardWrongBoneCycle[color] ?? 0
+  guardWrongBoneCycle[color] = cycle + 1
+  return pool[cycle % pool.length]
+}
+
 // Define random elevator messages
 export const getRandomElevatorMessage = (): string => {
   const messages = [
@@ -206,14 +280,15 @@ skeleton: {
     1: [
     "Mirrors show hard truths. Like the fact that yer ugly.",
     "Stare longer. Maybe yer face will make sense.",
-    "Tsk. Ya are staring at failure. It wears yer face well.",
+    "Tsk. Yer starin' at failure. It wears yer face well.",
     "Ya came all this way to admire yerself? Mphf.",
     "First puzzle and already stuck? My ribs are rattlin' with amusement.",
-    "Starin' at yer reflection shows a deep lack of self-respect."
+    "Smoke goes right through me. Wanna see? Come closer. Closer.",
+    "Stare all ya like. That face ain't gettin' any better."
     ],
 
     2: [
-    "Countin' bones. I do that nightly. It is a terrible habit.",
+    "Countin' bones. I count mine every night. Always come up a couple short. Ya didn't pinch any, did ya?",
     "Yer fingers tremble and make countin' harder. Are ya *beggin'* me to break 'em?",
     "I kept a ledger of who owned these. They all ended up here just like ya.",
     "The last prisoner who took this puzzle ended up becomin' part of the exhibit.",
@@ -224,25 +299,25 @@ skeleton: {
 
     3: [
     "Math: the universal language of sufferin'. And yer failin' the alphabet.",
-    "I solved this with half my brain missin'. Don't tell me that yer stuck.",
-    "Add yer regrets. Subtract yer chances. Divide yer hope.",
+    "I solved this with no brain at all. Don't tell me yer stuck.",
+    "Countin' on yer fingers? I've got a jar full of 'em if ya run out.",
     "Hah-hah-hah. The solution is *sufferin'*.",
-    "Numbers are honest creatures. Unlike ya, they refuse to lie about yer odds."
+    "Numbers don't lie. Neither do I. Much."
     ],
 
     4: [
     "Hah-hah-hah. Dreams? Here, we call those delusions.",
-    "The alphabet actively conspires against ya. Believe me.",
+    "The alphabet's against ya. Believe me.",
     "Tsk. Ya sleep? Sleep is a luxury for the hopeful.",
     "Yer nightmares are my favorite bedtime stories.",
-    "I stopped havin' dreams centuries ago. But I think I may start havin' nightmares after seein' yer face.",
-    "Mphf. Yer unconscious mind is currently negotiatin' yer surrender."
+    "Haven't dreamed in centuries. Yer face might fix that.",
+    "Sleep tight. I'll be right here when ya wake up. *If* ya wake up."
     ],
 
     5: [
     "Tick. Tock. Yer coffin's gettin' cold.",
     "Hey. Stop wastin' everyone's eternity with yer slowness.",
-    "The clock keeps score. It says ya suck at this.",
+    "The clock keeps score. Yer losin'.",
     "The hands of that clock are countin' down to somethin' ya will not survive.",
     "Some days I can't remember if I'm dead or just really, really bored. Yer guess is as good as mine.",
     "Bricks and stones may break my bones, but I can also break yers."
@@ -250,17 +325,17 @@ skeleton: {
 
     6: [
     "Meet Shackles. All bone, no flesh, just how I like company.",
-    "Tried eatin' him once. Too gristly. Kept him as a pet instead.",
+    "Tried eatin' him once. Bone on bone, no good. Yer much meatier.",
     "Feed him right and he might not tear yer hand off. Might.",
     "Mphf. Shackles is pickier than I am about his meals.",
     "Give him the wrong bone and he'll spit it right back at ya."
     ],
 
     7: [
-    "Heh. I can make ya change LIFE to DEATH in only two steps.",
+    "Heh. LIFE to DEATH. I can help ya skip a few steps.",
     "Yer logic has more gaps than my ribcage.",
     "Change HOPE to NOPE in one move. Congrats, yer doomed.",
-    "HATE becomes FATE becomes... whatever",
+    "HATE becomes FATE becomes... nah. Figure it out yerself.",
     "Mphf. Word games are for children and fools. Thought ya might like this one."
     ],
 
@@ -269,8 +344,8 @@ skeleton: {
     "Mphf. Even I don't know the answer. Isn't that wonderful?",
     "This puzzle has broken minds harder than yers. They tasted much better, too.",
     "I think randomly smashin' the pieces might actually work. Try it.",
-    "The real magic is how quickly ya abandon logic for guesswork.",
-    "Tsk. I think if ya arrange them at random eventually yer'll get it right.",
+    "Guessin' already? That was quick.",
+    "Tsk. Arrange 'em at random. Ya'll get it eventually. Few hundred years. I can wait.",
     "C'mon, I'm bored. Give up already.",
     "Ah, yer gettin' tired. Good.",
     ],
@@ -279,7 +354,7 @@ skeleton: {
     "I skewer three of 'em at a time. Roast nicely over the brazier, they do.",
     "Squeak all ya want. I've heard sweeter music from a rat on a spit.",
     "Named that fat grey one after a warden I outlived. Tastes about the same too.",
-    "Mphf. Nothin' pairs better with stale bread than a well-charred tail.",
+    "Mphf. Nothin' pairs better with stale bread than a well-charred tail. Goes right through me, but the taste lingers.",
     "Oh, ya want my help? That's adorable. Tsk.",
     "Careful with the plump ones. They bite back right up till they're dinner.",
     "I wonder what sound *yer* bones will make when I finally get to play with them.",
@@ -289,20 +364,14 @@ skeleton: {
   }
 ,
 butler: {
-  11: [ // Bookshelf Chronology Puzzle
-    "I dust these shelves daily. The Master was most particular about the preservation of knowledge.",
-    "Please refrain from bending the spines. It is an act of barbarism. You are a guest here, after all.",
-    "The Master's library contains over ten thousand volumes. Have you read any books at all?",
-    "The stories preserved here far outlast the fleeting lives they recount.",
-    "Fascinating. Your taste in literature appears... unrefined."
-  ],
-  12: [ // Assembly Puzzle / Box (escargot)
+  11: [ // Assembly Puzzle / Box (escargot)
     "We find much depends on the patience invested versus mere trial and error.",
     "I have polished these pieces weekly for thirty years. I trust you will handle them with care.",
     "Assembly is a matter of order, a concept apparently elusive to some.",
     "Some things are more valuable when taken apart. It reveals their inner workings.",
     "Kintsugi is the Japanese art of repairing broken pottery with gold. It treats breakage as part of an object's history."
   ],
+  // 12 (Bookshelf Chronology Puzzle) uses getBookshelfButlerLine above, not this table.
   13: [ // Exotic Spices Puzzle
     "The Master did enjoy a hint of the exotic in every meal. One must have standards.",
     "Lessons in flavour, like this puzzle, require patience and discernment.",
@@ -354,97 +423,97 @@ butler: {
 },
   gypsy: {
     21: [
-      "Tell me your truth. The spirits listen, yes?",
-      "Your essence speaks volumes. Louder than any shout.",
-      "Secrets are sharp stones. Be careful where you step, *dragul meu*.",
-      "My **duende** sees your **drabardi**. It is... a winding road.",
-      "Everyone hides something. Even the pebbles on the path. Heh.",
-      "Face your answers. Do not fear what you find inside.",
-      "You think you know yourself? We will see. *Aha!*",
-      "Your path unfolds now. Like a stubborn riddle."
+      "Tell me your truth. The spirits, they listen, yes?",
+      "Answer fast. First answer is true one. Second answer is lawyer.",
+      "Everybody lies to Gypsy. Is fine. I charge extra.",
+      "My ~duende~ sees your ~drabardi~. Is very bendy road. Who builds road like this? Drunk man.",
+      "Why you sit like you still wear seatbelt? Relax, ~dragă~.",
+      "Don't whistle in my wagon! Whistling calls the Devil. I have enough problems.",
+      "You think you know yourself? Ha! I know you better already, and I only see your shoes.",
+      "Secrets are like stone in shoe, ~dragă~. You can walk, but you walk funny."
     ],
     22: [
-      "*Ghicitul în cafea*. Tasseomancy, you call it. It makes me run.",
-      "This coffee... it rumbles my belly. Like thunder. *Pfiu*. So much gas.",
-      "The grounds whisper secrets. Like old winds through bones.",
-      "Your future swirls in there. Like mud after a big rain.",
-      "Patterns hold truth. Like runes in the dirt. Very old truth.",
-      "Bad luck if you spill. Or worse. Heh. Very worse.",
-      "Some see stains. Wise ones see stories. Which are you?",
-      "A storm is coming. Or maybe just... indigestion. *Da?*"
+      "~Ghicitul în cafea~. Tasseomancy, you call it. Coffee makes me run. To the nearest toilet, usually.",
+      "Turn cup three times, toward you. Away from you is for people who want bad news.",
+      "Last week I see a horse in cup. Man says is duck. We argue one hour. He never pays.",
+      "Bad luck if you spill. Very worse if you spill on my carpet.",
+      "Some see stains. Wise ones see stories. You? You have stain face.",
+      "I feel storm coming. Or is my stomach. With me, hard to say, ~da~?",
+      "Cup is like face, ~dragă~. After forty, everything shows.",
+      "This coffee, it rumbles my belly like thunder. *Pfiu*. So much gas."
     ],
     23: [
-      "Stars sing songs. Different lands, different tunes, yes?",
-      "Your year has a voice. A very... spirited animal voice.",
-      "My favorite animal? Hmm. I once had a pig. Jambon, I called him. Such a good boy. Everyone said he tasted delicious. Ha! Just kidding. Mostly.",
-      "Cycles turn. Like a peasant's wheel. Or a wolf's mood. Always turning.",
-      "Some signs bring luck. Some bring *grijă* (care). Be watchful.",
-      "The sky knows more than your noisy metal maps. Always.",
-      "This year remembers change. A big change. For you. *Heh*.",
-      "Beware the animal's temper. It bites. Like a stray dog."
+      "Stars sing same song everywhere. But every land, it changes the words, yes?",
+      "Twelve animals, twelve years. I am Rat. Everybody says this explains a lot. Rude, but true.",
+      "My favorite animal? I had a pig once. Jambon, I call him. Such a good boy. Everybody says he tastes delicious. Joke! Mostly.",
+      "Different country, different animals. Same year, different face. Like me after coffee. Not a good face.",
+      "Your phone knows where you are. My ball knows where you should be. Big difference.",
+      "This year remembers big change. For you. *Heh*. Don't ask. Is extra.",
+      "My second husband, very faithful man. Is why he is still alive and not in well.",
+      "Some signs bring luck. Some bring ~grijă~. You bring mostly questions."
     ],
     24: [
-      "Crystals hold power. Old power. Like **duende**. This one? Clear quartz. Amplifies everything. Even my collection.",
-      "Each piece wants home. Like a lost soul. Like you? Perhaps.",
-      "Stones whisper secrets. Louder than your little phone. This amethyst? For calm. Helps me sleep. When I'm not jittery.",
-      "Some crystals heal. Some reveal. Some just... help you feel good. This rose quartz? Very nice for... comfort. For a lonely night. *Heh*.",
-      "You look broken too. Maybe these pieces help put you back? Like my obsidian. Cleanses bad energy.",
-      "Fit them together. See what truth the stones show. Like my agate. Swirls hide worlds.",
-      "This stone remembers. It remembers everything. Even betrayals. Like my jade. Protects against bad vibes.",
-      "Sharp edges bring pain. Like harsh truths. Or using this smooth tourmaline for... other purposes. Very effective."
+      "Crystals hold old power. Like ~duende~, but fits in pocket.",
+      "Each piece wants to go home. You also, I think. Too bad.",
+      "You look broken too, ~dragă~. Maybe pieces help. Maybe not. I am psychic, not doctor.",
+      "This rose quartz? Very nice for comfort. For lonely night. Don't ask how I know. *Heh*.",
+      "My grandmother made mosaic from broken plates. Plates were broken on my grandfather.",
+      "This stone remembers everything. Even betrayals. Like me. My first husband learned this. In the well.",
+      "Careful, edges are sharp. Blood on the pieces is bad luck. Also I must clean.",
+      "Put pieces fast. Stone gets bored. Bored stone, very bad energy."
     ],
     25: [
-      "Shapes speak. Numbers sing. The universe's song, *da*. But I don't trust numbers.",
-      "Ancient secrets hid in symbols. Like my grandmother's soup. But math? Bah!",
-      "Simple? Ha! Nothing is simple. Not even *sarmale*. Very complex. Logic is for the birds.",
-      "Find balance. Or face chaos. My magic tells me balance is best. Not your rigid lines.",
-      "Geometry is language. Older than your noisy metal. But numbers? Cold. Dead.",
-      "Your ancestors knew these shapes. Before all the noise. They felt the magic.",
-      "Numbers build wonders. Or trap you forever. Like a cage. Magic sets you free.",
-      "Find the pattern. Or get lost. My gut tells me the way. Not your silly rules."
+      "Shapes speak. Numbers sing. But I don't trust numbers. Numbers took my money in casino.",
+      "Once I predict my first husband live to hundred. Next week he 'falls' in well. Still alive down there, so maybe I am right.",
+      "Old secrets hide in symbols. Like my grandmother's soup. She dies, soup dies with her. Math survives. Unfair.",
+      "Simple? Ha! Nothing is simple. Not even ~sarmale~. Three days to make, ten minutes to eat.",
+      "Geometry is old language. Pyramid men speak it. I speak a little. Mostly I nod.",
+      "Find balance, or face chaos. Me, I choose chaos. Is cheaper.",
+      "You count with fingers? Good. Fingers never lie. Calculators lie. Casinos also.",
+      "Your ancestors knew these shapes before they knew letters. You know letters. Is something."
     ],
     26: [
-      "Look up. The sky tells stories. Not your glowing screen. Much better from here.",
-      "Stars are old memories. They watch everything. Always. So much watching.",
-      "Your ancestors navigated by these. Did they find their way? Or just get lost?",
-      "This pattern has a name. A secret name. Like a hidden treasure.",
-      "Aha! You see the wolf in the sheep's clothing now? Clever boy.",
-      "The sky watches your steps. It remembers all. Even your mistakes.",
-      "Destiny's dice are thrown in the stars. Tossed high. Men want to travel there? Fools.",
-      "Find the shape. Or wander lost. In the dark. Much easier to read from here, yes?"
+      "Look up. Sky tells stories. Much better than your glowing screen.",
+      "Don't point at stars with finger! ~Ptiu, ptiu.~ Now you wait for wart.",
+      "My grandmother says every star is somebody who died owing money. Is why they don't come down.",
+      "This pattern has a name. Very old name. Sky people were not good at drawing.",
+      "People are sheep with wolf teeth, ~dragă~. Mostly they bite themselves.",
+      "Sailors follow these. Some arrive. Some become fish food. Stars don't give refund.",
+      "Men want to fly to stars now. ~Doamne~. They can't even find their keys.",
+      "Find the shape. Connect dots. Like children's book, but children's book has answers in back."
     ],
     27: [
-      "Zodiac tells of year, soul. And your restless heart. Always restless.",
-      "Cycles turn. Human hearts? Always chasing shadows. *Heh*. Unlike the moon.",
-      "Twelve signs? Some say more. How many signs are out there? Few know the true answer.",
-      "Is your heart in sync? Or lost like a sheep? Be honest now.",
-      "This season hides a sign. A hidden one. Like a secret wish.",
-      "The heavens know order. Humans? Ha! A different story. Always different.",
-      "Your path twists. Like a Romani dance. Or a river. *Da*.",
-      "Secrets hide in plain sight. Like a wolf in the flock. Always watching."
+      "Twelve signs, everybody says. Some say more. Nobody asks Gypsy. I know there are more.",
+      "This season, it hides a sign. A hidden one. Very shy, like me at weddings. I am not shy. I lie.",
+      "You are what, Scorpio? You have Scorpio face. Is not compliment.",
+      "The heavens keep order. My wagon, no. Don't open the cupboards.",
+      "Your heart is in tune with stars? No? Is fine. Stars also are not in tune. They pretend.",
+      "Frames and tapestries. I weave these myself. Very slow hands. Very fast tongue.",
+      "Your path twists like Romani dance. Two steps forward, one step back, then everybody drinks.",
+      "Secrets hide in plain sight. Right there, in the thread. ~Haide~! Even my goat would see it, and my goat is blind."
     ],
     28: [
-      "Crystals hum songs. Like my stomach. Ha! Avoid the coffee. It brings only pain.",
-      "Right order unlocks power. Or a secret trap. Be careful. This tourmaline wards off bad dreams.",
-      "These stones remember hands. Many hands. Many stories. Like my collection. So many stones.",
-      "Some sing together. Like a wedding. Some scream. Like bad singers. This one? It's for... focus. Very potent.",
-      "Harmony is fragile. Like your hope. Or my crystal ball when I drop it. Oops. Use this jade for protection.",
-      "Place them true. They don't like to be pushed around. This amethyst helps me sleep. When I'm not too jittery.",
-      "This stone is mischievous. Like a child with shiny things. Watch it. It likes to roll away. Fun!",
-      "Balance your path. Like these crystals. Or like using this smooth agate... for inner peace. And other things. *Heh*."
+      "Crystals hum, if you listen. I don't listen. I talk. Is my gift.",
+      "Right order opens power. Wrong order opens headache. I know, I tried.",
+      "These stones remember many hands. Some hands, very dirty. I don't say whose.",
+      "Some stones sing together, like at wedding. Some scream, like my first husband in the well.",
+      "Harmony is fragile. Like crystal ball when I drop it. Which is often. ~Vai de mine~.",
+      "Stones don't like to be pushed. My first husband also didn't like. Too late now.",
+      "This one is mischievous stone. Like child with shiny things. It likes to roll away and hide. Watch it.",
+      "Amethyst is for sleep. I need big one. My blood is mostly espresso, and I don't even drink."
     ],
     29: [
       "..."
     ],
     30: [
-      "Cards show your soul's journey. Your **drabardi**. Yes. It is written.",
-      "Empires fall. Like cards. Like noisy toys. So flimsy. *Poate*.",
-      "Joy upright. Despair reversed. Like shortcuts and blisters. *Oof*. A painful lesson.",
-      "Choices have echoes. Especially yours. Listen for them. They follow you.",
-      "You think you are done? *Poate*. Maybe. For now. The journey is long.",
-      "End of road. Start of new. Always. Like the sun rising. Or setting in fire.",
-      "Did you learn? Or just pass through? Cards know. They see the desert in your soul.",
-      "This last card. It is about your future. Be ready. You walk towards a burning place. *Heh*."
+      "Cards show your ~drabardi~. Is written. I only read, I don't write. Don't blame me.",
+      "Upright is joy. Reversed is trouble. Turn your head if you must, ~dragă~, nobody watches.",
+      "Empires fall like cards. Towers also. You know about towers, I think.",
+      "Choices have echoes. Yours, very loud echo. I hear it from here.",
+      "You think you are done? ~Poate~. Road is still long, and road is hot. Bring water.",
+      "End of one road, start of new one. I would give you coffee for the road, but coffee is my enemy.",
+      "Did you learn something, or you just pass through? Cards know. They see sand in your soul.",
+      "Last card, it is about your future. Be ready. You walk toward a burning place. *Heh*."
     ]
   },
   sphinx: {
@@ -638,8 +707,3 @@ export const characterImageMap: Record<string, string> = {
   brain: "/images/brainlamp.webp", // Default brain image
 };
 
-// Utility to parse dialogue for italicized words
-export const parseDialogueForItalics = (text: string): string => {
-  // Replace *word* with <em>word</em>, but only for single asterisks
-  return text.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
-};

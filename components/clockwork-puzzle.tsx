@@ -10,6 +10,8 @@ export default function ClockworkPuzzle({ onSolve }: ClockworkPuzzleProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const dragState = useRef<{ startAngle: number; startRotation: number } | null>(null)
   const [rotation, setRotation] = useState(0)
+  const rotationRef = useRef(0)
+  const overlayRef = useRef<HTMLImageElement>(null)
   const hasSolvedRef = useRef(false)
 
   const angleFromCenter = (clientX: number, clientY: number) => {
@@ -28,13 +30,23 @@ export default function ClockworkPuzzle({ onSolve }: ClockworkPuzzleProps) {
   const handlePointerMove = (e: PointerEvent) => {
     if (!dragState.current) return
     const currentAngle = angleFromCenter(e.clientX, e.clientY)
-    setRotation(dragState.current.startRotation + (currentAngle - dragState.current.startAngle))
+    rotationRef.current = dragState.current.startRotation + (currentAngle - dragState.current.startAngle)
+    setRotation(rotationRef.current)
   }
 
   const handlePointerUp = () => {
     dragState.current = null
     window.removeEventListener("pointermove", handlePointerMove)
     window.removeEventListener("pointerup", handlePointerUp)
+
+    // Let the heavy dial wobble and settle instead of stopping dead.
+    const r = rotationRef.current
+    if (!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      overlayRef.current?.animate(
+        [r, r + 5, r - 3, r + 1.5, r].map((deg) => ({ transform: `rotate(${deg}deg)` })),
+        { duration: 520, easing: "ease-out" },
+      )
+    }
 
     // First completed drag counts as having read the dial — unlocks the answer input.
     if (!hasSolvedRef.current) {
@@ -67,6 +79,7 @@ export default function ClockworkPuzzle({ onSolve }: ClockworkPuzzleProps) {
           className="absolute inset-0 w-full h-full pointer-events-none"
         />
         <img
+          ref={overlayRef}
           src="/images/clockwork_overlay.webp"
           alt=""
           draggable={false}

@@ -1,0 +1,10 @@
+- generic [active] [ref=f3e1]:
+  - main [ref=f3e5]:
+    - generic [ref=f3e57]:
+      - button "Skip" [ref=f3e60] [cursor=pointer]
+      - generic [ref=f3e63]:
+        - img "skeleton" [ref=f3e66]
+        - generic [ref=f3e67]:
+          - paragraph [ref=f3e68]: "\"There's a secret message hidden somewhere in this cell,\" the guard rasps."
+          - paragraph [ref=f3e70]: Tap to continue...
+  - alert [ref=f3e30]

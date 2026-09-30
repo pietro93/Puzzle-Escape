@@ -21,11 +21,13 @@ This document details the mechanics, visual setup, player interactions, step-by-
 - **Answer:** `MURDER`
 
 ### Level 2: Bone Counting
-- **What it Consists of:** An arrangement of skeletal skulls and bones colored in various paint markers.
+- **What it Consists of:** Four colored skulls above a pile of colored bones, plus rust-colored bones that match no skull.
 - **How to Solve (Player Journey):**
   1. Observe the colors of the skulls: Purple, Orange, White, and Black.
-  2. Count each set of colored bones scattered in the cell.
-  3. Map the counts of the colored bones to the skulls in their exact order: Purple (10), Orange (5), White (13), Black (7).
+  2. Drag each bone onto the skull of its color. It leaves the pile and adds a tally mark under that skull. A wrong color is refused (the skull shakes). Rust bones fit no skull.
+  3. The answer input unlocks once every colored bone is sorted. Read the tallies in skull order: Purple (10), Orange (5), White (13), Black (7).
+  4. On a wrong four-number answer, skulls with a correct count glow and the others shake.
+- **Secret (optional, not signposted):** Dropping a bone on the Skeleton Guard's portrait. Rust bones are his and he keeps them (a line per bone, a special line for all 9); other colors get a color-specific brush-off and return to the pile. No reward, pure flavor.
 - **Answer:** `10 5 13 7` (or `105137`)
 
 ### Level 3: Lock & Key Math
@@ -100,27 +102,21 @@ This document details the mechanics, visual setup, player interactions, step-by-
 - **Character Mentor:** The Butler
 - **Aesthetic:** Polished mahogany libraries, bookshelves, Victorian wallpapers, and gold clock faces.
 
-### Level 11: Third Eye Readings
-- **What it Consists of:** A bookshelf containing five book titles: "The Third Eye", "The Great Gatsby", "Moby Dick", "Hamlet", "Frankenstein".
-- **How to Solve (Player Journey):**
-  1. Focus on the clue "The Third Eye provides a unique perspective".
-  2. Look at the other book titles and isolate the third letter of each:
-     - Th**e** Great Gatsby $\rightarrow$ E
-     - Mo**b**y Dick $\rightarrow$ B
-     - Ha**m**let $\rightarrow$ M
-     - Fr**a**nkenstein $\rightarrow$ A
-     - (And others depending on specific book files in data)
-  3. Rearrange or spell the extracted letters to form the answer.
-- **Answer:** `TEARS`
-- *Slated for a redesign to be more interactive — currently a static read.*
-
-### Level 12: Curious Jigsaw
+### Level 11: Curious Jigsaw
 - **What it Consists of:** A scrambled 3x3 sliding tile puzzle box.
 - **How to Solve (Player Journey):**
   1. Slide the puzzle blocks to reassemble the full image.
   2. The completed image reveals a spiral shell.
   3. The hint "EAT ME" reveals it is a French culinary delicacy.
 - **Answer:** `escargot`
+
+### Level 12: Third Eye Readings
+- **What it Consists of:** Nine books to place on a shelf, matched against plaques marking publication years. The plaques are not in ascending order — one, reading 1956, deliberately breaks the sequence.
+- **How to Solve (Player Journey):**
+  1. Match each book to the shelf plaque bearing its true publication year, including the out-of-sequence 1956 plaque.
+  2. Solving the shelf order reveals window light.
+  3. Read the third letter of each title's first word, in shelf order, excluding "The Third Eye" — a nod to "third eye" meaning "third letter."
+- **Answer:** `TEARDROP`
 
 ### Level 13: Anagram Spice
 - **What it Consists of:** A pantry of 21 draggable spice jars (two scrollable carousels), a plate flanked by two hands, and two pedestal "arches" of glowing slots curving out from the plate — the left arch already holds a fixed S, the right arch already holds a fixed A.

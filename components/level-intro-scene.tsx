@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
 import { ChevronRight, SkipForward } from "lucide-react"
 import { characterImageMap } from "@/utils/dialogue-utils"
 import type { LevelIntroScene } from "@/data/level-intro-scenes"
+import { DialogueText } from "@/components/dialogue-text"
+import TalkingPortrait from "@/components/talking-portrait"
 
 interface LevelIntroSceneProps {
   scene: LevelIntroScene
@@ -82,12 +83,12 @@ export default function LevelIntroSceneView({ scene, onContinue }: LevelIntroSce
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-6">
         <div className="w-32 h-32 relative pixelated-container shrink-0">
           <div className="absolute inset-0 bg-black/30 rounded-lg z-0" />
-          <Image
+          <TalkingPortrait
+            character={scene.character}
             src={characterImageMap[scene.character] || "/placeholder.svg"}
             alt={scene.character}
-            width={128}
-            height={128}
-            className="pixelated z-10 relative"
+            talking={isTyping}
+            className="pixelated z-10 relative object-contain w-full h-full"
           />
           <div className="absolute -inset-1 border-2 border-gray-800 rounded-lg z-20 pointer-events-none" />
         </div>
@@ -97,7 +98,7 @@ export default function LevelIntroSceneView({ scene, onContinue }: LevelIntroSce
           onClick={handleContinue}
         >
           <p className="font-pixel text-sm text-gray-300 mb-4 flex-1 leading-relaxed">
-            {textVisible}
+            <DialogueText text={textVisible} />
             {isTyping && <span className="animate-pulse">|</span>}
           </p>
 

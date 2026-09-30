@@ -23,7 +23,7 @@ Two lines were initially flagged for banned punctuation but are **intentional an
 - `data/puzzles-5.ts:99` — *"...dozens of switches connected to what appears to be a human brain... still attached to its head."* The ellipsis reads as a deliberate beat of dread/suspense in the reveal, not filler. Kept.
 - `data/level-intro-scenes.ts:27` — *"The guard says nothing — he just watches you read it."* Third-person narration (not a character quote), and the em dash reads fine here. Kept as-is; open to a rewrite later if a better phrasing comes up, but not a priority.
 
-The stylistic rule against ellipses/em dashes in `docs/NARRATIVE_DESIGN.md` §1 is aimed at *spoken character dialogue* — both lines above sit outside that scope (narration, or a single sanctioned suspense beat), so this doc treats them as exceptions rather than debt.
+The stylistic rule against ellipses/em dashes in `docs/NARRATIVE_DESIGN.md` §1 is aimed at *spoken character dialogue* — both lines above sit outside that scope (narration, or a single sanctioned suspense beat), so this doc treats them as exceptions rather than debt. `docs/NARRATIVE_DESIGN.md` §1b (added 2026-09) keeps this narration exemption but caps it at one em dash per paragraph; the outro endings in `components/outro-screen.tsx` exceed that and were not part of this pass.
 
 ---
 

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import type { Transition } from "@/types/transition"
 import Image from "next/image"
 import { ChevronRight, SkipForward, Volume2, VolumeX } from "lucide-react"
+import { DialogueText } from "@/components/dialogue-text"
+import { genderize } from "@/utils/player-gender"
 
 interface TransitionScreenProps {
   transition: Transition
@@ -118,7 +120,7 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
   useEffect(() => {
     if (currentParagraph >= transition.paragraphs.length) return
 
-    const text = transition.paragraphs[currentParagraph]
+    const text = genderize(transition.paragraphs[currentParagraph])
 
     // Update the displayed image based on paragraph number
     updateImageForParagraph(currentParagraph, transition)
@@ -237,7 +239,7 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
             onClick={handleContinue}
           >
             <p className="font-pixel text-sm text-gray-300 mb-4 flex-1 leading-relaxed">
-              {textVisible}
+              <DialogueText text={textVisible} />
               {isTyping && <span className="animate-pulse">|</span>}
             </p>
 

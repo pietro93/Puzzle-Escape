@@ -43,7 +43,7 @@ const MorseRatsPuzzle: React.FC<MorseRatsPuzzleProps> = ({ onSolve }) => {
 
   const handleRatClick = (color: "brown" | "grey" | "black") => {
     setHoppingRat(color)
-    setTimeout(() => setHoppingRat(null), 300)
+    setTimeout(() => setHoppingRat(null), 550)
     setRatIndex((prev) => {
       const positions = ratEligiblePositions[color]
       return { ...prev, [color]: (prev[color] + 1) % positions.length }
@@ -84,8 +84,8 @@ const MorseRatsPuzzle: React.FC<MorseRatsPuzzleProps> = ({ onSolve }) => {
                       src={ratImage[ratHere]}
                       alt={`${ratHere} rat`}
                       onClick={() => handleRatClick(ratHere)}
-                      className={`w-14 h-14 object-contain pixelated cursor-pointer transition-transform duration-300 ${
-                        hoppingRat === ratHere ? "scale-125 -translate-y-2" : "scale-100"
+                      className={`w-14 h-14 object-contain pixelated cursor-pointer ${
+                        hoppingRat === ratHere ? "animate-hopWiggle motion-reduce:animate-none" : ""
                       }`}
                     />
                   ) : null}

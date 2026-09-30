@@ -22,6 +22,8 @@ interface CharacterLocationDisplayProps {
   onLocationClick?: () => void
   onPyramidLocationImageClick?: () => void
   onColorPaletteClick?: () => void
+  // Line the character is currently speaking (animates the portrait's mouth)
+  speech?: string | null
 }
 
 // Speech Indicator Component using the new image
@@ -42,16 +44,19 @@ interface CharacterDisplayWrapperProps {
   character: string;
   onGuardClick: () => void;
   enableInteraction: boolean; // Controls clickability and speech icon visibility
+  speech?: string | null;
 }
 
-const CharacterDisplayWrapper = ({ character, onGuardClick, enableInteraction }: CharacterDisplayWrapperProps) => {
+const CharacterDisplayWrapper = ({ character, onGuardClick, enableInteraction, speech }: CharacterDisplayWrapperProps) => {
   return (
     <div className="flex justify-center items-center">
       <div
         className={`w-40 h-40 relative pixelated-container ${enableInteraction ? "cursor-pointer" : ""}`}
         onClick={enableInteraction ? onGuardClick : undefined}
+        // Silent drop target: level 2 lets the player hand bones to the guard.
+        data-character-drop={character}
       >
-        <CharacterImage character={character} />
+        <CharacterImage character={character} speech={speech} />
         {enableInteraction && <SpeechIndicator />}
       </div>
     </div>
@@ -77,6 +82,7 @@ export default function CharacterLocationDisplay({
   onLocationClick,
   onPyramidLocationImageClick,
   onColorPaletteClick,
+  speech,
 }: CharacterLocationDisplayProps) {
   // Helper function to get the correct brain lamp image based on correct combinations
   const getBrainLampImage = (correctCount: number) => {
@@ -198,7 +204,7 @@ export default function CharacterLocationDisplay({
   if (level === 15) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
         <div className="flex justify-center items-center cursor-pointer" onClick={() => onColorPaletteClick?.()}>
           <LocationImage
             setting={setting}
@@ -216,7 +222,7 @@ export default function CharacterLocationDisplay({
   if (level === 29) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
         <div className="flex justify-center items-center">
           <LocationImage setting={setting} customImage={puzzle.locationImage} hintImage={puzzle.imageHint} murderMysteryLocation={murderMysteryLocation} />
         </div>
@@ -228,7 +234,7 @@ export default function CharacterLocationDisplay({
   if (level === 39) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
         <div className="flex justify-center items-center">
           <LocationImage setting={setting} customImage={null} murderMysteryLocation={murderMysteryLocation} />
         </div>
@@ -240,7 +246,7 @@ export default function CharacterLocationDisplay({
   if (level === 40) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
         <div
           className={`flex justify-center items-center ${!hasPyramidTorch ? "cursor-pointer" : ""}`}
           onClick={!hasPyramidTorch ? onPyramidLocationImageClick : undefined}
@@ -266,7 +272,7 @@ export default function CharacterLocationDisplay({
   if (level === 47) {
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+        <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
         <div
           className="flex justify-center items-center cursor-pointer"
           onClick={() => {
@@ -300,7 +306,7 @@ export default function CharacterLocationDisplay({
     return (
       <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
         {/* Character image (Devil) */}
-        <CharacterDisplayWrapper character="devil" onGuardClick={onGuardClick} enableInteraction={true} />
+        <CharacterDisplayWrapper character="devil" onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
 
         {/* Location image - always clickable for elevator access */}
         <div className="flex justify-center items-center cursor-pointer" onClick={onLocationClick}>
@@ -340,7 +346,7 @@ export default function CharacterLocationDisplay({
 
   return (
     <div className="grid grid-cols-2 gap-3 mb-4 animate-fadeIn">
-      <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} />
+      <CharacterDisplayWrapper character={character} onGuardClick={onGuardClick} enableInteraction={true} speech={speech} />
       <div className="flex justify-center items-center">
         <div className="w-40 h-40 relative pixelated-container">
           <div className="absolute inset-0 bg-black/30 rounded-lg z-0"></div>

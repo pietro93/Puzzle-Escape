@@ -94,7 +94,7 @@
 > [!WARNING]
 > **Insights:** Same static-image + text-input issue as Level 3.
 >
-> **Redesign (Approved):** Interactive "Table Setting" component where the player arranges Silas's silverware on a dining table to visually balance equations. Ties the mechanic directly to the Butler's obsessive domestic perfectionism.
+> **Redesign (Approved):** Interactive "Table Setting" component where the player arranges the Butler's silverware on a dining table to visually balance equations. Ties the mechanic directly to the Butler's obsessive domestic perfectionism.
 
 ---
 
@@ -196,7 +196,7 @@
 - **UX Role:** Tonal calibration. His levity makes the dungeon feel escapable, not oppressive.
 - **Critique:** Absent during Levels 1–9 gameplay. **Proposed fix:** Hint delivery routed through his voice in Zone 1. When a hint is clicked: *"Fine, ya stubborn mule — here's yer bone..."* rather than generic system text.
 
-### Silas the Butler (Zone 2)
+### The Butler (Zone 2)
 - **Register:** Clipped, aristocratic, passive-aggressive. *"One mustn't linger on the threshold — it's most dreadfully improper."*
 - **UX Role:** Represents institutional/societal judgment.
 - **Critique:** Absent during Levels 11–19 gameplay. **Proposed fix:** Passive-aggressive hint delivery. Wrong answer prompt: *"Incorrect. Again. Shall I arrange for a remedial tutor, sir?"*

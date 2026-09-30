@@ -7,7 +7,7 @@ export const transitions: Transition[] = [
     paragraphs: [
       "The skeleton guard's bones clatter to the floor as you solve the final riddle. The cell door creaks open, revealing a path to freedom.",
 
-      "\"Heh, think yer clever, do ya?\" the guard's skull hisses as you step past. \"But I still have a bone to pick with ya. We'll meet again. That noggin o' yours know what ya did... Hah-hah-hah.\"",
+      "\"Heh, think yer clever, do ya, {{lad|lass|pal}}?\" the guard's skull hisses as you step past. \"But I still have a bone to pick with ya. We'll meet again. That noggin o' yers knows what ya did. Hah-hah-hah.\"",
 
       "His mocking words echo in your mind as you navigate through damp corridors and past empty cells. What did you do? Why can't you remember?",
 
@@ -15,7 +15,7 @@ export const transitions: Transition[] = [
 
       "As you approach the mansion's ornate entrance, the massive doors swing open of their own accord. In the doorway stands a tall, gaunt butler with an unnaturally rigid posture.",
 
-      '"We\'ve been expecting you, sir," he says in a crisp, proper English accent. His eyes never blinking as he studies you with cold precision. "Do come in. One mustn\'t linger on the threshold—it\'s most dreadfully improper."',
+      '"We\'ve been expecting you, {{sir|madam|guest}}," he says in a crisp, proper English accent. His eyes never blinking as he studies you with cold precision. "Do come in. One mustn\'t linger on the threshold. It\'s most dreadfully improper."',
     ],
     characterImage: "/images/butler.webp",
     characterName: "Butler",
@@ -41,7 +41,7 @@ export const transitions: Transition[] = [
 
       'The mansion begins to tremble, dust falling from the ornate ceiling. "I\'m afraid I cannot divulge further details," the butler says with a slight bow.',
 
-      '"The master would be most displeased. What you did carries consequences. A proper gentleman would already know that much."',
+      '"The master would be most displeased. What you did carries consequences. A proper {{gentleman|lady|guest}} would already know that much."',
 
       "You race through the mansion's twisting corridors, dodging falling debris. Bursting through the garden doors, you run until the sounds of destruction fade behind you.",
 
@@ -49,7 +49,7 @@ export const transitions: Transition[] = [
 
       "Just as you begin to fear you're hopelessly lost, you stumble upon a small clearing. In its center sits a colorful wagon, smoke curling from its chimney. An elderly woman emerges from within.",
 
-      '"Ah, the wanderer arrives!" she exclaims, her accent thick, her r\'s rolling dramatically. "The cards have foretold your coming. Your past haunts you, and your future waits to be read."',
+      '"Ah, finally you come, {{handsome|beautiful|pretty face}}!" she exclaims, her accent thick, her r\'s rolling dramatically. "Cards tell me you come Tuesday. Is Thursday. Cards are never wrong, so you are late."',
     ],
     // The reveal beat: silence on the ordinary butler, then the scream lands
     // right as his portrait swaps to the undead version. Unlike a jump
@@ -79,15 +79,15 @@ export const transitions: Transition[] = [
     paragraphs: [
       "The fortune teller's eyes widen as you solve her final riddle. The cards in her hand flutter to the table, arranging themselves in a perfect circle.",
 
-      '"I see your past," she whispers, her voice like dry leaves rustling in a Transylvanian wind. "A good soul you were, kind heart beating strong... but then darkness came! Metal screaming against metal. Glass shattering like the ice of frozen river. Blood on your hands that wasn\'t yours alone."',
+      '"I see your past," she whispers, her voice like dry leaves rustling in a Transylvanian wind. "A good soul you were, kind heart beating strong. But then, darkness came! Metal screaming against metal. Glass shattering like the ice of frozen river. Blood on your hands that wasn\'t yours alone."',
 
       "You feel a chill despite the warmth of her wagon. Fragments of memory flash through your mind—headlights in rain, the screech of brakes, a bottle rolling on the floor.",
 
-      'She grabs your hand suddenly, her rings cold against your skin. "Your future, it remains unwritten in the great book of fate," she continues, her gnarled fingers tracing the lines on your palm. "The path you walk now is one of judgment, but also of possibility. The spirits, they test you, yes? They watch with ancient eyes."',
+      'She grabs your hand suddenly, her rings cold against your skin. "Your future, nobody wrote it yet," she continues, her gnarled fingers tracing the lines on your palm. "Not even me, and I tried. The path you walk now, it judges you. The spirits, they test you, yes? Very strict teachers."',
 
       "The forest around you begins to shift. Trees bend away, creating a path where none existed before. The mist parts, revealing a trail bathed in moonlight.",
 
-      '"Go now," the fortune teller urges, pressing a strange coin into your palm. "Face what comes next. Remember that understanding comes before forgiveness—even forgiveness of self. The cards never lie, and they say your journey is far from over."',
+      '"Go now," the fortune teller urges, pressing a strange coin into your palm. "Face what comes next. First you understand, then you forgive. Even yourself, yes? Cards never lie. They say road is still long."',
 
       "You walk for what seems like hours, the forest gradually thinning around you. The air grows warmer, the soil beneath your feet increasingly gritty. Suddenly, the last trees fall away, and you find yourself standing at the edge of a vast desert. Golden dunes stretch to the horizon, shimmering in the heat.",
 
@@ -118,7 +118,7 @@ export const transitions: Transition[] = [
 
       "A figure approaches through the flames, tall and imposing. Neither fully human nor entirely other, he carries himself with the confidence of one who has ruled for eternity.",
 
-      '"Well, well, well!" he says with a theatrical flourish, his voice melodious and charming. "Look what the sphinx dragged in! Welcome to my humble abode, traveler." His smile is dazzling, perfect white teeth against red skin. "I\'ve been watching your progress with great interest. Not many make it this far, you know."',
+      '"Well, well, well!" he says with a theatrical flourish, his voice melodious and charming. "Look what the sphinx dragged in! Welcome to my humble abode, {{my good man|my dear lady|traveler}}." His smile is dazzling, perfect white teeth against red skin. "I\'ve been watching your progress with great interest. Not many make it this far, you know."',
 
       'He circles you, appraising. "I am the final test on your journey. Pass my little challenges, and your soul may yet escape my... hospitality. Fail, and well..." He gestures to the flames, his smile never faltering. "Let\'s just say you\'ll have plenty of time to practice your puzzle-solving skills. For eternity."',
     ],

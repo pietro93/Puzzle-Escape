@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 
 interface BookshelfChronologyPuzzleProps {
   onSolve: () => void
+  onRevealedChange?: (revealed: boolean) => void
 }
 
 interface BookDef {
@@ -65,7 +66,7 @@ const START_ORDER = [
   "andthentherewerenone",
 ]
 
-export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronologyPuzzleProps) {
+export default function BookshelfChronologyPuzzle({ onSolve, onRevealedChange }: BookshelfChronologyPuzzleProps) {
   const [slotOrder, setSlotOrder] = useState<string[]>(START_ORDER)
   const [draggedSlot, setDraggedSlot] = useState<number | null>(null)
   const [revealed, setRevealed] = useState(false)
@@ -76,6 +77,10 @@ export default function BookshelfChronologyPuzzle({ onSolve }: BookshelfChronolo
   useEffect(() => {
     if (isSolved) setRevealed(true)
   }, [isSolved])
+
+  useEffect(() => {
+    onRevealedChange?.(revealed)
+  }, [revealed, onRevealedChange])
 
   useEffect(() => {
     if (!isSolved) return

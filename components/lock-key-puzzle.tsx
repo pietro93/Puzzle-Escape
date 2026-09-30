@@ -212,11 +212,16 @@ function LockIcon({
   readOnly?: boolean
 }) {
   const meta = LOCK_META[type]
+  // Bumped on each toggle; remounting the img replays the clack.
+  const [toggles, setToggles] = useState(0)
   const content = (
     <img
+      key={toggles}
       src={`/images/locks/${type}_${state}.webp`}
       alt={`${meta.label} lock, ${state}`}
-      className={`w-20 h-20 object-contain -mr-4 ${readOnly ? "opacity-80" : ""}`}
+      className={`w-20 h-20 object-contain -mr-4 ${readOnly ? "opacity-80" : ""} ${
+        toggles > 0 ? "animate-clack motion-reduce:animate-none" : ""
+      }`}
     />
   )
 
@@ -225,7 +230,14 @@ function LockIcon({
   }
 
   return (
-    <button onClick={onClick} className="cursor-pointer transition-transform hover:scale-105" title={`Tap to use your key on the ${meta.label} lock`}>
+    <button
+      onClick={() => {
+        setToggles((n) => n + 1)
+        onClick?.()
+      }}
+      className="cursor-pointer transition-transform hover:scale-105"
+      title={`Tap to use your key on the ${meta.label} lock`}
+    >
       {content}
     </button>
   )
