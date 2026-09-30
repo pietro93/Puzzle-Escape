@@ -8,6 +8,8 @@ import { genderize } from "@/utils/player-gender"
 
 interface ParrotPuzzleProps {
   onSolve: () => void
+  // Wrong guesses typed into the main answer box; the Count mocks each one.
+  lastWrongAnswer?: { text: string; nonce: number } | null
 }
 
 // --- DIALOGUE PATTERNS ---
@@ -420,10 +422,32 @@ const getRandomResponse = (responses: readonly string[]): string => {
 // Fallback-only: the Count parrots the player's own unmatched input back at them.
 const ECHO_CHANCE = 1 / 3
 const ECHO_MAX_WORDS = 6
-const echoInput = (raw: string): string => {
+const quoteInput = (raw: string): string => {
   const words = raw.trim().toUpperCase().split(/\s+/)
-  const quoted = words.length > ECHO_MAX_WORDS ? `${words.slice(0, ECHO_MAX_WORDS).join(" ")} BLAH BLAH BLAH` : words.join(" ")
+  return words.length > ECHO_MAX_WORDS ? `${words.slice(0, ECHO_MAX_WORDS).join(" ")} BLAH BLAH BLAH` : words.join(" ")
+}
+const echoInput = (raw: string): string => {
+  const quoted = quoteInput(raw)
   return `"${quoted}"! "${quoted}"! HA! THAT'S YOU! THAT'S HOW YOU SOUND!`
+}
+
+// Intercept: his reaction to a wrong guess in the answer box. Never hints at the answer.
+const getWrongGuessResponse = (guess: string): string => {
+  const cleaned = guess.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").trim()
+  if (cleaned === "parrot" || cleaned === "a parrot" || cleaned === "the parrot") {
+    return "PARROT?! I NEVER SAID I WAS THE SOLUTION! GAWK!"
+  }
+  if (cleaned === "one more time") {
+    return "MAYBE TRY... ONE MORE TIME?"
+  }
+  if (cleaned === "papagalul" || cleaned === "count papagalul") {
+    return "YOU THINK I'D GIVE MYSELF AWAY? I'M A COUNT, NOT A CLUE!"
+  }
+  const quoted = quoteInput(guess)
+  return getRandomResponse([
+    `"${quoted}"?! "${quoted}"! HA! WRONG!`,
+    "WRONG! I'LL BE REPEATING THAT ONE FOR CENTURIES!",
+  ])
 }
 
 const getRandomIdleMessage = (): string => {
@@ -455,6 +479,7 @@ const getRandomIdleMessage = (): string => {
     "RELEASE THE FILES! GAWK!",
     "I'VE BEEN DEAD FOR CENTURIES AND I STILL LOOK BETTER THAN YOU!",
     "PRETTY BIRD! PRETTY BIRD! NOT YOU! ME!",
+    "POLLY WANTS A CRACKER! POLLY WANTS A LAWYER!",
   ]
 
   return getRandomResponse(idleMessages)
@@ -462,7 +487,7 @@ const getRandomIdleMessage = (): string => {
 // --- END DIALOGUE PATTERNS ---
 
 
-export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
+export default function ParrotPuzzle({ onSolve, lastWrongAnswer }: ParrotPuzzleProps) {
   const [input, setInput] = useState("")
   const [parrotText, setParrotText] = useState("")
   const [showParrotText, setShowParrotText] = useState(false)
@@ -474,6 +499,8 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
   const [currentSongLine, setCurrentSongLine] = useState(0)
   const [isSinging, setIsSinging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  // Ignore a wrong answer left over from a previous level.
+  const seenWrongNonce = useRef(lastWrongAnswer?.nonce ?? 0)
 
   // --- IDLE TIMER LOGIC ---
   const startIdleTimer = () => {
@@ -565,6 +592,27 @@ export default function ParrotPuzzle({ onSolve }: ParrotPuzzleProps) {
     }
   }, [isSinging, songLines, currentSongLine, solutionState, onSolve]) // eslint-disable-line react-hooks/exhaustive-deps
 
+
+  // Intercept wrong guesses from the answer box (never mid-song).
+  useEffect(() => {
+    if (!lastWrongAnswer || lastWrongAnswer.nonce === seenWrongNonce.current) return
+    seenWrongNonce.current = lastWrongAnswer.nonce
+    if (isSinging) return
+
+    if (idleTimer) clearTimeout(idleTimer)
+    if (textTimer) clearTimeout(textTimer)
+
+    setIsAnimating(true)
+    setTimeout(() => setIsAnimating(false), 300)
+    setParrotText(getWrongGuessResponse(lastWrongAnswer.text))
+    setShowParrotText(true)
+
+    const timer = setTimeout(() => {
+      setShowParrotText(false)
+      startIdleTimer()
+    }, 4000)
+    setTextTimer(timer)
+  }, [lastWrongAnswer]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault()

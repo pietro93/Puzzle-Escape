@@ -15,7 +15,7 @@ export const transitions: Transition[] = [
 
       "As you approach the mansion's ornate entrance, the massive doors swing open of their own accord. In the doorway stands a tall, gaunt butler with an unnaturally rigid posture.",
 
-      '"We\'ve been expecting you, {{sir|madam|guest}}," he says in a crisp, proper English accent. His eyes never blinking as he studies you with cold precision. "Do come in. One mustn\'t linger on the threshold. It\'s most dreadfully improper."',
+      '"We have been expecting you, {{sir|madam|guest}}," he says in a crisp, proper English accent. His eyes never blinking as he studies you with cold precision. "Do come in. One mustn\'t linger on the threshold. It is most dreadfully improper."',
     ],
     characterImage: "/images/butler.webp",
     characterName: "Butler",

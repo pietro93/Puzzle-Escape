@@ -445,7 +445,7 @@ export default function PuzzleContent({
           {puzzle.description && (
             <p className="text-gray-300 whitespace-pre-line font-mono text-sm mb-4">{puzzle.description}</p>
           )}
-          <ParrotPuzzle onSolve={handleParrotSolve} />
+          <ParrotPuzzle onSolve={handleParrotSolve} lastWrongAnswer={lastWrongAnswer} />
         </div>
       ) : isZodiacPuzzle ? (
         <div className="my-4">

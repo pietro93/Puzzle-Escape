@@ -54,11 +54,11 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   // Zone 2: Mansion - The Butler
   11: {
     character: "butler",
-    lines: [`"These were some of the master's favorite books," the butler explains, gesturing to the shelf.`, `"I myself was particularly fond of 'The Third Eye.' The master said it provided a unique perspective on the other works."`],
+    lines: [`"This belonged to the master's collection of culinary curiosities," the butler explains with a slight bow.`, `"Assemble the pieces to reveal the hidden message."`],
   },
   12: {
     character: "butler",
-    lines: [`"This belonged to the master's collection of culinary curiosities," the butler explains with a slight bow.`, `"Assemble the pieces to reveal the hidden message."`],
+    lines: [`"These were some of the master's favourite books," the butler explains, gesturing to the shelf.`, `"I myself was particularly fond of 'The Third Eye.' The master said it provided a unique perspective on the other works."`],
   },
   13: {
     character: "butler",
@@ -84,11 +84,11 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   17: {
     character: "butler",
-    lines: [`"It's pitch dark in here," the butler's voice calls out from somewhere in the room.`, `"You'll need to find the switches yourself."`],
+    lines: [`"It is rather dark in here, I'm afraid," the butler's voice calls out from somewhere in the room.`, `"You will have to find the switches yourself. I would help, but I do enjoy listening to you walk into the furniture."`],
   },
   18: {
     character: "butler",
-    lines: [`"This is Count Papagalul," the butler says, gesturing to the parrot's cage.`, `"He's quite the conversationalist, though his manners leave something to be desired. Be careful, he bites."`],
+    lines: [`"This is Count Papagalul," the butler says, gesturing to the parrot's cage.`, `"He is quite the conversationalist, though his manners leave something to be desired. Be careful, he bites."`],
   },
   19: {
     character: "butler",

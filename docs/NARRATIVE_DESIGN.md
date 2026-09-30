@@ -76,13 +76,24 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 | **Lyra** | Tired, blunt, the only honest one | Plain complete sentences, no slang. Her lines are the clues: never change their meaning. |
 | **Silas** | The only scary one | Soft, trailing. The only inmate allowed ellipses as a tic, plus "Hehe". Fixated on youth, beauty and skin, and on Ronan. |
 
-- **Gender:** Silas's Lyra line varies by `{{male|female|other}}` (female: "Besides you, pretty face"; other: "You'd do, though"). Ronan's "Who did *you* kill?" is the level's crash foreshadowing; keep it.
+- **Gender:** Silas's Lyra line varies by `{{male|female|other}}` (female: "Besides you, pretty face"; other: "You'd do, though"; "She's full of shit anyway" stays in all three). Ronan's "Don't trust women" adds "N-no offense." for a female player. Ronan's "Who did *you* kill?" is the level's crash foreshadowing; keep it.
 
 ### 🤵 The Butler (Zone 2)
 - **Role:** Host of the House of Morvane.
 - **Traits:** Impeccable formal service, highly educated in arts/science, subtly condescending (uses polite British dry humor to belittle the player's lack of taste), discreet and enigmatic.
 - **Communication Voice:** Speaks in formal British English. Drops random world facts related to the current puzzle category to highlight the player's ignorance.
 - **Key Phrase:** *"Kind guest, your efforts are noted. If one may be so bold..."*
+- **Name:** none, on purpose. "Silas" is a Level 10 inmate.
+
+#### Butler voice spec
+- **Core move: fake British humility that turns into an insult.** He opens polite or self-effacing ("I confess", "I'm afraid", "I would never presume", "pardon the pun") and ends on a pointed jab at the player: "I confess my own French extends little beyond ordering wine. Yours, I suspect, extends little beyond the fries." The humble opener is the joke's setup; don't cut it.
+- **The jab must follow from the setup.** A fact about arsenic wallpaper ends with him papering *your* room in it; purple reserved for emperors ends with commoners losing their heads. A tag that doesn't grow out of the fact ("You are wearing beige") reads as random. Never announce the contempt ("Your taste appears unrefined").
+- **Real facts tied to the puzzle.** Checked, specific, often grim (Scheele's green, nutmeg as a hallucinogen, the Habsburg jaw). A fact may stand alone without a jab.
+- **Register:** formal British, British spelling (colour, favourite, labelled). Contractions only in set phrases ("I'm afraid", "mustn't"). "Kind guest" is his default address; a clipped `{{sir|madam|guest}}` now and then, never on every line.
+- **Loyal to the Master.** He sneers at guests, never at the Master or the House of Morvane.
+- **Menace under the manners.** Guests who displease the house are "not invited back"; nobody is "expecting you home". Hints at the player's death stay oblique until the Level 20 scream.
+- **No running gags.** Don't invent one without the user.
+- **Parrot feud:** he never confirms or denies the Count's accusations. At most: "he is but a bird."
 
 ### 🦜 Count Papagalul (Zone 2, Level 18)
 - **Role:** The mansion's caged parrot. Free-text chat puzzle (`components/parrot-puzzle.tsx`).
@@ -97,7 +108,8 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 - **Topical and zero-tolerance pools stay** (Trump, Musk, "RELEASE THE FILES", bigotry). They only fire when the player types the trigger.
 - **Mechanics:** `PATTERN_PRIORITY` sets match order (zero tolerance → about him → topics → catch-alls). Unmatched input gets a fallback line or, one time in three, his echo of the player's words. He never says the same line twice in a row.
 - **Gendered lines** use `{{male|female|other}}` tokens; responses go through `genderize()` before the song split.
-- **Allowed:** one em dash, the "MASTER—\n—BATOR" beat.
+- **Wrong-guess intercept:** Level 18's answer box is deliberately ungated. Every wrong guess typed there gets a mocking reaction from him (`getWrongGuessResponse`): special lines for "parrot", "one more time" and his own name, otherwise he echoes the guess or yells WRONG. Never hints.
+- **Allowed:** one em dash, the "MASTER—\n—BATOR" beat; one ellipsis, the trolling pause in "MAYBE TRY... ONE MORE TIME?".
 
 ### 🔮 Gypsy Teller (Zone 3)
 - **Role:** Caravan wagon reader.

@@ -13,7 +13,7 @@ export const guardDialogLines = [
 // Add a specific sphinx riddle for level 38
 export const sphinxRiddle = "What has a bed, a mouth, banks, and a crystal clear body?"
 
-// Level 12 (Mansion Clock) — the time the butler reads out matches the clock's actual hand position, never random
+// Level 14 (Mansion Clock) — the time the butler reads out matches the clock's actual hand position, never random
 export const clockTimeSequence = ["III", "XII:IX", "XXI:XVIII", "VI:XXVII"]
 
 // A couple of remarks per step, so re-interacting at the same step before advancing doesn't
@@ -184,7 +184,7 @@ const bookshelfButlerLinesBefore: string[] = [
   "Do mind the spines, kind guest. Bending them is nothing short of barbarism.",
   "Every volume knows its place, if one bothers to consult the plaques below.",
   "First editions once bore their year plainly on the spine. This shelf extends you no such courtesy.",
-  "Fascinating. Your taste in literature appears rather unrefined.",
+  "Do you read, {{sir|madam|guest}}? Menus count, I suppose.",
 ]
 
 const bookshelfButlerLinesAfter: string[] = [
@@ -365,59 +365,58 @@ skeleton: {
 ,
 butler: {
   11: [ // Assembly Puzzle / Box (escargot)
-    "We find much depends on the patience invested versus mere trial and error.",
+    "Trial and error is a method, of sorts. You appear to have mastered the second half.",
     "I have polished these pieces weekly for thirty years. I trust you will handle them with care.",
     "Assembly is a matter of order, a concept apparently elusive to some.",
-    "Some things are more valuable when taken apart. It reveals their inner workings.",
-    "Kintsugi is the Japanese art of repairing broken pottery with gold. It treats breakage as part of an object's history."
+    "I would offer to help, but I should hate to rob you of the achievement. Such as it is.",
+    "The Japanese mend broken bowls with gold and call the scar beautiful. I fear the gold would be wasted on you."
   ],
   // 12 (Bookshelf Chronology Puzzle) uses getBookshelfButlerLine above, not this table.
   13: [ // Exotic Spices Puzzle
-    "The Master did enjoy a hint of the exotic in every meal. One must have standards.",
-    "Lessons in flavour, like this puzzle, require patience and discernment.",
-    "The pungent aroma of these spices was once worth more than gold. Quite the investment.",
-    "The Master's palate was exceptionally refined. A rare quality these days.",
+    "The Master took something exotic with every meal. You, I suspect, take ketchup.",
+    "Saffron is the stigma of a crocus, picked by hand, some hundred and fifty flowers to the gram. I would ask you not to touch it, but I see I am too late.",
+    "Nutmeg was once worth more than gold. The Dutch handed over Manhattan to keep an island of it.",
+    "Nutmeg by the spoonful is a hallucinogen. I suspect you would go positively nuts for it, pardon the pun.",
     "A guest once mistook cumin for cinnamon. They were not invited back."
   ],
   // 14 (Mansion Clock Puzzle) uses getClockButlerLine / clockButlerRemarksByStep above, not this table.
   15: [ // Color / Pigment Puzzle
     "I do hope your eyes serve you better than your instincts thus far.",
-    "You would do well not to overlook the nuances of hue and tone.",
-    "Tyrian purple, a color once reserved for emperors, was famously extracted from sea snails. Thousands for a single gram.",
-    "I do hope you possess a basic grasp of color theory. It would be most unfortunate otherwise.",
-    "The Master believed colour could alter one's mood. This room is a testament to that.",
-    "The painter labeled every hue in French. A rather stubborn habit of his countrymen, I find.",
+    "Scheele's green was made with arsenic and papered half of Victorian England. It poisoned guests slowly, in their own beds. I took the liberty of papering your room in it.",
+    "Tyrian purple took some ten thousand sea snails to the gram and was reserved for emperors. A commoner caught wearing it could lose his head. I mention this for no particular reason.",
+    "I do hope you possess a basic grasp of colour theory. It would be most unfortunate otherwise.",
+    "The painter labelled every hue in French. A rather stubborn habit of his countrymen, I find.",
     "Do not fret over the language, kind guest. Colour, unlike vocabulary, requires no translation.",
-    "I confess my own French extends little beyond ordering wine. This palette demands rather more of you."
+    "I confess my own French extends little beyond ordering wine. Yours, I suspect, extends little beyond the fries."
   ],
   16: [ // Silverware / Math Puzzle
-    "The family silverware is solid sterling. Polished daily, of course.",
+    "The silver is sterling, polished daily and counted nightly. I shall be counting it *again* after you leave.",
     "Do be careful. The tarnish of a single fingerprint takes ages to buff out.",
-    "The Master was fastidious about place settings, as etiquette demanded. Thankfully for you, they are not around.",
-    "Table manners may escape you, but they are quite important to me.",
-    "One cannot underestimate the silent conversation of a well-laid table."
+    "Cutlery is used from the outside in, {{sir|madam|guest}}. I mention it in case you were planning to use your hands.",
+    "The Victorians kept a separate fork for oysters, sardines and ice cream. I'm afraid you will have to make do with one fork, and supervision.",
+    "I would never presume to correct a guest's table manners. I shall simply watch them."
   ],
   17: [ // Light Switch & Compass Puzzle
     "Ah, light. A considerable improvement. Your fumbling in the dark was quite audible.",
     "The Master was fond of navigational instruments. This one, however, appears to have lost its bearings. It insists on pointing West.",
     "Nyctophilia is a fondness for darkness. I myself am a devoted practitioner.",
-    "Fascinating, isn't it? The first magnetic compass was invented in China during the Han Dynasty.",
-    "Are you lost, kind guest? Perhaps this compass will help you find the way."
+    "The Chinese of the Han Dynasty used the compass for fortune-telling. Navigation came later. You appear to be using it for neither.",
+    "Lost, kind guest? Do not worry. Nobody here is expecting you home."
   ],
   18: [ // Parrot Puzzle
     "Count Papagalul has endured through generations with unusual vitality.",
-    "The Count possesses a rather colorful vocabulary. The Master found it endlessly amusing. Myself, not so much.",
+    "The Count possesses a rather colourful vocabulary. The Master found it endlessly amusing. Myself, not so much.",
     "Kind guest, please exercise extreme caution in his presence. His bite lacks discretion.",
     "He tends to repeat things he overhears. I would be mindful of what you say.",
-    "He seems to have taken a dislike to you. How curious."
+    "The Count dislikes nearly every guest. In your case, I share his view.",
+    "Whatever the Count has told you about me, I would remind you that he is but a bird."
   ],
   19: [ // Library / Family Tree (heir) Puzzle
-    "The family records are a meticulously woven tapestry of facts and fabrications.",
-    "The Master devoted countless hours untangling the family's intricate roots.",
+    "Every noble family tree is half fact and half flattery. This one leans toward flattery.",
+    "The Habsburgs married their cousins until the jaw became hereditary. Charles the Second could barely chew.",
     "One must admire the care taken to conceal certain family affairs.",
     "Some branches of the family tree were deliberately pruned. For the health of the whole.",
-    "Genealogy is a fascinating pursuit. It reveals how the past is never truly past.",
-    "Be careful where you pry. Some ancestors are best left undisturbed."
+    "I would ask after your own family, but I suspect you no longer remember them."
   ]
   // 20 (Mansion Gallery Puzzle) uses getMansionButlerLine / mansionAmbientLines / mansionExaminingLines above, not this table.
 },

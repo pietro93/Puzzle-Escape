@@ -6,6 +6,7 @@ import { characterImageMap } from "@/utils/dialogue-utils"
 import type { LevelIntroScene } from "@/data/level-intro-scenes"
 import { DialogueText } from "@/components/dialogue-text"
 import TalkingPortrait from "@/components/talking-portrait"
+import { genderize } from "@/utils/player-gender"
 
 interface LevelIntroSceneProps {
   scene: LevelIntroScene
@@ -25,7 +26,8 @@ export default function LevelIntroSceneView({ scene, onContinue }: LevelIntroSce
   }, [])
 
   useEffect(() => {
-    const text = scene.lines[currentLine]
+    // genderize before the typewriter slices, so a half-typed token never shows
+    const text = genderize(scene.lines[currentLine])
 
     if (skipTyping) {
       setTextVisible(text)

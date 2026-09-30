@@ -2,6 +2,7 @@
 import TalkingPortrait from "./talking-portrait"
 import { characterImageMap } from "@/utils/dialogue-utils"
 import { DialogueText } from "@/components/dialogue-text"
+import { genderize } from "@/utils/player-gender"
 
 interface CharacterDialoguePopupProps {
   character: string
@@ -26,6 +27,7 @@ export default function CharacterDialoguePopup({
   level = 0,
   brainImage,
 }: CharacterDialoguePopupProps) {
+  dialogue = genderize(dialogue)
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-gray-900 p-4 rounded-lg border-2 border-gray-700 max-w-sm w-full animate-fadeIn">

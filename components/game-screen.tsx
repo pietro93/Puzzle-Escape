@@ -17,6 +17,7 @@ import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphin
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
+import { genderize } from "@/utils/player-gender"
 import PuzzleContent from "./puzzle-content"
 
 interface GameScreenProps {
@@ -865,7 +866,7 @@ export default function GameScreen({
           murderMysteryLocation={murderMysteryLocation}
           onColorPaletteClick={() => setShowColorPalettePopup(true)}
           speech={
-            showCharacterDialogue ? characterDialogue : showGuardPopup ? guardDialogLines[guardDialogIndex] : null
+            showCharacterDialogue ? genderize(characterDialogue) : showGuardPopup ? genderize(guardDialogLines[guardDialogIndex]) : null
           }
         />
       )}
