@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 interface MagicBoxPuzzleProps {
   onSolve: () => void
@@ -125,33 +126,21 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
     return sums
   }
 
-  // Handle drag start for a bone
-  const handleDragStart = (e: React.DragEvent, bone: BoneItem, fromGrid: boolean, gridIndex?: number) => {
-    e.dataTransfer.setData("id", bone.id.toString())
-    e.dataTransfer.setData("value", bone.value.toString())
-    e.dataTransfer.setData("imagePath", bone.imagePath)
-    e.dataTransfer.setData("fromGrid", fromGrid.toString())
-    if (gridIndex !== undefined) {
-      e.dataTransfer.setData("gridIndex", gridIndex.toString())
-    }
-  }
+  // A dragged bone, and the grid cell it came from (null when it came from storage)
+  type BoneDrag = { bone: BoneItem; gridIndex: number | null }
 
-  // Handle drag over for a grid cell
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+  const { dragSource } = usePointerDrag<BoneDrag>((drag, zone) => {
+    if (zone === "storage") handleDropOutside(drag)
+    else if (zone?.startsWith("cell:")) handleDrop(drag, Number(zone.slice(5)))
+  })
 
   // Handle drop for a grid cell
-  const handleDrop = (e: React.DragEvent, index: number) => {
-    e.preventDefault()
-
+  const handleDrop = ({ bone, gridIndex }: BoneDrag, index: number) => {
     if (isSolved) return
 
-    const id = Number.parseInt(e.dataTransfer.getData("id"))
-    const value = Number.parseInt(e.dataTransfer.getData("value"))
-    const imagePath = e.dataTransfer.getData("imagePath")
-    const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
-    const oldGridIndex = fromGrid ? Number.parseInt(e.dataTransfer.getData("gridIndex")) : -1
+    const { id } = bone
+    const fromGrid = gridIndex !== null
+    const oldGridIndex = gridIndex ?? -1
 
     // Update the grid
     const newGrid = [...grid]
@@ -163,14 +152,14 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
       if (targetBone === null) return
 
       // Place dragged bone in target cell
-      newGrid[index] = { id, value, imagePath }
+      newGrid[index] = bone
 
       if (fromGrid) {
         // Swap: put target bone in the cell we dragged from
         newGrid[oldGridIndex] = targetBone
       } else {
         // Moving from remaining bones: target bone goes back to remaining bones
-        newRemainingBones = newRemainingBones.filter((bone) => bone.id !== id)
+        newRemainingBones = newRemainingBones.filter((b) => b.id !== id)
         newRemainingBones = [...newRemainingBones, targetBone]
       }
     } else {
@@ -181,14 +170,14 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
       }
 
       // Place the bone in the new cell
-      newGrid[index] = { id, value, imagePath }
+      newGrid[index] = bone
 
       // Update the remaining bones
       if (fromGrid) {
         // If moving within the grid, no need to update remaining bones
       } else {
         // Remove the bone from remaining bones
-        newRemainingBones = newRemainingBones.filter((bone) => bone.id !== id)
+        newRemainingBones = newRemainingBones.filter((b) => b.id !== id)
       }
     }
 
@@ -196,27 +185,18 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
     setRemainingBones(newRemainingBones)
   }
 
-  // Handle drop outside the grid (return to available bones)
-  const handleDropOutside = (e: React.DragEvent) => {
-    e.preventDefault()
-
+  // Handle drop on the storage area (return to available bones)
+  const handleDropOutside = ({ bone, gridIndex }: BoneDrag) => {
     if (isSolved) return
 
-    const fromGrid = e.dataTransfer.getData("fromGrid") === "true"
-
-    if (fromGrid) {
-      const id = Number.parseInt(e.dataTransfer.getData("id"))
-      const value = Number.parseInt(e.dataTransfer.getData("value"))
-      const imagePath = e.dataTransfer.getData("imagePath")
-      const gridIndex = Number.parseInt(e.dataTransfer.getData("gridIndex"))
-
+    if (gridIndex !== null) {
       // Remove the bone from the grid
       const newGrid = [...grid]
       newGrid[gridIndex] = null
       setGrid(newGrid)
 
       // Add the bone back to remaining bones
-      setRemainingBones([...remainingBones, { id, value, imagePath }])
+      setRemainingBones([...remainingBones, bone])
     }
   }
 
@@ -315,15 +295,13 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
       {/* Bones storage area */}
       <div
         className="flex flex-wrap justify-center gap-4 mb-10 p-4 bg-gray-800 bg-opacity-40 rounded-lg min-h-[80px] w-[350px]"
-        onDragOver={handleDragOver}
-        onDrop={handleDropOutside}
+        data-drop-zone="storage"
       >
         {remainingBones.map((bone) => (
           <motion.div
             key={bone.id}
             className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
-            draggable={!isSolved}
-            onDragStart={(e) => handleDragStart(e, bone, false)}
+            {...dragSource({ bone, gridIndex: null }, isSolved)}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -404,8 +382,7 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
               className={`w-24 h-24 bg-amber-50 border-2 ${
                 isSolved ? "border-green-500" : "border-gray-700"
               } flex items-center justify-center relative overflow-hidden`}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, index)}
+              data-drop-zone={`cell:${index}`}
             >
               {flippedCells.includes(index) ? (
                 <div className="w-full h-full flex items-center justify-center bg-white">
@@ -424,8 +401,7 @@ export default function MagicBoxPuzzle({ onSolve, onSolved }: MagicBoxPuzzleProp
                 bone !== null && (
                   <motion.div
                     className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center cursor-grab overflow-hidden"
-                    draggable={!isSolved && bone !== null}
-                    onDragStart={(e) => bone !== null && handleDragStart(e, bone, true, index)}
+                    {...dragSource({ bone, gridIndex: index }, isSolved)}
                   initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}

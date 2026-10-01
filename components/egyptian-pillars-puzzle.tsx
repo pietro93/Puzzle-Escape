@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 interface EgyptianPillarsPuzzleProps {
   onSolve?: () => void
@@ -113,7 +114,6 @@ export default function EgyptianPillarsPuzzle({ onSolve }: EgyptianPillarsPuzzle
   const [outputMessage, setOutputMessage] = useState("")
 
   // Drag state
-  const [draggedWord, setDraggedWord] = useState<string | null>(null)
 
   // Letter mappings for each pillar and word combination
   const letterMappings: Record<string, Record<string, string>> = {
@@ -320,24 +320,13 @@ export default function EgyptianPillarsPuzzle({ onSolve }: EgyptianPillarsPuzzle
     setOutputMessage(message)
   }, [pillarSets])
 
-  // Handle drag start
-  const handleDragStart = (e: React.DragEvent, wordId: string) => {
-    setDraggedWord(wordId)
-    // Set drag image to be transparent (improves UX)
-    const img = new Image()
-    img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    e.dataTransfer.setDragImage(img, 0, 0)
-  }
-
-  // Handle drag over
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+  // Drop zones are the bottom halves of the currently visible pillar set
+  const { dragSource } = usePointerDrag<string>((wordId, zone) => {
+    if (zone?.startsWith("pillar:")) handleDrop(activePillarSetIndex, Number(zone.slice(7)), wordId)
+  })
 
   // Handle drop on pillar
-  const handleDrop = (pillarSetIndex: number, pillarIndex: number) => {
-    if (!draggedWord) return
-
+  const handleDrop = (pillarSetIndex: number, pillarIndex: number, draggedWord: string) => {
     // Create new pillar sets array
     const newPillarSets = [...pillarSets]
 
@@ -359,9 +348,6 @@ export default function EgyptianPillarsPuzzle({ onSolve }: EgyptianPillarsPuzzle
 
     // Mark the word as placed
     setWords((prevWords) => prevWords.map((word) => (word.id === draggedWord ? { ...word, isPlaced: true } : word)))
-
-    // Reset dragged word
-    setDraggedWord(null)
   }
 
   // Handle removing a word from a pillar
@@ -410,8 +396,7 @@ export default function EgyptianPillarsPuzzle({ onSolve }: EgyptianPillarsPuzzle
                 <div
                   key={word.id}
                   className="px-3 py-1.5 bg-gradient-to-b from-amber-800/60 to-amber-900/60 backdrop-blur-sm rounded-md text-amber-200 font-pixel text-sm cursor-grab hover:from-amber-700/60 hover:to-amber-800/60 transition-colors shadow-md border border-amber-700/30"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, word.id)}
+                  {...dragSource(word.id)}
                 >
                   {word.text}
                 </div>
@@ -485,8 +470,7 @@ export default function EgyptianPillarsPuzzle({ onSolve }: EgyptianPillarsPuzzle
                 {/* Bottom half of pillar - drop zone */}
                 <div
                   className="relative"
-                  onDragOver={handleDragOver}
-                  onDrop={() => handleDrop(activePillarSetIndex, pillarIndex)}
+                  data-drop-zone={`pillar:${pillarIndex}`}
                 >
                   <Image
                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pillar_bottom-SPWdkFa96Ek0YXicIAZQAQNXdbDdvn.webp"

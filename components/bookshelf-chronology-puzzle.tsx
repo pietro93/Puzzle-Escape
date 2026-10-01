@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 interface BookshelfChronologyPuzzleProps {
   onSolve: () => void
@@ -68,7 +69,6 @@ const START_ORDER = [
 
 export default function BookshelfChronologyPuzzle({ onSolve, onRevealedChange }: BookshelfChronologyPuzzleProps) {
   const [slotOrder, setSlotOrder] = useState<string[]>(START_ORDER)
-  const [draggedSlot, setDraggedSlot] = useState<number | null>(null)
   const [revealed, setRevealed] = useState(false)
 
   const bookById = Object.fromEntries(BOOKS.map((b) => [b.id, b]))
@@ -88,14 +88,17 @@ export default function BookshelfChronologyPuzzle({ onSolve, onRevealedChange }:
     return () => clearTimeout(timer)
   }, [isSolved, onSolve])
 
-  function handleDrop(targetIndex: number) {
-    if (revealed || draggedSlot === null || draggedSlot === targetIndex) return
+  const { dragSource, dragging: draggedSlot } = usePointerDrag<number>((fromSlot, zone) => {
+    if (zone !== null) handleDrop(fromSlot, Number(zone))
+  })
+
+  function handleDrop(draggedSlot: number, targetIndex: number) {
+    if (revealed || draggedSlot === targetIndex) return
     setSlotOrder((prev) => {
       const next = [...prev]
       ;[next[draggedSlot], next[targetIndex]] = [next[targetIndex], next[draggedSlot]]
       return next
     })
-    setDraggedSlot(null)
   }
 
   return (
@@ -152,15 +155,15 @@ export default function BookshelfChronologyPuzzle({ onSolve, onRevealedChange }:
           const heightPct = ((SLOT_BOTTOM - SLOT_TOP) / CANVAS_HEIGHT) * 100
           const widthPct = (book.width / CANVAS_WIDTH) * 100
 
+          const drag = dragSource(slotIndex, revealed)
           return (
             <div
               key={slotIndex}
-              draggable={!revealed}
-              onDragStart={() => setDraggedSlot(slotIndex)}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={() => handleDrop(slotIndex)}
+              onPointerDown={drag.onPointerDown}
+              data-drop-zone={slotIndex}
               className={revealed ? "absolute" : "absolute cursor-grab active:cursor-grabbing"}
               style={{
+                ...drag.style,
                 left: `${centerXPct}%`,
                 top: `${topPct}%`,
                 width: `${widthPct}%`,

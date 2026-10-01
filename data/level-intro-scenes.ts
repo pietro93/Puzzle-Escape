@@ -161,7 +161,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   // Zone 4: Desert - The Sphinx
   31: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with ancient symbols carved in stone.`, `"The symbols seem to hold a message from the distant past."`],
+    lines: [`The Sphinx presents you with ancient symbols carved in stone.`, `"These signs carry a message from a distant past. Perhaps from thine as well."`],
   },
   32: {
     character: "sphinx",
@@ -177,7 +177,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   34: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with a fragmented mosaic of an ancient deity.`, `"Reassemble it to reveal the identity of the crocodile god worshipped in this region."`],
+    lines: [`The Sphinx presents you with a fragmented mosaic of an ancient deity.`, `"Reassemble it, and name the crocodile god worshipped in this land."`],
   },
   35: {
     character: "sphinx",
@@ -185,7 +185,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   36: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with a challenge of construction.`, `"Build a pyramid by moving blocks through the workshops."`],
+    lines: [`The Sphinx presents you with a challenge of construction.`, `"Build a pyramid, mortal. Every block must pass through the workshops."`],
   },
   37: {
     character: "sphinx",
@@ -193,7 +193,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   38: {
     character: "sphinx",
-    lines: [`A strange message appears in the desert sand. The Sphinx gazes at you with ancient eyes.`, `"Ask me, and I shall give you the key to decode this message."`],
+    lines: [`A strange message appears in the desert sand. The Sphinx gazes at you with ancient eyes.`, `"Ask of me, and I shall give thee the key to this message."`],
   },
   39: {
     character: "sphinx",
@@ -201,7 +201,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   40: {
     character: "sphinx",
-    lines: [`The Sphinx leads you into a pyramid with multiple chambers.`, `"Explore them to uncover the hidden message."`],
+    lines: [`The Sphinx leads you into a pyramid with multiple chambers.`, `"Explore them all. Not every chamber will be lit for thee."`],
   },
 
   // Zone 5: Hell - The Devil

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useMemo } from "react"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 interface AnagramSpicePuzzleProps {
   onSolve: () => void
@@ -10,6 +11,18 @@ interface AnagramSpicePuzzleProps {
 // the two jars instead of just bouncing off, and dropping a pantry jar onto an
 // occupied slot sends the displaced jar back to the pantry.
 type SlotRef = { type: "pantry" } | { type: "left" | "right" | "plate"; index: number }
+
+// Slots are tagged in the DOM as data-drop-zone="pantry" / "left:0" / "plate:1" etc.
+function zoneKey(ref: SlotRef): string {
+  return ref.type === "pantry" ? "pantry" : `${ref.type}:${ref.index}`
+}
+
+function parseZone(key: string): SlotRef | null {
+  if (key === "pantry") return { type: "pantry" }
+  const [type, index] = key.split(":")
+  if (type !== "left" && type !== "right" && type !== "plate") return null
+  return { type, index: Number(index) }
+}
 
 function sameSlot(a: SlotRef, b: SlotRef): boolean {
   if (a.type !== b.type) return false
@@ -63,8 +76,6 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
   const [basketLeft, setBasketLeft] = useState<(string | null)[]>([null, null, null])
   const [basketRight, setBasketRight] = useState<(string | null)[]>([null, null, null, null])
   const [plate, setPlate] = useState<(string | null)[]>([null, null])
-  const [draggedId, setDraggedId] = useState<string | null>(null)
-  const [draggedFrom, setDraggedFrom] = useState<SlotRef | null>(null)
   // Jar that just landed on a plate (clacks) or just went back to the pantry (pops).
   const [jarAnim, setJarAnim] = useState<{ landed: string | null; returned: string | null }>({
     landed: null,
@@ -124,14 +135,10 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
     }
   }, [basketLeft, basketRight])
 
-  const handleDragStart = (id: string, from: SlotRef) => {
-    setDraggedId(id)
-    setDraggedFrom(from)
-  }
-  const handleDragEnd = () => {
-    setDraggedId(null)
-    setDraggedFrom(null)
-  }
+  const { dragSource } = usePointerDrag<{ id: string; from: SlotRef }>(({ id, from }, zone) => {
+    const to = zone && parseZone(zone)
+    if (to) handleDrop(to, id, from)
+  })
 
   const getSlotValue = (ref: SlotRef): string | null => {
     if (ref.type === "left") return basketLeft[ref.index]
@@ -166,9 +173,7 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
   // was there is sent to wherever the dragged jar came from — a real swap when
   // dragging between slots, or simply "returned to the pantry" when the dragged
   // jar came from a carousel (pantry jars have no slot to swap back into).
-  const handleDrop = (to: SlotRef) => (e: React.DragEvent) => {
-    e.preventDefault()
-    if (!draggedId || !draggedFrom) return
+  const handleDrop = (to: SlotRef, draggedId: string, draggedFrom: SlotRef) => {
     if (sameSlot(to, draggedFrom)) return
     const occupant = getSlotValue(to)
     setSlotValue(to, draggedId)
@@ -180,18 +185,16 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
         ? { landed: null, returned: draggedId }
         : { landed: draggedId, returned: occupant && draggedFrom.type === "pantry" ? occupant : null },
     )
-    setDraggedId(null)
-    setDraggedFrom(null)
   }
 
-  const spiceTile = (id: string, size: number, from: SlotRef, key?: React.Key) => (
+  const spiceTile = (id: string, size: number, from: SlotRef, key?: React.Key) => {
+    const drag = dragSource({ id, from })
+    return (
     <img
       key={key}
       src={srcOf[id]}
       alt={letterOf[id]}
-      draggable
-      onDragStart={() => handleDragStart(id, from)}
-      onDragEnd={handleDragEnd}
+      onPointerDown={drag.onPointerDown}
       onAnimationEnd={() =>
         setJarAnim((a) => (from.type === "pantry" ? { ...a, returned: null } : { ...a, landed: null }))
       }
@@ -202,9 +205,10 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
             ? "animate-pop"
             : ""
       }`}
-      style={{ width: size, height: size }}
+      style={{ ...drag.style, width: size, height: size }}
     />
-  )
+    )
+  }
 
   // Floor slots are absolutely positioned around the foot of the pedestal, each
   // resting on a tiny plate. An empty slot shows just the plate, signaling
@@ -237,8 +241,7 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
   ) => (
     <div
       key={key}
-      onDrop={handleDrop(ref)}
-      onDragOver={(e) => e.preventDefault()}
+      data-drop-zone={zoneKey(ref)}
       className="absolute flex items-end justify-center"
       style={{
         left: pos.left,
@@ -266,8 +269,7 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
   const floorCatcher = (ref: SlotRef, pos: { left: string; bottom: number }, key: React.Key) => (
     <div
       key={key}
-      onDrop={handleDrop(ref)}
-      onDragOver={(e) => e.preventDefault()}
+      data-drop-zone={zoneKey(ref)}
       className="absolute"
       style={{
         left: pos.left,
@@ -306,8 +308,7 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
     <div className="flex flex-col gap-3 w-full max-w-md mx-auto">
       {/* Pantry: two carousels, each holding roughly half of the spices */}
       <div
-        onDrop={handleDrop({ type: "pantry" })}
-        onDragOver={(e) => e.preventDefault()}
+        data-drop-zone="pantry"
         className="flex flex-col gap-1"
       >
         <div className="flex items-center justify-center gap-1">
@@ -387,16 +388,14 @@ const AnagramSpicePuzzle: React.FC<AnagramSpicePuzzleProps> = ({ onSolve }) => {
           style={{ left: "50%", bottom: 66, transform: "translateX(-50%)", width: 190, height: 80 }}
         >
           <div
-            onDrop={handleDrop({ type: "plate", index: 0 })}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-zone="plate:0"
             className="flex items-center justify-center"
             style={{ width: 80, height: 80 }}
           >
             {plate[0] && spiceTile(plate[0], 76, { type: "plate", index: 0 })}
           </div>
           <div
-            onDrop={handleDrop({ type: "plate", index: 1 })}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-zone="plate:1"
             className="flex items-center justify-center"
             style={{ width: 80, height: 80, marginLeft: -36 }}
           >

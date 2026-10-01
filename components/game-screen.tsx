@@ -104,12 +104,12 @@ export default function GameScreen({
   // Handle sphinx interaction in pyramid puzzle
   const handleSphinxInteract = (room: string) => {
     const godRoomMessages: Record<string, string> = {
-      isis: "The mural in this chamber represents Isis, the goddess of magic and fertility.",
-      osiris: "The mural in this chamber represents Osiris, the god of the underworld.",
-      horus: "The mural in this chamber represents Horus, the god of the sky.",
-      toth: "The mural in this chamber represents Thoth, the god of wisdom and writing.",
-      ra: "The mural in this chamber represents Ra, the god of light.",
-      anubis: "The mural in this chamber represents Anubis, the god of mummification.",
+      isis: "Isis, goddess of magic and fertility. She gave life back to one who had lost it.",
+      osiris: "Osiris, god of the underworld. All who die come before him, in time.",
+      horus: "Horus, god of the sky, who sees all that lies beneath it.",
+      toth: "Thoth, god of wisdom and writing. What he writes is never erased.",
+      ra: "Ra, god of light. Where he goes, the dark cannot stay.",
+      anubis: "Anubis, god of mummification. He has weighed many hearts. He will weigh more.",
     }
 
     if (godRoomMessages[room]) {

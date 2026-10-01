@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 interface DugBone {
   letter: string
@@ -23,19 +24,14 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
   const [dugBones, setDugBones] = useState<DugBone[]>([])
   const [shacklesState, setShacklesState] = useState<"resting" | "excited" | "holding" | "digging">("resting")
   const [tombState, setTombState] = useState<"filled" | "dig">("filled")
-  const [draggedItem, setDraggedItem] = useState<string | null>(null)
   const [showInputPopup, setShowInputPopup] = useState(false)
   const [inputLetter, setInputLetter] = useState("")
   const [dialogue, setDialogue] = useState<string | null>(null)
   const [inscribeIndex, setInscribeIndex] = useState(0) // Track position in inscription sequence
 
-  const handleDragStart = (letter: string) => {
-    setDraggedItem(letter)
-  }
-
-  const handleDragEnd = () => {
-    setDraggedItem(null)
-  }
+  const { dragSource } = usePointerDrag<string>((letter, zone) => {
+    if (zone === "shackles") handleDrop(letter)
+  })
 
   const handleInputSubmit = (overrideLetter?: string) => {
   const rawLetter = overrideLetter !== undefined ? overrideLetter : inputLetter
@@ -203,8 +199,8 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
     }
   }
 
-  const handleDrop = () => {
-    if (!draggedItem || shacklesState !== "resting") return
+  const handleDrop = (draggedItem: string) => {
+    if (shacklesState !== "resting") return
 
     if (draggedItem === "empty") {
       // Show input popup for empty bone
@@ -213,7 +209,6 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
         setDialogue(null)
         setShowInputPopup(true)
       }, 2000)
-      setDraggedItem(null)
       return
     }
 
@@ -255,9 +250,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
       // Wrong bone, return to inventory
       setDialogue("Shackles sniffs the bone disapprovingly, then tosses it aside. Try again!")
       setTimeout(() => setDialogue(null), 4000)
-      setDraggedItem(null)
     }
-    setDraggedItem(null)
   }
 
   const getShacklesImage = () => {
@@ -298,8 +291,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
           <div
             className="cursor-pointer"
             onClick={handleShacklesClick}
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-zone="shackles"
           >
             <img src={getShacklesImage()} alt="Shackles" className="w-[120] h-[120] object-contain" />
           </div>
@@ -322,9 +314,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
               src={letter === "empty" ? "/images/shackles-bone-empty.webp" : `/images/shackles-bone-${letter.toLowerCase()}.webp`}
               alt={`Bone ${letter}`}
               className="w-16 h-16 object-contain cursor-move"
-              draggable
-              onDragStart={() => handleDragStart(letter)}
-              onDragEnd={handleDragEnd}
+              {...dragSource(letter)}
             />
           ))}
         </div>

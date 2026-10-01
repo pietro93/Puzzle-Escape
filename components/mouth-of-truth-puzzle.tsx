@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { useAudio } from "@/hooks/use-audio"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 interface MouthOfTruthPuzzleProps {
   onSolve: () => void
@@ -25,9 +26,6 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
     bl: null, // bottom left
     br: null,
   })
-
-  // State for tracking which marble is being dragged
-  const [draggedMarble, setDraggedMarble] = useState<MarbleType>(null)
 
   // State for tracking if all positions are filled
   const [allFilled, setAllFilled] = useState(false)
@@ -118,33 +116,14 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
   // Available marbles
   const marbles: MarbleType[] = ["black", "white", "golden", "red", "green", "blue"]
 
-  // Handle drag start
-  const handleDragStart = (e: React.DragEvent, marbleType: MarbleType) => {
-    if (puzzleSolved) return // Prevent interaction if puzzle is solved
-
-    setDraggedMarble(marbleType)
-    // Set the drag image (optional)
-    if (e.dataTransfer) {
-      e.dataTransfer.setData("text/plain", marbleType)
-      e.dataTransfer.effectAllowed = "move"
-    }
-  }
-
-  // Handle drag over
-  const handleDragOver = (e: React.DragEvent) => {
-    if (puzzleSolved) return // Prevent interaction if puzzle is solved
-
-    e.preventDefault()
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = "move"
-    }
-  }
+  // Drop zones are the four corner slots around the mouth (data-drop-zone="tl" etc.)
+  const { dragSource } = usePointerDrag<MarbleType>((marble, zone) => {
+    if (zone) handleDrop(marble, zone as Position)
+  })
 
   // Handle drop
-  const handleDrop = (e: React.DragEvent, position: Position) => {
+  const handleDrop = (draggedMarble: MarbleType, position: Position) => {
     if (puzzleSolved) return // Prevent interaction if puzzle is solved
-
-    e.preventDefault()
 
     if (draggedMarble && position) {
       // Update the position with the dragged marble
@@ -163,8 +142,6 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
         return newPositions
       })
     }
-
-    setDraggedMarble(null)
   }
 
   // Handle click on a position to remove marble
@@ -395,8 +372,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
             <div
               key={marble}
               className="w-12 h-12 cursor-grab relative"
-              draggable
-              onDragStart={(e) => handleDragStart(e, marble)}
+              {...dragSource(marble, puzzleSolved)}
             >
               <Image
                 src={`/images/mouth-of-truth/${marble === "golden" ? "gold" : marble}_marble.webp`}
@@ -421,8 +397,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
         {/* Top Left */}
         <div
           className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "tl")}
+          data-drop-zone="tl"
           onClick={() => handlePositionClick("tl")}
         >
           <Image
@@ -448,8 +423,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
         {/* Top Right */}
         <div
           className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "tr")}
+          data-drop-zone="tr"
           onClick={() => handlePositionClick("tr")}
         >
           <Image
@@ -464,8 +438,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
         {/* Bottom Left */}
         <div
           className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "bl")}
+          data-drop-zone="bl"
           onClick={() => handlePositionClick("bl")}
         >
           <Image
@@ -500,8 +473,7 @@ export default function MouthOfTruthPuzzle({ onSolve, level = 48 }: MouthOfTruth
         {/* Bottom Right */}
         <div
           className={`w-full h-full ${!puzzleSolved ? "cursor-pointer" : ""}`}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, "br")}
+          data-drop-zone="br"
           onClick={() => handlePositionClick("br")}
         >
           <Image

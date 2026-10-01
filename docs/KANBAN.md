@@ -1,112 +1,140 @@
-# 📋 Kanban Progress Tracker
+# 📋 Launch Kanban
 
-This document tracks implementation, code review, and quality assurance progress across the entire **Puzzle Escape** codebase.
+What's left before **Puzzle Escape** ships on Steam. Last updated **2026-09-30**.
 
----
+- **Live test build:** https://puzzle-escape.pages.dev (Cloudflare Pages). The old Vercel URLs are stale: `riddle-escape-pietro93s-projects-e29beb16.vercel.app` serves a 2025 build and `riddleescape.vercel.app` (still the GitHub repo homepage) returns 404.
+- **Visual version of this board:** published as a claude.ai artifact ("Launch Board"); this file is the source of truth.
 
-## 🎛️ System & Core Engine
-| Feature | Implementation Status | Reviewed & Approved | Notes |
-|---|:---:|:---:|---|
-| **Next.js 14 App Setup** | `[x] Implemented` | `[ ] Reviewed` | Web build setup using Tailwind CSS and Radix. |
-| **Electron Main Wrapper** | `[x] Implemented` | `[ ] Reviewed` | Desktop wrapper config in `electron/main.ts`. |
-| **Game State & Saving** | `[x] Implemented` | `[ ] Reviewed` | Level tracker and saving using localStorage. |
-| **UI Container Theme** | `[x] Implemented` | `[ ] Reviewed` | Glassmorphic dark styling across components. |
-| **Transition System** | `[x] Implemented` | `[ ] Reviewed` | Interstitial screen loading between zones. |
+Legend: 🔴 blocks launch · 🟠 should fix before launch · 🟢 nice to have / post-launch
 
 ---
 
-## 🎮 Levels Progress Tracker (Levels 1–50)
+## 🚧 To do
 
-### 💀 Zone 1: Prison Cell (Levels 1–10)
-- `[x]` Level 1: Mirror Fog (`[ ] Reviewed`)
-- `[x]` Level 2: Bone Count Skulls (`[ ] Reviewed`)
-- `[x]` Level 3: Silver Key Math (`[ ] Reviewed`)
-- `[x]` Level 4: Dream Scratches (`[ ] Reviewed`)
-- `[x]` Level 5: Clockwise Quadrant (`[ ] Reviewed`)
-- `[x]` Level 6: Shackles Feeding (`[ ] Reviewed`)
-- `[x]` Level 7: Word Ladder (`[ ] Reviewed`)
-- `[x]` Level 8: Magic Box (`[ ] Reviewed`)
-- `[x]` Level 9: Morse Decoder (`[ ] Reviewed`)
-- `[x]` Level 10: Inmate Whodunit (`[ ] Reviewed`)
+### Tech & platform
+| | Item | Notes |
+|---|---|---|
+| 🔴 | **Download the 81 externally hosted images** | Zodiac (L27), casino (L46), fire map (L41), tarot (L30), scarab (L32), pillars (L37), `puzzle-content.tsx`, `transition-screen.tsx` load from `hebbkx1anhila5yf.public.blob.vercel-storage.com`. Breaks offline/Steam play, and that storage is tied to the Vercel account we moved away from. List: `EXTERNAL_DEPENDENCIES_DOWNLOAD_LIST.md`. |
+| 🔴 | **Missing pixel font** | `globals.css` loads `/fonts/pixel.woff2`, which doesn't exist. Every `font-pixel` text falls back to plain monospace. |
+| 🔴 | **Steam integration is a stub** | `steam/steam_api.ts` only logs to the console; no Steamworks library installed, achievements never reach Steam. Also needs App ID and depot setup. |
+| 🔴 | **Windows build never tested** | `npm run electron:make` exists but has never been run to a finished installer. Install on a clean machine and play start to finish. |
+| 🔴 | **Audio: none in the game** | Zero audio files in `public/`, though code already calls `/audio/correct.mp3` etc. Plan in `docs/AUDIO_DESIGN.md`. |
+| 🔴 | **L49 runtime error** | `murder-mystery-puzzle.tsx:214` calls `dialogue.setCurrentDialogueOptions`, which doesn't exist. Fires 100ms after the mortician's "let me see the body" option; the "check body" option may not refresh. |
+| 🟠 | **Save data on desktop** | Electron writes save files via IPC, but `localStorage` is still used in `use-storage`, `use-achievements`, `library-puzzle`, `family-tree-scroll`. Verify nothing is lost on a cache wipe. |
+| 🟠 | **122 hidden TypeScript errors** | `next.config.mjs` has `ignoreBuildErrors: true`. Most are harmless; some are real prop mismatches (`game-container*.tsx`). Triage for bugs. |
+| 🟠 | **Solvability tests** | No tests at all. Minimum: check every level's solution string is accepted, so no level can block progress. |
+| 🟠 | **L43 font loads from Google** | `damned-souls-puzzle.tsx` pulls UnifrakturCook from Google Fonts via `next/head` (doesn't work in the app router). A local copy is already in `public/fonts`. |
+| 🟠 | **L47 lamp art is 37MB** | `xbrainlampa1-6.webp` are animated WebPs; the first alone is 12.2MB. Compress. |
+| 🟠 | **Missing transition images** | `MISSING_IMAGES_REPORT.md` lists `desert-transition.png`, `hell-transition.png`, `forest.webp`. Verify. |
+| 🟠 | **Revert temp trailer config** | `next.config.mjs` still has the "TEMP (trailer capture)" webpack watch override. |
+| 🟢 | **Repo cleanup** | Root has `step*.png`, `level*-check.png`, `splash*.png`, `.playwright-mcp/`, `.tmp-trailer-shots/`. `.github/workflows/deploy.yml` is a dead GitHub Pages workflow (publishes `./www`, build outputs `./out`). Update the GitHub repo homepage to the Pages URL. |
 
-### 🤵 Zone 2: Mansion (Levels 11–20)
-- `[x]` Level 11: Anagram Spice (`[ ] Reviewed`)
-- `[x]` Level 12: Roman Clock Sequence (`[ ] Reviewed`)
-- `[x]` Level 13: Color Palette GPS (`[ ] Reviewed`)
-- `[x]` Level 14: Escargot Jigsaw (`[ ] Reviewed`)
-- `[x]` Level 15: Patricia's Portrait (`[ ] Reviewed`)
-- `[x]` Level 16: Third Eye Books (`[ ] Reviewed`)
-- `[x]` Level 17: Dark Room Switches (`[ ] Reviewed`)
-- `[x]` Level 18: Silverware Math (`[ ] Reviewed`)
-- `[x]` Level 19: Parrot Dialogue (`[ ] Reviewed`)
-- `[x]` Level 20: Mansion Genealogy (`[ ] Reviewed`)
+### Content & level design
+| | Item | Notes |
+|---|---|---|
+| 🔴 | **Full playthrough, all 50 levels** | 0/50 levels reviewed. A level that can't be finished is the biggest refund risk inside Steam's 2-hour window. |
+| 🔴 | **L20 Mansion Gallery** | 6/8 items wired. See `docs/level-15-mansion-redesign.md`. |
+| 🔴 | **L12 Bookshelf** | Geometry update to the new 906×1286 shelf art still pending. |
+| 🟠 | **Redesign the "Who are you?" opening screen** | `player-gender-screen.tsx`, the first thing a new player sees. It only asks gender (Male / Female / Other), which reads like Pokémon's "Are you a boy or a girl?". Needs a redesign so the question feels like part of the game, not a form. |
+| 🟠 | **L35 Sands Mirage** | Just a desert background and a one-word riddle ("mirage"). Weakest level; needs a real puzzle. |
+| 🟠 | **L16 Silverware Math** | Still a static image. Approved redesign: interactive table setting, math tuned slightly harder. |
+| 🟠 | **Family plotline** | Wife/daughter plot not written yet (player-gender tokens are ready). |
+| 🟠 | **"Unfun" review** | Candidates: L31 (needs a hieroglyph dictionary), L23 (outside zodiac lookup), L38 (Vigenère by hand), L29 (GIF + text box). |
+| 🟢 | **Tarot-flip transition** | Mansion → Forest reveal is a skippable paragraph; proposed card-flip mechanic. |
+| 🟢 | **Mentor voice in hints** | Proposed: hints/wrong-answer text in the Skeleton's and Butler's voice. |
+| 🟢 | **Sphinx personality pass** | Weakest-characterized mentor. |
+| 🟢 | **Colorblind support** | L15 Color Palette. |
+| 🟢 | **Jigsaw fatigue** | Four jigsaw levels (L11, L24, L34, L44). |
+| 🟢 | **Localization** | Dialogue blocks not set up for translation. |
 
-### 🔮 Zone 3: Forest (Levels 21–30)
-- `[x]` Level 21: Hangman Questionnaire (`[ ] Reviewed`)
-- `[x]` Level 22: Tasseography Coffee (`[ ] Reviewed`)
-- `[x]` Level 23: Zodiac Crystal Ball (`[ ] Reviewed`)
-- `[x]` Level 24: Gem Mosaic (`[ ] Reviewed`)
-- `[x]` Level 25: Geometric Mystics (`[ ] Reviewed`)
-- `[x]` Level 26: Star Constellation (`[ ] Reviewed`)
-- `[x]` Level 27: Zodiac Seasons Matching (`[ ] Reviewed`)
-- `[x]` Level 28: Crystal Sequence Clockwise (`[ ] Reviewed`)
-- `[x]` Level 29: Hand Sign Language (`[ ] Reviewed`)
-- `[x]` Level 30: Major Arcana Tarot (`[ ] Reviewed`)
-
-### 🏜️ Zone 4: Desert (Levels 31–40)
-- `[x]` Level 31: Hieroglyphic Tablet (`[ ] Reviewed`)
-- `[x]` Level 32: Golden Scarab Route (`[ ] Reviewed`)
-- `[x]` Level 33: Arabic Fire Torch (`[ ] Reviewed`)
-- `[x]` Level 34: Crocodile Sobek Diagonal (`[ ] Reviewed`)
-- `[x]` Level 35: Sands Mirage Riddle (`[ ] Reviewed`)
-- `[x]` Level 36: Pyramid Hanoi Workshop (`[ ] Reviewed`)
-- `[x]` Level 37: Pillars Deities Chronology (`[ ] Reviewed`)
-- `[x]` Level 38: Vigenere Sands Cipher (`[ ] Reviewed`)
-- `[x]` Level 39: Egyptian Math Papyri (`[ ] Reviewed`)
-- `[x]` Level 40: Pyramid Chamber Exploration (`[ ] Reviewed`)
-
-### 😈 Zone 5: Hell (Levels 41–50)
-- `[x]` Level 41: Asia Fire Map Connection (`[ ] Reviewed`)
-- `[x]` Level 42: Apocalypse Knight Tour (`[ ] Reviewed`)
-- `[x]` Level 43: Damned Cages Math (`[ ] Reviewed`)
-- `[x]` Level 44: Bosch Hell Jigsaw (`[ ] Reviewed`)
-- `[x]` Level 45: Familiar Faces Literature (`[ ] Reviewed`)
-- `[x]` Level 46: Casino Slots Reels (`[ ] Reviewed`)
-- `[x]` Level 47: Binary Switch Brain (`[ ] Reviewed`)
-- `[x]` Level 48: Mouth of Truth Marbles (`[ ] Reviewed`)
-- `[x]` Level 49: Murder Mystery Botany (`[ ] Reviewed`)
-- `[x]` Level 50: Final Confrontation Riddle (`[ ] Reviewed`)
+### Store & release
+| | Item | Notes |
+|---|---|---|
+| 🔴 | **Steam store page** | Capsule art, screenshots, description, trailer (capture in progress). |
+| 🟠 | **Business model for Steam** | `MONETIZATION_STRATEGY.md` assumes IAP/ads; confirm what applies on Steam. |
+| 🟠 | **Host privacy policy & ToS** | Files exist in the repo root (`privacy-policy.md`, `terms-of-service.md`). |
+| 🟢 | **Minigames mode** | 4 approved, 1 open question, nothing built. Post-launch. |
 
 ---
 
-## 🎵 Audio & Asset Pipeline
-| Asset Category | Implementation Status | Reviewed & Approved | Notes |
-|---|:---:|:---:|---|
-| **Ambience SFX** | `[ ] Planned` | `[ ] Reviewed` | Water drops, forest breeze, fire crackles. |
-| **Zone Music Tracks** | `[ ] Planned` | `[ ] Reviewed` | Harpsichord, sitar, cellos, industrial drones. |
-| **Interactive Clues SFX** | `[ ] Planned` | `[ ] Reviewed` | Click toggles, success chime, failure wood knock. |
-| **Speech Sound Cues** | `[ ] Planned` | `[ ] Reviewed` | Voice-over blip sounds for character dialogue. |
+## ✅ Done this week (2026-09-29 → 30)
+- **L2 Bone Counting redesign:** sort bones onto matching skulls with tally marks; answer box unlocks once sorted; per-skull glow/shake on a wrong answer; hidden optional "give rust bones to the Guard" interaction with lines per colour; touch dragging works.
+- **Talking + breathing portraits** for every talking human character: the 5 mentors, the L10 inmates, the L45 lineup, the L49 policewoman/mortician/librarian.
+- **Small animations:** L3 lock clack, L5 dial settle, L9 rat hop-wiggle, L13 jar clack/pop, L15 paint pop on a correct value, L22 cup spin inertia, L32 scarab hop, L41 route wipe + glow, L43 chest rattle/pop/thud, L47 switch squash, L48 face shake on a wrong guess.
+- **L43 progression bug fixed:** opening the big chest now counts toward unlocking the answer.
+- **Docs:** the Butler is unnamed (removed "Silas the Butler"; Silas is an L10 inmate).
 
 ---
 
-## 📝 General Project Todo List
-- `[ ]` Configure localization support for narrative dialogue blocks.
-- `[ ]` Implement unit tests for Save & Load state management.
-- `[ ]` Run test builds for Electron app package (`npm run make` testing on Windows target).
+## 🎮 Level tracker (1–50)
+Status: ✅ built · 🆕 reworked this week · 🛠️ needs work · ⚠️ tech issue · 🤔 review whether it's fun. **None reviewed in a full playthrough yet.**
 
----
+### 💀 Zone 1: Prison Cell
+| # | Level | Status | Notes |
+|---|---|---|---|
+| 1 | The Secret Message | ✅ | |
+| 2 | Bone Counting | 🆕 | Sort-to-skull redesign |
+| 3 | Lock & Key Math | ✅ | Lock clack added |
+| 4 | Ominous Scratchings | ✅ | |
+| 5 | Like Clockwork | ✅ | Dial settle added |
+| 6 | Shackles the Dog | ✅ | |
+| 7 | Word Ladder | ✅ | |
+| 8 | Magic Box Rebus | ✅ | |
+| 9 | Morse Code | ✅ | Rat hop-wiggle added |
+| 10 | Whodunit? | ✅ | Inmates talk + breathe |
 
-## 🛠️ Audit Action Items (Roadmap to 100%)
-### Technical
-- `[ ]` **Test Coverage:** Add Jest/React Testing Library setup and write unit tests for puzzle validation logic (Blocks Ship).
-- `[ ]` **Build Pipeline:** Add Electron Forge build/package scripts to `package.json` for Steam distribution (Blocks Ship).
-- `[ ]` **Save State Integrity:** Migrate from `localStorage` to Node's `fs` for robust local save files on desktop (Blocks Ship).
+### 🤵 Zone 2: The Mansion
+| # | Level | Status | Notes |
+|---|---|---|---|
+| 11 | Curious Jigsaw | ✅ | |
+| 12 | Third Eye Readings (bookshelf) | 🛠️ | New shelf geometry pending |
+| 13 | Anagram Spice | ✅ | Jar clack/pop added |
+| 14 | Clock Roman Numerals | ✅ | |
+| 15 | Color Palette GPS | ✅ | Paint pop added; colorblind support wanted |
+| 16 | Silverware Math | 🛠️ | Static image; redesign approved |
+| 17 | Pitch Dark Switches | ✅ | |
+| 18 | Count Papagalul | ✅ | |
+| 19 | Mansion Genealogy | ✅ | |
+| 20 | The Mansion Gallery | 🛠️ | 6/8 items wired |
 
-### Game UX & Level Redesign
-- `[ ]` **Jigsaw Polish:** Spacing out or integrating narrative elements into the 4 jigsaw puzzles (Levels 14, 24, 34, 44) to prevent fatigue, despite their increasing difficulty and mechanical adjustments.
-- `[ ]` **Math Puzzles Interactivity Upgrade:** Convert the static image math puzzles (Levels 3, 18, 25) into fully interactive UI components (e.g. draggable weighing scales, interactive silverware placement, glowing runes).
-- `[ ]` **Accessibility:** Add texture/pattern overlays to color-reliant puzzles (Level 13) for colorblind players.
+### 🔮 Zone 3: The Forest
+| # | Level | Status | Notes |
+|---|---|---|---|
+| 21 | Essence Questionnaire | ✅ | |
+| 22 | Tasseography Coffee | ✅ | Cup spin inertia added |
+| 23 | Crystal Ball Zodiac | 🤔 | Needs outside lookup |
+| 24 | Gem Mosaic | ✅ | |
+| 25 | Mystics Geometry | ✅ | |
+| 26 | Star Constellation | ✅ | |
+| 27 | Zodiac Seasons | ⚠️ | External images |
+| 28 | Crystal Sequence | ✅ | |
+| 29 | Sign Language GIF | 🤔 | GIF + text box |
+| 30 | Major Arcana Tarot | ⚠️ | External images |
 
-### Narrative Polish
-- `[ ]` **Pacing:** Inject micro-dialogues or environmental lore text every 3-4 levels to keep the story present.
-- `[ ]` **Character Polish:** Enhance the Sphinx's dialogue to provide a stronger, more provocative contrast before the Devil's finale.
+### 🏜️ Zone 4: The Desert
+| # | Level | Status | Notes |
+|---|---|---|---|
+| 31 | Hieroglyphic Tablet | 🤔 | Needs a hieroglyph dictionary |
+| 32 | Golden Scarab Path | ⚠️ | External images; scarab hop added |
+| 33 | Arabic Fire Torch | ✅ | |
+| 34 | Crocodile Sobek | ✅ | |
+| 35 | Sands Mirage | 🛠️ | Placeholder-quality riddle |
+| 36 | Pyramid Hanoi Workshop | ✅ | |
+| 37 | Pillars Deities Chronology | ⚠️ | External images |
+| 38 | Vigenère Sands Cipher | 🤔 | Manual cipher work |
+| 39 | Mathematical Papyri | ✅ | |
+| 40 | Pyramid Chambers | ✅ | |
+
+### 😈 Zone 5: Hell
+| # | Level | Status | Notes |
+|---|---|---|---|
+| 41 | Asia Fire Map | ⚠️ | External images; route wipe added |
+| 42 | Apocalypse Knight Tour | ✅ | |
+| 43 | Damned Cages Math | ⚠️ | Font from Google; chest bug fixed, animations added |
+| 44 | Bosch Hell Jigsaw | ✅ | |
+| 45 | Familiar Faces | ✅ | Mentors talk + breathe |
+| 46 | Casino Slots | ⚠️ | External images |
+| 47 | Binary Switch Brain | ⚠️ | 37MB lamp art; switch squash added |
+| 48 | Mouth of Truth | ✅ | Face shake added |
+| 49 | Murder Mystery Botany | ⚠️ | Runtime error (see above); characters talk |
+| 50 | Final Confrontation | ✅ | |

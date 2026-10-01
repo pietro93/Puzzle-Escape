@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CharacterDialoguePopup from "@/components/character-dialogue-popup";
+import ItemDragTray from "@/components/item-drag-tray";
 
 interface PrisonCellPuzzleProps {
   onSolve: () => void;
@@ -9,13 +10,6 @@ interface PrisonCellPuzzleProps {
 interface InteractiveItem {
   width: number;
   height: number;
-}
-
-// Define an interface for the drag-and-drop items
-interface DraggableItem {
-  id: string;
-  name: string;
-  imageUrl: string;
 }
 
 // Define an interface for the dialogue popup state
@@ -241,7 +235,6 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
   const [isTapOn, setIsTapOn] = useState<boolean>(false);
   const [isCigaretteClicked, setIsCigaretteClicked] = useState<boolean>(false);
   const [showGuardDialogue, setShowGuardDialogue] = useState<boolean>(false);
-  const [draggedItem, setDraggedItem] = useState<DraggableItem | null>(null);
   const [isRagOnTube, setIsRagOnTube] = useState<boolean>(false);
   const [isRagSoaked, setIsRagSoaked] = useState<boolean>(false);
   const [roomBackgrounds, setRoomBackgrounds] = useState<Record<string, string>>({
@@ -360,109 +353,108 @@ Skeleton: ${item.onClick.skeletonComment}`;
     setShowGuardDialogue(false);
   };
 
-  const handleDragStart = (item: DraggableItem) => {
-    setDraggedItem(item);
+  // Pointer-based (not native HTML5 drag) so it works on touch screens: hit-test
+  // the release point against the phantom divs tagged with data-drop-target.
+  const handleTrayDrop = (item: string, point: { x: number; y: number }) => {
+    const target = document
+      .elementsFromPoint(point.x, point.y)
+      .find((el): el is HTMLElement => el instanceof HTMLElement && !!el.dataset.dropTarget);
+    if (!target) return;
+    handleDrop(target.dataset.dropTarget!, item === "Rubbing Alcohol" ? "Alcohol" : item);
   };
 
-  const handleDragEnd = () => {
-    setDraggedItem(null);
-  };
-
-  const handleDrop = (targetId: string) => {
-    if (!draggedItem) return;
-
-    if (targetId === "tube" && draggedItem.name === "Rag") {
+  const handleDrop = (targetId: string, itemName: string) => {
+    if (targetId === "tube" && itemName === "Rag") {
       setIsRagOnTube(true);
       setInventory((prevInventory) => prevInventory.filter((item) => item !== "Rag"));
       return; // prevent other interactions with tube
     }
-    if (targetId === "tube" && draggedItem.name === "Alcohol" && isRagOnTube) {
+    if (targetId === "tube" && itemName === "Alcohol" && isRagOnTube) {
       setIsRagSoaked(true);
       setInventory((prevInventory) => prevInventory.filter((item) => item !== "Rubbing Alcohol"));
       return; // prevent other interactions with tube
     }
 
-    if (targetId === "tube" && draggedItem.name === "Lit Cigarette" && isRagSoaked) {
+    if (targetId === "tube" && itemName === "Lit Cigarette" && isRagSoaked) {
       setIsHeatOn(true);
       setInventory((prevInventory) => prevInventory.filter((item) => item !== "Lit Cigarette"));
       return; // prevent other interactions with tube
     }
 
-    if (targetId === "guard" && draggedItem.name === "Lit Cigarette") {
+    if (targetId === "guard" && itemName === "Lit Cigarette") {
       setDialogue({ text: "Giving back your stolen goods already? Tsk. I was starting to think you had a spine." });
       return;
     }
 
-    if (targetId === "guard" && draggedItem.name === "Alcohol") {
+    if (targetId === "guard" && itemName === "Alcohol") {
       setDialogue({ text: "Thank you, I am not thirsty." });
       return;
     }
 
-    if (targetId === "guard" && draggedItem.name === "Rag") {
+    if (targetId === "guard" && itemName === "Rag") {
       setDialogue({ text: "Planning a theatrical exit? Hang in there. Ha! Get it?" });
       return;
     }
 
-    if (targetId === "window" && draggedItem.name === "Rag") {
+    if (targetId === "window" && itemName === "Rag") {
       setDialogue({ text: "You press the rag against the bars. They don't bend." });
       return;
     }
 
-    if (targetId === "toilet" && draggedItem.name === "Rag") {
+    if (targetId === "toilet" && itemName === "Rag") {
       setDialogue({ text: "You hold the rag over the bowl. Your gag reflex answers before your hands do." });
       return;
     }
 
-    if (targetId === "toilet" && draggedItem.name === "Lit Cigarette") {
+    if (targetId === "toilet" && itemName === "Lit Cigarette") {
       setDialogue({ text: "It is a dreadful habit, but you decide to hold on to your only cigarette for now." });
       return;
     }
 
-    if (targetId === "lock" && draggedItem.name === "Rag") {
+    if (targetId === "lock" && itemName === "Rag") {
       setDialogue({ text: "You rub the lock with the rag. The lock ignores your efforts completely." });
       return;
     }
 
-    if (targetId === "lock" && draggedItem.name === "Lit Cigarette") {
+    if (targetId === "lock" && itemName === "Lit Cigarette") {
       setDialogue({ text: "You succeed only in getting a small smudge of ash on the lock and burn your fingertip in the process." });
       return;
     }
 
-    if (targetId === "pillow" && draggedItem.name === "Alcohol") {
+    if (targetId === "pillow" && itemName === "Alcohol") {
       setDialogue({ text: "No amount of disinfectant could ever make that bed fit for sleeping. You'd rather take the floor." });
       return;
     }
 
-    if (targetId === "bed" && draggedItem.name === "Alcohol") {
+    if (targetId === "bed" && itemName === "Alcohol") {
       setDialogue({ text: "No amount of disinfectant could ever make that bed fit for sleeping. You'd rather take the floor." });
       return;
     }
 
-    if (targetId === "toilet" && draggedItem.name === "Alcohol") {
+    if (targetId === "toilet" && itemName === "Alcohol") {
       setDialogue({ text: "The rubbing alcohol's purpose is probably to clean the toilet. Your job, however, is to get out of here." });
       return;
     }
 
-    if (targetId === "tube" && draggedItem.name === "Lit Cigarette" && isRagOnTube && !isRagSoaked) {
+    if (targetId === "tube" && itemName === "Lit Cigarette" && isRagOnTube && !isRagSoaked) {
       setDialogue({ text: "The rag smolders but doesn't catch. It is not flammable enough." });
       return;
     }
 
-    if (targetId === "sink" && draggedItem.name === "Lit Cigarette") {
+    if (targetId === "sink" && itemName === "Lit Cigarette") {
       setDialogue({ text: "Not even you are sure what you are trying to do there." });
       return;
     }
 
-    if (targetId === "sink" && draggedItem.name === "Rag" && !isTapOn) {
+    if (targetId === "sink" && itemName === "Rag" && !isTapOn) {
       setDialogue({ text: "You give the sink a good wipe. Dust and rust shift around." });
       return;
     }
 
-    if (targetId === "sink" && draggedItem.name === "Rag" && isTapOn) {
+    if (targetId === "sink" && itemName === "Rag" && isTapOn) {
       setDialogue({ text: "You could soak the rag, but you decide against it." });
       return;
     }
-    setDraggedItem(null);
   };
 
   return (
@@ -510,8 +502,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(156, "height"),
             }}
             onClick={() => handleItemClick("pillow")}
-            onDrop={() => handleDrop("pillow")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="pillow"
           />
         )}
 
@@ -526,8 +517,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(89, "height"),
             }}
             onClick={() => handleItemClick("vent")}
-            onDrop={() => handleDrop("vent")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="vent"
           />
         )}
 
@@ -551,8 +541,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(386, "height"),
             }}
             onClick={() => handleItemClick("toilet")}
-            onDrop={() => handleDrop("toilet")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="toilet"
           />
         )}
 
@@ -567,8 +556,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(216, "height"),
             }}
             onClick={() => handleItemClick("mirror")}
-            onDrop={() => handleDrop("mirror")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="mirror"
           />
         )}
 
@@ -651,8 +639,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               }
               setDialogue({ text: dialogueText });
             }}
-            onDrop={() => handleDrop("tube")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="tube"
           >
           </div>
         )}
@@ -693,8 +680,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               }
               setDialogue({ text: dialogueText });
             }}
-            onDrop={() => handleDrop("tube")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="tube"
           >
             {isRagOnTube && !isRagSoaked && !isHeatOn && (
               <img src="/images/prison-cell/rag-sink.webp" alt="Rag on Tube" className="absolute top-0 left-0 object-cover z-2" />
@@ -735,8 +721,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(162, "height"),
             }}
             onClick={() => handleItemClick("lock")}
-            onDrop={() => handleDrop("lock")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="lock"
           >
           </div>
         )}
@@ -753,8 +738,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
                 height: pixelToPercentage(144, "height"),
               }}
               onClick={() => handleItemClick("guard")}
-              onDrop={() => handleDrop("guard")}
-              onDragOver={(e) => e.preventDefault()}
+              data-drop-target="guard"
             >
             </div>
             <div
@@ -766,8 +750,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
                 height: pixelToPercentage(406, "height"),
               }}
               onClick={() => handleItemClick("guard")}
-              onDrop={() => handleDrop("guard")}
-              onDragOver={(e) => e.preventDefault()}
+              data-drop-target="guard"
             >
             </div>
             <div
@@ -779,8 +762,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
                 height: pixelToPercentage(120, "height"),
               }}
               onClick={() => handleItemClick("guard")}
-              onDrop={() => handleDrop("guard")}
-              onDragOver={(e) => e.preventDefault()}
+              data-drop-target="guard"
             >
             </div>
           </>
@@ -797,8 +779,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(386, "height"),
             }}
             onClick={() => handleItemClick("bed")}
-            onDrop={() => handleDrop("bed")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="bed"
           >
           </div>
         )}
@@ -814,8 +795,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
               height: pixelToPercentage(159, "height"),
             }}
             onClick={() => handleItemClick("window")}
-            onDrop={() => handleDrop("window")}
-            onDragOver={(e) => e.preventDefault()}
+            data-drop-target="window"
           >
           </div>
         )}
@@ -863,39 +843,14 @@ Skeleton: ${item.onClick.skeletonComment}`;
         {inventory.length === 0 ? (
           <span className="text-gray-400 font-pixel text-xs"></span>
         ) : (
-          <div className="flex flex-wrap gap-2 justify-center">
-            {inventory.map((item, index) => {
-              const imageSrc = getItemImage(item);
-              return (
-                imageSrc ? (
-                  <img
-                    key={index}
-                    src={imageSrc}
-                    alt={item}
-                    className="w-12 h-12 opacity-50" // Adjusted size and opacity
-                    draggable
-                    onDragStart={(e) => {
-                      if (item === "Rag") {
-                        handleDragStart({ id: "rag", name: "Rag", imageUrl: "/images/prison-cell/rag-inventory.webp" });
-                      } else if (item === "Rubbing Alcohol") {
-                        handleDragStart({ id: "alcohol", name: "Alcohol", imageUrl: "/images/prison-cell/alcohol-inventory.webp" });
-                      } else if (item === "Lit Cigarette") {
-                        handleDragStart({ id: "cigarette", name: "Lit Cigarette", imageUrl: "" });
-                      }
-                    }}
-                    onDragEnd={handleDragEnd}
-                  />
-                ) : (
-                  <div
-                    key={index}
-                    className="bg-gray-700 px-2 py-1 rounded-full text-xs font-pixel text-gray-200"
-                  >
-                    {item}
-                  </div>
-                )
-              );
-            })}
-          </div>
+          <ItemDragTray
+            items={inventory}
+            icons={Object.fromEntries(inventory.flatMap((item) => {
+              const src = getItemImage(item);
+              return src ? [[item, src]] : [];
+            }))}
+            onDrop={handleTrayDrop}
+          />
         )}
       </div>
 

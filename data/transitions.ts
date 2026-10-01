@@ -104,13 +104,13 @@ export const transitions: Transition[] = [
   {
     title: "The Trial of the Soul",
     paragraphs: [
-      'The sphinx\'s stone face cracks into what might be a smile as you solve its final riddle. "The mortal possesses wisdom," it rumbles, its voice ancient as the desert itself. "But does the mortal possess understanding?"',
+      'The sphinx\'s stone face cracks into what might be a smile as you solve her final riddle. "The mortal possesses wisdom," she rumbles, her voice ancient as the desert itself. "But does the mortal possess understanding?"',
 
-      'Its massive paws shift in the sand, eyes boring into yours like twin suns. "Thou art being judged," it intones. "For actions taken in the realm of the living, for choices made when clothed in flesh. For lives altered by thy hand."',
+      'Her massive paws shift in the sand, eyes boring into yours like twin suns. "Thou art being judged," she intones. "For actions taken in the realm of the living, for choices made when clothed in flesh. For lives altered by thy hand."',
 
       '"I..." you begin, but the sphinx cuts you off with a raised paw.',
 
-      '"This one is not thy judge," it says. "Merely a waypoint on thy journey through the eternal scales. But know this truth: what awaits thee next is the final arbiter of thy fate. Answer with truth in thy heart, face what thou hast done, and perhaps thy ka may yet find peace in the afterlife."',
+      '"This one is not thy judge," she says. "Merely a waypoint on thy journey through the eternal scales. But know this truth: what awaits thee next is the final arbiter of thy fate. Answer with truth in thy heart, face what thou hast done, and perhaps thy ka may yet find peace in the afterlife."',
 
       "The ground beneath you begins to shift, not like the gentle movement of sand, but a deliberate parting. The sand gives way completely, and you find yourself falling through darkness. The air grows hotter around you, yet you feel no fear—only a strange sense of inevitability.",
 

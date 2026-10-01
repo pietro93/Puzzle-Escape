@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
+import { usePointerDrag } from "@/hooks/use-pointer-drag"
 
 // Define crystal types
 interface Crystal {
@@ -27,8 +28,6 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
   const [sequence, setSequence] = useState<(Crystal | null)[]>(Array(7).fill(null))
 
   // State for drag and drop
-  const [draggedCrystal, setDraggedCrystal] = useState<Crystal | null>(null)
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   // State for the compendium
   const [showCompendium, setShowCompendium] = useState(false)
@@ -151,27 +150,21 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
     }
   }, [sequence, availableCrystals, isPuzzleComplete])
 
-  // Handle drag start
-  const handleDragStart = (crystal: Crystal, index: number | null, e: React.DragEvent) => {
-    // If puzzle is complete and not tiger's eye, prevent dragging
-    if (isPuzzleComplete && crystal.id !== "tigers-eye") {
-      e.preventDefault()
-      return
-    }
+  // A dragged crystal, and the sequence slot it came from (null when it came from the available tray)
+  type CrystalDrag = { crystal: Crystal; index: number | null }
 
-    setDraggedCrystal(crystal)
-    setDraggedIndex(index)
-  }
+  const { dragSource } = usePointerDrag<CrystalDrag>(({ crystal, index }, zone) => {
+    if (zone === "center") handleDropOnCenter(crystal)
+    else if (zone === "available") handleDropOnAvailable(crystal, index)
+    else if (zone?.startsWith("slot:")) handleDropOnSlot(Number(zone.slice(5)), crystal, index)
+  })
 
-  // Handle drag over
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+  // If puzzle is complete and not tiger's eye, prevent dragging
+  const crystalDragSource = (crystal: Crystal, index: number | null) =>
+    dragSource({ crystal, index }, isPuzzleComplete && crystal.id !== "tigers-eye")
 
   // Handle drop on a sequence slot
-  const handleDropOnSlot = (slotIndex: number) => {
-    if (!draggedCrystal) return
-
+  const handleDropOnSlot = (slotIndex: number, draggedCrystal: Crystal, draggedIndex: number | null) => {
     // If puzzle is complete, only allow tiger's eye to be placed in center
     if (isPuzzleComplete && draggedCrystal.id !== "tigers-eye") return
 
@@ -201,24 +194,16 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
     if (draggedIndex === null) {
       setAvailableCrystals(availableCrystals.filter((c) => c.id !== draggedCrystal.id))
     }
-
-    // Reset drag state
-    setDraggedCrystal(null)
-    setDraggedIndex(null)
   }
 
   // Handle drop on center
-  const handleDropOnCenter = () => {
-    if (!draggedCrystal || draggedCrystal.id !== "tigers-eye" || !isPuzzleComplete || !showTigerEye) return
+  const handleDropOnCenter = (draggedCrystal: Crystal) => {
+    if (draggedCrystal.id !== "tigers-eye" || !isPuzzleComplete || !showTigerEye) return
 
     setTigerEyeInCenter(true)
 
     // Remove tiger's eye from available crystals
     setAvailableCrystals(availableCrystals.filter((c) => c.id !== "tigers-eye"))
-
-    // Reset drag state
-    setDraggedCrystal(null)
-    setDraggedIndex(null)
 
     // Open compendium with tiger image
     setTimeout(() => {
@@ -227,8 +212,8 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
   }
 
   // Handle drop back to available crystals
-  const handleDropOnAvailable = () => {
-    if (!draggedCrystal || draggedIndex === null) return
+  const handleDropOnAvailable = (draggedCrystal: Crystal, draggedIndex: number | null) => {
+    if (draggedIndex === null) return
 
     // If puzzle is complete, prevent removing crystals
     if (isPuzzleComplete) return
@@ -242,10 +227,6 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
     if (!availableCrystals.some((c) => c.id === draggedCrystal.id)) {
       setAvailableCrystals([...availableCrystals, draggedCrystal])
     }
-
-    // Reset drag state
-    setDraggedCrystal(null)
-    setDraggedIndex(null)
   }
 
   // Handle click on a crystal in the sequence to remove it
@@ -358,7 +339,6 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
       {/* Crystal sequence circle */}
       <div
         className="relative w-full h-[300px] bg-gray-900/50 rounded-lg border border-gray-800 mb-6"
-        onDragOver={handleDragOver}
       >
         {/* Sequence slots in a circle */}
         {sequence.map((crystal, index) => (
@@ -368,8 +348,7 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
               crystal ? "bg-transparent" : "bg-gray-800/80 border-2 border-dashed border-gray-600"
             }`}
             style={getSlotPosition(index, sequence.length)}
-            onDragOver={handleDragOver}
-            onDrop={() => handleDropOnSlot(index)}
+            data-drop-zone={`slot:${index}`}
           >
             {crystal && (
               <div className="relative w-full h-full">
@@ -379,8 +358,7 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
                   width={60}
                   height={60}
                   className="w-full h-full object-contain rounded-full"
-                  draggable={!isPuzzleComplete}
-                  onDragStart={(e) => handleDragStart(crystal, index, e)}
+                  {...crystalDragSource(crystal, index)}
                 />
                 {!isPuzzleComplete && (
                   <button
@@ -400,8 +378,7 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
           className={`absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full ${
             tigerEyeInCenter ? "bg-transparent" : "bg-gray-800/40 border border-dashed border-gray-600"
           }`}
-          onDragOver={handleDragOver}
-          onDrop={handleDropOnCenter}
+          data-drop-zone="center"
         >
           {tigerEyeInCenter && (
             <div className="w-full h-full relative">
@@ -425,8 +402,7 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
       {/* Available crystals */}
       <div
         className="grid grid-cols-4 gap-2 mb-4 bg-gray-900/30 p-3 rounded-lg border border-gray-800"
-        onDragOver={handleDragOver}
-        onDrop={handleDropOnAvailable}
+        data-drop-zone="available"
       >
         {availableCrystals.map((crystal, index) => (
           <div
@@ -446,8 +422,7 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
                   ? "animate-[glow_1.5s_ease-in-out_infinite_alternate] shadow-[0_0_10px_5px_rgba(255,215,0,0.7)]"
                   : ""
               }`}
-              draggable
-              onDragStart={(e) => handleDragStart(crystal, null, e)}
+              {...crystalDragSource(crystal, null)}
             />
           </div>
         ))}

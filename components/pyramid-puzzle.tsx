@@ -165,7 +165,7 @@ export default function PyramidPuzzle({
             {/* Room navigation and content */}
             <div className="relative bg-black p-4 rounded-lg border border-gray-800 mb-4">
                 {/* Room content */}
-                <div className="relative w-full h-72 mb-4 overflow-hidden rounded-lg" onMouseMove={handleMouseMove}>
+                <div className="relative w-full h-72 mb-4 overflow-hidden rounded-lg touch-none" onPointerMove={handleMouseMove} onPointerDown={handleMouseMove}>
                     {/* Room image */}
                     <Image
                         src={getRoomImage() || "/placeholder.svg"}

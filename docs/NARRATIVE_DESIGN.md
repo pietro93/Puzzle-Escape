@@ -152,6 +152,15 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 - **Traits:** Stoic, philosophical, riddle-loving, and ancient.
 - **Communication Voice:** Formally arches dialogue with classical and archaic terms (e.g. `"thou art"`, `"thy ka"`). Offers cosmic weight and tests of the seeker's wisdom.
 - **Key Phrase:** *"The mortal possesses wisdom. But does the mortal possess understanding?"*
+- **Pronoun:** she.
+
+#### Sphinx voice spec
+- **Cryptic, not riddling.** She says a little less than she knows and lets the line hang: "The dark hides nothing from those who carry fire. For a while." Riddles are rare. Don't turn every line into one.
+- **She does not insult the player.** She is a stoic judge, not a mocker. Her weight comes from what she implies, never from put-downs.
+- **Foreshadowing as a question or a quiet aside,** tied to the judgment of the dead (the scales, weighed hearts, the road of the dead): "These walls show the road of the dead through the underworld. Does it look familiar?" Never state crash details.
+- **Hints stay cryptic.** Many lines nudge the puzzle ("The great may carry the small. Never the reverse." for the Hanoi rule; "Light reaches the deepest chamber only when a god allows it."). Never a solution.
+- **Real Egyptian material.** Facts must be true (heart scarabs, chiselled-out names, Khepri and the sun). No invented myths, no placard tone ("X represents Y").
+- **Register:** archaic pronouns (thou, thee, thy, dost, mayest), no contractions, sparing "seeker"/"mortal". Keep it readable: no "-eth" pile-ups.
 
 ### 😈 The Devil (Zone 5)
 - **Role:** Grand Arbitrator of Hell.
