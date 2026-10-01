@@ -48,49 +48,49 @@ export default function CrystalSequencePuzzle({ onSolve }: CrystalSequencePuzzle
       name: "Amethyst",
       image: "/images/amethyst.webp",
       description:
-        "**Color**: Rich purple hues ranging from light lavender to deep violet.\n\n**Shape**: Clustered points or polished geodes.\n\n**Magical Properties**: *Protects against negative energies, enhances spiritual awareness, and calms the mind.*\n\nIn ancient lore, amethyst was said to ward off the darkness, its purple hue a beacon of tranquility amidst turmoil. Those who possess it are shielded from malevolent forces, their minds clear and focused on the path ahead.",
+        "**Color**: Rich purple hues ranging from light lavender to deep violet.\n\n**Shape**: Clustered points or polished geodes.\n\n**Magical Properties**: *Protects against negative energies, enhances spiritual awareness, and calms the mind.*\n\nMy grandmother says amethyst keeps darkness away and keeps head clear. I keep big one by my bed. Darkness stays away. Sleep also stays away. Is my blood, it is mostly espresso.",
     },
     {
       id: "citrine",
       name: "Citrine",
       image: "/images/citrine.webp",
       description:
-        "**Color**: Vibrant yellow-orange tones, reminiscent of sunlight.\n\n**Shape**: Pointed clusters or polished gems.\n\n**Magical Properties**: *Radiates joy, abundance, and positivity.*\n\nCitrine is known as the sunstone, imbuing its bearers with warmth and optimism. It is said to attract prosperity and happiness, illuminating the path to success.",
+        "**Color**: Vibrant yellow-orange tones, reminiscent of sunlight.\n\n**Shape**: Pointed clusters or polished gems.\n\n**Magical Properties**: *Radiates joy, abundance, and positivity.*\n\nThey call citrine the sunstone. It brings money and good mood. I have three. Still waiting for money.",
     },
     {
       id: "lapis-lazuli",
       name: "Lapis Lazuli",
       image: "/images/lapislazuli.webp",
       description:
-        "**Color**: Deep blue with golden flecks of pyrite, evoking the night sky.\n\n**Shape**: Polished cabochons or rectangular slabs.\n\n**Magical Properties**: *Promotes wisdom, clarity, and connection to celestial realms.*\n\nThis celestial stone is said to hold the secrets of the universe. It grants wisdom to those who seek it, allowing them to navigate the mysteries of the cosmos with clarity and purpose.",
+        "**Color**: Deep blue with golden flecks of pyrite, evoking the night sky.\n\n**Shape**: Polished cabochons or rectangular slabs.\n\n**Magical Properties**: *Promotes wisdom, clarity, and connection to celestial realms.*\n\nStone of night sky, with little gold stars inside. It gives wisdom to whoever looks for it. Most people don't look. Then they come to me.",
     },
     {
       id: "moonstone",
       name: "Moonstone",
       image: "/images/moonstone.webp",
       description:
-        "**Color**: Soft white with a bluish shimmer, resembling moonlight.\n\n**Shape**: Polished cabochons, often oval or rounded.\n\n**Magical Properties**: *Enhances intuition, dreams, and emotional balance. Associated with lunar energy and feminine power.*\n\nMoonstone is a gentle guide, connecting its bearers to the mystical power of the moon. It fosters intuition and emotional harmony, allowing one to navigate life's challenges with grace and wisdom.",
+        "**Color**: Soft white with a bluish shimmer, resembling moonlight.\n\n**Shape**: Polished cabochons, often oval or rounded.\n\n**Magical Properties**: *Enhances intuition, dreams, and emotional balance. Associated with lunar energy and feminine power.*\n\nMoonstone keeps the moon's light, even in daytime. Good for dreams, and for knowing things before they happen. I have one. Is how I knew you come Tuesday.",
     },
     {
       id: "obsidian",
       name: "Obsidian",
       image: "/images/obsidian.webp",
       description:
-        "**Color**: Glossy black or dark green with a mirror-like surface.\n\n**Shape**: Smooth spheres or sharp-edged shards.\n\n**Magical Properties**: *Provides protection, grounding, and shields against negativity.*\n\nObsidian is born from the fiery depths of volcanoes, its dark beauty forged in the intense heat of the earth. It protects its wielders from harm, grounding them in the present and reflecting back any malevolent energy.",
+        "**Color**: Glossy black or dark green with a mirror-like surface.\n\n**Shape**: Smooth spheres or sharp-edged shards.\n\n**Magical Properties**: *Provides protection, grounding, and shields against negativity.*\n\nObsidian is born in volcano, forged from fire. Black like mirror. It sends bad energy back where it came from. Like letter with wrong address.",
     },
     {
       id: "rose-quartz",
       name: "Rose Quartz",
       image: "/images/rose-quartz.webp",
       description:
-        "**Color**: Soft pink tones with a translucent glow.\n\n**Shape**: Rounded masses or polished hearts.\n\n**Magical Properties**: *Represents love, compassion, and emotional healing.*\n\nRose quartz is the heart of the earth, radiating love and warmth to all who touch it. It heals emotional wounds and fosters compassion, reminding us of the power of love in our lives.",
+        "**Color**: Soft pink tones with a translucent glow.\n\n**Shape**: Rounded masses or polished hearts.\n\n**Magical Properties**: *Represents love, compassion, and emotional healing.*\n\nRose quartz is for love, and for healing broken heart. My best seller. Nobody ever buys the one for wisdom.",
     },
     {
       id: "selenite",
       name: "Selenite",
       image: "/images/selenite.webp",
       description:
-        "**Color**: Pure white with a radiant glow; often translucent.\n\n**Shape**: Columnar formations or polished rods.\n\n**Magical Properties**: *Cleanses energy fields, illuminates spiritual paths, and promotes clarity.*\n\nSelenite is a beacon of light, cleansing the aura and guiding us toward spiritual enlightenment. It illuminates the path ahead, ensuring clarity and purpose in our journey.",
+        "**Color**: Pure white with a radiant glow; often translucent.\n\n**Shape**: Columnar formations or polished rods.\n\n**Magical Properties**: *Cleanses energy fields, illuminates spiritual paths, and promotes clarity.*\n\nSelenite is pure white light. It cleans your energy and shows you the path. You, I think, need two.",
     },
     {
       id: "tigers-eye",

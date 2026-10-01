@@ -4,8 +4,8 @@ import type { Puzzle } from "@/types/puzzle"
 export const puzzlesSet3: Puzzle[] = [
   {
     level: 21,
-    question: "The gypsy woman invites you to answer some questions about yourself.",
-    description: "Answer truthfully. The cards see through all deception.",
+    question: "Questions",
+    description: "",
     imageUrl: "",
     isQuestionnairePuzzle: true,
     solution: "RANDOM", // This will be overridden by the component
@@ -18,9 +18,9 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 22,
-    question: "The gypsy woman prepares to perform some tasseography with a bunch of coffee grounds.",
+    question: "Three Cups",
     description:
-      "She presents you with three cups, each containing mysterious patterns in the coffee residue. 'The grounds never lie,' she whispers.",
+      "",
     imageUrl: "",
     solution: "STORMY TIMES AHEAD",
     category: "pattern",
@@ -32,9 +32,9 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 23,
-    question: "The gypsy woman's crystal ball reveals shadows from a faraway land.",
+    question: "The Crystal Ball",
     description:
-      "The crystal ball clouds over, then clears to reveal shifting patterns of light. 'I see a distant culture, an ancient zodiac cycle,' the gypsy whispers. 'Tell me the year and animal I'm seeing.'",
+      "",
     imageUrl: "/images/zodiac-animation.webp",
     solution: "1639:Mèo|1639:mèo|1639 Mèo|1639 mèo",
     category: "pattern",
@@ -48,7 +48,7 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 24,
-    question: "The gypsy woman presents you with fragments of a crystal mosaic.",
+    question: "The Broken Mosaic",
     description: "Reassemble the pieces to reveal the name of a precious stone with mystical properties.",
     imageUrl: "",
     isCrystalJigsawPuzzle: true,
@@ -56,13 +56,13 @@ export const puzzlesSet3: Puzzle[] = [
     category: "pattern",
     hints: [
       "You should be able to clearly identify the four corners of the mosaic. Start from there when you assemble it.",
-      "The mosaic seem to represent various magical crystals.",
+      "The mosaic seems to represent various magical crystals.",
       "The mosaic contains some characters: Lap... ...uli? Looks like some letters are missing.",
     ],
   },
   {
     level: 25,
-    question: "The gypsy woman presents you with an ancient geometric puzzle.",
+    question: "Old Symbols",
     description: "Each rune holds a specific value. Solve each equation and lock in the runes to reveal the final expression.",
     imageUrl: "",
     isMysticsGeometryPuzzle: true,
@@ -80,9 +80,9 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 26,
-    question: "The gypsy woman invites you to look at the sky.",
+    question: "The Night Sky",
     description:
-      "The gypsy woman leads you outside her wagon and points upward. 'The stars have much to tell us tonight,' she whispers. 'Trace the shape hidden among them, and tell me what you see.'",
+      "",
     imageUrl: "",
     locationImage: "/images/constellation.gif",
     isConstellationPuzzle: true,
@@ -96,7 +96,7 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 27,
-    question: "The gypsy woman presents you with a collection of tapestries and frames.",
+    question: "Tapestries",
     description: "",
     imageUrl: "",
     isZodiacPuzzle: true,
@@ -110,7 +110,7 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 28,
-    question: "The gypsy woman presents you with magical crystals and a compendium.",
+    question: "Seven Crystals",
     description: "Arrange the seven crystals in their proper sequence, starting from the top and moving clockwise.",
     imageUrl: "",
     isCrystalSequencePuzzle: true,
@@ -127,9 +127,9 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 29,
-    question: "The Gypsy woman goes quiet.",
+    question: "Silence",
     description:
-      "She begins to move her hands in a strange pattern, then stops. Her eyes lock with yours, waiting for your understanding.",
+      "",
     imageUrl: "",
     isPuzzleImage: true,
     isAnimatedGif: true,
@@ -145,8 +145,8 @@ export const puzzlesSet3: Puzzle[] = [
   },
   {
     level: 30,
-    question: "The final card reveals your destiny",
-    description: "The Gypsy woman prepares to give you a tarot reading using the Major Arcana cards.",
+    question: "The Last Card",
+    description: "",
     imageUrl: "",
     isTarotPuzzle: true,
     solution: "livid",

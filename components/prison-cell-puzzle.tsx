@@ -287,7 +287,7 @@ const PrisonCellPuzzle: React.FC<PrisonCellPuzzleProps> = ({ onSolve }) => {
       changeRoomBackground("bathroom", "/images/prison-cell/bathroom-2.webp");
       setShowAlcohol(true);
       setShowVent(false);
-      setDialogue({ text: "The small vent comes off with ease, revealing a passage to what is surely home to several rats and vermins." });
+      setDialogue({ text: "The small vent comes off with ease, revealing a passage to what is surely home to several rats and worse." });
       return;
     }
 
@@ -382,17 +382,17 @@ Skeleton: ${item.onClick.skeletonComment}`;
     }
 
     if (targetId === "guard" && itemName === "Lit Cigarette") {
-      setDialogue({ text: "Giving back your stolen goods already? Tsk. I was starting to think you had a spine." });
+      setDialogue({ text: "Givin' it back already? Tsk. And here I thought ya had a spine." });
       return;
     }
 
     if (targetId === "guard" && itemName === "Alcohol") {
-      setDialogue({ text: "Thank you, I am not thirsty." });
+      setDialogue({ text: "Keep yer drink. Goes straight through me." });
       return;
     }
 
     if (targetId === "guard" && itemName === "Rag") {
-      setDialogue({ text: "Planning a theatrical exit? Hang in there. Ha! Get it?" });
+      setDialogue({ text: "Plannin' a dramatic exit? Hang in there. Hah-hah-hah." });
       return;
     }
 
@@ -857,7 +857,7 @@ Skeleton: ${item.onClick.skeletonComment}`;
       {showGuardDialogue && (
         <CharacterDialoguePopup
           character="skeleton"
-          dialogue="HEY! I WAS HOLDING THAT! ...whatever, not like I can smoke anyways. I have no lungs."
+          dialogue="Oi! I was smokin' that! Tsk. Keep it. Ya look like ya need it more than I do."
           onClose={closeGuardDialogue}
         />
       )}

@@ -60,20 +60,20 @@
 ### Gypsy Teller
 
 *   **Core Beliefs & Philosophy:**
-    *   **Universe:** Views the universe as an interconnected web of **duende** (a Romani-inspired concept of spirited fate).
-    *   **Destiny:** Believes everyone has a **drabardi** (personal destiny path), but it is not rigid. Free will allows individuals to steer their path.
+    *   **Universe:** Views the universe as an interconnected web of **baht** (luck, fate).
+    *   **Destiny:** Believes everyone has their own **baht**, but it is not rigid. Free will allows individuals to steer their path.
     *   **Balance:** Champions balance between life's joys and sorrows. Chaos reigns when this harmony is broken.
     *   **Humanity:** Considers people "sheep with wolf teeth"—capable of greatness but prone to folly. Fortunes should empower, not scare.
     *   **Modernity:** Skeptical of modern "progress" and technology ("noisy metal that drowns the old songs"). Champions the preservation of old ways.
 
 *   **Cultural Roots & Practices:**
     *   Draws heavily from Romani mysticism and folklore.
-    *   Actively gathers stories from Romani elders to keep **ghicitul** (divination arts) alive.
+    *   Actively gathers stories from Romani elders to keep fortune telling alive.
     *   A skilled storyteller, often weaving Romani proverbs into her speech.
     *   Always in motion, using props like cards, cups, crystals, and crystal balls. A touch theatrical.
 
 *   **Communication & Mannerisms:**
-    *   **Speech:** Speaks in **broken English** with a distinct **Romanian accent**. Occasionally uses Romanian words (e.g., "Ghicitul în cafea," "drabardi," "duende").
+    *   **Speech:** Speaks in **broken English** with a distinct **Romani accent**. Occasionally uses Balkan Romani words (e.g., "baht," "Devla," "bre"). Never Romanian: she is Romani, not Romanian.
     *   **Humor:** Possesses dry, self-deprecating humor, often playful and mischievous.
     *   **Bluntness:** Very direct and blunt.
     *   **Superstition:** Extremely superstitious.
@@ -81,14 +81,14 @@
     *   **Coffee Aversion:** Does not drink coffee; it causes an upset stomach and frequent bowel movements. She is naturally hyper-caffeinated.
     *   **Foreshadowing:** Subtly hints at the broader plot, player history, or future events/characters when referencing the player's fate.
 
-*   **Voice spec (canonical):** grammar rules, her five moves, joke budgets and foreign-word markup are in `docs/NARRATIVE_DESIGN.md` under "Gypsy voice spec". Follow it for every new line. Wrap all Romanian/Romani words in `~tildes~` (renders italic amber).
+*   **Voice spec (canonical):** grammar rules, her five moves, joke budgets and foreign-word markup are in `docs/NARRATIVE_DESIGN.md` under "Gypsy voice spec". Follow it for every new line. Wrap all her foreign words in `~tildes~` (renders italic amber).
 
 *   **Example Romani Proverbs/Phrases:**
     *   "The road to hell is paved with good intentions. But shortcuts, they lead to blisters!"
-    *   "Ghicitul în cafea" (Coffee leaf reading)
-    *   "Duende" (Spirited fate)
-    *   "Drabardi" (Personal destiny path)
-    *   "Ghicitul" (Divination arts)
+    *   "Baht" (luck, fate)
+    *   "Bibaht" (bad luck)
+    *   "Drabarni" (fortune teller)
+    *   "Devla!" (God!)
 
 
 

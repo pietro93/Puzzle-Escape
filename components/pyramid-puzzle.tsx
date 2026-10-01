@@ -102,22 +102,22 @@ export default function PyramidPuzzle({
                 setSphinxMessage("The mural in the entrance room depicts some kind of bird.")
                 break
             case "isis":
-                setSphinxMessage("The goddess Isis gazes down from the wall, her presence powerful and serene.")
+                setSphinxMessage("Isis, goddess of magic and fertility. She gave life back to one who had lost it.")
                 break
             case "osiris":
-                setSphinxMessage("Osiris, god of the afterlife, is depicted on this ancient mural.")
+                setSphinxMessage("Osiris, god of the underworld. All who die come before him, in time.")
                 break
             case "horus":
-                setSphinxMessage("Horus, the falcon-headed god, watches over this chamber.")
+                setSphinxMessage("Horus, the falcon-headed god of the sky, who sees all that lies beneath it.")
                 break
             case "toth":
-                setSphinxMessage("Thoth, the god of wisdom, is represented in this sacred space.")
+                setSphinxMessage("Thoth, god of wisdom and writing. What he writes is never erased.")
                 break
             case "ra":
-                setSphinxMessage("Ra, the sun god, shines brightly on this mural.")
+                setSphinxMessage("Ra, god of the sun. Where he goes, the dark cannot stay.")
                 break
             case "anubis":
-                setSphinxMessage("Anubis, the jackal-headed god of the dead, presides over this chamber.")
+                setSphinxMessage("Anubis, the jackal-headed god of mummification. He has weighed many hearts. He will weigh more.")
                 break
             case "mural1":
             case "mural2":

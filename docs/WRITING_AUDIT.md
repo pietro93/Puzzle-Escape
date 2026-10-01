@@ -273,11 +273,11 @@ High points: "Cards tell me you come Tuesday. Is Thursday. Cards are never wrong
 | Where | Now | Proposed |
 |---|---|---|
 | Questionnaire opening | "Welcome, seeker. The cards have been whispering your name. Before I read your fortune, I must understand your essence. Answer truthfully, for the cards see through all deception." | "Sit, sit. Before I read you, I must know what you are made of. Five questions. Answer true. Cards see through lies, and I charge extra for them." |
-| Questionnaire closing | "I have seen enough. The spirits have revealed much about you. Now, what vision comes to your mind? What do you see in the mists between us?" | "~Gata~. I have seen enough. Now you look. Letters are there, some still hiding. What words you see, ~dragă~?" |
-| Tarot end screen | "The cards have revealed your path. Now you must decipher their message to continue your journey." | "Cards said what they said. Now is your turn, ~dragă~. Read them like I read you. Slowly, and with suspicion." |
+| Questionnaire closing | "I have seen enough. The spirits have revealed much about you. Now, what vision comes to your mind? What do you see in the mists between us?" | "~Dosta~. I have seen enough. Now you look. Letters are there, some still hiding. What words you see, ~bre~?" |
+| Tarot end screen | "The cards have revealed your path. Now you must decipher their message to continue your journey." | "Cards said what they said. Now is your turn. Read them like I read you. Slowly, and with suspicion." |
 | Level 45, "Are you single?" | "Do not mistake me for some tavern wench to be wooed with cheap flattery. Your attempts at manipulation will not help you here. Focus on your task, or remain trapped forever." | "Single? I have second husband. Very faithful. He knows what happened to first one. Ask your real question." |
 | Level 45, lost soul | "Ah yes, let me check on my crystal sphere. I see a figure, a woman... she appears in a white dress, surrounded by light. Angels attend her. She guides a man through realms of light." | "Wait, I look in ball. A woman. White dress, very clean, too much light around her. Angels carry her bags. She walks a man through heaven like he is tourist." |
-| Level 45, guard and Russia | "The bones form a pattern pointing south, not east. The bear of Russia is nowhere in these signs. The skeleton speaks with a forked tongue." | "Russia? Bones point south. Bones are not tourists, they don't get lost. Skeleton lies to you, ~dragă~. Is his only hobby." |
+| Level 45, guard and Russia | "The bones form a pattern pointing south, not east. The bear of Russia is nowhere in these signs. The skeleton speaks with a forked tongue." | "Russia? Bones point south. Bones are not tourists, they don't get lost. Skeleton lies to you, ~bre~. Is his only hobby." |
 
 All 20 of her Level 45 answers need the same treatment. None uses her grammar.
 
@@ -422,5 +422,5 @@ Together these describe a nice, slightly clumsy person who assumes everyone can 
 1. What the family plotline is, and whether it becomes the finale's new reveal.
 2. Whether the Master is the Devil.
 3. Whether narration keeps "the gypsy woman".
-4. Whether the "Dohn Joe" and Declan Tremblay mismatch is a joke or an error.
+4. ~~Whether the "Dohn Joe" and Declan Tremblay mismatch is a joke or an error.~~ Resolved: neither. The creature makes its victims shorter; the height gap is the clue.
 5. Whether the parrot's political pools ship on Steam as they are.

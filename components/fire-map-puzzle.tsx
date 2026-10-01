@@ -196,7 +196,7 @@ export default function FireMapPuzzle({ onSolve }: { onSolve?: () => void }) {
 
   return (
     <div className="w-full bg-gray-900 rounded-lg overflow-hidden p-4">
-      <h3 className="text-lg font-bold mb-4 text-amber-500">Mysterious Map</h3>
+      <h3 className="text-lg font-bold mb-4 text-amber-500">The Map</h3>
 
       <div className="w-full max-w-4xl mx-auto">
         <div

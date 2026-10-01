@@ -4,7 +4,7 @@ import type { Puzzle} from "@/types/puzzle"
 export const puzzlesSet1: Puzzle[] = [
   {
     level: 1,
-    question: "There's a secret message hidden somewhere.",
+    question: "The Cell",
     description: "",
     solution: "MURDER", 
     category: "interactive",
@@ -15,12 +15,12 @@ export const puzzlesSet1: Puzzle[] = [
       "Try wrapping the rag under the sink. Check every vent, see if you can find a way to make it flammable.",
       "Pick up the rubbing alcohol hidden inside the vent and steal the cigarette from the guard.",
       "Set the rag on fire to heat the sink, then turn the tap on. Condensation will make a message appear on the mirror.",
-      "Things you see on mirror are reflected... so is your solution to this level."
+      "Things seen in a mirror are reversed. So is this message."
     ],
   },
   {
   level: 2,
-  question: "Fine, let's see if you figure out what to do next. Tsk.",
+  question: "Bones",
   description: "",
   solution: "10 5 13 7|105137",
   category: "pattern",
@@ -33,7 +33,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 3,
-    question: "Mphf. Let's test your math.",
+    question: "Three Locks",
     description: "",
     solution: "16",
     category: "math",
@@ -47,8 +47,8 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 4,
-    question: "FEAR YOUR DREAMS",
-    description: "The guard introduces you to a ominous message scratched on a wall, with no further instructions.",
+    question: "Scratched Wall",
+    description: "",
     solution: "freedom",
     category: "interactive",
     isFearYourDreamsPuzzle: true,
@@ -61,7 +61,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 5,
-    question: "Like clockwork",
+    question: "Like Clockwork",
     description: "A dust-caked clockwork mechanism sits before you.",
     solution: "Amber",
     category: "interactive",
@@ -74,7 +74,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
   level: 6,
-  question: "The Guard introduces you to his pet dog Shackles.",
+  question: "Shackles",
   description: "",
   solution: "RABID REND",
   category: "interactive",
@@ -87,7 +87,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 7,
-    question: "Mphf. I can't let you go. You won't solve this one!",
+    question: "No Way Out",
     description: "",
     solution: "BONE LONE LOVE|BONE LONE LORE|BONE LONE LOSE|BONE LONE LOBE|BONE LONE LODE|BONE LONE LOGE|BONE LONE LOPE",
     category: "interactive",
@@ -100,7 +100,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 8,
-    question: "You think these puzzles are easy? Ha! I present you: the magic box.",
+    question: "The Magic Box",
     description: "",
     solution: "bloodshot eyes",
     category: "logic",
@@ -110,13 +110,13 @@ export const puzzlesSet1: Puzzle[] = [
       "The bones with values 1 and 5 are the tricky part, they can never sit in a corner. They only work placed opposite each other, in the same row or column as your line of 3s.",
       "With 1 and 5 placed, you're left with two 4s and two 2s for the corners. Each diagonal needs one 4 and one 2, not two of the same, to reach 9.",
       "Once the box balances, three cells reveal images in a row. Say what each one shows out loud, one right after another.",
-      "It's a rebus, so listen for the sounds when reading out loud rather than the image displayed. Solution is a two words, not three.",
+      "It's a rebus, so listen for the sounds when reading out loud rather than the image displayed. The answer is two words.",
     ],
     isMagicBoxPuzzle: true,
   },
   {
     level: 9,
-    question: "Rats skittering between the skulls in the dark.",
+    question: "Rats in the Dark",
     description: "",
     solution: "DECAY",
     category: "logic",
@@ -130,7 +130,7 @@ export const puzzlesSet1: Puzzle[] = [
   },
   {
     level: 10,
-    question: "Whodunit? Find the culprit.",
+    question: "Whodunit",
     description:
       "The guard claims one of the inmates is the murderer. Speak with each inmate to hear their statements. Beware: only one of them is telling the truth.",
     imageUrl: "",
@@ -155,10 +155,10 @@ export const puzzlesSet1: Puzzle[] = [
         image: "/images/ronan.webp",
         statements: [
           { text: "I-I never liked that Silas guy. I think he did it. Don't tell him I said that." },
+          { text: "How did *you* end up here? Who did *you* kill?" },
           { text: "{{Don't trust women. They lie and manipulate you, all the time.|Don't trust women. They lie and manipulate you, all the time. N-no offense.|Don't trust women. They lie and manipulate you, all the time.}}" },
           { text: "Listen, pal. You can trust me. W-we're friends, right?" },
           { text: "Caine and Lyra had a thing going on, you know? If one of them's lying, the other one is too. I bet." },
-          { text: "How did *you* end up here? Who did *you* kill?" },
           { text: "The victim? I believe she was a woman." },
         ],
       },
@@ -168,7 +168,7 @@ export const puzzlesSet1: Puzzle[] = [
         statements: [
           { text: "I am not a murderer!" },
           { text: "I am telling you, none of us did it. We're innocent." },
-          { text: "The culprit is in this room, that much I know." },
+          { text: "The culprit is in this block, that much I know." },
           { text: "The guard is probably in on it. Do not trust what he said." },
           { text: "Why would you trust anyone in here? Most of us are compulsive liars." },
           { text: "Caine and I? Yes, we used to date. But I have nothing to do with him now." },

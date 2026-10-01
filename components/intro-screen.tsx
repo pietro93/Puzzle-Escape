@@ -21,11 +21,11 @@ export default function IntroScreen({ onStart, soundEnabled, toggleSound }: Intr
   const introParagraphs = [
     "You awaken in a cold, damp cell. The stone walls are slick with moisture, and the only light filters through a small, barred window high above.",
 
-    "Your head throbs with a dull ache, and your memory is a fog of disconnected images. How did you get here? What crime could you have possibly committed?",
+    "Your head hurts in a way that suggests you earned it. You remember nothing. The cell seems to think that is your problem.",
 
-    "The sound of bones rattling against stone breaks the silence. A figure approaches your cell—a walking skeleton, its empty eye sockets somehow fixed upon you.",
+    "The sound of bones rattling against stone breaks the silence. A figure approaches your cell. It is a skeleton, walking, and its empty eye sockets are somehow fixed on you.",
 
-    '"Solve my riddles," it rasps, voice like dry leaves scrapin\' against stone. "And ya may walk free. Fail, and... Hah-hah-hah!"',
+    '"Solve my riddles," it rasps, voice like dry leaves scraping against stone. "And ya may walk free. Fail, and I get a new chew toy. Hah-hah-hah!"',
   ]
 
   // Show skip button after a delay

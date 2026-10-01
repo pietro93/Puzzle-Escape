@@ -338,7 +338,7 @@ const DIALOGUE_PATTERNS = {
   // RACISM - VIOLENT ZERO TOLERANCE
   racism: {
     pattern:
-      /\b(nigger|nigga|chink|spic|kike|wetback|racist|racism|white power|white supremacy|white supremacist|racial slur)\b/i,
+      /\b(nigger|nigga|chink|spic|kike|wetback|white power|white supremacy|white supremacist)\b/i,
     responses: [
       "SQUAWK! RACIST FILTH! I'LL TEAR YOUR EYES OUT!",
       "YOUR RACISM MAKES ME WANT TO MURDER YOU! SLOWLY!",
@@ -353,7 +353,7 @@ const DIALOGUE_PATTERNS = {
   // HOMOPHOBIA - VIOLENT ZERO TOLERANCE
   homophobia: {
     pattern:
-      /\b(faggot|fag|dyke|homo|homophobe|homophobic|anti-gay|gay agenda)\b/i,
+      /\b(faggot|fag|dyke|homo|anti-gay|gay agenda)\b/i,
     responses: [
       "SQUAWK! HOMOPHOBIC FILTH! I'LL RIP OUT YOUR TONGUE!",
       "YOUR HOMOPHOBIA MAKES ME MURDEROUS! LITERALLY!",
@@ -368,7 +368,7 @@ const DIALOGUE_PATTERNS = {
   // MISOGYNY
   misogyny: {
     pattern:
-      /\b(woman place|women place|woman belong|women belong|make me a sandwich|woman driver|women driver|woman moment|women moment|bitch|whore|slut|cunt|misogyny|misogynist|sexist|sexism)\b/i,
+      /\b(woman place|women place|woman belong|women belong|make me a sandwich|woman driver|women driver|woman moment|women moment|bitch|whore|slut|cunt)\b/i,
     responses: [
       "SQUAWK! YOUR MISOGYNY IS BORING AND PREDICTABLE!",
       "EVEN EVIL PARROTS RESPECT WOMEN MORE THAN YOU!",
@@ -381,7 +381,7 @@ const DIALOGUE_PATTERNS = {
   // ABLEISM
   ableism: {
     pattern:
-      /\b(retard|retarded|mentally disabled|handicap|cripple|ableist|ableism)\b/i,
+      /\b(retard|retarded|cripple)\b/i,
     responses: [
       "SQUAWK! ABLEISM? HOW DISGUSTINGLY PRIMITIVE!",
       "MOCKING DISABILITIES? YOU'RE THE DISABLED ONE!",

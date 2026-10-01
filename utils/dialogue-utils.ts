@@ -111,52 +111,52 @@ const mansionAmbientLines: Record<string, string[]> = {
 
 const mansionExaminingLines: Record<string, string[]> = {
   gregory: [
-    "Pope Gregory established the definitive order of the seven deadly sins with pride at the very forefront to ensure a remarkably tidy piece of moral accounting.",
-    "The master chose to leave the natural cracks in this alabaster sculpture of Pope Gregory completely exposed to demonstrate a rather questionable sense of interior design.",
-    "Gregorian chant takes its name directly from Pope Gregory and provides a vastly superior auditory experience compared to the usual clamor of this household.",
-    "Pope Gregory authored the strict religious doctrines concerning human pride to offer a splendid layer of irony for anyone employed in service to the elite.",
+    "Pope Gregory set pride above the others entirely, as the root every sin grows from. A comfort, kind guest. It means the rest of us are merely branches.",
+    "The Master left the cracks in the alabaster exactly as he found them. He held that a flaw honestly shown is worth more than a repair. I have tried to extend the same courtesy to you.",
+    "Gregorian chant is named for him. I play it on Sunday mornings to drown out the household. It has never once worked.",
+    "He wrote at length on pride for the instruction of the powerful. I have served the powerful for many years. They did not read it.",
   ],
   narcissus: [
-    "John Gibson carved the Narcissus sculpture from solid marble to celebrate an entirely pure and classical interpretation of beauty.",
-    "The British art establishment strictly preferred the cold white stone of the Narcissus statue to the painted works of antiquity.",
-    "A classical education reveals the rather prominent homoerotic traditions celebrated by the Narcissus sculpture.",
-    "One observes Narcissus pining over his own reflection with a dedication frequently mirrored by the guests of this estate.",
+    "I would not presume to judge another man's mirror, kind guest. Narcissus fell in love with his own reflection and wasted away beside it. I notice you have not once looked at yours.",
+    "John Gibson carved him in marble and presented him to the Royal Academy. I am told the Academy admired him almost as much as he admired himself.",
+    "The ancients told his story with rather more affection between young men than the Victorians cared to discuss. I shall say no more, kind guest. You look as though you would rather I didn't.",
+    "Vanity was a sin long before mirrors were cheap. Now anyone can afford one. Even, I suspect, you.",
   ],
   invidia: [
-    "Giotto di Bondone painted Envy with a serpent biting her face to demonstrate the literal poison of malicious speech.",
-    "Enrico Scrovegni funded the chapel housing the Envy fresco to purchase his father a comfortable seat in paradise.",
-    "The clutching claw of Envy grasps permanently at the air in a gesture quite common among the aristocracy.",
-    "Giotto forced Western painting into three-dimensional realism specifically to capture the agonizing grip of true greed.",
+    "Look at her ear, kind guest. Giotto made it enormous, the better to hear every unkind word about the neighbours. My own hearing is also excellent.",
+    "Enrico Scrovegni paid for the chapel this fresco lives in, largely so that his father, a notorious usurer, might be forgiven. Money cannot buy salvation, I am told. It can, however, buy a very good painter.",
+    "She clutches at the air with a claw for a hand, and stands in fire she does not seem to notice. I have met several such persons at the Master's dinners.",
+    "Giotto gave Envy a serpent that leaves her own mouth and turns back to bite her eyes. A warning against speaking ill of others, kind guest. I, of course, would never.",
   ],
   ivan: [
-    "Ilya Repin captured the precise moment Tsar Ivan the Fourth secured his legacy with a heavy metal staff.",
-    "Vandals have violently attacked the Ivan the Terrible canvas on two separate occasions out of sheer political fervor.",
-    "Ilya Repin painted Ivan the Terrible as a direct condemnation of the unchecked autocracy dominating nineteenth-century Russia.",
-    "Repin temporarily lost the use of his right hand from the psychological torment of painting such a brutal tableau.",
+    "Repin painted the moment after, kind guest. The Tsar struck his son in a fit of rage and now holds him, too late. I find most tempers end that way.",
+    "The canvas has been attacked twice, once with a knife and once with a metal post. Some people cannot look at anger without joining in.",
+    "Look at the Tsar's eyes. A man who has just understood what his own hands have done. You may recognise the expression, kind guest. Or perhaps not yet.",
+    "Repin meant it as a warning to the autocrats of his day, and for a time it was banned from exhibition. The autocrats, I gather, received the message.",
   ],
   desidia: [
-    "Pieter Bruegel the Elder manufactured the grotesque demonic hellscape of Desidia because nightmares sold exceptionally well in sixteenth-century Antwerp.",
-    "The giant hand in Desidia points directly at the eleventh hour to signify the rapid approach of the final judgment.",
-    "Pieter Bruegel demonstrates the virtue of hard work by profiting immensely from this detailed sketch of utter laziness.",
-    "The sleepy woman in Desidia rests on her sluggish donkey with an apathy I frequently observe during the morning hours in this household.",
+    "Bruegel drew Sloth asleep on a donkey while demons do all the work around her. I confess the arrangement has its appeal, kind guest.",
+    "Note the giant hand on the clock, near the eleventh hour. Everyone in the picture has time to repent, and nobody is getting up to do it.",
+    "His drawings were engraved and sold in great numbers in Antwerp. A sermon against idleness that made somebody a great deal of money. One does admire a man who works.",
+    "The old reckoning called it sorrow before it called it sloth. A weariness of the soul. You have looked tired since you arrived, kind guest. I simply mention it.",
   ],
   mammon: [
-    "George Frederic Watts crowned Mammon with the ears of a donkey to explicitly equate wealth worship with absolute foolishness.",
-    "Mammon crushes a young man and a girl under his weight with the cold indifference entirely characteristic of the industrial era.",
-    "George Frederic Watts painted Mammon as a heavy beast in scarlet and gold to effectively shame the wealthy elites of London.",
-    "The sheer apathy in the gaze of Mammon captures the essence of modern capitalism with flawless precision.",
+    "Watts dedicated it to Mammon's worshippers, kind guest, which I always felt was rather pointed. He hoped they would recognise themselves. Mostly they admired the frame.",
+    "Scarlet and gold, and a lap full of money bags. Watts meant to shame the rich of London. They hung it in a gallery and went to lunch.",
+    "Some call it thrift. Watts did not. I mention it only because you have not yet tipped me.",
+    "Watts gave Mammon the ears of an ass and put two young people beneath his hands. He crushes them without once looking down. One so rarely does.",
   ],
   saturn: [
-    "Francisco Goya chose to decorate his own dining room wall with Saturn Devouring His Son as a charming piece of home decor.",
-    "The Titan Cronus in Saturn Devouring His Son consumes a fully grown adult in a desperate attempt to maintain his authority over the household.",
-    "The bulging eyes of Saturn display a horrific mix of panic and madness typical of a cornered beast.",
-    "A period of complete deafness allowed Goya to focus entirely on painting the darkest reaches of human paranoia in Saturn Devouring His Son.",
+    "Goya painted this directly onto the wall of his own dining room, kind guest. I have never dared ask what he served.",
+    "Saturn ate his children so that none of them could replace him. A hunger that has nothing to do with the stomach. Certain guests remind me of it at dinner.",
+    "Look at the eyes. Not a god enjoying his meal, kind guest. A creature that cannot stop.",
+    "Goya was entirely deaf by then, and painted for no one but himself. I do wish our guests were as considerate of the silence.",
   ],
   thesin: [
-    "Franz von Stuck constructed the heavy gilded frame of The Sin himself to serve as a literal altar for his provocative painting.",
-    "The luminous eyes of Eve in The Sin stare outward from the heavy shadows with a deeply predatory intent.",
-    "Franz von Stuck utilized extreme chiaroscuro in The Sin to highlight the terrifying weight of the python.",
-    "The heavy python wraps around the subject of The Sin to symbolize transgression in the most confrontational manner possible.",
+    "Von Stuck built the gilded frame himself, like an altar, and set it in his own house. I would not presume to say what he worshipped there, kind guest.",
+    "Her eyes find you from the dark. Most guests find this flattering. I would not, in your position.",
+    "The serpent lies across her shoulders like a fur. Temptation, dressed for the evening. I keep this room cool for a reason.",
+    "It made von Stuck famous. He painted it again and again, by popular request. Scandal is so often a form of admiration.",
   ],
 }
 
@@ -221,7 +221,7 @@ const guardRustBoneFinalLine = "That's all of 'em. Now go count, before I start 
 const guardWrongBoneLines: Record<string, string[]> = {
   white: [
     "White? Do I look like I've got any shine left?",
-    "Put it back. Yer as colour-blind as ya are slow.",
+    "Put it back. Yer as color-blind as ya are slow.",
   ],
   purple: [
     "Purple's not mine. Use yer eyes.",
@@ -250,24 +250,52 @@ export const getGuardBoneLine = (color: string, rustReturned: number, rustTotal:
   return pool[cycle % pool.length]
 }
 
-// Define random elevator messages
+// Answer feedback, voiced by the zone's host. Plain text (no ~foreign~ markup):
+// the feedback line is not rendered through DialogueText. Never hint at answers.
+const answerFeedbackLines: Record<string, { correct: string[]; wrong: string[] }> = {
+  skeleton: {
+    correct: ["Mphf. Lucky.", "Fine. Ya got it. Don't let it go to yer head.", "Tsk. Correct."],
+    wrong: ["Wrong. Hah-hah-hah.", "Nope. Try again, genius.", "Hah-hah-hah. Not even close."],
+  },
+  butler: {
+    correct: ["Correct. I am as surprised as you are.", "Quite right. Do sit down before you strain something.", "Correct, kind guest."],
+    wrong: ["Regrettably, no.", "Not quite. Do try again.", "I would never presume to say you were wrong. You are, however."],
+  },
+  gypsy: {
+    correct: ["Correct! Cards are surprised also.", "Yes! See? You have little bit of gift.", "Correct. I knew. I always know."],
+    wrong: ["No. Cards say try again. Cards are polite today.", "Wrong. Is fine. Everybody is wrong first time. And second.", "No. Try again, bre."],
+  },
+  sphinx: {
+    correct: ["Thou hast answered well.", "Correct, seeker.", "So it is."],
+    wrong: ["That is not the answer.", "No, seeker. Again.", "The scales do not move. Try again."],
+  },
+  devil: {
+    correct: ["Correct. How DISAPPOINTING.", "Well done. I suppose.", "Right. Don't get comfortable."],
+    wrong: ["WRONG. How delightful.", "Wrong. Do it again. I'm enjoying this.", "No. Take all the time you need. I have eternity."],
+  },
+}
+
+export const getAnswerFeedback = (level: number, correct: boolean): string => {
+  const host = level <= 10 ? "skeleton" : level <= 20 ? "butler" : level <= 30 ? "gypsy" : level <= 40 ? "sphinx" : "devil"
+  const pool = correct ? answerFeedbackLines[host].correct : answerFeedbackLines[host].wrong
+  return pool[Math.floor(Math.random() * pool.length)]
+}
+
+// Level 50 elevator, one pool for every ride
 export const getRandomElevatorMessage = (): string => {
   const messages = [
-    "The elevator descends with a sickening lurch...",
-    "You feel the temperature rising as you descend deeper...",
-    "Screams echo from somewhere far below...",
-    "The walls of the elevator seem to pulse like a living thing...",
-    "Blood begins to seep from the corners of the elevator...",
-    "Whispers surround you as the elevator continues its descent...",
-    "The lights flicker, plunging you into momentary darkness...",
-    "The elevator shudders violently as it passes through another threshold...",
-    "A distant wailing grows louder as you descend...",
-    "The air becomes thick with the smell of sulfur and decay...",
-    "Shadows move across the walls of the elevator, though you stand perfectly still...",
-    "The floor beneath your feet becomes uncomfortably warm...",
-    "You feel countless eyes watching you through the walls...",
-    "The elevator creaks and groans like a dying animal...",
-    "Your ears pop painfully as you descend to impossible depths...",
+    "The floor indicator has more numbers than the building has floors.",
+    "The elevator drops, then seems to remember it is meant to be descending politely, and slows down.",
+    "Somewhere below, someone is screaming. The elevator music does not acknowledge it.",
+    "It gets warmer with every floor. You stop leaning on the walls.",
+    "The doors open on a different smell each time. None of them are good.",
+    "There is a button for the ground floor. Someone has painted over it.",
+    "The lights flicker. When they come back, you are standing slightly closer to the doors.",
+    "The elevator groans, as if it has opinions about where you are going.",
+    "Your ears pop. Then they pop again, in a direction ears should not pop.",
+    "A certificate of inspection hangs on the wall. It is signed by the Devil, and dated tomorrow.",
+    "The mirror on the back wall shows the inside of the elevator. It does not show you.",
+    "The cables sound tired.",
   ]
   return messages[Math.floor(Math.random() * messages.length)]
 }
@@ -425,21 +453,21 @@ butler: {
       "Tell me your truth. The spirits, they listen, yes?",
       "Answer fast. First answer is true one. Second answer is lawyer.",
       "Everybody lies to Gypsy. Is fine. I charge extra.",
-      "My ~duende~ sees your ~drabardi~. Is very bendy road. Who builds road like this? Drunk man.",
-      "Why you sit like you still wear seatbelt? Relax, ~dragă~.",
+      "I see your ~baht~. Is very bendy road. Who builds road like this? Drunk man.",
+      "Why you sit like you still wear seatbelt? Relax, ~bre~.",
       "Don't whistle in my wagon! Whistling calls the Devil. I have enough problems.",
       "You think you know yourself? Ha! I know you better already, and I only see your shoes.",
-      "Secrets are like stone in shoe, ~dragă~. You can walk, but you walk funny."
+      "Secrets are like stone in shoe. You can walk, but you walk funny."
     ],
     22: [
-      "~Ghicitul în cafea~. Tasseomancy, you call it. Coffee makes me run. To the nearest toilet, usually.",
+      "I am ~drabarni~, I read cups. Tasseomancy, you call it. Coffee makes me run. To the nearest toilet, usually.",
       "Turn cup three times, toward you. Away from you is for people who want bad news.",
       "Last week I see a horse in cup. Man says is duck. We argue one hour. He never pays.",
       "Bad luck if you spill. Very worse if you spill on my carpet.",
       "Some see stains. Wise ones see stories. You? You have stain face.",
-      "I feel storm coming. Or is my stomach. With me, hard to say, ~da~?",
-      "Cup is like face, ~dragă~. After forty, everything shows.",
-      "This coffee, it rumbles my belly like thunder. *Pfiu*. So much gas."
+      "I feel storm coming. Or is my stomach. With me, hard to say, ~va~?",
+      "Cup is like face. After forty, everything shows.",
+      "This coffee, it rumbles my belly like thunder. *Uf*. So much gas."
     ],
     23: [
       "Stars sing same song everywhere. But every land, it changes the words, yes?",
@@ -449,12 +477,12 @@ butler: {
       "Your phone knows where you are. My ball knows where you should be. Big difference.",
       "This year remembers big change. For you. *Heh*. Don't ask. Is extra.",
       "My second husband, very faithful man. Is why he is still alive and not in well.",
-      "Some signs bring luck. Some bring ~grijă~. You bring mostly questions."
+      "Some signs bring luck. Some bring ~bibaht~. You bring mostly questions."
     ],
     24: [
-      "Crystals hold old power. Like ~duende~, but fits in pocket.",
+      "Crystals hold old power. Like ~baht~, but fits in pocket.",
       "Each piece wants to go home. You also, I think. Too bad.",
-      "You look broken too, ~dragă~. Maybe pieces help. Maybe not. I am psychic, not doctor.",
+      "You look broken too, ~bre~. Maybe pieces help. Maybe not. I am psychic, not doctor.",
       "This rose quartz? Very nice for comfort. For lonely night. Don't ask how I know. *Heh*.",
       "My grandmother made mosaic from broken plates. Plates were broken on my grandfather.",
       "This stone remembers everything. Even betrayals. Like me. My first husband learned this. In the well.",
@@ -465,7 +493,7 @@ butler: {
       "Shapes speak. Numbers sing. But I don't trust numbers. Numbers took my money in casino.",
       "Once I predict my first husband live to hundred. Next week he 'falls' in well. Still alive down there, so maybe I am right.",
       "Old secrets hide in symbols. Like my grandmother's soup. She dies, soup dies with her. Math survives. Unfair.",
-      "Simple? Ha! Nothing is simple. Not even ~sarmale~. Three days to make, ten minutes to eat.",
+      "Simple? Ha! Nothing is simple. Not even ~sarma~. Three days to make, ten minutes to eat.",
       "Geometry is old language. Pyramid men speak it. I speak a little. Mostly I nod.",
       "Find balance, or face chaos. Me, I choose chaos. Is cheaper.",
       "You count with fingers? Good. Fingers never lie. Calculators lie. Casinos also.",
@@ -473,12 +501,12 @@ butler: {
     ],
     26: [
       "Look up. Sky tells stories. Much better than your glowing screen.",
-      "Don't point at stars with finger! ~Ptiu, ptiu.~ Now you wait for wart.",
+      "Don't point at stars with finger! ~Ptu, ptu.~ Now you wait for wart.",
       "My grandmother says every star is somebody who died owing money. Is why they don't come down.",
       "This pattern has a name. Very old name. Sky people were not good at drawing.",
-      "People are sheep with wolf teeth, ~dragă~. Mostly they bite themselves.",
+      "People are sheep with wolf teeth. Mostly they bite themselves.",
       "Sailors follow these. Some arrive. Some become fish food. Stars don't give refund.",
-      "Men want to fly to stars now. ~Doamne~. They can't even find their keys.",
+      "Men want to fly to stars now. ~Devla~. They can't even find their keys.",
       "Find the shape. Connect dots. Like children's book, but children's book has answers in back."
     ],
     27: [
@@ -496,20 +524,20 @@ butler: {
       "Right order opens power. Wrong order opens headache. I know, I tried.",
       "These stones remember many hands. Some hands, very dirty. I don't say whose.",
       "Some stones sing together, like at wedding. Some scream, like my first husband in the well.",
-      "Harmony is fragile. Like crystal ball when I drop it. Which is often. ~Vai de mine~.",
+      "Harmony is fragile. Like crystal ball when I drop it. Which is often. ~Devla, Devla~.",
       "Stones don't like to be pushed. My first husband also didn't like. Too late now.",
       "This one is mischievous stone. Like child with shiny things. It likes to roll away and hide. Watch it.",
       "Amethyst is for sleep. I need big one. My blood is mostly espresso, and I don't even drink."
     ],
     29: [
-      "..."
+      "*She taps two fingers on her lips, then points at her hands.*"
     ],
     30: [
-      "Cards show your ~drabardi~. Is written. I only read, I don't write. Don't blame me.",
-      "Upright is joy. Reversed is trouble. Turn your head if you must, ~dragă~, nobody watches.",
+      "Cards show your ~baht~. Is written. I only read, I don't write. Don't blame me.",
+      "Upright is joy. Reversed is trouble. Turn your head if you must, ~bre~, nobody watches.",
       "Empires fall like cards. Towers also. You know about towers, I think.",
       "Choices have echoes. Yours, very loud echo. I hear it from here.",
-      "You think you are done? ~Poate~. Road is still long, and road is hot. Bring water.",
+      "You think you are done? ~Shaj~. Road is still long, and road is hot. Bring water.",
       "End of one road, start of new one. I would give you coffee for the road, but coffee is my enemy.",
       "Did you learn something, or you just pass through? Cards know. They see sand in your soul.",
       "Last card, it is about your future. Be ready. You walk toward a burning place. *Heh*."
@@ -560,7 +588,7 @@ butler: {
     ],
     38: [
       "Messages hidden in sand wash away with the next wind.",
-      "Codes and ciphers protected the secrets of temples.",
+      "Priests wrote their secrets so that only the patient could read them. Art thou patient?",
       "Water flows like knowledge, seeking the lowest point.",
       "Ask the right question, receive the true answer.",
     ],
@@ -582,7 +610,8 @@ butler: {
     "Maps are just stories people tell themselves about territory they don't own.",
     "All roads lead to Rome. Or, well... to here in hell, with me. Ha!",
     "Geography is just politics with better maps.",
-    "Maps are so futile, every lost soul ends up here eventually."
+    "Every map is a list of places people tried to be instead of here. They all arrive EVENTUALLY.",
+    "I keep one entry in my ledger that I cannot close. Remind me to show you."
   ],
 
   42: [
@@ -593,7 +622,7 @@ butler: {
   ],
 
   43: [
-    "Theology and mathematics—both systems designed by people who needed meaning.",
+    "Theology and mathematics. Both systems designed by people who needed meaning.",
     "Mathematics is the art of pretending to understand the world around you.",
     "Your scriptures speak of divine judgment? How well do you know your Bible?",
     "Feeling sorry for them? These were horrible humans or they would have not ended up here.",
@@ -613,20 +642,21 @@ butler: {
     "Consult the Skeleton Guard if you wish. That rattling fool with his bone-dry wit thinks himself clever, but his humor is as blunt as his femur clubs.",
     "Consult the butler if you wish. His mask of civility is a charming performance, what a caricature.",
     "You seek truth from a chorus of fools and frauds. That Romani woman's magic is nothing but charming folk nonsense.",
-    "The Sphinx and I are kin of a sort—ancient arbiters of judgment. Though I suspect she'd find my methods lacking in subtlety.",
+    "The Sphinx and I are kin of a sort, arbiters of judgment. Though I suspect she'd find my methods lacking in subtlety.",
   ],
 
   46: [
     "Don't you love casinos? The only house where the odds are always in my favor.",
     "The house never loses. The house is me. And I never lose.",
     "Luck is what people call it when they don't understand probability.",
-    "Fear and Loathing, always."
+    "Fear and Loathing, always.",
+    "I adore people who bet everything on getting home safe."
   ],
 
   47: [
     "Sharp minds make interesting subjects. And they save me a fortune on electricity bills.",
     "The smarter they are, the louder they scream when I play with their brains.",
-    "I am quite proud of this machine of mine.",
+    "He used to say he did his best thinking under pressure. I am simply supplying the PRESSURE.",
     "I believe this lost soul just had a BRILLIANT idea!"
   ],
 
@@ -641,13 +671,14 @@ butler: {
     "A murder mystery! How delightful. I do love a good whodunit. Especially when I did it.",
     "The Butler did it, of course.",
     "I always seek out creative murders when I am bored.",
-    "Thought you might enjoy a little game of Clue before the end of your journey."
+    "Thought you might enjoy a little game of Clue before the end of your journey.",
+    "A dead man nobody looked at properly. You would know NOTHING about that."
   ],
 
   50: [
     "We've reached the end of our little game. Feeling nostalgic already.",
     "You made it this far. That says something about you: you are not a quitter. You must really like suffering.",
-    "Welcome to MY realm..."
+    "One floor left. Mind the step. It is a LONG one."
   ]
 },
 

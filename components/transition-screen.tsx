@@ -30,7 +30,7 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
       "the Mansion": "/images/skeleton.webp", // Coming from prison
       "the Forest": "/images/butler.webp", // Coming from mansion
       "the Desert": "/images/gypsy.webp", // Coming from forest
-      "the Afterlife": "/images/sphinx.webp", // Coming from desert
+      "Hell": "/images/sphinx.webp", // Coming from desert
     }
 
     return characterMap[nextLocation] || "/images/skeleton.webp"
@@ -42,7 +42,7 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
       "the Forest":
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-Qd9jgVQwNdCF6yT2PFKtFg0KEhxQ4Q.webp", // Coming from mansion (interior)
       "the Desert": "/images/forest-bg.webp", // Coming from forest
-      "the Afterlife": "/images/desert-bg.webp", // Coming from desert
+      "Hell": "/images/desert-bg.webp", // Coming from desert
     }
 
     return locationMap[nextLocation] || "/images/prison-bg.webp"
@@ -54,7 +54,7 @@ export default function TransitionScreen({ transition, onContinue, soundEnabled,
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mansion-exterior-KTmGONVi3wa6sx2G9nKqAybVn3qVV0.webp", // Mansion exterior
       "the Forest": "/images/forest-bg.webp",
       "the Desert": "/images/desert-bg.webp",
-      "the Afterlife": "/images/hell-bg.webp",
+      "Hell": "/images/hell-bg.webp",
     }
 
     return locationMap[locationName] || "/images/prison-bg.webp"

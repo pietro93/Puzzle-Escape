@@ -320,7 +320,7 @@ export default function ZodiacPuzzle({ onSolve }: ZodiacPuzzleProps) {
               className="w-full h-auto"
             />
           </div>
-          <p className="text-center text-purple-300 font-pixel mt-4">A mysterious new tapestry reveals itself...</p>
+          <p className="text-center text-purple-300 font-pixel mt-4">A new tapestry has appeared.</p>
         </div>
       ) : (
         <>

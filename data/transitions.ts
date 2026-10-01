@@ -9,13 +9,13 @@ export const transitions: Transition[] = [
 
       "\"Heh, think yer clever, do ya, {{lad|lass|pal}}?\" the guard's skull hisses as you step past. \"But I still have a bone to pick with ya. We'll meet again. That noggin o' yers knows what ya did. Hah-hah-hah.\"",
 
-      "His mocking words echo in your mind as you navigate through damp corridors and past empty cells. What did you do? Why can't you remember?",
+      "You walk out through damp corridors and empty cells, waiting for someone to stop you. Nobody does. What did you do? You can't remember, and you notice you would rather not.",
 
-      "Finally, you emerge into a strange twilight. In the distance, perched atop a hill, stands a grand mansion. Its windows glow with an eerie light, beckoning you forward. With nowhere else to go, you begin the trek toward the imposing structure.",
+      "Outside it is neither night nor day. On the hill there is a house with every window lit, the way a house is lit when someone is waiting up. You have nowhere else to be.",
 
       "As you approach the mansion's ornate entrance, the massive doors swing open of their own accord. In the doorway stands a tall, gaunt butler with an unnaturally rigid posture.",
 
-      '"We have been expecting you, {{sir|madam|guest}}," he says in a crisp, proper English accent. His eyes never blinking as he studies you with cold precision. "Do come in. One mustn\'t linger on the threshold. It is most dreadfully improper."',
+      '"We have been expecting you, {{sir|madam|guest}}," he says in a crisp, proper English accent. His eyes do not blink as he studies you. "Do come in. One mustn\'t linger on the threshold. It is most dreadfully improper."',
     ],
     characterImage: "/images/butler.webp",
     characterName: "Butler",
@@ -29,7 +29,7 @@ export const transitions: Transition[] = [
   {
     title: "Beyond the Mansion's Walls",
     paragraphs: [
-      '"..."',
+      "The butler opens his mouth. For a moment, nothing comes out.",
 
       '"MORS ET VITA IN MANIBUS AURIGAE TEMERARII!" The shriek tears loose like something that has been trapped in him for years.',
 
@@ -45,7 +45,7 @@ export const transitions: Transition[] = [
 
       "You race through the mansion's twisting corridors, dodging falling debris. Bursting through the garden doors, you run until the sounds of destruction fade behind you.",
 
-      "The path leads you deep into a dense, mist-shrouded forest unlike any you've seen before. Strange lights flicker between the trunks, and whispers seem to follow your every step.",
+      "The path gives up after a mile. The forest does not. Between the trunks, small lights keep pace with you, and stop when you stop.",
 
       "Just as you begin to fear you're hopelessly lost, you stumble upon a small clearing. In its center sits a colorful wagon, smoke curling from its chimney. An elderly woman emerges from within.",
 
@@ -79,9 +79,9 @@ export const transitions: Transition[] = [
     paragraphs: [
       "The fortune teller's eyes widen as you solve her final riddle. The cards in her hand flutter to the table, arranging themselves in a perfect circle.",
 
-      '"I see your past," she whispers, her voice like dry leaves rustling in a Transylvanian wind. "A good soul you were, kind heart beating strong. But then, darkness came! Metal screaming against metal. Glass shattering like the ice of frozen river. Blood on your hands that wasn\'t yours alone."',
+      '"I see your past," she says, and for once she does not joke. "A good soul you were, kind heart beating strong. But then, darkness came! Metal screaming against metal. Glass shattering like the ice of frozen river."',
 
-      "You feel a chill despite the warmth of her wagon. Fragments of memory flash through your mind—headlights in rain, the screech of brakes, a bottle rolling on the floor.",
+      "Headlights in rain. The screech of brakes. The memory goes as fast as it came, and you decide not to chase it.",
 
       'She grabs your hand suddenly, her rings cold against your skin. "Your future, nobody wrote it yet," she continues, her gnarled fingers tracing the lines on your palm. "Not even me, and I tried. The path you walk now, it judges you. The spirits, they test you, yes? Very strict teachers."',
 
@@ -106,26 +106,26 @@ export const transitions: Transition[] = [
     paragraphs: [
       'The sphinx\'s stone face cracks into what might be a smile as you solve her final riddle. "The mortal possesses wisdom," she rumbles, her voice ancient as the desert itself. "But does the mortal possess understanding?"',
 
-      'Her massive paws shift in the sand, eyes boring into yours like twin suns. "Thou art being judged," she intones. "For actions taken in the realm of the living, for choices made when clothed in flesh. For lives altered by thy hand."',
+      'Her massive paws shift in the sand. She does not blink. "Thou art being judged," she intones. "For actions taken in the realm of the living, for choices made when clothed in flesh. For lives altered by thy hand."',
 
       '"I..." you begin, but the sphinx cuts you off with a raised paw.',
 
-      '"This one is not thy judge," she says. "Merely a waypoint on thy journey through the eternal scales. But know this truth: what awaits thee next is the final arbiter of thy fate. Answer with truth in thy heart, face what thou hast done, and perhaps thy ka may yet find peace in the afterlife."',
+      '"I am not thy judge," she says. "Merely a waypoint on thy road to the eternal scales. But know this truth: what awaits thee next is the final arbiter of thy fate. Answer with truth in thy heart, face what thou hast done, and perhaps thy ka may yet find peace in the afterlife."',
 
-      "The ground beneath you begins to shift, not like the gentle movement of sand, but a deliberate parting. The sand gives way completely, and you find yourself falling through darkness. The air grows hotter around you, yet you feel no fear—only a strange sense of inevitability.",
+      "The ground beneath you begins to shift, not like the gentle movement of sand, but a deliberate parting. The sand gives way completely, and you find yourself falling through darkness. The air grows hotter. You notice you are not afraid, and wonder when that stopped.",
 
       "Your descent slows, and you land gently on a surface of smooth, warm stone. All around you, flames cast dancing shadows on cavern walls.",
 
-      "A figure approaches through the flames, tall and imposing. Neither fully human nor entirely other, he carries himself with the confidence of one who has ruled for eternity.",
+      "Someone walks out of the flames toward you. He is tall, and handsome in a way that looks rehearsed.",
 
-      '"Well, well, well!" he says with a theatrical flourish, his voice melodious and charming. "Look what the sphinx dragged in! Welcome to my humble abode, {{my good man|my dear lady|traveler}}." His smile is dazzling, perfect white teeth against red skin. "I\'ve been watching your progress with great interest. Not many make it this far, you know."',
+      '"Well, well, well!" he says. "Look what the sphinx dragged in! Welcome to my humble abode, {{my good man|my dear lady|traveler}}." His teeth are very white against his red skin. "I\'ve been watching your progress with great interest. Not many make it this far, you know."',
 
-      'He circles you, appraising. "I am the final test on your journey. Pass my little challenges, and your soul may yet escape my... hospitality. Fail, and well..." He gestures to the flames, his smile never faltering. "Let\'s just say you\'ll have plenty of time to practice your puzzle-solving skills. For eternity."',
+      'He circles you, appraising. "I am the final test. Pass my little challenges, and your soul may yet escape my hospitality. Fail," he gestures to the flames, "and you\'ll have plenty of time to practice your puzzle-solving. For ETERNITY."',
     ],
     characterImage: "/images/devil.webp",
     characterName: "The Devil",
     backgroundImage: "/images/hell-transition.png",
-    nextLocation: "the Afterlife",
+    nextLocation: "Hell",
     bgClass: "bg-red-950/90",
   },
 ]

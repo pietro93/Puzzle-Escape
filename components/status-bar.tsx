@@ -31,7 +31,7 @@ export default function StatusBar({ level, lives, coins, setting }: StatusBarPro
       case "desert":
         return "Desert"
       case "hell":
-        return "Underworld"
+        return "Hell"
       default:
         return "Chapter"
     }

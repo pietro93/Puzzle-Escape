@@ -141,7 +141,6 @@ export default function SplashScreen({
                   <li>Read each riddle carefully</li>
                   <li>Use hints if you get stuck</li>
                   <li>Type your answer and swipe to submit</li>
-                  <li>For testing, use the secret key: TIENGVIET</li>
                 </ul>
               </div>
 

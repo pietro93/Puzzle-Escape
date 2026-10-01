@@ -113,8 +113,8 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 
 ### 🔮 Gypsy Teller (Zone 3)
 - **Role:** Caravan wagon reader.
-- **Traits:** Believes in *duende* (fate) and *drabardi* (destiny path). Strongly skeptical of technology and modern "noisy metal". Hyper-caffeinated but hates drinking coffee (gives her stomach upsets).
-- **Communication Voice:** Speaks in broken English with a Romanian accent. Infuses Romani terms (`duende`, `drabardi`, `ghicitul`). Direct, blunt, and superstitious.
+- **Traits:** Believes in *baht* (luck, fate) and fears *bibaht* (bad luck). She calls herself a *drabarni* (fortune teller). Strongly skeptical of technology and modern "noisy metal". Hyper-caffeinated but hates drinking coffee (gives her stomach upsets).
+- **Communication Voice:** Speaks in broken English with a Romani accent. Drops in Balkan Romani words (`baht`, `Devla`, `bre`). Direct, blunt, and superstitious.
 - **Key Phrase:** *"The road to hell is paved with good intentions. But shortcuts, they lead to blisters!"*
 
 #### Gypsy voice spec
@@ -122,18 +122,18 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 - Topic first, then a pronoun: "The spirits, they test you."
 - Drops articles: "Draw card." "Put pieces back."
 - "Is" for "it is", no contractions: "Is fine."
-- Tag questions: "yes?", "~da~?"
+- Tag questions: "yes?", "~va~?"
 - Wrong intensifiers: "very worse", "too much good".
 - Complete thoughts. The "X. Like Y. Or Z." simile chain is banned: it made her sound like generic AI mysticism.
 
 **Her five moves (every line should use at least one):**
 | Move | Example |
 |---|---|
-| Superstition as an action (real Romanian folk beliefs) | "Don't point at stars with finger! ~Ptiu, ptiu.~ Now you wait for wart." |
+| Superstition as an action (real Romani folk beliefs) | "Don't point at stars with finger! ~Ptiu, ptiu.~ Now you wait for wart." |
 | Blunt, then moves on | "Everybody lies to Gypsy. Is fine. I charge extra." |
 | Self-deprecating | "Once I predict my husband live to hundred. Next week he fall in well. Nobody is perfect." |
 | Hyper-caffeinated without coffee (jumps topic mid-line) | "Your left hand, it itches? Money coming. Or rash. At my age is fifty-fifty. Anyway, draw." |
-| Foreshadowing disguised as a joke | "Why you sit like you still wear seatbelt? Relax, ~dragă~." |
+| Foreshadowing disguised as a joke | "Why you sit like you still wear seatbelt? Relax, ~bre~." |
 
 **Budgets per zone:** one crystal innuendo, two anti-technology jabs.
 
@@ -143,7 +143,22 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 
 **Family:** the two husbands are the only relatives with jokes built around him. Her grandmother appears in a few lines (soup, stars, mosaic plates). Don't invent new relatives as punchlines.
 
-**Foreign words:** Romanian/Romani words stay untranslated (no bracketed glosses) and are wrapped in `~tildes~` so they render italic amber (see §1c). Stock: ~Doamne~, ~vai de mine~, ~dragă~, ~haide~, ~gata~, ~poate~, ~ptiu~, ~duende~, ~drabardi~, ~ghicitul~.
+**Foreign words:** Balkan Romani only, one dialect, written without diacritics so the pixel font renders it and English players can read it. Never Romanian: she is Romani, not Romanian. Words stay untranslated (no bracketed glosses) and are wrapped in `~tildes~` so they render italic amber (see §1c). Context must carry the meaning.
+
+| Word | Meaning | Use |
+|---|---|---|
+| ~Devla~ / ~Devla, Devla~ | God! / oh God | exasperation, dismay |
+| ~bre~ | hey, you (Balkan, gender-neutral) | her default way to address the player; max one per line |
+| ~va~ | yes | tag question: "~va~?" |
+| ~baht~ / ~bibaht~ | luck, fate / bad luck | fate, destiny, omens |
+| ~drabarni~ | fortune teller (woman) | what she calls herself |
+| ~shaj~ | maybe, can | "~Shaj~." as a one-word answer |
+| ~dosta~ | enough, done | closing a reading |
+| ~haide~ | come on | hurrying the player |
+| ~mashala~ | well done, bless | grudging praise |
+| ~ptu, ptu~ | spitting against the evil eye | after a bad omen |
+| ~sarma~ | stuffed cabbage | food jokes |
+
 
 **Instruction lines** (the ones that explain a puzzle) keep every piece of puzzle information and only take her grammar, not her jokes.
 
@@ -196,8 +211,24 @@ Four suspects in the Whodunit (`data/puzzles-1.ts`, `inmateData`). Only Lyra tel
 ### The Player (Main Character)
 The player begins the game in absolute amnesia, waking in a medieval-looking prison cell. Over the course of the 50 levels, they are unaware that they are already dead. In life, they were a virtuous person: kind, generous, and loved. However, on their final night, they made a catastrophic error—mixing alcohol with prescription antidepressants and making the selfish decision to drive home. 
 
+#### Player voice
+The player never narrates themselves, but narration, dialogue options and reactions all describe the same person: **friendly to a fault, squeamish, polite to monsters, never heroic, never aware they are dead until the game says so.** They assume everyone can be won over ("I am not leaving until you accept my unconditional love and friendship"). The comedy and the tragedy come from the same trait.
+- Narration gives them reactions, not just sensations. "You decide standing is safer." beats "You feel a chill."
+- Dialogue options sound like a person, not a database query: "Sorry, which poet?" not "Tell me about this poet."
+
 ### The Accident
 While driving under the influence on a rain-slicked road, the player crashed head-on. The crash killed the player instantly, but also extinguished the life of an innocent pedestrian who was in the wrong place at the wrong time. The player's journey through the Prison, Mansion, Forest, and Desert is a purgatorial trial evaluating their soul's capacity for recognition, logic, memory reconstruction, and ultimate judgment.
+
+### Reveal schedule
+Each zone gives away one more piece and holds the rest. Every mid-zone memory beat (intro scenes for Levels 5, 15, 25, 35, 45) follows this table.
+
+| Zone | The player learns | Hold back |
+|---|---|---|
+| Prison | I did something. | Everything else. |
+| Mansion | I was driving. I am dead. | Drink, pills, the victim. |
+| Forest | I had been drinking. Something broke all at once. | The second person. |
+| Desert | Someone else's life was in it. | Who. |
+| Hell | Who it was, and what I think I deserve. | |
 
 ---
 
@@ -212,16 +243,16 @@ The player is forced to select one of three choices, which branches the story in
 - **Narrative Resolution:** The player demands strict, unyielding punishment for the crime.
 - **The Twist:** The Devil reveals the soul is the player's own. By declaring that the driver belongs in Hell, the player seals their own fate.
 - **Ending Detail:** The Devil's civilized mask tears away. He drags the player down into a personal hell where they are forced to experience the fatal car crash on an infinite loop, accompanied by a lifetime of impossible, unsolvable puzzles.
-- **Devil's Response:** *"By your own judgment, you belong to MINE. We have all of ETERNITY to explore... We are going to have so much FUN together."*
+- **Devil's Response:** *"By your own judgment, you belong to ME."* He plays the "anonymous soul" as an obvious game: *"The soul I described was yours. Do try to look surprised."*
 
 ### 🔵 Choice B: "Heaven" (The Limbo/Ignominy Ending)
 - **Narrative Resolution:** The player requests easy forgiveness and entry into paradise.
-- **The Twist:** The Devil mocks the player's self-serving narcissism, stating they cannot simply wash away a stolen life with previous good deeds. 
+- **The Twist:** The Devil is delighted, not angry. A soul letting itself off is the best thing that has happened to him all day. He points out that forgiveness is easy to hand out when it is not yours to give, and that nobody asked the pedestrian.
 - **Ending Detail:** The Devil refuses to let them enter Heaven, but denies them the release of Hell's finality. Instead, he drops them into an endless, gray void of Limbo, left alone with their memories and guilt. Alternatively, they may be reincarnated as a dung beetle or a confused puppy destined to chase its tail in loops.
-- **Devil's Response:** *"SUCH NARCISSISM. You believe you deserve paradise after what you have done? You shall drift in the void between worlds, alone with your memories and guilt for eternity."*
+- **Devil's Response:** *"Oh, I was HOPING you would say that. Forgiveness is the easiest thing in the world to hand out when it is not yours to give."*
 
 ### 🟢 Choice C: "Neither" (The True Reincarnation Ending)
 - **Narrative Resolution:** The player rejects both self-indulgent paradise and eternal damnation, choosing a path of active atonement and recognition of their guilt.
 - **The Twist:** The Devil is surprised and genuinely impressed by the player's wisdom and self-awareness.
 - **Ending Detail:** The Devil grants the player a second chance at life. They are sent through a shimmering veil to be reborn as a human (a teacher, doctor, or gardener) to heal the world and balance their past crime. The Devil hints that in this new life, their path may cross again with the soul of the pedestrian they killed—not as victim and driver, but as friends, healers, or guides.
-- **Devil's Response:** *"Your judgment of yourself shows wisdom... The universe rarely offers second chances. Do not waste this one. Until we meet again."*
+- **Devil's Response:** *"The universe rarely offers second chances. Do not waste this one. I shall be waiting."* (He says goodbye once. Not three times.)

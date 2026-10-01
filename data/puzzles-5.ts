@@ -6,7 +6,7 @@ export const puzzlesSet5: Puzzle[] = [
   // Level 41 - Fire Map Puzzle
   {
     level: 41,
-    question: "The Devil presents you with a mysterious map.",
+    question: "The Map",
     description: "",
     hints: [
       "Each pin marks a location in Central Asia.",
@@ -21,7 +21,7 @@ export const puzzlesSet5: Puzzle[] = [
   // Level 42 - Infernal Chess Puzzle
   {
     level: 42,
-    question: "The Devil challenges you to a game of infernal chess.",
+    question: "Four Horsemen",
     description: "",
     imageUrl: "",
     solution: "arena of anointed",
@@ -31,12 +31,12 @@ export const puzzlesSet5: Puzzle[] = [
       "Move each horseman one after another in a circular motion - clockwise or anticlockwise.",
       "Try to keep all horsemen in the central nine tiles of the board as they move in circles.",
       "You should be able to place each horseman on its respective tile in 20 moves.",
-      "Pay attention to the order in which the apocalypse unfolds - which horsemen moves first, and which last?",
+      "Pay attention to the order in which the apocalypse unfolds - which horseman moves first, and which last?",
     ],
   },
   {
   level: 43,
-  question: "The Devil presents you with five mysterious chests. You can hear screaming inside.",
+  question: "Five Chests",
   description: "", 
   imageUrl: "",
   solution: "23",
@@ -52,7 +52,7 @@ export const puzzlesSet5: Puzzle[] = [
   // Remaining levels unchanged
   {
     level: 44,
-    question: "The Devil presents you with fragments of a haunting scene.",
+    question: "A Haunting Scene",
     description: "Reassemble the pieces to reveal the name of this infernal transportation.",
     imageUrl: "",
     isHellJigsawPuzzle: true,
@@ -67,7 +67,7 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 45,
-    question: "The Devil brings back some familiar faces from your journey.",
+    question: "Familiar Faces",
     description: "One of these familiar faces knows the identity of a lost soul you must name.",
     imageUrl: "",
     isFamiliarFacesPuzzle: true, // This will use our new component
@@ -81,7 +81,7 @@ export const puzzlesSet5: Puzzle[] = [
   },
   {
     level: 46,
-    question: "The Devil invites you to try your luck at his infernal casino.",
+    question: "The Casino",
     description: "",
     imageUrl: "",
     isInfernalCasinoPuzzle: true,
@@ -96,39 +96,39 @@ export const puzzlesSet5: Puzzle[] = [
   {
     level: 47,
     question:
-      "The Devil gestures towards an infernal machine: dozens of switches connected to what appears to be a human brain... still attached to its head. The owner seems to be in pain.",
+      "The Machine",
     description: "",
     imageUrl: "",
     solution: "eureka",
     category: "logic",
     hints: [
       "The numbers next to each row of switches show how many switches need to be flipped up.",
-      "Pay attention to the flickering of the light. When you find the correct combination for one set of switches, the lightbulb become slightly brighter.",
+      "Pay attention to the flickering of the light. When you find the correct combination for one set of switches, the lightbulb becomes slightly brighter.",
       "Once you find all six combinations, pay attention to what's in front of you. Perhaps the solution is hidden somewhere.",
-      "The switches seem to be a combinations of 0s and 1s. Perhaps the solution is encoded in binary",
+      "The switches seem to be a combination of 0s and 1s. Perhaps the solution is encoded in binary.",
     ],
     isBinarySwitchPuzzle: true,
   },
   {
     level: 48,
-    question: "The Mouth of Truth Reveals All",
+    question: "The Mouth of Truth",
     description:
-      "The ancient Mouth of Truth is said to bite the hand of those who lie. Place the correct marbles in the right positions to reveal its secret.",
+      "Place the correct marbles in the right positions to reveal its secret.",
     imageUrl: "",
     locationImage: "/images/hell-bg.webp",
     isMouthOfTruthPuzzle: true,
     solution: "chaplain",
     hints: [
-      "Each marble represents a different sin.",
-      "The position of each marble matters.",
-      "The Mouth of Truth will only speak when the correct combination is found.",
-      "Look for patterns in the symbols on each marble.",
+      "Fill all four corners with marbles, then put your hand in the Mouth. The cherubs below react to your guess.",
+      "The cherubs judge the whole guess, not one corner each, and they are shuffled. Count how many show each reaction: right color in the right corner, right color in the wrong corner, or nothing.",
+      "Once the Mouth speaks, every marble has a cherub of the same color. Each pair holds two letters.",
+      "Each cherub shows on which side of its marble its letter belongs. Read the pairs in the order the marbles appear.",
     ],
     category: "pattern",
   },
   {
     level: 49,
-    question: "The Devil challenges you to face death, in a sort of murder mystery game.",
+    question: "A Death by the Road",
     description: "",
     imageUrl: "",
     solution: "yara-ma-yha-who",
@@ -136,15 +136,15 @@ export const puzzlesSet5: Puzzle[] = [
     isMurderMysteryPuzzle: true,
     component: MurderMysteryPuzzle,
     hints: [
-      "Visit all locations to gather clues about the murder.",
-      "Pay special attention to the books in the library.",
-      "The killer's name is related to a poisonous plant.",
-      "Look for connections between the toxicology report and botanical knowledge.",
+      "The autopsy rules out poison. Look at what it does find: almost no blood left, and strange marks on the arms and legs.",
+      "Compare the victim's ID with the autopsy report. He was 180 cm when he was alive.",
+      "Look closely at the tree at the crime scene, then find it in the botany book. Where does it grow?",
+      "The demonology book hides every creature's name. Find the one that drains blood, waits in that tree and makes its victims shorter, then work out its name.",
     ],
   },
   {
     level: 50,
-    question: "The Devil presents you with a final challenge.",
+    question: "The Last Floor",
     description: "",
     imageUrl: "",
     solution:

@@ -1,7 +1,7 @@
 import { Fragment, type ReactNode } from "react"
 
 // Inline markup for character dialogue:
-//   ~word~   foreign word (italic, amber), e.g. the Gypsy's Romanian
+//   ~word~   foreign word (italic, amber), e.g. the Gypsy's Romani
 //   *word*   stage direction / sound (italic), e.g. *Heh*
 //   **word** emphasis (bold)
 // An unclosed marker styles the rest of the string, so typewriter effects can

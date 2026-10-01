@@ -5,7 +5,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 11,
     question:
-      "The butler presents you with a peculiar puzzle box. 'This belonged to the master's collection of culinary curiosities,' he explains with a slight bow.",
+      "A Culinary Curiosity",
     description: "Assemble the pieces to reveal the hidden message.",
     imageUrl: "",
     isJigsawPuzzle: true,
@@ -19,7 +19,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 12,
-    question: "The butler shows some of the master's favourite readings.",
+    question: "The Master's Shelf",
     description: "The master's library has fallen into disarray. It once told a story, in order.",
     solution: "TEARDROP|TEAR DROP",
     category: "pattern",
@@ -33,7 +33,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 13,
-    question: "I am looking for a spice. Must be somewhere around here.",
+    question: "The Missing Spice",
     description: "",
     imageUrl: "",
     isAnagramSpicePuzzle: true,
@@ -42,13 +42,13 @@ export const puzzlesSet2: Puzzle[] = [
     hints: [
       "Drag spice jars onto the plate, two at a time. The hands react to what you place.",
       "A still hand means neither spice belongs in the solution. A turning hand means one of them does. Pair an untested jar with one you already know is a dud to isolate the result.",
-      "Once you've confirmed which word a jar belongs to, rest it on that word's pedestal to keep track — the order on the pedestal doesn't matter, only the letters.",
+      "Once you've confirmed which word a jar belongs to, rest it on that word's pedestal to keep track. The order on the pedestal doesn't matter, only the letters.",
       "The answer is formed by two words: the name of the spice and its shape.",
     ],
   },
   {
     level: 14,
-    question: "The butler presents you with an ornate clock.",
+    question: "The Family Clock",
     description: "",
     imageUrl: "",
     isMansionClockPuzzle: true,
@@ -63,7 +63,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 15,
-    question: "",
+    question: "The Painter's Palette",
     description: "",
     imageUrl: "",
     locationImage: "/images/color-palette/color_palette.webp",
@@ -82,7 +82,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 16,
-    question: "The butler presents you with a mathematical puzzle involving the mansion's silverware.",
+    question: "The Silverware",
     description: "Can you determine the value of knife + fork + spoon?",
     imageUrl: "/images/puzzle18.webp",
     solution: "135",
@@ -91,13 +91,13 @@ export const puzzlesSet2: Puzzle[] = [
       "You can simplify the first equation by dividing everything by 4.",
       "You can combine the first, second and fourth equation to find the value of the spoon.",
       "By combining the equations you can find that 9 spoons = 90.",
-      "If one spoon equals 10, then you can easily find the value of the fork by solving the first equation, fork = 15 + 10",
+      "If one spoon equals 10, then you can easily find the value of the fork by solving the first equation, fork = 15 + 10 = 25.",
       "Knowing that spoon is 10 and fork is 25, you can solve the third equation to find that the knife is equal to 500 - 400 = 100.",
     ],
   },
   {
     level: 17,
-    question: "",
+    question: "Lights Out",
     description: "It's pitch dark.",
     imageUrl: "",
     isLightSwitchPuzzle: true,
@@ -112,7 +112,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 18,
-    question: "Count Papagalul awaits.",
+    question: "Count Papagalul",
     description: "",
     imageUrl: "",
     isParrotPuzzle: true,
@@ -127,7 +127,7 @@ export const puzzlesSet2: Puzzle[] = [
   {
     level: 19,
     question:
-      "Find the name of the heir.",
+      "The House of Morvane",
     description: "Discover the identity of a forgotten heir who ruled with a brief yet infamous reign.",
     imageUrl: "",
     isLibraryPuzzle: true,
@@ -194,7 +194,7 @@ export const puzzlesSet2: Puzzle[] = [
   },
   {
     level: 20,
-    question: "The butler leads you into a wing of the mansion lined with the master's art.",
+    question: "The Gallery",
     description: "",
     isMansionMapPuzzle: true,
     solution: "mors et vita in manibus aurigae temerarii|mors et vita in manibus aurigae temerarii.",

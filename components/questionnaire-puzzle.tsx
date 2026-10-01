@@ -54,7 +54,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
             "Twins! Two faces. I talk to one, the other one doesn't listen. Like my first husband. Now he listens. He has no choice.",
           CANCER:
             "Crab. You carry your house on your back and pinch anybody who comes close. I like you. A little.",
-          LEO: "Lion! Big hair, big voice. But even kings must kneel sometimes, ~dragă~. Usually to tax man.",
+          LEO: "Lion! Big hair, big voice. But even kings must kneel sometimes, ~bre~. Usually to tax man.",
           VIRGO:
             "Virgo. Already you see three things wrong in my wagon. Say nothing. I know.",
           LIBRA: "Balance, balance. But your scales, they wobble. I see from here.",
@@ -72,7 +72,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
         question: "Good. Now tell me, what you want most in this life?",
         options: ["LOVE", "FORTUNE", "SUCCESS", "PEACE", "HAPPINESS", "FREEDOM"],
         comments: {
-          LOVE: "Love! Everybody wants. Nobody reads the small print. ~Vai de mine~.",
+          LOVE: "Love! Everybody wants. Nobody reads the small print. ~Devla~.",
           FORTUNE: "Money. Honest answer! Most people lie and say love. Money keeps you warm at night. Not very warm, but warm.",
           SUCCESS: "Success is a horizon. Always visible, never reached. Keep walking anyway, legs need exercise.",
           PEACE:
@@ -89,7 +89,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
           LUST: "Lust! Ha! At least you are honest. The spirits, they blush. I don't.",
           GLUTTONY: "Gluttony. Good! Skinny people, I don't trust. They are hiding something. Usually food.",
           PRIDE: "Pride. It makes you stand tall. Also you walk into doors, because you never look down.",
-          WRATH: "Anger. It burns the one who holds it first. Put it down, ~dragă~. Is hot.",
+          WRATH: "Anger. It burns the one who holds it first. Put it down. Is hot.",
           SLOTH: "Sloth. You don't want to move. Is fine. Sometimes the road moves for you. Not always in good direction.",
           GREED:
             "Greed. You hold too tight, like water in fist. Everything drips out, and you have wet hand.",
@@ -100,7 +100,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
         options: ["DEATH", "AGING", "BEING ALONE", "CAPITALISM"],
         comments: {
           DEATH:
-            "Death. Everybody fears it. Is only a door, ~dragă~. What scares you is who waits on other side.",
+            "Death. Everybody fears it. Is only a door, ~bre~. What scares you is who waits on other side.",
           AGING:
             "Old age. Look at me. Is not so bad. Only knees and memory and teeth. Otherwise perfect.",
           "BEING ALONE":
@@ -156,7 +156,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
       setReadingComplete(false)
       setIsProcessingAnswer(false)
       setGypsyComment(
-        "Welcome, seeker. The cards have been whispering your name. Before I read your fortune, I must understand your essence. Answer truthfully, for the cards see through all deception.",
+        "Sit, sit. Before I read you, I must know what you are made of. Five questions. Answer true. Cards see through lies, and I charge extra for them.",
       )
 
       // Send the solution back to the parent component
@@ -228,7 +228,7 @@ const QuestionnairePuzzle = forwardRef<{ initializePuzzle: () => void }, Questio
           setReadingComplete(true)
           onSolve()
           setGypsyComment(
-            "I have seen enough. The spirits have revealed much about you. Now, what vision comes to your mind? What do you see in the mists between us?",
+            "~Dosta~. I have seen enough. Now you look. Letters are there, some still hiding. What words you see, ~bre~?",
           )
           setIsProcessingAnswer(false) // Reset processing flag
         }

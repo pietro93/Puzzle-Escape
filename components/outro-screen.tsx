@@ -6,109 +6,95 @@ import { Sparkles, Home, RotateCcw, Volume2, VolumeX } from "lucide-react"
 
 // Extracted story text constants
 const DEVIL_INTRO = [
-  "As you solve the Devil's final riddle, a profound silence falls over the hellish landscape. The flames around you dim to embers, casting long, dancing shadows across the obsidian floor.",
+  "The last riddle gives. The flames around you sink to embers, as if someone turned them down to hear you better.",
 
-  '"Bravo. BRAVO!" The Devil\'s voice booms as he slow-claps with theatrical flair, his perfect teeth gleaming in a smile that never quite reaches his eyes. "Few souls make it this far and match wits with me."',
+  "\"Bravo. BRAVO!\" The Devil slow-claps, and keeps clapping slightly longer than is polite. \"Few souls make it this far and match wits with me.\"",
 
-  "He circles you like a predator, his form shifting between human and something ancient and wrong, with too many angles to look at, too many teeth that grin menaciously at you.",
+  "He circles you. From one side he is a handsome man. From the other he has too many angles and too many teeth. You decide to keep looking at the handsome side.",
 
-  '"I find myself with an intriguing moral dilemma," he purrs, conjuring an ornate throne from the darkness and lounging upon it. "Perhaps a clever soul like yourself could offer insight."',
+  "A throne assembles itself out of the dark, and he sits without checking that it is there. \"I find myself with a little moral dilemma. Perhaps a clever soul like yourself could offer insight.\"",
 
-  'The Devil leans forward, his eyes now glowing like hot coals. "I have a particular soul in my ledger. A fascinating case study in human fallibility. This person lived virtuously. Kind to strangers. Generous to charities. Loved by friends and family."',
+  "\"I have a particular soul in my ledger. A hypothetical. Purely.\" He lets that sit. \"This person lived virtuously. Kind to strangers. Generous to charities. Loved by friends and family.\"",
 
-  'His voice drops to a whisper that somehow fills the entire chamber. "One fateful night brought catastrophic error. They mixed alcohol with prescription antidepressants and decided to drive home."',
+  "\"One night, they mixed alcohol with their prescription antidepressants and decided to drive home.\"",
 
-  "With a snap of his long fingers, the air before you tears open like a wound. Through the rift, you see images playing out in terrible clarity: rain-slicked roads, headlights blurring through a windshield, empty bottles rolling on a car floor, a driver's unfocused eyes.",
+  "He snaps his fingers and the air in front of you tears open. Through it: rain on a windshield, headlights smearing, a bottle rolling under a seat, a driver whose eyes are not quite on the road.",
 
-  '"The inevitable occurred," the Devil continues, his voice now soft with mock sympathy. "A crash. Metal screaming against metal. Glass shattering like frozen stars. Two lives were extinguished. The driver\'s and an innocent pedestrian\'s who was simply in the wrong place at the wrong time."',
+  "\"A crash, naturally. Two lives ended. The driver's, and a pedestrian's, who had simply picked the wrong evening for a walk.\"",
 
-  "He dismisses the vision with a casual flick of his wrist, and the rift seals itself with a sound like tearing silk. The Devil's eyes bore into yours, unblinking and ancient.",
+  "The rift closes like a wound healing too fast. The Devil looks at you for a long moment. You find you cannot look away first.",
 
-  '"What is the just fate for such a soul? This soul lived virtuously yet caused death and destruction. One moment of selfishness erased a lifetime of goodness."',
+  "\"So. What is the just fate for such a soul? A whole life of goodness, and one evening of selfishness that cost someone else everything.\"",
 
-  "The Devil rises from his throne, which crumbles to ash behind him. He extends a hand toward you, palm up, fingers slightly curled as if beckoning.",
+  "The throne crumbles to ash as he stands. He holds out a hand to you, palm up.",
 
-  '"Should this soul burn in Hell for eternity for one terrible mistake?" His voice drops an octave, resonating through your bones. "Should they be forgiven and welcomed into Heaven despite the life they took?" His tone becomes mocking. "Or perhaps something else entirely?"',
+  "\"Should they burn in Hell for ETERNITY, for one terrible mistake? Should they be forgiven and welcomed into Heaven, despite the life they took? Or something else entirely?\"",
 
-  'The chamber grows darker, the flames dimming further until only the Devil\'s eyes glow in the darkness. "What say you, clever soul? Heaven, Hell, or Neither?"',
+  "The flames go out. Only his eyes are left. \"What say you, clever soul? Heaven, Hell, or Neither?\"",
 ]
 
 const HELL_ENDING = [
-  '"Hell!" The Devil\'s eyes flare with sudden, terrible delight! His smile stretches impossibly wide, revealing row upon row of needle-sharp teeth. "How deliciously severe of you. Such unwavering moral judgment."',
+  "\"Hell!\" His smile widens past the point where smiles should stop. \"How deliciously severe of you. Such unwavering moral judgment.\"",
 
-  "He stalks around you, his movements no longer human but predatory, joints bending at unnatural angles. The temperature in the chamber rises dramatically, the air becoming thick and difficult to breathe.",
+  "He walks around you, and his joints bend in places joints do not have. The air gets hot enough to taste.",
 
-  '"One mistake brings eternal damnation. Endless suffering is the price of weakness. How deliciously human."',
+  "\"One mistake, and eternal damnation. Endless suffering as the price of weakness. How very HUMAN of you.\"",
 
-  "The Devil stops abruptly before you, growing taller, his shadow stretching across the walls like spilled ink. His skin cracks in places, revealing molten fire beneath.",
+  "He stops in front of you, taller than he was. \"I could not agree more. How FORTUNATE that you have made your judgment so clear.\"",
 
-  '"I could not agree more," he growls, the ground trembling beneath your feet. "How FORTUNATE that you have made your judgment so clear."',
+  "He tears the air open again. This time, the driver is you.",
 
-  "With a violent gesture, he tears another rift in reality. But this time, the vision shows you behind the wheel of that car on that rainy night.",
+  "\"The soul I described was yours. Do try to look surprised.\"",
 
-  '"The soul I described was yours."',
+  "It comes back all at once. The drinks. The pills. The wet road. The moment you looked away. The impact. The screaming, then the quiet. Your death, and the one you caused.",
 
-  "The memories crash into you like a physical blow. The drinks. The pills. The rain-slicked roads. The momentary distraction. The horrific impact. The screams. The silence. Your death—and the death you caused.",
+  "\"By your own judgment, you belong to ME.\"",
 
-  "Horror floods through you as you realize the truth. This entire journey—the prison, the mansion, the forest, the desert, and finally this hellish domain—it was all a trial for your soul.",
+  "His hand closes around your wrist. It is no longer a hand. Where it touches you, your skin blackens and smokes.",
 
-  '"By your own judgment, you belong to ME."',
+  "\"I have so many puzzles prepared for you. Unsolvable ones. We have all of ETERNITY to get through them.\"",
 
-  "His hand, now a twisted claw of obsidian and flame, closes around your wrist with burning finality. The flesh where he touches you blackens and smokes.",
+  "The floor splits open beneath you. You fall, and his laughter falls with you.",
 
-  '"I have so many puzzles prepared for you. Unsolvable puzzles. Infinite riddles. Impossible locks. We have all of ETERNITY to explore them together."',
+  "\"Welcome home.\"",
 
-  "The ground beneath you splits open, revealing a chasm of writhing flames and distant screams. As you begin to fall, the Devil's laughter follows you down, down into the endless dark.",
+  "You fall past floors of fire and floors of ice. A gambler reaching for cards that turn to ash in his hand. A glutton at a feast that rots at the first bite. You do not look for long.",
 
-  '"Welcome home. We are going to have so much FUN together."',
+  "Your fall ends on a wet highway at night. Headlights. Impact. Then the road resets, dry for a moment, and the rain starts again.",
 
-  "You plummet through layers of fire and darkness, each level more terrifying than the last. The screams of the damned rise to meet you, and soon your own voice will be among them.",
+  "\"You chose this for a stranger,\" the Devil says, from everywhere at once. \"And now for yourself. I do love it when they save me the paperwork.\"",
 
-  "As you descend deeper, you catch glimpses of souls trapped in personal hells tailored to their specific sins. A gambler forever reaching for cards that turn to ash in his hands. A glutton surrounded by feasts that turn rancid at first bite.",
-
-  "Your fall slows as you approach your own personal hell. A twisted version of that rain-soaked highway stretches before you, the moment of impact playing on endless loop. Each time, you feel the full force of the crash, the guilt, the pain, only to be reset and forced to experience it again.",
-
-  "The Devil's voice surrounds you, no longer charming but raw with malevolent glee: \"You chose this fate for others and now for yourself. Poetic, is it not? I do so love when souls condemn themselves.\"",
-
-  "And so begins your eternity—trapped in the moment of your greatest failure, your greatest sin, with no hope of redemption or escape. Just as you judged, so have you been judged.",
-
-  "The Devil was right about one thing: there will be puzzles here. The puzzle of maintaining your sanity through endless torment. The puzzle of remembering who you were before this became your reality. And the cruelest puzzle of all, the knowledge that you could have chosen differently.",
+  "He was right about the puzzles. Keeping your mind. Remembering who you were before the road. And the worst one: knowing you could have answered differently.",
 ]
 
 const HEAVEN_ENDING = [
-  '"Heaven?" The Devil\'s eyebrows arch high on his forehead, his expression one of genuine surprise that quickly morphs into something darker. "How remarkably generous of you. Forgiveness regardless of consequence. How very convenient."',
+  "\"Heaven?\" The Devil sits up. For a moment he looks genuinely happy. \"Oh, I was HOPING you would say that.\"",
 
-  'He begins to pace, his movements becoming increasingly agitated, leaving scorched footprints on the stone floor. "So one should be judged by the entirety of their life, not by a single mistake? Even when that mistake STOLE an innocent life?"',
+  "\"Forgiveness is the easiest thing in the world to hand out when it is not yours to give. The pedestrian was not consulted, I notice. Nobody ever asks the pedestrian.\"",
 
-  'The Devil stops abruptly, his handsome face contorting with barely contained rage. "How DARE you presume to such magnanimity. Forgiveness that is not yours to give."',
+  "He tears the air open again. This time, the driver is you.",
 
-  "With a violent gesture, he tears open another rift in reality. But this time, the vision shows you behind the wheel of that car on that rainy night.",
+  "\"The soul I described was yours. Do try to look surprised.\"",
 
-  '"The soul I described was YOURS."',
+  "It comes back all at once. The drinks. The pills. Deciding you were fine to drive. The crash. The life you ended along with your own.",
 
-  "The memories flood back in a torrent of guilt and horror. The drinks. The pills. The fatal decision to drive. The crash. The life you ended along with your own.",
+  "\"And there it is. You let yourself off before you knew it was you. Most people at least wait until they are sure.\"",
 
-  "The Devil's form grows larger, more monstrous, his skin splitting to reveal something ancient and terrible beneath. His voice becomes a cacophony of screams and whispers.",
+  "\"I will not send you to Heaven, obviously. Not my department. But I will not give you Hell either. You would only find it fair.\"",
 
-  '"SUCH NARCISSISM. Such ENTITLEMENT. You believe you deserve paradise after what you have done? Your good life serves as no counterweight to the life you STOLE?"',
+  "\"Limbo, I think. Neither punished nor forgiven. You can drift there until you work out which one you deserve.\"",
 
-  'He looms over you, his shadow engulfing you completely. "You disgust me with your self-serving morality. Heaven? HEAVEN? You will not see Heaven for a thousand lifetimes."',
+  "\"Perhaps you will be reborn eventually. Something humbling. A dung beetle. Or, if you are lucky, a confused puppy chasing its own tail in circles, much like your reasoning.\"",
 
-  "The Devil's rage suddenly cools, replaced by something more calculated and cruel. \"I feel creative today. Your judgment traps my claim upon your soul. Instead, I shall ensure you remain in Limbo forever.\"",
+  "The ground under you turns to mist. \"Do try to make better choices,\" he calls after you. \"I mean that. It makes for better stories.\"",
 
-  'He leans in close, his breath like the heat from an open grave. "Neither Heaven nor Hell will claim you. You shall drift in the void between worlds, alone with your memories and guilt for eternity."',
+  "The mist takes you. The Devil's realm fades, and so does any sense of up or down. You are nowhere in particular, in a gray of your own making.",
 
-  'A terrible smile spreads across his face. "Perhaps reincarnation awaits you. Something humbling. A dung beetle, perhaps. Or if you are fortunate, a cute but perpetually confused puppy, doomed to chase its tail in endless circles, much like your circular, self-serving logic."',
+  "You might drift for minutes or for centuries. Now and then you catch light from above and screaming from below. Neither gets any closer.",
 
-  'As the ground beneath you dissolves into mist, the Devil\'s mocking laughter follows you into the void. "Better luck next time. Do try to make better choices."',
+  "Your memories keep you company. The kind things you did come back first, and they look smaller every time. Then the face of the person whose life you ended.",
 
-  "The mist envelops you completely, and you feel yourself drifting, untethered from physical form. The Devil's realm fades away, but so does any sense of direction or purpose. You are nowhere and everywhere, suspended in a gray limbo of your own making.",
-
-  "You might have been floating for minutes or for centuries. Occasionally, you catch glimpses of both realms you've been denied: flashes of heavenly light from above, echoes of hellish screams from below. Both equally unreachable.",
-
-  "Your only companions are your memories and regrets. The life you lived plays before you in fragments—moments of kindness and generosity that now seem hollow against the weight of your final mistake. The face of the person whose life you ended haunts you, their unfinished story a constant accusation.",
-
-  "Sometimes, you feel yourself drawn toward a new beginning—the pull of reincarnation, the promise of another chance. But each time, at the threshold of rebirth, you hesitate, paralyzed by the fear of making the same mistakes again.",
+  "Sometimes something pulls at you: a new beginning, another chance. Each time, on the threshold, you stop. You are afraid of doing it again.",
 
   "Your purgatory has no fire and no cleansing. Only the same hesitation, forever. Neither punished nor forgiven. Just forgotten.",
 
@@ -116,35 +102,33 @@ const HEAVEN_ENDING = [
 ]
 
 const NEITHER_ENDING = [
-  '"Neither? A choice that rejects both Heaven and Hell. A nuanced answer. How unexpected."',
+  "\"Neither?\" The Devil tilts his head. \"Not Heaven, not Hell. A nuanced answer. How UNEXPECTED.\"",
 
-  'He circles you slowly, tapping one long finger against his chin. "Justice tempered with mercy. Punishment without eternal condemnation. Fascinating."',
+  "He circles you slowly, tapping one long finger against his chin. \"Justice with some mercy in it. Punishment that ends. Fascinating.\"",
 
-  'For the first time, the Devil\'s theatrical facade seems to slip, revealing something older and more contemplative beneath. "You have solved my riddle."',
+  "For the first time, the act slips. What looks out at you is older, and quieter. \"You have solved my riddle.\"",
 
-  "With a gesture more gentle than before, he opens another rift in reality. But this time, the vision shows you behind the wheel of that car on that rainy night.",
+  "He opens the air again, more gently this time. The driver is you.",
 
-  '"The soul I described was yours."',
+  "\"The soul I described was yours. I suspect you knew.\"",
 
   "The memories return, not in a crushing wave but in a steady flow of clarity. The depression. The medication. The alcohol that promised temporary relief. The fatal decision to drive. The crash. The life you took along with your own.",
 
-  '"Your journey served its purpose. You, insignificant human. Are you truly attached to this life?"',
+  "\"Your trial is over. So tell me honestly. After what the last one cost, do you still want a life?\"",
 
-  'He gestures, and a path of soft light appears, cutting through the darkness toward a distant horizon. "Heaven closes to you now. Hell rejects you as well. This is a wager. A bet that you can do better. Most souls fail that bet."',
+  "He gestures, and a path of soft light appears, cutting through the darkness toward a distant horizon. \"Heaven closes to you now. Hell rejects you as well. This is a wager. A bet that you can do better. Most souls fail that bet.\"",
 
-  'The Devil approaches you, extending his hand not to grab you but in a gesture almost like respect. "A new life awaits you. New challenges, new puzzles to solve. A chance to do better."',
+  "The Devil approaches you, extending his hand not to grab you but in a gesture almost like respect. \"A new life awaits you. New challenges, new puzzles to solve. A chance to do better.\"",
 
-  "As you step onto the path of light, the Devil's expression shifts to something unreadable—part amusement, part warning.",
+  "As you step onto the path of light, his face is hard to read. Part amusement, part warning.",
 
-  '"The universe rarely offers second chances. Do not waste this one. You will return to me. You always do. I shall be waiting."',
+  "\"The universe rarely offers second chances. Do not waste this one. I shall be waiting.\"",
 
-  "The path before you brightens, and as you walk forward, you feel the weight of your past life lifting. Not forgotten—never that—but no longer a chain binding you to eternal punishment.",
+  "The path brightens as you walk, and the weight of your past life lifts. Not forgotten. Never that. But no longer a chain.",
 
-  'Behind you, barely audible as the light grows stronger, you hear the Devil\'s final words: "Until we meet again. We will meet again."',
+  "The path ends at a shimmering veil. On the other side is a vast, misty expanse. Not the fire below, not the light above. Something in between.",
 
-  "The path leads you through a shimmering veil, and suddenly you're standing in a vast, misty expanse. It's neither the fiery depths of Hell nor the radiant heights of Heaven, but something in between—a realm of second chances.",
-
-  "Before you stretches a gallery of lives—countless possible futures, each a different path your soul might take. You see yourself as a teacher, guiding troubled youth away from the mistakes you made. You see yourself as a doctor, saving lives to balance the one you took. You see yourself as a simple gardener, finding redemption in nurturing life in all its forms.",
+  "Before you stretches a gallery of lives, each a different path your soul might take. You see yourself as a teacher, guiding troubled youth away from the mistakes you made. You see yourself as a doctor, saving lives to balance the one you took. You see yourself as a simple gardener, finding redemption in nurturing life in all its forms.",
 
   '"Choose," says a voice from the mist. It sounds like no one in particular.',
 
@@ -353,8 +337,8 @@ export default function OutroScreen({ onRestart, soundEnabled, toggleSound }: Ou
                   {ending === "hell"
                     ? "Your soul belongs to the Devil now..."
                     : ending === "heaven"
-                      ? "Your journey continues in a different form..."
-                      : "Your journey continues beyond this realm..."}
+                      ? "You are still drifting."
+                      : "Be kind to strangers."}
                 </p>
                 <button
                   onClick={onRestart}

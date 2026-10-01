@@ -44,7 +44,7 @@ export const policewomanDialogue: DialogueOption[] = [
             id: "crime-scene-items",
             text: "Did you find anything on the crime scene?",
             response:
-              "Ah yes, we got lucky. He left this box of donuts untouched. Managed to rescue it before it goes to waste",
+              "Ah yes, we got lucky. He left this box of donuts untouched. Managed to rescue it before it went to waste.",
             followUp: [
               {
                 id: "eating-donuts",
@@ -149,7 +149,7 @@ export const morticianDialogue: DialogueOption[] = [
   {
     id: "initial-greeting",
     text: "Start",
-    response: "Hmm? A visitor? How... unusual. What do you want?",
+    response: "Hmm? A visitor? How unusual. What do you want?",
     followUp: [
       {
         id: "who-are-you",
@@ -177,7 +177,7 @@ export const morticianDialogue: DialogueOption[] = [
               {
                 id: "anemia-question",
                 text: "Anemia?",
-                response: "Low blood levels. Caused organ failure. A rather... pale affair.",
+                response: "Low blood levels. Caused organ failure. A rather pale affair.",
                 followUp: [],
               },
               {

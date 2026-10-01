@@ -72,7 +72,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
     name: "Tarot Decoder",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tarot-decoder-ArWhfze9wYYvng3iPHW6CItDve6wQZ.webp",
     description:
-      "Ooh, my eyes, they go big. Last card is a key, ~dragă~. The spirits want you to work for it. I have faith in you. Little bit. Solve, then go.",
+      "Ooh, my eyes, they go big. Last card is a key, ~bre~. The spirits want you to work for it. I have faith in you. Little bit. Solve, then go.",
   }
 
   // Handle card click during the reading
@@ -232,7 +232,7 @@ export default function TarotPuzzle({ onSolve }: TarotPuzzleProps) {
 
           <div className="mt-4 text-center">
             <p className="text-purple-300 font-pixel text-sm">
-              "The cards have revealed your path. Now you must decipher their message to continue your journey."
+              "Cards said what they said. Now is your turn. Read them like I read you. Slowly, and with suspicion."
             </p>
           </div>
         </div>

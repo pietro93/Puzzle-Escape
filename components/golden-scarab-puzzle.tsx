@@ -76,7 +76,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
       name: "Land of Gold",
       image: "/images/golden-scarab/mansa-musa-mali-pedistal.webp",
       description:
-        "A majestic pedestal adorned with a golden lion, symbolizing wealth and power. The base is decorated with intricate patterns reminiscent of West African art.",
+        "A golden lion on a base carved with West African patterns. Whoever made it had gold to spare.",
       position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
@@ -84,7 +84,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
       name: "Great Desert",
       image: "/images/golden-scarab/mansa-musa-sahara-pedistal.webp",
       description:
-        "A pedestal depicting a caravan of camels crossing vast sand dunes. The hieroglyphs tell stories of treacherous journeys across the scorching sands.",
+        "A caravan of camels crossing the dunes. The carvings count the days of the crossing, and the travelers who did not finish it.",
       position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
@@ -92,7 +92,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
       name: "Land of Pharaohs",
       image: "/images/golden-scarab/mansa-musa-egypt-pedistal.webp",
       description:
-        "An ornate pedestal with lotus motifs and ancient symbols. The carvings speak of a civilization that revered the sacred beetle as a symbol of rebirth.",
+        "Lotus flowers around a carved beetle. In this land the scarab stood for rebirth, every single morning.",
       position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
@@ -100,7 +100,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
       name: "Holy Land",
       image: "/images/golden-scarab/mansa-musa-hejaz-pedistal.webp",
       description:
-        "A sacred black cube rests atop this pedestal. Golden inscriptions in an ancient script encircle its base, speaking of pilgrimages and devotion.",
+        "A black cube on a plain base. Golden script runs around it, all of it about pilgrims and the road it takes to reach them.",
       position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
     {
@@ -108,7 +108,7 @@ export default function GoldenScarabPuzzle({ onSolve }: { onSolve?: () => void }
       name: "River Kingdom",
       image: "/images/golden-scarab/mansa-musa-songhai-pedistal.webp",
       description:
-        "A pedestal featuring a trading vessel, symbolizing commerce along great waterways. The intricate patterns suggest a realm of merchants and scholars.",
+        "A trading boat on a carved river. Around it, merchants weigh goods and scholars weigh words.",
       position: { x: 0, y: 0 }, // Will be updated from pedestalPositions
     },
   ])

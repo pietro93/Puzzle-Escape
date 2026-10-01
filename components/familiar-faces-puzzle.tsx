@@ -78,7 +78,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
     },
     {
       id: "poet",
-      text: "Tell me about this poet",
+      text: "Sorry, which poet?",
       characterId: ["butler", "sphinx"],
       unlocked: false,
       unlockCondition: "poet-mention",
@@ -92,7 +92,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
     },
     {
       id: "city",
-      text: "What city is important?",
+      text: "Is there a city I should know about?",
       characterId: ["butler", "sphinx"],
       unlocked: false,
       unlockCondition: "city-mention",
@@ -248,7 +248,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         solution: [
         {
         gesture: "The skeleton's jaw clicks mockingly",
-        text: "Ha! Yer'll never figure it out. But I'll give ya a hint - yer lookin' for a famous Russian painter.",
+        text: "Hah-hah-hah. Ya'll never figure it out. But I'll give ya a hint - yer lookin' for a famous Russian painter.",
         },
         ],
         "lost-soul": [
@@ -266,7 +266,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         woman: [
         {
         gesture: "The skeleton laughs dryly",
-        text: "A woman? No, no, yer lookin' for a man! Why would ya even ask about a woman? Women don't create great art, everyone knows that.",
+        text: "A woman? Nah. Yer lookin' for a man. Big beard. Russian. Trust me.",
         },
         ],
         city: [
@@ -295,21 +295,13 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         ],
         hate: [
         {
-        gesture: "The skeleton's shoulders slump slightly",
-        text: "Cause yer tryin' too hard. Just give up already. Nobody gets out of here, ya know. I've been guardin' this place for centuries, and yer just another soul who thinks they're special.",
-        },
-        {
-        gesture: "The skeleton's bones rattle with what might be a sigh",
-        text: "Look, it's nothin' personal. It's just my job to keep souls trapped and miserable. And yer makin' my job harder than it needs to be.",
-        },
-        {
         gesture: "The skeleton leans in conspiratorially",
         text: "Fine, ya want the truth? I just enjoy messin' with people. Eternity gets borin'. Watchin' lost souls run in circles followin' bad advice is one of my few entertainments.",
         },
         ],
         "lying-guard": [
         {
-        gesture: "The skeleton shrugs, bones clickin' against each other",
+        gesture: "The skeleton shrugs, bones clicking against each other",
         text: "So what? They don't pay me enough for this.",
         },
         ],
@@ -329,7 +321,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         who: [
           {
             gesture: "The butler adjusts his bow tie with meticulous precision",
-            text: "Good day, {{sir|madam|guest}}. I think we have met before.",
+            text: "Good day, {{sir|madam|guest}}. We have met before, though I would not expect you to remember. Few guests do.",
           },
         ],
         why: [
@@ -341,55 +333,55 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         solution: [
           {
             gesture: "The butler stands with perfect posture",
-            text: "I'm afraid I cannot tell you the answer directly. Feel free to ask about anything else.",
+            text: "I would never presume to simply hand you the answer, {{sir|madam|guest}}. You might hurt yourself catching it.",
           },
         ],
         "lost-soul": [
           {
             gesture: "The butler's eyes betray a hint of knowledge",
-            text: "Ah, yes. If I may direct your attention to the library{{, sir|, madam|}}. There is a particular volume on Italian literature of the Middle Ages that might prove illuminating.",
+            text: "If I may{{, sir|, madam|}}, the Master's library holds a volume on Italian literature of the Middle Ages. It has pictures, should that help.",
           },
         ],
         storyteller: [
           {
             gesture: "The butler nods slightly",
-            text: "Indeed. The Master's library contains several first editions of this particular poet's work. A Florentine, exiled from his beloved city. His magnum opus describes a journey through the realms beyond.",
+            text: "The Master keeps several first editions of this poet. A Florentine, exiled from his own city, whose great work walks through the realms beyond. Do try not to bend the spines.",
           },
         ],
         poet: [
           {
             gesture: "The butler's tone is measured and precise",
-            text: "If you would consult the third volume on the eastern bookshelf{{, sir|, madam|}}, you would find that this poet was born in Florence circa 1265. His work revolutionized literature by using the vernacular rather than Latin.",
+            text: "I would not presume to name him, {{sir|madam|guest}}. Born in Florence around 1265, he wrote in the common tongue rather than Latin, and wrote his enemies into Hell by name. One admires the thoroughness.",
           },
         ],
         city: [
           {
             gesture: "The butler straightens his already impeccable posture",
-            text: "The birthplace of the Renaissance{{, sir|, madam|}}. A city of merchants and bankers that became a cradle of art and literature.",
+            text: "The birthplace of the Renaissance{{, sir|, madam|}}. A city of merchants and bankers that somehow produced poets. There is hope for everyone, it seems. Even you.",
           },
         ],
         italy: [
           {
             gesture: "The butler's voice carries a hint of admiration",
-            text: "Italy, yes. The Master's collection includes several maps of medieval Italian city-states. One particular city-state was a center of cultural and political significance in the 13th and 14th centuries.",
+            text: "Italy, yes. The Master collects maps of the medieval Italian city-states. One of them mattered a great deal in the thirteenth and fourteenth centuries. I could point to it, but I would hate to deprive you of the exercise.",
           },
         ],
         florence: [
           {
             gesture: "The butler's eyes gleam with appreciation",
-            text: "The archives indicate that our poet was born there but was exiled for political reasons. He never returned to his beloved city, though it haunted his writings until his death.",
+            text: "Our poet was born there, and exiled for politics. He never went back, though he never stopped writing about it. I understand the feeling. I have tried to leave this conversation twice.",
           },
         ],
         venice: [
           {
             gesture: "The butler raises an eyebrow ever so slightly",
-            text: "Venice? I believe there may be some confusion. The individual we seek has no particular connection to Venice. The historical records in the Master's library are quite clear on this matter.",
+            text: "Venice? I believe there has been some confusion. Our poet has no connection to Venice whatsoever. I can only imagine who told you otherwise.",
           },
         ],
         muse: [
           {
             gesture: "The butler's tone is educational",
-            text: "According to the Master's collection of literary criticism{{, sir|, madam|}}, this particular muse was a woman the poet saw only twice in his life. Yet she became the central figure in his work, representing divine love and guidance.",
+            text: "According to the Master's critics{{, sir|, madam|}}, this muse was a woman the poet saw only twice in his life. She became the heart of his work, his guide to divine love. Twice. Some of us give a lifetime of service without a single mention.",
           },
         ],
         count: [
@@ -401,43 +393,43 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         "guard-painter": [
           {
             gesture: "The butler's lips press into a thin line",
-            text: "A painter? No{{, sir|, madam|}}. The guard is... confused. Or deliberately misleading you. The Master's biographical dictionary clearly states that the individual we seek was a poet, not a painter.",
+            text: "A painter? No{{, sir|, madam|}}. The Master's biographical dictionary is quite clear that we seek a poet. The guard is either confused or lying. With him, one rarely has to choose.",
           },
         ],
         "guard-venice": [
           {
             gesture: "The butler sighs almost imperceptibly",
-            text: "I'm afraid the guard is incorrect. The lost soul we seek has no connection to Venice. I would advise caution when accepting the guard's... guidance.",
+            text: "I'm afraid the guard is mistaken. The lost soul has no connection to Venice. I would accept his guidance the way one accepts a cold. Briefly, and with regret.",
           },
         ],
         "guard-man": [
           {
             gesture: "The butler nods slightly",
-            text: "In this instance, the guard is correct, though I suspect it was merely a fortunate guess. The poet was indeed male. However, the woman who inspired him is equally significant to your quest.",
+            text: "For once the guard is correct, though I suspect by accident. The poet was a man. The woman who inspired him, however, matters every bit as much to your search. Do keep up.",
           },
         ],
         "guard-russia": [
           {
             gesture: "The butler's expression becomes carefully neutral",
-            text: "Russia? {{Sir|Madam|My dear guest}}, the historical atlas in the Master's study clearly places our subject in Italy, not Russia. The guard appears to be... fabricating information.",
+            text: "Russia? {{Sir|Madam|My dear guest}}, the atlas in the Master's study places our subject firmly in Italy. The guard appears to be fabricating. It is the only craft he has kept up.",
           },
         ],
         "guard-trust": [
           {
             gesture: "The butler's expression becomes carefully neutral",
-            text: "The guard has been here a very long time{{, sir|, madam|}}. Perhaps too long. His memory and motivations are not always... reliable. I would suggest consulting more... scholarly sources.",
+            text: "The guard has been here a very long time{{, sir|, madam|}}. Perhaps too long. I would consult more scholarly sources. Almost any source, in fact.",
           },
         ],
         "middle-ages": [
           {
             gesture: "The butler consults an imaginary pocket watch",
-            text: "The Master's historical chronicles place our poet in the late 13th and early 14th centuries{{, sir|, madam|}}. A tumultuous time in Florence, with much political strife between the Guelphs and Ghibellines.",
+            text: "The Master's chronicles place our poet in the late thirteenth and early fourteenth centuries{{, sir|, madam|}}. Florence was busy tearing itself apart between Guelphs and Ghibellines. Rather like a dinner party, with swords.",
           },
         ],
         default: [
           {
             gesture: "The butler maintains his perfect composure",
-            text: "I'm afraid I cannot be of assistance with that particular inquiry{{, sir|, madam|}}. Perhaps another line of questioning would be more productive?",
+            text: "I'm afraid I cannot help with that particular inquiry{{, sir|, madam|}}. Perhaps a better question. Do take your time.",
           },
         ],
       },
@@ -450,121 +442,121 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         who: [
           {
             gesture: "The fortune teller's eyes glint mysteriously in the dim light",
-            text: "Who are you is what you should ask yourself.",
+            text: "Me? I am ~drabarni~. I read cards, cups, hands. Better question is who are you. Nobody here knows. Not even you.",
           },
         ],
         why: [
           {
             gesture: "She gestures dramatically with ringed fingers",
-            text: "I just read what's in front of me. The future, the past. You seek answers, I offer my services.",
+            text: "I read what is in front of me. Past, future, today. Today is you. You want answers, I have services. Very reasonable price.",
           },
         ],
         solution: [
           {
             gesture: "The fortune teller shuffles her tarot cards",
-            text: "I cannot tell. That's for you to discover.",
+            text: "Answer? Ha! I don't give answers, I give directions. You walk yourself.",
           },
         ],
         "lost-soul": [
           {
             gesture: "The fortune teller peers intently into her crystal ball",
-            text: "Ah yes, let me check on my crystal sphere. I see a figure, a woman... she appears in a white dress, surrounded by light. Angels attend her. She guides a man through realms of light.",
+            text: "Wait, I look in ball. A woman. White dress, very clean, too much light around her. Angels carry her bags. She walks a man through heaven like he is tourist.",
           },
         ],
         storyteller: [
           {
             gesture: "The fortune teller's voice becomes melodic",
-            text: "The cards speak of one who journeyed beyond the veil and returned to tell the tale. See here, the Hermit card appears, signifying a spiritual journey, wisdom gained through solitude.",
+            text: "Cards say a man goes to other side and comes back to write about it. Who comes back? Nobody I know. See, Hermit card. Long walk, alone, much thinking. Is him.",
           },
         ],
         woman: [
           {
             gesture: "The fortune teller traces patterns in the air",
-            text: "My crystal shows a young woman, dressed in red. She died very young, but her spirit transcended death. The Lovers card appears beside her, but also the Death card... transformation, not ending.",
+            text: "Ball shows young woman, dressed in red. She dies very young, ~Devla~. But death does not finish her. Lovers card is next to her. Also Death card. Don't panic. Death card means change, not end.",
           },
         ],
         city: [
           {
             gesture: "The fortune teller's voice becomes distant",
-            text: "The cards show me an old European town of ancient stones and love. The Tower card appears, suggesting upheaval, exile, political strife.",
+            text: "Cards show old town in Europe. Old stones, much love. Then comes Tower card. Fighting, politics, somebody gets kicked out of his own city. Always politics.",
           },
         ],
         italy: [
           {
             gesture: "The fortune teller nods knowingly",
-            text: "Italy... land of passion and poetry. I cast the bones, and they form the shape of a boot. A sign that cannot be mistaken.",
+            text: "Italy, ~va~. Land of poems and shouting. I throw bones, and they make a boot. Bones are not subtle.",
           },
         ],
         florence: [
           {
             gesture: "The fortune teller closes her eyes",
-            text: "The city of the red lily... I see a river dividing ancient streets. In my tea leaves, I see towers and domes, and a great dome rising above all others. A baptistery of ancient design. The birthplace of a soul who would change how we see the afterlife.",
+            text: "City of red lily. I see river cutting old streets in half. In my tea leaves, towers and domes, and one big dome over all the others. Old baptistery. Here is born a man who changes how everybody pictures the afterlife.",
           },
         ],
         venice: [
           {
             gesture: "The fortune teller shakes her head, causing her earrings to sway",
-            text: "Venice? No, the waters I see are not the grand canals. The cards reject this path - see how the Moon appears reversed, signifying deception and illusion.",
+            text: "Venice? No. Water I see is not canals. Look, Moon card comes upside down. Means lies, tricks. Somebody sells you wrong city.",
           },
         ],
         love: [
           {
             gesture: "The fortune teller places her hand over her heart",
-            text: "The cards show the Lovers, but in an unusual position. A love from afar, barely acknowledged in life, yet powerful enough to transcend death itself. A love that guides through darkness.",
+            text: "Lovers card, but sideways. Strange. Love from far away. In life, they barely say hello. After death, this love is so strong it walks him through the dark. Everybody has different ~baht~. Mine fell in well.",
           },
         ],
         afterlife: [
           {
             gesture: "The fortune teller's eyes roll back slightly",
-            text: "My crystal shows three distinct realms... one of punishment, circles descending into darkness. Another of purification, a mountain to climb. The third of light, spheres ascending to divine presence.",
+            text: "Ball shows three places. First, circles going down, down, into dark. Is punishment. Second, a mountain. You climb, you get clean. Third, all light, spheres going up and up to God. Most people I read, they stop at first one.",
           },
         ],
         single: [
           {
             gesture: "The fortune teller's eyes flash dangerously",
-            text: "Do not mistake me for some tavern wench to be wooed with cheap flattery. Your attempts at manipulation will not help you here. Focus on your task, or remain trapped forever.",
+            text: "Single? I have second husband. Very faithful. He knows what happened to first one. Ask your real question.",
           },
         ],
         "guard-painter": [
           {
             gesture: "The fortune teller's lips curl into a knowing smile",
-            text: "The cards contradict this. See how the Page of Wands appears, representing a messenger, a writer - not the Page of Pentacles, which would indicate a craftsman or artist.",
+            text: "Painter? Cards say no. See, Page of Wands. Is messenger, writer. For painter I get Page of Pentacles, craftsman, artist. I don't get it. Cards don't lie. Skeleton lies.",
           },
         ],
         "guard-venice": [
           {
             gesture: "The fortune teller shakes her head vigorously",
-            text: "My crystal grows cloudy when I seek Venice, but clears when I turn elsewhere. The skeleton attempts to lead you down a false path.",
+            text: "I look for Venice, ball goes cloudy. I look somewhere else, ball is clear. Skeleton sends you wrong way, ~bre~. Is what he does for fun.",
           },
         ],
         "guard-man": [
           {
             gesture: "The fortune teller nods slowly",
-            text: "The Emperor card appears, confirming a male figure of significance. But beside it lies the High Priestess - the feminine divine is equally important to your quest.",
+            text: "This time skeleton is right. Emperor card, so is a man, important one. But next to him, High Priestess. The woman, she is just as important for you. Maybe more. I am biased.",
           },
         ],
         "guard-russia": [
           {
             gesture: "The fortune teller casts bones onto her table",
-            text: "The bones form a pattern pointing south, not east. The bear of Russia is nowhere in these signs. The skeleton speaks with a forked tongue.",
+            text: "Russia? Bones point south. Bones are not tourists, they don't get lost. Skeleton lies to you, ~bre~. Is his only hobby.",
           },
         ],
         "guard-trust": [
           {
             gesture: "The fortune teller leans forward conspiratorially",
-            text: "The cards show the Moon reversed - deception, illusion, trickery. The skeleton enjoys toying with lost souls. Trust him at your peril.",
+            text: "Trust skeleton? Moon card, upside down. Lies, tricks. He plays with lost souls like cat with mouse. Trust him, and you are mouse.",
           },
         ],
         angel: [
           {
             gesture: "The fortune teller's eyes widen as she stares into her crystal",
-            text: "I see a woman transformed, surrounded by divine light. Once mortal, now a guide through celestial realms. The Judgment card appears, signifying spiritual awakening and divine calling.",
+            text: "Angels? I see woman, changed. Holy light all over her. Once she is mortal, like you. Now she guides people through heaven. Judgment card. Means wake up, somebody upstairs is calling.",
           },
         ],
         default: [
           {
             gesture: "The fortune teller shrugs dramatically",
-            text: "The spirits are silent on this matter. Perhaps they will speak if you ask a different question.",
+            text: "Spirits say nothing about this. Ask different question. Spirits are picky.",
           },
         ],
       },
@@ -577,25 +569,25 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         who: [
           {
             gesture: "The sphinx's voice resonates with ancient power",
-            text: "I am the keeper of riddles and secrets.",
+            text: "Thou knowest me. I asked, and thou didst answer.",
           },
         ],
         why: [
           {
             gesture: "The sphinx's stone face remains impassive",
-            text: "To test your wit and wisdom to find out if you are worthy.",
+            text: "To test thy wit and thy wisdom, and learn whether thou art worthy.",
           },
         ],
         solution: [
           {
             gesture: "The sphinx's eyes glow faintly",
-            text: "No answer can be provided like this.",
+            text: "I do not hand out answers, seeker. Thou must earn them.",
           },
         ],
         "lost-soul": [
           {
             gesture: "The sphinx speaks in measured tones",
-            text: "The one who walks between worlds is not lost, but seeking. The one who guides is not found, but waiting. Look for the one who inspired the journey, not the one who made it.",
+            text: "One walked through the three kingdoms of the dead and wrote down what he saw. Another walked ahead of him and lit the way. Thou seekest the second.",
           },
         ],
         storyteller: [
@@ -649,19 +641,19 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         "guard-venice": [
           {
             gesture: "The sphinx's eyes narrow to slits",
-            text: "Waters that flow beneath bridges are not the same as those that flow through the city of the red lily. The guard would lead you to drown in the wrong river.",
+            text: "Waters that flow beneath bridges are not the same as those that flow through the city of the red lily. The guard would have thee drown in the wrong river.",
           },
         ],
         "guard-man": [
           {
             gesture: "The sphinx's head tilts slightly",
-            text: "The masculine principle created the journey, but the feminine divine guided it. Both are essential to your quest, like day and night, sun and moon.",
+            text: "The masculine principle created the journey, but the feminine divine guided it. Thou needest both, as the day needs the night.",
           },
         ],
         "guard-russia": [
           {
             gesture: "The sphinx's stone face shows a hint of disdain",
-            text: "The land of the northern bear has no place in this riddle. The skeleton attempts to send you wandering through snow when you should be walking among olive trees.",
+            text: "The land of the northern bear has no place in this riddle. The skeleton would send thee wandering through snow when thou shouldst walk among olive trees.",
           },
         ],
         "guard-trust": [
@@ -673,13 +665,13 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
         "family-name": [
           {
             gesture: "The sphinx's eyes flash with golden light",
-            text: "To proceed beyond this threshold, seeker, you must name the guide completely. As mortals are known by two names, so must you speak both to unlock the path forward. Half a name holds half the power.",
+            text: "The dead are called by their whole names, seeker, or they do not turn. Give both of hers.",
           },
         ],
         default: [
           {
             gesture: "The sphinx remains motionless",
-            text: "This question does not lead to the answer you seek. Ask that which will illuminate your path.",
+            text: "This question leads nowhere, seeker. Ask what will light thy path.",
           },
         ],
       },
@@ -695,17 +687,17 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
       },
       {
         gesture: "The Devil bows with theatrical flair",
-        text: "Prince of Darkness, Lord of the Flies, Beelzebub, Satan... I've collected quite a few titles over the millennia. But you can call me... Sir.",
+        text: "Prince of Darkness, Lord of the Flies, Beelzebub, Satan. I've collected quite a few titles over the millennia. But you may call me Sir.",
       },
     ],
     why: [
       {
         gesture: "The Devil examines his nails with feigned disinterest",
-        text: "I'm not helping you; I'm testing you.",
+        text: "I am here to watch you squirm. Helping would spoil the view.",
       },
       {
         gesture: "The Devil's smile is razor-sharp",
-        text: "Because eternity is boring, and tormenting souls like yours provides a modicum of entertainment. Think of yourself as... reality television for the damned.",
+        text: "Because eternity is boring, and tormenting souls like yours provides a modicum of entertainment. Think of yourself as reality television for the damned.",
       },
     ],
     solution: [
@@ -717,7 +709,7 @@ export default function FamiliarFacesPuzzle({ onSolve, id, handleDevilClick }: F
     please: [
       {
         gesture: "The Devil's eyes gleam with malicious amusement",
-        text: "Fine, since you're so persistent... You need to figure out the identity of a lost soul. I won't tell you anything more.",
+        text: "Fine, since you're so PERSISTENT. You need to figure out the identity of a lost soul. Not one word more.",
       },
     ],
     default: [

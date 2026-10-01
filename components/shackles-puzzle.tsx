@@ -94,7 +94,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
         }
         return prev
       })
-      setDialogue("Shackles sniffs the bone disapprovingly, then tosses it aside. Try again!")
+      setDialogue("Shackles sniffs the bone disapprovingly, then tosses it aside. He looks at you as if you should know better.")
       setTimeout(() => setDialogue(null), 4000)
     }
   }
@@ -248,7 +248,7 @@ const ShacklesPuzzle: React.FC<ShacklesPuzzleProps> = ({ onSolve, onFirstBoneBur
       }, 500)
     } else {
       // Wrong bone, return to inventory
-      setDialogue("Shackles sniffs the bone disapprovingly, then tosses it aside. Try again!")
+      setDialogue("Shackles sniffs the bone disapprovingly, then tosses it aside. He looks at you as if you should know better.")
       setTimeout(() => setDialogue(null), 4000)
     }
   }

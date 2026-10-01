@@ -4,8 +4,8 @@ import type { Puzzle } from "@/types/puzzle"
 export const puzzlesSet4: Puzzle[] = [
   {
     level: 31,
-    question: "The Sphinx presents you with ancient symbols carved in stone.",
-    description: "The symbols seem to hold a message from the distant past.",
+    question: "Carved Stone",
+    description: "",
     imageUrl: "", // We'll handle the images differently
     isPuzzleImage: true,
     solution: "tutankhamon|tutankhamun",
@@ -19,8 +19,8 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 32,
-    question: "The Sphinx presents you with a golden scarab and ancient pedestals.",
-    description: "Guide the sacred beetle along the path of the golden pilgrim.",
+    question: "The Golden Scarab",
+    description: "",
     imageUrl: "",
     isGoldenScarabPuzzle: true,
     solution: "sublime splendor",
@@ -35,7 +35,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 33,
-    question: "The Sphinx leads you into a dark chamber with ancient inscriptions.",
+    question: "The Dark Chamber",
     description: "",
     imageUrl: "",
     isDarkRoomPuzzle: true,
@@ -50,7 +50,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 34,
-    question: "The Sphinx presents you with a fragmented mosaic of an ancient deity.",
+    question: "The Broken God",
     description: "Reassemble the mosaic to reveal the identity of the crocodile god worshipped in this region.",
     imageUrl: "",
     isCrocodileJigsawPuzzle: true,
@@ -64,8 +64,8 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 35,
-    question: "The Sphinx presents you with a riddle of the sands.",
-    description: "The sands shift to reveal a pattern of symbols that seem to change with the desert winds.",
+    question: "Shifting Sands",
+    description: "",
     imageUrl:
       "/images/desert-bg.webp",
     solution: "mirage",
@@ -78,7 +78,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 36,
-    question: "The Sphinx presents you with a challenge of construction.",
+    question: "The Workshops",
     description: "Build a pyramid by moving blocks through the workshops.",
     imageUrl: "",
     isPyramidOfHanoiPuzzle: true,
@@ -94,7 +94,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 37,
-    question: "",
+    question: "The Pillars",
     description: "",
     imageUrl: "",
     isEgyptianPillarsPuzzle: true,
@@ -109,9 +109,9 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 38,
-    question: "A strange message appears in the desert sand.",
+    question: "Writing in the Sand",
     description:
-      'The Sphinx gazes at you with ancient eyes. "Ask me and I shall give you the key to decode this message."',
+      "",
     imageUrl: "/images/level38.webp",
     solution: "desert soul",
     category: "pattern",
@@ -126,7 +126,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 39,
-    question: "The Sphinx presents you with ancient Egyptian mathematical papyri.",
+    question: "The Papyri",
     description: "",
     imageUrl: "",
     isEgyptianMathPuzzle: true,
@@ -142,7 +142,7 @@ export const puzzlesSet4: Puzzle[] = [
   },
   {
     level: 40,
-    question: "The Sphinx leads you into a pyramid with multiple chambers.",
+    question: "The Pyramid",
     description: "Explore the chambers of the pyramid to uncover the hidden message.",
     imageUrl: "",
     isPyramidPuzzle: true,

@@ -7,13 +7,12 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import type { Puzzle } from "@/types/puzzle"
 import HintSystem from "./hint-system"
 import { Lightbulb, Volume2, VolumeX, Sparkles, RotateCcw } from "lucide-react"
-import DevilDialogue from "./devil-dialogue"
 import ElevatorPanel from "./elevator-panel"
 import { useAudio } from "@/hooks/use-audio"
 import { useHaptics } from "@/hooks/use-haptics"
 import { useAchievements } from "@/hooks/use-achievements"
 import { useStorage } from "@/hooks/use-storage"
-import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, sphinxRiddle, getClockButlerLine, getMansionButlerLine, getBookshelfButlerLine, getGuardBoneLine } from "@/utils/dialogue-utils"
+import { useCharacterDialogue, guardDialogLines, getRandomElevatorMessage, getAnswerFeedback, sphinxRiddle, getClockButlerLine, getMansionButlerLine, getBookshelfButlerLine, getGuardBoneLine } from "@/utils/dialogue-utils"
 import CharacterLocationDisplay from "./character-location-display"
 import AnswerInput from "./answer-input"
 import CharacterDialoguePopup from "./character-dialogue-popup"
@@ -77,6 +76,94 @@ const brainDialogueOptions = [
   "My brain... melting...",
   "No more... switches...",
 ]
+
+
+// Level 50 hell floors: the Devil's speech for each floor, split into click-through parts.
+const HELL_FLOOR_SPEECHES: Record<number, string[]> = {
+  // HOT HELLS
+  [-1]: [
+    "How precious, the mind's little trick of shutting off before the terror finishes its work. I forbid it here.",
+    "My guards cut them down, and the heart restarts the instant the brain tries to sever the connection. They wake fully aware of what they just endured.",
+    "So a man who spent his life claiming he'd never hurt anyone gets to stay awake for every second of what he actually did.",
+  ],
+  [-2]: [
+    "I drew every black line myself, and if that impresses you, I won't stop you.",
+    "The saw follows the charcoal a hair's width at a time, slow enough to feel deliberate.",
+    "He spent thirty years insisting his mistakes were accidents. Down here, nothing is.",
+  ],
+  [-3]: [
+    "That sound is two mountains finally agreeing on something, with a soul caught in the middle of the argument.",
+    "She spent her life certain that words could never really wound anyone.",
+    "I'm teaching her the difference between an opinion and a weight.",
+  ],
+  [-4]: [
+    "I come here to relax. Every voice in this valley is screaming, and every one insists it never wanted to be heard.",
+    "Which I find touching, coming from a woman who spent forty years deciding who got to speak and when.",
+    "The screaming usually stops meaning anything after a while. Hers hasn't yet. I admire the stamina.",
+  ],
+  [-5]: [
+    "An upgrade on the screaming hall upstairs. LOUDER, and molten metal, poured slow enough to enjoy properly.",
+    "He spent decades lecturing his congregation about restraint, then helped himself to whatever he liked first.",
+    "Poetic, that his portions are finally decided for him.",
+  ],
+  [-6]: [
+    "One iron stake, heel to crown, and the heat finishes the job from the inside. Elegant, I think.",
+    "He built three towers on foundations he knew wouldn't hold and called the collapse an act of god.",
+    "Something is finishing what he started too.",
+  ],
+  [-7]: [
+    "The floor above was the warm-up. This is the great furnace: cauldrons the size of mountains, and a proper reduction takes centuries.",
+    "Nobody down here is counting anymore.",
+    "She used to call patience a virtue, usually right before using it to outlast anyone who disagreed with her. Seems only fair she has more of it now than she knows what to do with.",
+  ],
+  [-8]: [
+    "My masterpiece, and I don't say that often. Fire so hot it burns white, and not one pause, not one second of relief, EVER.",
+    "He spent his whole life insisting there was no excuse for rest.",
+    "I happen to agree with him completely.",
+  ],
+
+  // COLD HELLS
+  [-9]: [
+    "The first cold room, and already its newest guest is begging for the flames she was so glad to leave behind.",
+    "The blisters swell like ripened fruit before the frost seals them shut.",
+    "She built a career telling people pain was weakness if you let it show. Hers is on full display now, whether she likes it or not.",
+  ],
+  [-10]: [
+    "Here the blisters finally burst, and the ice inside tears through the muscle like broken glass leaving the room.",
+    "He spent his life bragging that nothing could break him.",
+    "I'd say the argument is settled.",
+  ],
+  [-11]: [
+    "Named for the sound the teeth make against the frost. At-at-at, over and over.",
+    "Which is more than she ever let anyone else get a word in edgewise while she was alive.",
+    "The muscle tears, the cold seals it, then it tears again. A rhythm, if you're patient. I have nothing but time.",
+  ],
+  [-12]: [
+    "All that's left of his voice is 'ha-ha-va', which strikes me as fitting.",
+    "He spent his life laughing at people for considerably less.",
+    "The breath freezes into little shapes on the way out. I've kept a few of the prettier ones, if you'd like to see.",
+  ],
+  [-13]: [
+    "The blue room. Even the scream freezes on the way out. Hu-hu-va, and then nothing.",
+    "Blood freezes in the vein and cracks it from the inside, a sound not unlike a windowpane going.",
+    "She used to pride herself on never letting anything get under her skin. Now nothing can get out.",
+  ],
+  [-14]: [
+    "Named for the utpala, a blue flower, and for the color the skin turns on its way out.",
+    "The eyes freeze solid in their sockets and keep working regardless.",
+    "He spent a long career insisting he never saw what was happening right in front of him. I've made sure that excuse won't hold up much longer.",
+  ],
+  [-15]: [
+    "The skin splits into patterns like lotus petals as it freezes, and the blood that escapes hardens into small red sculptures.",
+    "She spent her career calling suffering beautiful whenever it wasn't hers.",
+    "I've simply given her an exhibit of her own.",
+  ],
+  [-16]: [
+    "The coldest of them, where even thought slows and eventually stops.",
+    "What's left just sits, half aware, for longer than your calendars have numbers for.",
+    "He used to say nothing ever got to him. I'd call this a fair test of that claim, and a fitting place to end the tour.",
+  ],
+}
 
 export default function GameScreen({
   level,
@@ -152,7 +239,6 @@ export default function GameScreen({
   const [mansionRoom, setMansionRoom] = useState<{ room: string; examining: boolean }>({ room: "foyer", examining: false })
   const [bookshelfRevealed, setBookshelfRevealed] = useState(false)
   const [hasPyramidTorch, setHasPyramidTorch] = useState(false)
-  const [showDevilDialogue, setShowDevilDialogue] = useState(false)
   const [currentElevatorFloor, setCurrentElevatorFloor] = useState(0)
   const [floorLabels, setFloorLabels] = useState<Record<number, string>>({})
   const [hasUsedElevator, setHasUsedElevator] = useState(false)
@@ -285,7 +371,7 @@ export default function GameScreen({
 
     // Special case for puzzle 10 to accept both "guard" and "the guard"
     if (puzzle.level === 10 && (normalizedUserAnswer === "guard" || normalizedUserAnswer === "the guard")) {
-      setFeedback("Correct! Well done.")
+      setFeedback(getAnswerFeedback(puzzle.level, true))
       setIsCorrect(true)
 
       setTimeout(() => {
@@ -299,7 +385,7 @@ export default function GameScreen({
     }
 
     if (normalizedCorrectAnswers.includes(normalizedUserAnswer)) {
-      setFeedback("Correct! Well done.")
+      setFeedback(getAnswerFeedback(puzzle.level, true))
       setIsCorrect(true)
 
       setTimeout(() => {
@@ -321,7 +407,7 @@ export default function GameScreen({
         onCorrect(true) // Skip to next available puzzle
       }, 1500)
     } else {
-      setFeedback("That's not quite right. Try again.")
+      setFeedback(getAnswerFeedback(puzzle.level, false))
       setIsWrong(true)
       setLastWrongAnswer((prev) => ({ text: normalizedUserAnswer, nonce: (prev?.nonce ?? 0) + 1 }))
 
@@ -392,153 +478,18 @@ export default function GameScreen({
     }
   }
 
-  // Get devil dialogue for level 50 based on current floor and dialogue part
+  // Level 50 floor speeches. Each floor pairs its punishment with the excuse the
+  // sinner used in life. Every floor keeps the detail that identifies which hell
+  // it is (the sound, the color, the instrument), since the final answer
+  // depends on naming the floors. Clicking the Devil steps through the parts.
   const getDevilDialogueForFloor = (floor: number, dialogueIndex: number = 0): string => {
-    const devilDialogues: Record<number, string[]> = {
-      // HOT HELLS
-      [-1]: [
-        "In this realm, death becomes meaningless.",
-        "The damned are slaughtered by my guards, only to awaken fully aware of what they have just endured.",
-        "The memory is pristine. Unbearable. And then it happens again.",
-        "Do you understand the cruelty of that? A soul cannot escape even through oblivion."
-      ],
-
-      [-2]: [
-        "My surveyors mark each victim with precision before the saws descend.",
-        "Black lines chart their division perfectly. Flesh parts from flesh with geometric accuracy.",
-        "Once severed, the pieces reassemble themselves—only to be marked anew and cut again.",
-        "I find the symmetry of this punishment particularly elegant."
-      ],
-
-      [-3]: [
-        "Two mountains serve as my instrument of compression.",
-        "They meet with inexorable force, and the damned experience the full mathematics of being crushed.",
-        "Bones become powder. Organs become paste.",
-        "When the mountains part, what remains reassembles, awaiting the next collision. I have perfected the timing of their embrace."
-      ],
-
-      [-4]: [
-        "The screaming here reaches decibel levels that would rupture mortal eardrums.",
-        "The damned cook slowly in iron cauldrons, their skin separating from muscle.",
-        "The chorus of wailing gives this realm its nature.",
-        "Imagine a scream that never diminishes, never finds release. That is what I have created here."
-      ],
-
-      [-5]: [
-        "Molten metal serves as both tomb and womb.",
-        "The damned submerge into glowing pools, dissolve, reform, and sink again in an endless tide.",
-        "The metal glows with colors that have no name.",
-        "Each reformation brings fresh sensation, fresh agony. This realm is the amplified version of my screaming hall. Everything is magnified."
-      ],
-
-      [-6]: [
-        "Iron stakes pierce through the soles of the damned and emerge from their crowns.",
-        "The heat radiates from within, cooking organs slowly and deliberately.",
-        "My attendants rotate the stakes to ensure even distribution of suffering.",
-        "I take great care with this one. Precision matters."
-      ],
-
-      [-7]: [
-        "Cauldrons the size of mountains filled with blazing fire.",
-        "The damned are thrown into this furnace where they are cooked like stew.",
-        "The bubbling is constant. The heat is tremendous.",
-        "This realm makes my other heating hell seem almost gentle by comparison."
-      ],
-
-      [-8]: [
-        "There is no respite here. Not even for a moment.",
-        "Individual cells of flame isolate each soul in solitary burning.",
-        "The fire burns so hot it appears white—it consumes yet preserves the damned for eternity.",
-        "This is uninterrupted suffering. This is my final statement on heat. Nothing lies beneath this."
-      ],
-
-      // COLD HELLS
-      [-9]: [
-        "Cold becomes a weapon more terrible than flame.",
-        "The skin of the damned erupts in blisters the size of mountains, filled with infected ice and frozen blood.",
-        "The winds howl through this barren white landscape.",
-        "This is where cold suffering begins. This is where I introduce the damned to freezing."
-      ],
-
-      [-10]: [
-        "The blisters burst. That is the defining cruelty of this realm.",
-        "The cold is so severe that the massive frozen sores split open from internal pressure.",
-        "Jagged crystals of ice tear outward from within the flesh.",
-        "The wounds refreeze immediately. This is the escalation. Everything that came before, but worse."
-      ],
-
-      [-11]: [
-        "The damned can only produce one sound here: at-at-at.",
-        "Their teeth chatter so violently that muscles tear and bones splinter.",
-        "Their bodies convulse and freeze in grotesque positions.",
-        "Imagine your own skeleton fracturing with every tremor. Imagine that never stopping."
-      ],
-
-      [-12]: [
-        "A different cry reaches this level: ha-ha-va.",
-        "Their breath freezes solid as it leaves their mouths, creating clouds of ice that hang suspended like ghosts.",
-        "The frostbite claims extremities that snap away like icicles.",
-        "Skin turns white, then blue, then black. This realm is colder than before."
-      ],
-
-      [-13]: [
-        "The bodies turn completely blue in this realm.",
-        "The sound becomes hu-hu-va—the damned try to scream but their voices freeze in their throats.",
-        "Their blood becomes ice in their veins. Crystals tear through arteries.",
-        "Joint by joint, they become immobilized by their own frozen essence."
-      ],
-
-      [-14]: [
-        "A delicate flower gives this realm its character.",
-        "The skin takes on the color of the utpala—perfect blue.",
-        "The cold reaches into the eye sockets and freezes the eyeballs solid.",
-        "The tongue becomes a rigid block of ice. The landscape fills with frozen statues, each locked in eternal agony."
-      ],
-
-      [-15]: [
-        "The skin cracks into petal-like patterns, as if blooming in slow motion.",
-        "Beautiful cracks that deepen until they reach bone.",
-        "The bone itself splits along these same lines.",
-        "The damned become flowers themselves. The realm grows quiet here. Even I appreciate the silence of such perfect suffering."
-      ],
-
-      [-16]: [
-        "This is the absolute. The coldest. The deepest. The final realm of freezing suffering.",
-        "The skin splits into enormous petal-like patterns.",
-        "Chunks of flesh fall like autumn leaves, revealing muscle and bone preserved in perfect ice.",
-        "Thought itself begins to freeze. Consciousness becomes a burden they carry for eons. This is my greatest work. Beyond this, there is only void."
-      ],
-    }
-
-    const floorDialogues = devilDialogues[floor]
-    if (!floorDialogues) return "This realm defies description. Even I find it difficult to articulate the nature of the suffering here."
+    const floorDialogues = HELL_FLOOR_SPEECHES[floor]
+    if (!floorDialogues) return "This particular pit requires total darkness to do its work properly. Everyone discovers something different about themselves in the dark. Rarely something worth knowing."
 
     return floorDialogues[dialogueIndex % floorDialogues.length] || floorDialogues[0]
   }
 
-  // Get the number of dialogue parts for a floor
-  const getDevilDialoguePartsCount = (floor: number): number => {
-    const devilDialogues: Record<number, string[]> = {
-      [-1]: ["", "", "", ""], // 4 parts
-      [-2]: ["", "", "", ""], // 4 parts
-      [-3]: ["", "", "", ""], // 4 parts
-      [-4]: ["", "", "", ""], // 4 parts
-      [-5]: ["", "", "", ""], // 4 parts
-      [-6]: ["", "", "", ""], // 4 parts
-      [-7]: ["", "", "", ""], // 4 parts
-      [-8]: ["", "", "", ""], // 4 parts
-      [-9]: ["", "", "", ""], // 4 parts
-      [-10]: ["", "", "", ""], // 4 parts
-      [-11]: ["", "", "", ""], // 4 parts
-      [-12]: ["", "", "", ""], // 4 parts
-      [-13]: ["", "", "", ""], // 4 parts
-      [-14]: ["", "", "", ""], // 4 parts
-      [-15]: ["", "", "", ""], // 4 parts
-      [-16]: ["", "", "", ""], // 4 parts
-    }
-
-    return devilDialogues[floor]?.length || 4
-  }
+  const getDevilDialoguePartsCount = (floor: number): number => HELL_FLOOR_SPEECHES[floor]?.length || 1
 
   // Update the handleGuardClick function to properly handle sphinx click for level 38 and 40
   const handleGuardClick = () => {
@@ -571,7 +522,7 @@ export default function GameScreen({
     }
     // Special handling for level 8 (magic box rebus)
     else if (level === 8 && magicBoxRebusShown) {
-    setCharacterDialogue("Are you a fan of rebuses? Hehe")
+    setCharacterDialogue("A rebus. Say what ya see, out loud. Go on, I could use a laugh.")
     setShowCharacterDialogue(true)
     }
     // Special handling for level 14 (mansion clock puzzle) — reflects the clock's actual hand position, not random
@@ -1040,9 +991,6 @@ export default function GameScreen({
       </div>
 
       {/* Devil Dialog popup for level 50 */}
-      {showDevilDialogue && level === 50 && (
-        <DevilDialogue onClose={() => setShowDevilDialogue(false)} currentFloor={currentElevatorFloor} />
-      )}
 
       {/* Character dialogue popup */}
       {showCharacterDialogue && (

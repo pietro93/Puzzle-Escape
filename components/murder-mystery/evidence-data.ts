@@ -6,38 +6,37 @@ export const autopsyReportPages: AutopsyReportPage[] = [
     title: "Autopsy Report - Page 1",
     content: `Name: Dohn Joe  \n
 Gender: Male (assumed, based on tax records)  \n
-Age: Early 30s (the best years, lucky bastard died in his prime)   \n
-Eyes: The same shade of brown as a good, solid, albeit unremarkable coffee   \n
-Hair: The same shade of brown as a well-trodden forest path) \n
-**Additional Notes**:  
-> *“Subject appeared to be attempting to ‘relax’ while dying. Arms folded. Expression serene. Very rude. We had to reposition him for the photos.”*`,
-
+Age: Early 30s  \n
+Eyes: Brown  \n
+Hair: Brown  \n
+**Additional Notes**:
+> *"Found lying down. Arms folded. Expression serene. Rude."*`,
   },
   {
     title: "Autopsy Report - Page 2",
     content: `Clinical Summary: \n
-    Our dear Dohn met his untimely end due to a severe case of "not enough red stuff in the veins." Also known as anemia. \n
-    Before kicking the bucket, he called emergency services and said, "I'm not feeling well." Paramedics arrived, only to find he had already turned into a human-level lamp. No signs of trauma, injury, or anyone poking him with a stick.`,
+    Anemia. Severe. \n
+    Victim phoned emergency services. Said: "I'm not feeling well." Correct. \n
+    Dead before paramedics arrived. Paler than the ambulance. No trauma. No injury. Nobody poked him with a stick.`,
   },
   {
     title: "Autopsy Report - Page 3",
     content: `External examination: \n
     Height: 168 cm \n
-    External examination: Height 168 cm. The body presents with the ghostly pallor of an underboiled shrimp. \n
-    Either weird bruises or VERY weird tattoos on limbs but no sign of struggle so I guess that's nothing to be concerned about.
-    `,
+    Pale. Very. \n
+    Marks on arms and legs. Bruises, or bad tattoos. No sign of struggle. Not my problem.`,
   },
   {
     title: "Autopsy Report - Page 4",
-    content: `Toxicology \n
-    Our tests found a profound absence of poison, venom, or exciting toxins. Bro did not know how to party.`,
+    content: `Toxicology: \n
+    No poison. No venom. No drugs. \n
+    Boring.`,
   },
   {
     title: "Autopsy Report - Page 5",
-    content: `Summary:
-    The official cause of death is organ failure due to extreme anemia. 
-    His blood gave up first, then his soul left his body out of politeness. \n
-    100% Natural. Case closed.`,
+    content: `Summary: \n
+    Cause of death: organ failure due to extreme anemia. \n
+    Natural. Case closed.`,
   },
 ]
 

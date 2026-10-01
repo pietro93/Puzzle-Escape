@@ -24,11 +24,11 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   4: {
     character: "skeleton",
-    lines: [`Scratched into the stone wall: "FEAR YOUR DREAMS."`, `The guard says nothing — he just watches you read it.`],
+    lines: [`Scratched into the stone wall: "FEAR YOUR DREAMS."`, `The guard says nothing. He just watches you read it.`],
   },
   5: {
     character: "skeleton",
-    lines: [`"Like clockwork," the guard mutters, nodding at the circular markings.`, `"Clockwise. That's the only hint yer gettin'."`],
+    lines: [`"Like clockwork," the guard mutters, nodding at the circular markings.`, `"Clockwise. That's the only hint yer gettin'."`, `For a moment your hands feel wet, as if you have just come in out of the rain. Then the feeling passes.`],
   },
   6: {
     character: "skeleton",
@@ -76,6 +76,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
     lines: [
       `"This palette belonged to a rather renowned French painter," the butler explains, presenting a curious arrangement of colors.`,
       `"The labels remain in his native tongue. I trust that will not prove an insurmountable obstacle."`,
+      `There is a mirror behind him. You glance at it the way you would check a rear-view mirror. It shows the room, and nobody standing in it.`,
     ],
   },
   16: {
@@ -119,15 +120,15 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   22: {
     character: "gypsy",
-    lines: [`She presents you with three cups, each containing mysterious patterns in the coffee residue.`, `"Grounds never lie," she whispers. "People lie. Grounds only gossip."`],
+    lines: [`She sets three cups in front of you. Each has its own pattern in the coffee residue.`, `"Grounds never lie," she says. "People lie. Grounds only gossip."`],
   },
   23: {
     character: "gypsy",
-    lines: [`The crystal ball clouds over, then clears to reveal shifting patterns of light.`, `"I see faraway land. Very old zodiac," the gypsy whispers.`, `"Tell me year and animal I see."`],
+    lines: [`The crystal ball clouds over, then clears to reveal shifting patterns of light.`, `"I see faraway land. Very old zodiac," she says.`, `"Tell me year and animal I see."`],
   },
   24: {
     character: "gypsy",
-    lines: [`The gypsy woman presents you with fragments of a crystal mosaic.`, `"Put pieces back together. Is precious stone, very magic. You tell me its name."`],
+    lines: [`She tips a cloth bag onto the table. It was a mosaic once.`, `"Put pieces back together. Is precious stone, very magic. You tell me its name."`],
   },
   25: {
     character: "gypsy",
@@ -135,11 +136,12 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
       `"Old mystics hide their secrets in these symbols," the gypsy says, eyes gleaming. "Very clever people. Very bad handwriting."`,
       `"Each shape has its own value. Put together, they make key to hidden knowledge."`,
       `"Solve, and you see number code that opens door to next place."`,
+      `The symbols swim if you look at them too long, the way road signs swam once. You don't remember when. You remember the signs.`,
     ],
   },
   26: {
     character: "gypsy",
-    lines: [`The gypsy woman leads you outside her wagon and points upward.`, `"Stars are talking tonight," she whispers. "Inside wagon I cannot hear them."`, `"Look close at the sky. What you see?"`],
+    lines: [`The gypsy woman leads you outside her wagon and points upward.`, `"Stars are talking tonight," she says. "Inside wagon I cannot hear them."`, `"Look close at the sky. What you see?"`],
   },
   27: {
     character: "gypsy",
@@ -147,7 +149,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   28: {
     character: "gypsy",
-    lines: [`The gypsy woman presents you with magical crystals and a compendium.`, `"Seven crystals. Put them in proper order. Start from top, go clockwise."`],
+    lines: [`Seven crystals lie on a velvet cloth beside a thick, much-thumbed book.`, `"Seven crystals. Put them in proper order. Start from top, go clockwise."`],
   },
   29: {
     character: "gypsy",
@@ -161,43 +163,43 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   // Zone 4: Desert - The Sphinx
   31: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with ancient symbols carved in stone.`, `"These signs carry a message from a distant past. Perhaps from thine as well."`],
+    lines: [`Symbols are carved into the stone at the Sphinx's feet. She waits until you have looked at every one.`, `"These signs carry a message from a distant past. Perhaps from thine as well."`],
   },
   32: {
     character: "sphinx",
     lines: [
-      `The Sphinx presents you with a golden scarab and ancient pedestals, speaking in riddles.`,
+      `A golden scarab rests beside a row of pedestals. The Sphinx speaks without looking at it.`,
       `"Guide the sacred beetle along the path of the one whose generosity changed the value of gold itself."`,
       `"Trace the journey of the golden pilgrim who brought splendor to the lands he crossed."`,
     ],
   },
   33: {
     character: "sphinx",
-    lines: [`The Sphinx leads you into a dark chamber with ancient inscriptions, then falls silent.`],
+    lines: [`The Sphinx leads you into a dark chamber covered in inscriptions.`, `"Read, seeker. The dark will not read them for thee."`],
   },
   34: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with a fragmented mosaic of an ancient deity.`, `"Reassemble it, and name the crocodile god worshipped in this land."`],
+    lines: [`Broken tiles lie in the sand. Together, they were once a god.`, `"Reassemble it, and name the crocodile god worshipped in this land."`],
   },
   35: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with a riddle of the sands.`, `"The sands shift to reveal a pattern of symbols that seem to change with the desert winds."`],
+    lines: [`The wind moves the sand at your feet. Symbols surface in it, then sink again.`, `Half buried nearby are two sets of footprints. One of them stops.`, `"The desert writes slowly, seeker. Read quickly."`],
   },
   36: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with a challenge of construction.`, `"Build a pyramid, mortal. Every block must pass through the workshops."`],
+    lines: [`Cut stone waits in the sand. The Sphinx looks at the blocks, then at you.`, `"Build a pyramid, mortal. Every block must pass through the workshops."`],
   },
   37: {
     character: "sphinx",
-    lines: [`The Sphinx says nothing, only gestures toward the pillars before you.`],
+    lines: [`The Sphinx gestures toward the pillars before you.`, `"Stone keeps what it is told. Look well."`],
   },
   38: {
     character: "sphinx",
-    lines: [`A strange message appears in the desert sand. The Sphinx gazes at you with ancient eyes.`, `"Ask of me, and I shall give thee the key to this message."`],
+    lines: [`A message is written in the sand that was not there a moment ago. The Sphinx watches you read it.`, `"Ask of me, and I shall give thee the key to this message."`],
   },
   39: {
     character: "sphinx",
-    lines: [`The Sphinx presents you with ancient Egyptian mathematical papyri, and waits for you to begin.`],
+    lines: [`Papyri covered in numbers are weighted down with stones. The Sphinx waits for you to begin.`, `"The scribes of this land counted grain, and days, and the dead. Count, seeker."`],
   },
   40: {
     character: "sphinx",
@@ -207,26 +209,26 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   // Zone 5: Hell - The Devil
   41: {
     character: "devil",
-    lines: [`The Devil presents you with a mysterious map of Central Asia.`, `"Pins of the same color are related somehow," he muses.`],
+    lines: [`The Devil unrolls a map of Central Asia across a table that was not there a moment ago.`, `"Pins of the same color are related somehow," he muses.`],
   },
   42: {
     character: "devil",
-    lines: [`The Devil challenges you to a game of infernal chess.`, `"Four horsemen. Twenty moves. Let's see if you survive the apocalypse," he grins.`],
+    lines: [`The Devil sets four horsemen on a chessboard and turns it to face you.`, `"Four horsemen. Twenty moves. Let's see if you survive the apocalypse," he grins.`],
   },
   43: {
     character: "devil",
-    lines: [`The Devil presents you with five mysterious chests. You can hear screaming inside.`, `"Numbers, old tongue, and a little arithmetic," he says. "Nothing you can't handle."`],
+    lines: [`Five chests sit in a row. Something inside them is screaming.`, `"Numbers, old tongue, and a little arithmetic," he says. "Nothing you can't handle."`],
   },
   44: {
     character: "devil",
-    lines: [`The Devil presents you with fragments of a haunting scene.`, `"Reassemble the pieces to reveal the name of this infernal transportation."`],
+    lines: [`The Devil empties a box of painted fragments at your feet.`, `"Reassemble the pieces to reveal the name of this infernal transportation."`],
   },
   45: {
     character: "devil",
     lines: [
-      `The Devil brings back some familiar faces from your journey, grinning wickedly.`,
+      `The Devil brings back some familiar faces, grinning. You count them twice. You keep expecting one more: someone you only saw for a second, in the headlights.`,
       `"I've brought some old friends to help you with this challenge. One of them knows the identity of a lost soul you must name."`,
-      `"But be careful who you trust..."`,
+      `"But be careful who you trust. Some of them LIE."`,
     ],
   },
   46: {
@@ -235,7 +237,7 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   47: {
     character: "devil",
-    lines: [`The Devil gestures toward an infernal machine: dozens of switches connected to what appears to be a human brain — still attached to its head.`, `The owner seems to be in pain.`],
+    lines: [`The Devil gestures toward an infernal machine: dozens of switches connected to what appears to be a human brain, still attached to its head.`, `The owner seems to be in pain.`],
   },
   48: {
     character: "devil",
@@ -243,10 +245,10 @@ export const levelIntroScenes: Record<number, LevelIntroScene> = {
   },
   49: {
     character: "devil",
-    lines: [`The Devil challenges you to face death, in a sort of murder mystery game.`, `"Find the killer," he says, "before the killer finds you."`],
+    lines: [`A man has died beside a road, and nobody at the scene much cares who he was.`, `"Find the killer," the Devil says. "Or decide there wasn't one. People usually do."`],
   },
   50: {
     character: "devil",
-    lines: [`The Devil smiles, wider than should be possible.`, `"One final challenge before you may leave... or stay forever."`],
+    lines: [`The Devil smiles, wider than should be possible.`, `"One final challenge. Then you may leave. Or stay. I am very accommodating."`],
   },
 }

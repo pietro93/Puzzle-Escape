@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { getRandomElevatorMessage } from "@/utils/dialogue-utils"
 import Image from "next/image"
 import FinalJigsawPuzzle from "./final-jigsaw-puzzle"
 import ElevatorPanel from "./elevator-panel"
@@ -299,21 +300,6 @@ export default function FinalLevelPuzzle({
     return "???"
   }
 
-  // Get random elevator message
-  const getRandomElevatorMessage = () => {
-    const messages = [
-      "The elevator descends with a sickening lurch...",
-      "The elevator doors open to reveal a nightmarish scene...",
-      "As the elevator stops, screams echo from beyond the doors...",
-      "The elevator shudders to a halt, and the doors slide open with a groan...",
-      "The temperature changes dramatically as the elevator doors open...",
-      "A wave of despair washes over you as the elevator reaches its destination...",
-      "The elevator's descent seems to take an eternity before finally stopping...",
-      "The elevator doors part to reveal the horrors that await...",
-    ]
-
-    return messages[Math.floor(Math.random() * messages.length)]
-  }
 
 
 
@@ -379,13 +365,6 @@ export default function FinalLevelPuzzle({
           <div className="p-3 bg-gray-800/50 rounded-lg border border-gray-700 mb-4 text-center">
             <p className="text-red-300 font-pixel">{getEncodedStringForFloor(currentFloor)}</p>
           </div>
-
-          {/* For testing purposes - show solution in the last room */}
-          {currentFloor === -16 && (
-            <div className="mt-4 p-3 bg-gray-800/50 rounded-lg border border-gray-700">
-              <p className="text-xs text-gray-400">For testing: The solution is "{solution.toLowerCase()}"</p>
-            </div>
-          )}
         </>
       )}
 
